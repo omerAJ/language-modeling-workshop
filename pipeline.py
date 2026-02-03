@@ -298,7 +298,7 @@ class LanguageModelingPipeline(Scene):
         self.show_tokenization()
         self.show_token_ids()
         self.show_embeddings()
-        self.show_positional_embeddings()
+        self.show_transformer_pipeline()
         self.wait(2)
 
     # ------------------------------------------------------------------
@@ -675,11 +675,281 @@ class LanguageModelingPipeline(Scene):
             FadeOut(weight_group),
             FadeOut(result_decor),
             FadeOut(extracted_rows),
-            FadeIn(emb_matrix),
-            run_time=1,
+            run_time=1.2,
         )
         self.wait(0.3)
 
         self.emb_matrix = emb_matrix
 
-    
+    # ------------------------------------------------------------------
+    # PHASE 4 — Full transformer forward-pass pipeline
+    # ------------------------------------------------------------------
+
+    def show_transformer_pipeline(self):
+        """Full transformer forward pass — matrix travels through pipeline with equations."""
+        # ── Clear previous phase ──
+        self.play(*[FadeOut(m) for m in self.mobjects], run_time=2.0)
+
+        title = Text("Transformer Forward Pass", font_size=28, color=ACCENT_COLOR)
+        title.to_edge(UP, buff=0.25)
+
+        # ── Layout constants ──
+        BW, BH = 2.5, 0.38
+        GAP = 0.31
+        PIPELINE_X = -1.5
+        MAT_X = PIPELINE_X - BW / 2 - 1.2
+        EQ_X = 3.5
+
+        # ── Block definitions ──
+        block_data = [
+            ("Token Embeddings",                 ACCENT_COLOR, 13),   # 0
+            ("+ Positional Embeddings",          ACCENT_COLOR, 13),   # 1
+            ("Masked Multi-Head Self-Attention \n\t\t\t\t\t(MHA)",  "#e57373",   10),   # 2
+            ("Add & Norm",                   "#ffb74d",   13),   # 3
+            ("Feed Forward Network \n\t\t\t\t(FFN)",                "#e57373",   13),   # 4
+            ("Add & Norm",                   "#ffb74d",   13),   # 5
+            ("Linear Projection",                 ACCENT_COLOR, 13),  # 6
+            ("Softmax",                           ACCENT_COLOR, 13),  # 7
+            ("Next-token Probabilities",          YELLOW,      13),   # 8
+        ]
+        orig_colors = [c for _, c, _ in block_data]
+
+        def make_block(label, color, fs):
+            box = RoundedRectangle(
+                width=BW, height=BH, corner_radius=0.08,
+                stroke_color=color, stroke_width=2,
+                fill_color=BOX_COLOR, fill_opacity=0.75,
+            )
+            txt = Text(label, font_size=fs, color=color)
+            txt.move_to(box)
+            return VGroup(box, txt)
+
+        blocks = [make_block(*d) for d in block_data]
+
+        pipeline = VGroup(*blocks)
+        pipeline.arrange(UP, buff=GAP)
+        pipeline.move_to(np.array([PIPELINE_X, -0.15, 0]))
+
+        # ── Connecting arrows ──
+        arrows = VGroup()
+        for i in range(len(blocks) - 1):
+            a = Arrow(
+                blocks[i].get_top(), blocks[i + 1].get_bottom(),
+                buff=0.02, color=GRAY_B, stroke_width=1.5,
+                max_tip_length_to_length_ratio=0.25,
+            )
+            arrows.add(a)
+
+        # ── Transformer Block container (blocks 2–5) ──
+        tf_inner = VGroup(blocks[2], blocks[3], blocks[4], blocks[5])
+        container = SurroundingRectangle(
+            tf_inner, buff=0.25,
+            stroke_color=GRAY_A, stroke_width=1.5, fill_opacity=0.05,
+        )
+        brace = Brace(container, RIGHT, buff=0.15, color=GRAY_B)
+        n_label = MathTex(r"\times N", font_size=18, color=GRAY_B)
+        n_label.next_to(brace, RIGHT, buff=0.08)
+
+    # ── Residual arrows (orthogonal + smooth bends) ──
+        from manim import CubicBezier
+
+        res_color = "#66bb6a"
+
+        def residual_ortho(
+            flow_arrow,
+            dst_block,
+            x_offset=1.6,
+            bend_radius=0.18,
+            into_box=0.06,
+            stroke_w=2.2,
+        ):
+            start = flow_arrow.get_center() + RIGHT * 0.05
+
+            end_y = dst_block.get_center()[1]
+            end_x = dst_block[0].get_right()[0] - into_box
+            end = np.array([end_x, end_y, 0])
+
+            bend_x = start[0] + x_offset
+
+            # Hard corner points
+            A = start
+            B = np.array([bend_x, start[1], 0])
+            C = np.array([bend_x, end_y, 0])
+            D = end
+
+            # Direction vectors
+            h = RIGHT
+            v = UP if C[1] > B[1] else DOWN
+            l = LEFT
+
+            r = bend_radius
+
+            # Rounded control points
+            A2 = B - h * r
+            B2 = B + v * r
+            C1 = C - v * r
+            C2 = C + l * r
+
+            seg1 = Line(A, A2)
+
+            curve1 = CubicBezier(
+                A2,
+                A2 + h * r,
+                B2 - v * r,
+                B2,
+            )
+
+            seg2 = Line(B2, C1)
+
+            curve2 = CubicBezier(
+                C1,
+                C1 + v * r,
+                C2 - l * r,
+                C2,
+            )
+
+            seg3 = Line(C2, D)
+
+            path = VGroup(seg1, curve1, seg2, curve2, seg3)
+            path.set_stroke(res_color, width=stroke_w)
+            path.set_z_index(3)
+
+            tip = ArrowTriangleFilledTip(color=res_color)
+            tip.scale(0.35)
+            tip.rotate(angle_of_vector(D - C2) + PI)
+            tip.shift(D - tip.get_tip_point())
+            tip.set_z_index(4)
+
+            return VGroup(path, tip)
+
+        # Attention residual (skip around MHA into Add&LN)
+        res1 = residual_ortho(arrows[1], blocks[3], x_offset=1.37)
+
+        # FFN residual (skip around MLP into Add&LN)
+        res2 = residual_ortho(arrows[3], blocks[5], x_offset=1.37)
+
+        # ── Phase 1: Show full pipeline structure quickly ──
+        self.play(FadeIn(title), run_time=0.5)
+        self.play(
+            LaggedStart(*[FadeIn(b, shift=UP * 0.05) for b in blocks], lag_ratio=0.05),
+            LaggedStart(*[GrowArrow(a) for a in arrows], lag_ratio=0.05),
+            run_time=1.2,
+        )
+        self.play(
+            Create(container),
+            GrowFromCenter(brace), FadeIn(n_label),
+            Create(res1), Create(res2),
+            run_time=0.6,
+        )
+        self.wait(0.5)
+
+        # ── Phase 2: Traveling matrix with per-stage equations ──
+        mat = TensorMatrix(T, D_MODEL, cell_size=0.15, label=None)
+        mat.move_to(np.array([MAT_X, blocks[0].get_center()[1] - 0.8, 0]))
+
+        mat_label = MathTex("E", font_size=20, color=ACCENT_COLOR)
+        mat_label.next_to(mat, DOWN, buff=0.1)
+
+        self.play(FadeIn(mat, shift=UP * 0.3), FadeIn(mat_label), run_time=0.5)
+
+        # Stage definitions: (active_block_indices, equation_lines, new_label)
+        stages = [
+            (
+                [0, 1],
+                [r"X_0 = E[\text{token\_ids}] + P"],
+                "X_0",
+            ),
+            (
+                [2],
+                [
+                    r"Q = XW_Q,\; K = XW_K,\; V = XW_V",
+                    r"\text{Attn} = \text{softmax}\!\left(\tfrac{QK^\top}{\sqrt{d_k}} + M\right)\!V",
+                    r"\text{MHA}(X) = [\text{head}_1 \cdots \text{head}_h]\,W_O",
+                ],
+                None,
+            ),
+            (
+                [3],
+                [r"X_1 = \text{LayerNorm}\!\left(X_0 + \text{MHA}(X_0)\right)"],
+                "X_1",
+            ),
+            (
+                [4],
+                [r"\text{FFN}(X) = \sigma(XW_1 + b_1)\,W_2 + b_2"],
+                None,
+            ),
+            (
+                [5],
+                [r"X_2 = \text{LayerNorm}\!\left(X_1 + \text{FFN}(X_1)\right)"],
+                "X_2",
+            ),
+            (
+                [6],
+                [r"Z = X_2\, W_{\text{out}} + b_{\text{out}}"],
+                "Z",
+            ),
+            (
+                [7, 8],
+                [r"p = \text{softmax}(Z)"],
+                "p",
+            ),
+        ]
+
+        prev_eq = None
+
+        for s_blocks, eq_lines, new_label in stages:
+            # Target: vertically center matrix with active block(s)
+            target_y = np.mean([blocks[i].get_center()[1] for i in s_blocks])
+            target_pos = np.array([MAT_X, target_y, 0])
+            label_pos = np.array([MAT_X, target_y - mat.height / 2 - 0.12, 0])
+
+            # Build equation group for this stage
+            eq_group = VGroup(*[
+                MathTex(line, font_size=22, color=TEXT_COLOR)
+                for line in eq_lines
+            ])
+            eq_group.arrange(DOWN, buff=0.12)
+            eq_group.move_to(np.array([EQ_X, target_y, 0]))
+
+            # Keep equations inside the frame
+            if eq_group.get_right()[0] > 6.8:
+                eq_group.shift(LEFT * (eq_group.get_right()[0] - 6.8))
+
+            # ── A: Move matrix + highlight active blocks ──
+            anims = [mat.animate.move_to(target_pos)]
+
+            if new_label:
+                new_lbl = MathTex(new_label, font_size=20, color=ACCENT_COLOR)
+                new_lbl.move_to(label_pos)
+                anims.append(Transform(mat_label, new_lbl))
+            else:
+                anims.append(mat_label.animate.move_to(label_pos))
+
+            for idx in s_blocks:
+                anims.append(blocks[idx][0].animate.set_stroke(YELLOW, width=3))
+
+            self.play(*anims, run_time=0.6)
+
+            # ── B: Swap equations ──
+            if prev_eq:
+                self.play(FadeOut(prev_eq, shift=UP * 0.15), run_time=0.25)
+
+            self.play(
+                LaggedStart(*[Write(eq) for eq in eq_group], lag_ratio=0.3),
+                run_time=max(0.6, len(eq_lines) * 0.4),
+            )
+            prev_eq = eq_group
+            self.wait(1.0)
+
+            # ── C: De-highlight blocks ──
+            self.play(
+                *[blocks[idx][0].animate.set_stroke(orig_colors[idx], width=2)
+                  for idx in s_blocks],
+                run_time=0.3,
+            )
+
+        # Final fade of last equation
+        if prev_eq:
+            self.play(FadeOut(prev_eq), run_time=0.5)
+
+        self.wait(1.0)
