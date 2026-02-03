@@ -46,6 +46,9 @@ TEXT_COLOR = WHITE
 BOX_COLOR = "#2d2d44"
 LLM_BOX_FILL = "#0d0d1a"
 MATRIX_COLORS = [BLUE_E, BLUE_D, BLUE_C, BLUE_B, BLUE_A, GREEN_A, YELLOW_A, ORANGE]
+EQUATION_BG = "#101624"
+EQUATION_STROKE = "#fdd835"
+SLOW_FACTOR = 1.2
 
 
 # =============================================================================
@@ -64,9 +67,11 @@ class LLMBlackBox(VGroup):
             fill_color=LLM_BOX_FILL, fill_opacity=0.95,
         )
         self.title_text = Text("LLM", font_size=36, color=ACCENT_COLOR, weight=BOLD)
-        self.title_text.move_to(self.box.get_center() + UP * 0.15)
+        self.theta_text = MathTex(r"\theta", font_size=32, color=ACCENT_COLOR)
+        self.title_text.move_to(self.box.get_center() + UP * 0.3)
+        self.theta_text.next_to(self.title_text, DOWN*1.2, buff=0.05)
 
-        self.add(self.box, self.title_text)
+        self.add(self.box, self.title_text, self.theta_text)
 
 
 class CompactDistribution(VGroup):
@@ -275,12 +280,37 @@ class EquationLabel(VGroup):
 
     def __init__(self, equation_tex, description=None, font_size=35, **kwargs):
         super().__init__(**kwargs)
-        self.equation = MathTex(equation_tex, font_size=font_size, color=TEXT_COLOR)
-        self.add(self.equation)
+        if isinstance(equation_tex, (list, tuple)):
+            equations = VGroup(*[
+                MathTex(eq, font_size=font_size, color=TEXT_COLOR)
+                for eq in equation_tex
+            ])
+            equations.arrange(DOWN, buff=0.12)
+        else:
+            equations = VGroup(
+                MathTex(equation_tex, font_size=font_size, color=TEXT_COLOR)
+            )
+
+        self.equations = equations
+        self.equation = equations
+
+        content = equations
         if description:
             self.description = Text(description, font_size=20, color=GRAY_B)
-            self.description.next_to(self.equation, DOWN, buff=0.15)
-            self.add(self.description)
+            content = VGroup(equations, self.description).arrange(DOWN, buff=0.15)
+
+        background = SurroundingRectangle(
+            content,
+            buff=0.2,
+            corner_radius=0.12,
+            stroke_color=EQUATION_STROKE,
+            stroke_width=2,
+            fill_color=EQUATION_BG,
+            fill_opacity=0.85,
+        )
+
+        self.background = background
+        self.add(background, content)
 
 
 # =============================================================================
@@ -289,6 +319,14 @@ class EquationLabel(VGroup):
 
 class LanguageModelingPipeline(Scene):
     """Black-box demo → zoom-in → tokenization → embeddings → positional embeddings."""
+
+    def play(self, *args, **kwargs):
+        run_time = kwargs.pop("run_time", 1.0)
+        kwargs["run_time"] = run_time * SLOW_FACTOR
+        return super().play(*args, **kwargs)
+
+    def wait(self, duration=1.0):
+        return super().wait(duration * SLOW_FACTOR)
 
     def construct(self):
         self.camera.background_color = DARK_BG
@@ -319,6 +357,13 @@ class LanguageModelingPipeline(Scene):
         llm_box.move_to(ORIGIN)
         self.play(FadeIn(llm_box, scale=0.85), run_time=1)
 
+        ar_eq = EquationLabel(
+            r"p(x)=\prod_{t=1}^{T} p(x_t\mid x_{<t};\theta)",
+            font_size=24,
+        )
+        ar_eq.next_to(llm_box, UP, buff=0.35)
+        self.play(FadeIn(ar_eq), run_time=0.8)
+
         current_text = SENTENCE
         sentence = Text(f'"{current_text}"', font_size=20, color=TEXT_COLOR)
         sentence.next_to(llm_box, LEFT, buff=1.6)
@@ -334,6 +379,7 @@ class LanguageModelingPipeline(Scene):
         self.bb_box = llm_box
         self.bb_sentence = sentence
         self.bb_arrow_in = arrow_in
+        self.bb_eq = ar_eq
 
         for iteration in BLACKBOX_ITERATIONS:
             current_text = self._run_iteration(iteration, current_text)
@@ -367,6 +413,13 @@ class LanguageModelingPipeline(Scene):
             run_time=0.8,
         )
 
+        cond_eq = EquationLabel(
+            r"p(x_t\mid x_{<t};\theta)",
+            font_size=20,
+        )
+        cond_eq.next_to(dist, UP, buff=0.2).shift(RIGHT * 0.25)
+        self.play(FadeIn(cond_eq), run_time=0.4)
+
         sel_idx = data["top_tokens"].index(data["selected"])
         highlight = SurroundingRectangle(
             dist.token_groups[sel_idx],
@@ -374,6 +427,13 @@ class LanguageModelingPipeline(Scene):
         )
         self.play(Create(highlight), run_time=0.4)
         self.wait(0.4)
+
+        sample_eq = EquationLabel(
+            r"x_t \sim \text{Categorical}(p)",
+            font_size=20,
+        )
+        sample_eq.move_to(cond_eq.get_center())
+        self.play(Transform(cond_eq, sample_eq), run_time=0.4)
 
         selected = data["selected"]
         flying = Text(selected, font_size=22, color=YELLOW, weight=BOLD)
@@ -402,7 +462,7 @@ class LanguageModelingPipeline(Scene):
 
         self.play(
             FadeOut(flying),
-            FadeOut(dist), FadeOut(highlight), FadeOut(arrow_out),
+            FadeOut(dist), FadeOut(highlight), FadeOut(arrow_out), FadeOut(cond_eq),
             Transform(self.bb_sentence, new_sentence),
             Transform(self.bb_arrow_in, new_arrow_in),
             run_time=0.7,
@@ -426,6 +486,7 @@ class LanguageModelingPipeline(Scene):
             FadeOut(self.bb_title),
             FadeOut(self.bb_sentence),
             FadeOut(self.bb_arrow_in),
+            FadeOut(self.bb_eq),
             FadeOut(question),
             run_time=0.8,
         )
@@ -440,6 +501,7 @@ class LanguageModelingPipeline(Scene):
 
         self.play(
             self.bb_box.title_text.animate.set_opacity(0),
+            self.bb_box.theta_text.animate.set_opacity(0),
             run_time=0.5,
         )
 
@@ -501,7 +563,11 @@ class LanguageModelingPipeline(Scene):
         )
 
         eq = EquationLabel(
-            r"\text{text} \rightarrow [\text{tok}_1, \ldots, \text{tok}_T]"
+            [
+                r"x_{1:T} = \text{tokenize}(\text{text})",
+                r"[x_1,\ldots,x_T] = [\text{tok}_1,\ldots,\text{tok}_T]",
+            ],
+            font_size=28,
         )
         eq.scale(0.7).to_edge(RIGHT, buff=0.8).shift(UP * 1.5)
 
@@ -511,7 +577,7 @@ class LanguageModelingPipeline(Scene):
             LaggedStart(*[FadeIn(b, scale=0.8) for b in token_row], lag_ratio=0.1),
             run_time=1.5,
         )
-        self.play(Write(eq), run_time=0.8)
+        self.play(FadeIn(eq), run_time=0.8)
         self.wait(0.5)
 
         self.token_row = token_row
@@ -536,7 +602,13 @@ class LanguageModelingPipeline(Scene):
             for i in range(len(TOKENS))
         ])
 
-        new_eq = EquationLabel(r"\text{tok}_i \rightarrow \text{id}_i \in \mathbb{Z}")
+        new_eq = EquationLabel(
+            [
+                r"x_t = \text{id}(\text{tok}_t)",
+                r"x_t \in \{1,\dots,|V|\}",
+            ],
+            font_size=26,
+        )
         new_eq.scale(0.7).move_to(self.current_eq)
 
         self.play(Transform(self.stage_label, new_stage))
@@ -570,7 +642,11 @@ class LanguageModelingPipeline(Scene):
         new_stage.move_to(self.stage_label).shift(RIGHT * 0.5)
 
         new_eq = EquationLabel(
-            r"E = W_E[\,\text{ids}\,] \in \mathbb{R}^{t \times d}"
+            [
+                r"e_t = W_E[x_t]",
+                r"E = [e_1;\dots;e_T] \in \mathbb{R}^{t \times d}",
+            ],
+            font_size=26,
         )
         new_eq.scale(0.7).move_to(self.current_eq)
 
@@ -695,7 +771,7 @@ class LanguageModelingPipeline(Scene):
 
         # ── Layout constants ──
         BW, BH = 2.5, 0.38
-        GAP = 0.31
+        GAP = 0.34
         PIPELINE_X = -1.5
         MAT_X = PIPELINE_X - BW / 2 - 1.2
         EQ_X = 3.5
@@ -856,64 +932,79 @@ class LanguageModelingPipeline(Scene):
         stages = [
             (
                 [0, 1],
-                [r"X_0 = E[\text{token\_ids}] + P"],
+                [
+                    r"X_0 = E + P",
+                ],
                 "X_0",
+                22,
             ),
             (
                 [2],
                 [
                     r"Q = XW_Q,\; K = XW_K,\; V = XW_V",
-                    r"\text{Attn} = \text{softmax}\!\left(\tfrac{QK^\top}{\sqrt{d_k}} + M\right)\!V",
-                    r"\text{MHA}(X) = [\text{head}_1 \cdots \text{head}_h]\,W_O",
+                    r"M_{ij}=\begin{cases}0,& j\le i\\ -\infty,& j>i\end{cases}",
+                    r"\text{head}_i=\text{softmax}\!\left(\tfrac{Q_iK_i^\top}{\sqrt{d_k}}+M\right)V_i",
+                    r"\text{MHA}(X)=[\text{head}_1 \cdots \text{head}_h]\,W_O",
                 ],
                 None,
+                20,
             ),
             (
                 [3],
-                [r"X_1 = \text{LayerNorm}\!\left(X_0 + \text{MHA}(X_0)\right)"],
+                [
+                    r"X_1 = \text{LayerNorm}\!\left(X_0 + \text{MHA}(X_0)\right)",
+                    r"\text{LN}(X)=\frac{X-\mu}{\sqrt{\sigma^2+\epsilon}}\odot\gamma+\beta",
+                ],
                 "X_1",
+                20,
             ),
             (
                 [4],
-                [r"\text{FFN}(X) = \sigma(XW_1 + b_1)\,W_2 + b_2"],
+                [
+                    r"\text{FFN}(X) = \sigma(XW_1 + b_1)\,W_2 + b_2",
+                    r"\sigma=\text{GELU}",
+                ],
                 None,
+                20,
             ),
             (
                 [5],
                 [r"X_2 = \text{LayerNorm}\!\left(X_1 + \text{FFN}(X_1)\right)"],
                 "X_2",
+                20,
             ),
             (
                 [6],
                 [r"Z = X_2\, W_{\text{out}} + b_{\text{out}}"],
                 "Z",
+                22,
             ),
             (
                 [7, 8],
-                [r"p = \text{softmax}(Z)"],
+                [
+                    r"p = \text{softmax}(Z)",
+                    r"p(x_t\mid x_{<t}; \theta) = \text{softmax}(z_t)",
+                ],
                 "p",
+                20,
             ),
         ]
 
         prev_eq = None
 
-        for s_blocks, eq_lines, new_label in stages:
+        for s_blocks, eq_lines, new_label, eq_font_size in stages:
             # Target: vertically center matrix with active block(s)
             target_y = np.mean([blocks[i].get_center()[1] for i in s_blocks])
             target_pos = np.array([MAT_X, target_y, 0])
             label_pos = np.array([MAT_X, target_y - mat.height / 2 - 0.12, 0])
 
             # Build equation group for this stage
-            eq_group = VGroup(*[
-                MathTex(line, font_size=22, color=TEXT_COLOR)
-                for line in eq_lines
-            ])
-            eq_group.arrange(DOWN, buff=0.12)
-            eq_group.move_to(np.array([EQ_X, target_y, 0]))
+            eq_panel = EquationLabel(eq_lines, font_size=eq_font_size)
+            eq_panel.move_to(np.array([EQ_X, target_y, 0]))
 
             # Keep equations inside the frame
-            if eq_group.get_right()[0] > 6.8:
-                eq_group.shift(LEFT * (eq_group.get_right()[0] - 6.8))
+            if eq_panel.get_right()[0] > 6.8:
+                eq_panel.shift(LEFT * (eq_panel.get_right()[0] - 6.8))
 
             # ── A: Move matrix + highlight active blocks ──
             anims = [mat.animate.move_to(target_pos)]
@@ -934,11 +1025,13 @@ class LanguageModelingPipeline(Scene):
             if prev_eq:
                 self.play(FadeOut(prev_eq, shift=UP * 0.15), run_time=0.25)
 
+            self.play(FadeIn(eq_panel.background), run_time=0.3)
             self.play(
-                LaggedStart(*[Write(eq) for eq in eq_group], lag_ratio=0.3),
-                run_time=max(0.6, len(eq_lines) * 0.4),
+                LaggedStart(*[FadeIn(eq) for eq in eq_panel.equations], lag_ratio=0.3),
+                run_time=max(0.7, len(eq_lines) * 0.45),
             )
-            prev_eq = eq_group
+            self.add(eq_panel)
+            prev_eq = eq_panel
             self.wait(1.0)
 
             # ── C: De-highlight blocks ──
