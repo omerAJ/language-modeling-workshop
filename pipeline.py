@@ -414,7 +414,7 @@ class LanguageModelingPipeline(Scene):
         )
 
         cond_eq = EquationLabel(
-            r"p(x_t\mid x_{<t};\theta)",
+            r"p(x_t \mid x_{<t}; \theta) = \mathrm{softmax}(f_\theta(x_{<t}))",
             font_size=20,
         )
         cond_eq.next_to(dist, UP, buff=0.2).shift(RIGHT * 0.25)
@@ -429,7 +429,7 @@ class LanguageModelingPipeline(Scene):
         self.wait(0.4)
 
         sample_eq = EquationLabel(
-            r"x_t \sim \text{Categorical}(p)",
+            r"x_t \sim \mathrm{Categorical}\big(p(\cdot \mid x_{<t}; \theta)\big)",
             font_size=20,
         )
         sample_eq.move_to(cond_eq.get_center())
@@ -546,7 +546,7 @@ class LanguageModelingPipeline(Scene):
             self.bring_to_back(m)
 
     # ------------------------------------------------------------------
-    # PHASE 3 — Detailed pipeline (up to positional embeddings)
+    # PHASE 3 — Detailed pipeline
     # ------------------------------------------------------------------
 
     def show_tokenization(self):
