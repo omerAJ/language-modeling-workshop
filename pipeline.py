@@ -14,6 +14,9 @@ Manim Community Edition v0.18+
 from manim import *
 import numpy as np
 
+# Fix font kerning issues (e.g., 'self', 'masked' rendering poorly)
+Text.set_default(font="DejaVu Sans")
+
 # =============================================================================
 # PARAMETERS
 # =============================================================================
@@ -388,7 +391,7 @@ class LanguageModelingPipeline(Scene):
             handoff_from='input',
             handoff_to='transformer',
             matrix_label="X_0",
-            narrative_text="X₀ is ready—let's pass it to the Transformer!",
+            narrative_text="We have successfully converted our text to a list of numbers... Now lets pass it to the transformer and see what it does to these!",
         )
         self.transition_to_transformer_core()
         self.show_transformer_pipeline()
@@ -398,7 +401,7 @@ class LanguageModelingPipeline(Scene):
             handoff_from='transformer',
             handoff_to='output',
             matrix_label="X_N",
-            narrative_text="The Transformer outputs X_N—rich contextual embeddings.",
+            narrative_text="X_N is still just numbers... but we wanted words!",
         )
         self.transition_to_output_decoding()
         self.show_output_decoding()
@@ -548,7 +551,8 @@ class LanguageModelingPipeline(Scene):
                         inner_fade_attrs, stroke_color=ACCENT_COLOR):
         """Reusable zoom-into transition. Returns zoom_cover for reveal."""
         question = Text(question_text, font_size=28, color=ACCENT_COLOR)
-        question.next_to(target, DOWN, buff=0.9)
+        # Center question on screen to avoid going off edges
+        question.move_to(ORIGIN + DOWN * 2.5)
         self.play(Write(question), run_time=1.2)
         self.wait(0.8)
 
@@ -653,7 +657,7 @@ class LanguageModelingPipeline(Scene):
                 FadeIn(input_block, shift=UP * 0.3),
                 FadeIn(transformer_block, shift=UP * 0.3),
                 FadeIn(output_block, shift=UP * 0.3),
-                lag_ratio=0.15,
+                lag_ratio=0.20,
             ),
             run_time=1.5,
         )
@@ -730,7 +734,7 @@ class LanguageModelingPipeline(Scene):
         self.tsp_arrow_1 = arrow_1
         self.tsp_arrow_2 = arrow_2
 
-        # ── Handoff animation: show matrix traveling between stages ──
+        # ── Handoff animation: matrix emerges from block, drops, then travels ──
         if handoff_from and handoff_to:
             block_map = {
                 'input': input_block,
@@ -746,18 +750,7 @@ class LanguageModelingPipeline(Scene):
             from_block = block_map[handoff_from]
             to_block = block_map[handoff_to]
 
-            # Create traveling matrix
-            mat = TensorMatrix(3, 4, cell_size=0.12, seed=99)
-            mat.move_to(from_block.get_center())
-            mat.scale(0.8)
-
-            label_text = matrix_label or "X"
-            mat_label = MathTex(label_text, font_size=16, color=color_map[handoff_from])
-            mat_label.next_to(mat, DOWN, buff=0.08)
-
-            self.play(FadeIn(mat), FadeIn(mat_label), run_time=0.5)
-
-            # Show narrative text
+            # Show narrative question FIRST
             if narrative_text:
                 narr = Text(narrative_text, font_size=20, color=GRAY_A)
                 narr.to_edge(DOWN, buff=0.6)
@@ -765,11 +758,35 @@ class LanguageModelingPipeline(Scene):
                 self.wait(1.2)
                 self.play(FadeOut(narr), run_time=0.4)
 
-            # Animate matrix traveling to next block
-            new_label = MathTex(label_text, font_size=16, color=color_map[handoff_to])
-            new_label.next_to(to_block.get_center(), DOWN, buff=0.08)
+            # ── Create traveling matrix + label ──
+            mat = TensorMatrix(3, 4, cell_size=0.12, seed=99)
 
-            # Determine the arrow to highlight based on direction
+            label_text = matrix_label or "X"
+            mat_label = MathTex(label_text, font_size=16, color=color_map[handoff_from])
+            mat_label.next_to(mat, DOWN, buff=0.08)
+
+            mat_group = VGroup(mat, mat_label)
+            mat_group.scale(1.2)
+
+            spawn_pos = from_block.get_bottom()
+            rest_pos = from_block.get_bottom() + DOWN * 0.5
+            target_pos = to_block.get_bottom() + DOWN * 0.5
+
+            mat_group.move_to(spawn_pos)
+
+            # Stage 1 — Emerge from block
+            self.play(GrowFromEdge(mat_group, UP), run_time=0.5)
+
+            # Stage 2 — Drop to resting position
+            self.play(
+                mat_group.animate.move_to(rest_pos),
+                run_time=0.6,
+                rate_func=smooth,
+            )
+
+            self.wait(0.6)
+
+            # Determine arrow
             if handoff_from == 'input' and handoff_to == 'transformer':
                 travel_arrow = arrow_1
             elif handoff_from == 'transformer' and handoff_to == 'output':
@@ -780,9 +797,10 @@ class LanguageModelingPipeline(Scene):
             if travel_arrow:
                 self.play(travel_arrow.animate.set_color(YELLOW), run_time=0.3)
 
+            # Stage 3 — Travel to next block
             self.play(
-                mat.animate.move_to(to_block.get_center()).scale(1.0),
-                Transform(mat_label, new_label),
+                mat_group.animate.move_to(target_pos).scale(1.0),
+                mat_label.animate.set_color(color_map[handoff_to]),
                 run_time=1.2,
                 rate_func=smooth,
             )
@@ -790,8 +808,11 @@ class LanguageModelingPipeline(Scene):
             if travel_arrow:
                 self.play(travel_arrow.animate.set_color(GRAY_B), run_time=0.3)
 
-            # Fade out the matrix before zooming in
-            self.play(FadeOut(mat), FadeOut(mat_label), run_time=0.5)
+            self.wait(0.6)
+
+            # Fade out before zooming in
+            self.play(FadeOut(mat_group), run_time=0.5)
+
 
     # ------------------------------------------------------------------
     # PHASE 2.5 — Zoom into each stage
@@ -838,22 +859,22 @@ class LanguageModelingPipeline(Scene):
     def transition_to_transformer_core(self):
         """Zoom into the Transformer Core block with narrative motivation."""
         # ── Narrative: Why do we need the Transformer? ──
-        motivation = Text(
-            "We have numbers... but they're just random embeddings.",
-            font_size=22, color=GRAY_A,
-        )
-        motivation.to_edge(DOWN, buff=0.8)
-        self.play(FadeIn(motivation, shift=UP * 0.2), run_time=0.8)
-        self.wait(1.0)
+        # motivation = Text(
+        #     "We have numbers... but they're just random embeddings.",
+        #     font_size=22, color=GRAY_A,
+        # )
+        # motivation.to_edge(DOWN, buff=0.8)
+        # self.play(FadeIn(motivation, shift=UP * 0.2), run_time=0.8)
+        # self.wait(1.0)
 
-        motivation2 = Text(
-            "How do we make sense of this and predict the next word?",
-            font_size=22, color=GRAY_A,
-        )
-        motivation2.to_edge(DOWN, buff=0.8)
-        self.play(Transform(motivation, motivation2), run_time=0.6)
-        self.wait(1.0)
-        self.play(FadeOut(motivation), run_time=0.5)
+        # motivation2 = Text(
+        #     "How do we make sense of this and predict the next word?",
+        #     font_size=22, color=GRAY_A,
+        # )
+        # motivation2.to_edge(DOWN, buff=0.8)
+        # self.play(Transform(motivation, motivation2), run_time=0.6)
+        # self.wait(1.0)
+        # self.play(FadeOut(motivation), run_time=0.5)
 
         zoom_cover = self.zoom_into_block(
             target=self.tsp_transformer_block,
@@ -872,7 +893,7 @@ class LanguageModelingPipeline(Scene):
         """Zoom into the Output Decoding block with narrative motivation."""
         # ── Narrative: Why do we need Output Decoding? ──
         motivation = Text(
-            "Wait... X_N is still just numbers!",
+            "Nice — we now have powerful, context-aware embeddings.",
             font_size=24, color=YELLOW,
         )
         motivation.to_edge(DOWN, buff=0.9)
@@ -880,12 +901,20 @@ class LanguageModelingPipeline(Scene):
         self.wait(1.0)
 
         motivation2 = Text(
-            "But we wanted words, not more embeddings...",
+            "But embeddings aren’t words… you can’t read them.",
             font_size=22, color=GRAY_A,
         )
         motivation2.to_edge(DOWN, buff=0.9)
         self.play(Transform(motivation, motivation2), run_time=0.6)
         self.wait(1.0)
+        
+        # motivation3 = Text(
+        #     "So how do we turn this into an actual next token?",
+        #     font_size=22, color=GRAY_A,
+        # )
+        # motivation3.to_edge(DOWN, buff=0.9)
+        # self.play(Transform(motivation2, motivation3), run_time=0.6)
+        # self.wait(1.0)
         self.play(FadeOut(motivation), run_time=0.5)
 
         zoom_cover = self.zoom_into_block(
@@ -893,7 +922,7 @@ class LanguageModelingPipeline(Scene):
             box_attr='box',
             fade_out=[self.tsp_title, self.tsp_input_block,
                       self.tsp_transformer_block, self.tsp_arrow_1, self.tsp_arrow_2],
-            question_text="How do we turn embeddings back into words?",
+            question_text="So how do we turn this into an actual next word?",
             inner_fade_attrs=['title_text', 'separator', 'sub_labels'],
             stroke_color=ACCENT_COLOR_2,
         )
@@ -1166,9 +1195,10 @@ class LanguageModelingPipeline(Scene):
 
         # ── Brief highlight: sine-wave intuition ──
         intuition = Text(
-            "Each position gets a unique signature from sin/cos waves",
+            "Each token gets a unique signature from sin/cos waves", #Here we will mention that this is from the original transformers paper, now new techniques are widely used like learnable pos embeddings, and RoPE; we will discuss those later.
             font_size=16, color=GRAY_B,
         )
+
         intuition.next_to(VGroup(e_mat, x0_mat), DOWN, buff=0.6)
         self.play(FadeIn(intuition), run_time=0.5)
         self.wait(1.0)
@@ -1176,7 +1206,7 @@ class LanguageModelingPipeline(Scene):
 
         # ── Narrative conclusion: X₀ is ready ──
         conclusion = Text(
-            "Now we have X₀—a numeric matrix the Transformer can process!",
+            "X₀: Position-aware embeddings, ready for the Transformer!",
             font_size=20, color=ACCENT_COLOR,
         )
         conclusion.next_to(VGroup(e_mat, x0_mat), DOWN, buff=0.6)
@@ -1430,17 +1460,27 @@ class LanguageModelingPipeline(Scene):
         if prev_eq:
             self.play(FadeOut(prev_eq), run_time=0.5)
 
-        # ── Narrative conclusion: X_N is ready ──
-        conclusion = Text(
-            "After N layers, we have X_N—embeddings enriched with context!",
+        # ── Narrative conclusion: X_N is ready (step-by-step) ──
+        conclusion_q = Text(
+            "Does the transformer core transform our embedding matrix into another embedding matrix?",
             font_size=20, color=TRANSFORMER_RED,
         )
-        conclusion.to_edge(DOWN, buff=0.6)
-        self.play(FadeIn(conclusion, shift=UP * 0.2), run_time=0.6)
+        conclusion_q.to_edge(DOWN, buff=0.8)
+
+        conclusion_a = Text(
+            "Yes — but now it contains rich, context-aware representations of each token based on the full sequence.",
+            font_size=20, color=TRANSFORMER_RED,
+        )
+        conclusion_a.next_to(conclusion_q, DOWN, buff=0.2)
+
+        self.play(FadeIn(conclusion_q, shift=UP * 0.2), run_time=0.6)
+        self.wait(0.8)
+        self.play(FadeIn(conclusion_a, shift=UP * 0.1), run_time=0.5)
         self.wait(1.0)
-        self.play(FadeOut(conclusion), run_time=0.4)
+        self.play(FadeOut(VGroup(conclusion_q, conclusion_a)), run_time=0.4)
 
         self.wait(0.5)
+
 
     # ------------------------------------------------------------------
     # PHASE 5 — Output decoding pipeline
@@ -1458,6 +1498,15 @@ class LanguageModelingPipeline(Scene):
         title = Text("Output Decoding", font_size=28, color=ACCENT_COLOR_2)
         title.to_edge(UP, buff=0.25)
         self.play(FadeIn(title), run_time=0.5)
+
+        subtitle = Text(
+            "Converts embeddings into a probability distribution over the vocabulary, then selects the next token.",
+            font_size=18,
+            color=GRAY_A,
+        )
+        subtitle.next_to(title, DOWN, buff=0.15)
+        self.play(FadeIn(subtitle), run_time=0.6)
+        self.wait(0.3)
 
         # ── Phase 1: Show X_N and explain we only need the last row ──
         xn_mat = TensorMatrix(T, D_MODEL, cell_size=0.22, label="X_N", seed=55)
