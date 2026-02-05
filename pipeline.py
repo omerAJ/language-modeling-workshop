@@ -48,6 +48,7 @@ LLM_BOX_FILL = "#0d0d1a"
 MATRIX_COLORS = [BLUE_E, BLUE_D, BLUE_C, BLUE_B, BLUE_A, GREEN_A, YELLOW_A, ORANGE]
 EQUATION_BG = "#101624"
 EQUATION_STROKE = "#fdd835"
+TRANSFORMER_RED = "#e57373"
 SLOW_FACTOR = 1.2
 
 
@@ -160,13 +161,13 @@ class IdRow(VGroup):
 class TensorMatrix(VGroup):
     """Abstract heatmap grid representing a tensor."""
 
-    def __init__(self, rows, cols, cell_size=0.25, label=None, **kwargs):
+    def __init__(self, rows, cols, cell_size=0.25, label=None, seed=42, **kwargs):
         super().__init__(**kwargs)
         self.rows = rows
         self.cols = cols
         self.cells = VGroup()
 
-        np.random.seed(42)
+        np.random.seed(seed)
         for i in range(rows):
             for j in range(cols):
                 idx = min(
@@ -313,6 +314,46 @@ class EquationLabel(VGroup):
         self.add(background, content)
 
 
+class PipelineStageBlock(VGroup):
+    """A titled block with sub-item labels for the three-stage pipeline view."""
+
+    def __init__(self, title, sub_items, color, width=3.4, height=2.8,
+                 title_font_size=18, sub_font_size=14, **kwargs):
+        super().__init__(**kwargs)
+
+        self.box = RoundedRectangle(
+            width=width, height=height, corner_radius=0.15,
+            stroke_color=color, stroke_width=3,
+            fill_color=BOX_COLOR, fill_opacity=0.85,
+        )
+
+        self.title_text = Text(
+            title, font_size=title_font_size,
+            color=color, weight=BOLD,
+        )
+        self.title_text.move_to(self.box.get_top() + DOWN * 0.35)
+
+        line_left = self.box.get_left()[0] + 0.2
+        line_right = self.box.get_right()[0] - 0.2
+        line_y = self.title_text.get_bottom()[1] - 0.15
+        self.separator = Line(
+            np.array([line_left, line_y, 0]),
+            np.array([line_right, line_y, 0]),
+            stroke_color=color, stroke_width=1, stroke_opacity=0.5,
+        )
+
+        self.sub_labels = VGroup()
+        start_y = line_y - 0.3
+        for i, item in enumerate(sub_items):
+            bullet = Text(f"  {item}", font_size=sub_font_size, color=GRAY_A)
+            bullet.move_to(
+                np.array([self.box.get_center()[0], start_y - i * 0.35, 0])
+            )
+            self.sub_labels.add(bullet)
+
+        self.add(self.box, self.title_text, self.separator, self.sub_labels)
+
+
 # =============================================================================
 # MAIN SCENE
 # =============================================================================
@@ -332,11 +373,23 @@ class LanguageModelingPipeline(Scene):
         self.camera.background_color = DARK_BG
 
         self.show_black_box_overview()
-        self.show_zoom_transition()
+        self.transition_to_three_stage()
+        self.show_three_stage_pipeline()
+
+        # Zoom into each stage
+        self.transition_to_input_encoding()
         self.show_tokenization()
         self.show_token_ids()
         self.show_embeddings()
+        self.show_positional_encoding()
+
+        self.zoom_back_to_three_stage()
+        self.transition_to_transformer_core()
         self.show_transformer_pipeline()
+
+        self.zoom_back_to_three_stage()
+        self.transition_to_output_decoding()
+        self.show_output_decoding()
         self.wait(2)
 
     # ------------------------------------------------------------------
@@ -471,54 +524,212 @@ class LanguageModelingPipeline(Scene):
         return new_text
 
     # ------------------------------------------------------------------
-    # PHASE 2 — Zoom transition
+    # Reusable zoom helpers
     # ------------------------------------------------------------------
 
-    def show_zoom_transition(self):
-        """Animate 'entering' the LLM black box to reveal internals."""
+    def add_behind(self, *mobjects):
+        for m in mobjects:
+            self.add(m)
+            self.bring_to_back(m)
 
-        question = Text("But how does this work?", font_size=28, color=ACCENT_COLOR)
-        question.next_to(self.bb_box, DOWN, buff=0.9)
+    def zoom_into_block(self, target, box_attr, fade_out, question_text,
+                        inner_fade_attrs, stroke_color=ACCENT_COLOR):
+        """Reusable zoom-into transition. Returns zoom_cover for reveal."""
+        question = Text(question_text, font_size=28, color=ACCENT_COLOR)
+        question.next_to(target, DOWN, buff=0.9)
         self.play(Write(question), run_time=1.2)
         self.wait(0.8)
 
         self.play(
-            FadeOut(self.bb_title),
-            FadeOut(self.bb_sentence),
-            FadeOut(self.bb_arrow_in),
-            FadeOut(self.bb_eq),
+            *[FadeOut(m) for m in fade_out],
             FadeOut(question),
             run_time=0.8,
         )
 
-        self.play(self.bb_box.animate.move_to(ORIGIN), run_time=0.4)
+        self.play(target.animate.move_to(ORIGIN), run_time=0.4)
 
+        box = getattr(target, box_attr)
         self.play(
-            self.bb_box.box.animate.set_stroke(YELLOW, width=6),
+            box.animate.set_stroke(YELLOW, width=6),
             rate_func=there_and_back,
             run_time=0.8,
         )
 
-        self.play(
-            self.bb_box.title_text.animate.set_opacity(0),
-            self.bb_box.theta_text.animate.set_opacity(0),
-            run_time=0.5,
-        )
+        anims = []
+        for attr in inner_fade_attrs:
+            anims.append(getattr(target, attr).animate.set_opacity(0))
+        self.play(*anims, run_time=0.5)
 
-        zoom_cover = self.bb_box.box.copy()
+        zoom_cover = box.copy()
         zoom_cover.set_fill(DARK_BG, opacity=1)
-        zoom_cover.set_stroke(ACCENT_COLOR, width=3)
+        zoom_cover.set_stroke(stroke_color, width=3)
         self.add(zoom_cover)
-        self.remove(self.bb_box)
+        self.remove(target)
 
         self.play(
             zoom_cover.animate.scale(6).set_stroke(width=0),
             run_time=2.0,
             rate_func=rush_into,
         )
+        return zoom_cover
+
+    def reveal_after_zoom(self, zoom_cover, *content):
+        """Place content behind zoom_cover, then fade out cover."""
+        self.add_behind(*content)
+        self.play(
+            FadeOut(zoom_cover),
+            run_time=1.5,
+            rate_func=rush_from,
+        )
+
+    # ------------------------------------------------------------------
+    # PHASE 2 — Three-stage pipeline overview
+    # ------------------------------------------------------------------
+
+    def transition_to_three_stage(self):
+        """Zoom into the LLM black box, reveal the three-stage pipeline title."""
+        zoom_cover = self.zoom_into_block(
+            target=self.bb_box,
+            box_attr='box',
+            fade_out=[self.bb_title, self.bb_sentence, self.bb_arrow_in, self.bb_eq],
+            question_text="But how does this work?",
+            inner_fade_attrs=['title_text', 'theta_text'],
+        )
+
+        title = Text(
+            "Three Stages of a Language Model",
+            font_size=28, color=ACCENT_COLOR,
+        )
+        title.to_edge(UP, buff=0.3)
+        self.reveal_after_zoom(zoom_cover, title)
+        self.tsp_title = title
+
+    def show_three_stage_pipeline(self):
+        """Display the three-stage pipeline blocks and run autoregressive iterations."""
+        input_block = PipelineStageBlock(
+            title="Input Encoding",
+            sub_items=["Tokenization", "Embedding Lookup", "Positional Encoding"],
+            color=ACCENT_COLOR,
+        )
+        transformer_block = PipelineStageBlock(
+            title="Transformer Core",
+            sub_items=["Self-Attention", "Feed-Forward (FFN)",
+                       "Residual Connections", "Layer Normalization"],
+            color=TRANSFORMER_RED,
+        )
+        output_block = PipelineStageBlock(
+            title="Output Decoding",
+            sub_items=["Linear Projection", "Softmax", "Sampling"],
+            color=ACCENT_COLOR_2,
+        )
+
+        input_block.move_to(LEFT * 4.4 + DOWN * 0.3)
+        transformer_block.move_to(DOWN * 0.3)
+        output_block.move_to(RIGHT * 4.4 + DOWN * 0.3)
+
+        arrow_1 = Arrow(
+            input_block.get_right(), transformer_block.get_left(),
+            buff=0.15, color=GRAY_B, stroke_width=2,
+        )
+        arrow_2 = Arrow(
+            transformer_block.get_right(), output_block.get_left(),
+            buff=0.15, color=GRAY_B, stroke_width=2,
+        )
+
+        self.play(
+            LaggedStart(
+                FadeIn(input_block, shift=UP * 0.3),
+                FadeIn(transformer_block, shift=UP * 0.3),
+                FadeIn(output_block, shift=UP * 0.3),
+                lag_ratio=0.15,
+            ),
+            run_time=1.5,
+        )
+        self.play(GrowArrow(arrow_1), GrowArrow(arrow_2), run_time=0.6)
+        self.wait(0.5)
+
+        self.tsp_input_block = input_block
+        self.tsp_transformer_block = transformer_block
+        self.tsp_output_block = output_block
+        self.tsp_arrow_1 = arrow_1
+        self.tsp_arrow_2 = arrow_2
+        self.wait(1.0)
+
+    # ------------------------------------------------------------------
+    # Reusable zoom-back helper
+    # ------------------------------------------------------------------
+
+    def zoom_back_to_three_stage(self):
+        """Fade out current content and restore the three-stage pipeline view."""
+        self.play(*[FadeOut(m) for m in self.mobjects], run_time=1.0)
+
+        title = Text(
+            "Three Stages of a Language Model",
+            font_size=28, color=ACCENT_COLOR,
+        )
+        title.to_edge(UP, buff=0.3)
+
+        input_block = PipelineStageBlock(
+            title="Input Encoding",
+            sub_items=["Tokenization", "Embedding Lookup", "Positional Encoding"],
+            color=ACCENT_COLOR,
+        )
+        transformer_block = PipelineStageBlock(
+            title="Transformer Core",
+            sub_items=["Self-Attention", "Feed-Forward (FFN)",
+                       "Residual Connections", "Layer Normalization"],
+            color=TRANSFORMER_RED,
+        )
+        output_block = PipelineStageBlock(
+            title="Output Decoding",
+            sub_items=["Linear Projection", "Softmax", "Sampling"],
+            color=ACCENT_COLOR_2,
+        )
+
+        input_block.move_to(LEFT * 4.4 + DOWN * 0.3)
+        transformer_block.move_to(DOWN * 0.3)
+        output_block.move_to(RIGHT * 4.4 + DOWN * 0.3)
+
+        arrow_1 = Arrow(
+            input_block.get_right(), transformer_block.get_left(),
+            buff=0.15, color=GRAY_B, stroke_width=2,
+        )
+        arrow_2 = Arrow(
+            transformer_block.get_right(), output_block.get_left(),
+            buff=0.15, color=GRAY_B, stroke_width=2,
+        )
+
+        self.play(
+            FadeIn(title),
+            FadeIn(input_block), FadeIn(transformer_block), FadeIn(output_block),
+            FadeIn(arrow_1), FadeIn(arrow_2),
+            run_time=1.0,
+        )
+
+        self.tsp_title = title
+        self.tsp_input_block = input_block
+        self.tsp_transformer_block = transformer_block
+        self.tsp_output_block = output_block
+        self.tsp_arrow_1 = arrow_1
+        self.tsp_arrow_2 = arrow_2
+
+    # ------------------------------------------------------------------
+    # PHASE 2.5 — Zoom into each stage
+    # ------------------------------------------------------------------
+
+    def transition_to_input_encoding(self):
+        """Zoom into the Input Encoding block."""
+        zoom_cover = self.zoom_into_block(
+            target=self.tsp_input_block,
+            box_attr='box',
+            fade_out=[self.tsp_title, self.tsp_transformer_block,
+                      self.tsp_output_block, self.tsp_arrow_1, self.tsp_arrow_2],
+            question_text="What does an LLM read?",
+            inner_fade_attrs=['title_text', 'separator', 'sub_labels'],
+        )
 
         inner_title = Text(
-            "Inside the Language Model",
+            "Input Encoding",
             font_size=32, color=ACCENT_COLOR,
         )
         inner_title.to_edge(UP, buff=0.5)
@@ -528,22 +739,49 @@ class LanguageModelingPipeline(Scene):
         sentence_group = VGroup(sentence_label, sentence_text).arrange(RIGHT, buff=0.3)
         sentence_group.next_to(inner_title, DOWN, buff=0.8)
 
-        self.add_behind(inner_title, sentence_label, sentence_text)
-
-        self.play(
-            FadeOut(zoom_cover),
-            run_time=1.5,
-            rate_func=rush_from,
-        )
+        self.reveal_after_zoom(zoom_cover, inner_title, sentence_label, sentence_text)
 
         self.title = inner_title
         self.sentence_text = sentence_text
         self.sentence_label = sentence_label
 
-    def add_behind(self, *mobjects):
-        for m in mobjects:
-            self.add(m)
-            self.bring_to_back(m)
+    def transition_to_transformer_core(self):
+        """Zoom into the Transformer Core block."""
+        zoom_cover = self.zoom_into_block(
+            target=self.tsp_transformer_block,
+            box_attr='box',
+            fade_out=[self.tsp_title, self.tsp_input_block,
+                      self.tsp_output_block, self.tsp_arrow_1, self.tsp_arrow_2],
+            question_text="How does context emerge?",
+            inner_fade_attrs=['title_text', 'separator', 'sub_labels'],
+            stroke_color=TRANSFORMER_RED,
+        )
+
+        inner_title = Text(
+            "Transformer Core",
+            font_size=32, color=TRANSFORMER_RED,
+        )
+        inner_title.to_edge(UP, buff=0.5)
+        self.reveal_after_zoom(zoom_cover, inner_title)
+
+    def transition_to_output_decoding(self):
+        """Zoom into the Output Decoding block."""
+        zoom_cover = self.zoom_into_block(
+            target=self.tsp_output_block,
+            box_attr='box',
+            fade_out=[self.tsp_title, self.tsp_input_block,
+                      self.tsp_transformer_block, self.tsp_arrow_1, self.tsp_arrow_2],
+            question_text="How does it choose the next word?",
+            inner_fade_attrs=['title_text', 'separator', 'sub_labels'],
+            stroke_color=ACCENT_COLOR_2,
+        )
+
+        inner_title = Text(
+            "Output Decoding",
+            font_size=32, color=ACCENT_COLOR_2,
+        )
+        inner_title.to_edge(UP, buff=0.5)
+        self.reveal_after_zoom(zoom_cover, inner_title)
 
     # ------------------------------------------------------------------
     # PHASE 3 — Detailed pipeline
@@ -745,7 +983,7 @@ class LanguageModelingPipeline(Scene):
 
         # ── Transition: replace with a clean TensorMatrix for next phase ──
         emb_matrix = TensorMatrix(T, D_MODEL, cell_size=0.22, label="E: t × d")
-        emb_matrix.move_to(LEFT * 3.5 + DOWN * 0.5)
+        emb_matrix.move_to(DOWN * 0.5)
 
         self.play(
             FadeOut(weight_group),
@@ -753,20 +991,82 @@ class LanguageModelingPipeline(Scene):
             FadeOut(extracted_rows),
             run_time=1.2,
         )
+        self.play(FadeIn(emb_matrix), run_time=0.6)
         self.wait(0.3)
 
         self.emb_matrix = emb_matrix
 
+    def show_positional_encoding(self):
+        """Positional encoding: X₀ = E + P."""
+        # ── Clean up previous elements for space ──
+        self.play(
+            FadeOut(self.token_row), FadeOut(self.id_row),
+            run_time=0.6,
+        )
+
+        # ── Update stage label ──
+        new_stage = Text("4. Positional Encoding", font_size=24, color=ACCENT_COLOR_2)
+        new_stage.move_to(self.stage_label)
+        self.play(Transform(self.stage_label, new_stage), run_time=0.5)
+
+        # ── Reposition E matrix to the left ──
+        e_mat = self.emb_matrix
+        self.play(e_mat.animate.move_to(LEFT * 4.2 + DOWN * 0.3), run_time=0.5)
+
+        # ── Build E + P = X₀ layout ──
+        plus = MathTex("+", font_size=32, color=TEXT_COLOR)
+        plus.next_to(e_mat, RIGHT, buff=0.3)
+
+        pe_mat = TensorMatrix(T, D_MODEL, cell_size=0.22, label="P: t × d", seed=77)
+        pe_mat.next_to(plus, RIGHT, buff=0.3)
+
+        equals = MathTex("=", font_size=32, color=TEXT_COLOR)
+        equals.next_to(pe_mat, RIGHT, buff=0.3)
+
+        x0_mat = TensorMatrix(T, D_MODEL, cell_size=0.22, label="X₀: t × d", seed=99)
+        x0_mat.next_to(equals, RIGHT, buff=0.3)
+
+        # ── Equation ──
+        new_eq = EquationLabel(
+            [
+                r"X_0 = E + P",
+                r"PE_{(pos,2i)} = \sin\!\left(\tfrac{pos}{10000^{2i/d}}\right)",
+                r"PE_{(pos,2i+1)} = \cos\!\left(\tfrac{pos}{10000^{2i/d}}\right)",
+            ],
+            font_size=22,
+        )
+        new_eq.scale(0.7).to_edge(RIGHT, buff=0.3).shift(UP * 2.5)
+
+        # ── Animate ──
+        self.play(FadeIn(plus), FadeIn(pe_mat, shift=DOWN * 0.2), run_time=0.8)
+        self.play(Transform(self.current_eq, new_eq), run_time=0.8)
+        self.wait(0.5)
+
+        # ── Show the summation result ──
+        self.play(FadeIn(equals), FadeIn(x0_mat, shift=DOWN * 0.2), run_time=0.8)
+        self.wait(0.5)
+
+        # ── Brief highlight: sine-wave intuition ──
+        intuition = Text(
+            "Each position gets a unique signature from sin/cos waves",
+            font_size=16, color=GRAY_B,
+        )
+        intuition.next_to(VGroup(e_mat, x0_mat), DOWN, buff=0.6)
+        self.play(FadeIn(intuition), run_time=0.5)
+        self.wait(1.0)
+        self.play(FadeOut(intuition), run_time=0.4)
+        self.wait(0.3)
+
     # ------------------------------------------------------------------
-    # PHASE 4 — Full transformer forward-pass pipeline
+    # PHASE 4 — Transformer core pipeline
     # ------------------------------------------------------------------
 
     def show_transformer_pipeline(self):
-        """Full transformer forward pass — matrix travels through pipeline with equations."""
+        """Transformer core: MHA → Add&Norm → FFN → Add&Norm with equations."""
         # ── Clear previous phase ──
         self.play(*[FadeOut(m) for m in self.mobjects], run_time=2.0)
 
-        title = Text("Transformer Forward Pass", font_size=28, color=ACCENT_COLOR)
+        title = Text("Transformer Core", font_size=28, color=TRANSFORMER_RED)
         title.to_edge(UP, buff=0.25)
 
         # ── Layout constants ──
@@ -776,17 +1076,12 @@ class LanguageModelingPipeline(Scene):
         MAT_X = PIPELINE_X - BW / 2 - 1.2
         EQ_X = 3.5
 
-        # ── Block definitions ──
+        # ── Block definitions (core transformer only) ──
         block_data = [
-            ("Token Embeddings",                 ACCENT_COLOR, 13),   # 0
-            ("+ Positional Embeddings",          ACCENT_COLOR, 13),   # 1
-            ("Masked Multi-Head Self-Attention \n\t\t\t\t\t(MHA)",  "#e57373",   10),   # 2
-            ("Add & Norm",                   "#ffb74d",   13),   # 3
-            ("Feed Forward Network \n\t\t\t\t(FFN)",                "#e57373",   13),   # 4
-            ("Add & Norm",                   "#ffb74d",   13),   # 5
-            ("Linear Projection",                 ACCENT_COLOR, 13),  # 6
-            ("Softmax",                           ACCENT_COLOR, 13),  # 7
-            ("Next-token Probabilities",          YELLOW,      13),   # 8
+            ("Masked Multi-Head Self-Attention \n\t\t\t\t\t(MHA)",  TRANSFORMER_RED, 10),
+            ("Add & Norm",                   "#ffb74d",   13),
+            ("Feed Forward Network \n\t\t\t\t(FFN)",  TRANSFORMER_RED, 13),
+            ("Add & Norm",                   "#ffb74d",   13),
         ]
         orig_colors = [c for _, c, _ in block_data]
 
@@ -816,95 +1111,83 @@ class LanguageModelingPipeline(Scene):
             )
             arrows.add(a)
 
-        # ── Transformer Block container (blocks 2–5) ──
-        tf_inner = VGroup(blocks[2], blocks[3], blocks[4], blocks[5])
+        # ── Container with ×N label ──
         container = SurroundingRectangle(
-            tf_inner, buff=0.25,
+            pipeline, buff=0.25,
             stroke_color=GRAY_A, stroke_width=1.5, fill_opacity=0.05,
         )
         brace = Brace(container, RIGHT, buff=0.15, color=GRAY_B)
         n_label = MathTex(r"\times N", font_size=18, color=GRAY_B)
         n_label.next_to(brace, RIGHT, buff=0.08)
 
-    # ── Residual arrows (orthogonal + smooth bends) ──
+        # ── Residual arrows ──
         from manim import CubicBezier
 
         res_color = "#66bb6a"
 
         def residual_ortho(
-            flow_arrow,
-            dst_block,
-            x_offset=1.6,
-            bend_radius=0.18,
-            into_box=0.06,
-            stroke_w=2.2,
+            flow_arrow, dst_block,
+            x_offset=1.6, bend_radius=0.18, into_box=0.06, stroke_w=2.2,
         ):
             start = flow_arrow.get_center() + RIGHT * 0.05
-
             end_y = dst_block.get_center()[1]
             end_x = dst_block[0].get_right()[0] - into_box
             end = np.array([end_x, end_y, 0])
-
             bend_x = start[0] + x_offset
 
-            # Hard corner points
             A = start
             B = np.array([bend_x, start[1], 0])
             C = np.array([bend_x, end_y, 0])
             D = end
 
-            # Direction vectors
-            h = RIGHT
-            v = UP if C[1] > B[1] else DOWN
-            l = LEFT
-
+            h, v, l = RIGHT, (UP if C[1] > B[1] else DOWN), LEFT
             r = bend_radius
 
-            # Rounded control points
             A2 = B - h * r
             B2 = B + v * r
             C1 = C - v * r
             C2 = C + l * r
 
-            seg1 = Line(A, A2)
-
-            curve1 = CubicBezier(
-                A2,
-                A2 + h * r,
-                B2 - v * r,
-                B2,
+            path = VGroup(
+                Line(A, A2),
+                CubicBezier(A2, A2 + h * r, B2 - v * r, B2),
+                Line(B2, C1),
+                CubicBezier(C1, C1 + v * r, C2 - l * r, C2),
+                Line(C2, D),
             )
-
-            seg2 = Line(B2, C1)
-
-            curve2 = CubicBezier(
-                C1,
-                C1 + v * r,
-                C2 - l * r,
-                C2,
-            )
-
-            seg3 = Line(C2, D)
-
-            path = VGroup(seg1, curve1, seg2, curve2, seg3)
-            path.set_stroke(res_color, width=stroke_w)
-            path.set_z_index(3)
+            path.set_stroke(res_color, width=stroke_w).set_z_index(3)
 
             tip = ArrowTriangleFilledTip(color=res_color)
             tip.scale(0.35)
             tip.rotate(angle_of_vector(D - C2) + PI)
             tip.shift(D - tip.get_tip_point())
             tip.set_z_index(4)
-
             return VGroup(path, tip)
 
-        # Attention residual (skip around MHA into Add&LN)
-        res1 = residual_ortho(arrows[1], blocks[3], x_offset=1.37)
+        # Input arrow (X₀ entering from below)
+        input_arrow = Arrow(
+            blocks[0].get_bottom() + DOWN * 0.6, blocks[0].get_bottom(),
+            buff=0.02, color=GRAY_B, stroke_width=1.5,
+            max_tip_length_to_length_ratio=0.25,
+        )
+        input_label = MathTex("X_0", font_size=18, color=ACCENT_COLOR)
+        input_label.next_to(input_arrow, DOWN, buff=0.05)
 
-        # FFN residual (skip around MLP into Add&LN)
-        res2 = residual_ortho(arrows[3], blocks[5], x_offset=1.37)
+        # Output arrow (X₂ leaving from top)
+        output_arrow = Arrow(
+            blocks[-1].get_top(), blocks[-1].get_top() + UP * 0.6,
+            buff=0.02, color=GRAY_B, stroke_width=1.5,
+            max_tip_length_to_length_ratio=0.25,
+        )
+        output_label = MathTex("X_N", font_size=18, color=ACCENT_COLOR)
+        output_label.next_to(output_arrow, UP, buff=0.05)
 
-        # ── Phase 1: Show full pipeline structure quickly ──
+        # Attention residual (skip around MHA → Add&Norm)
+        res1 = residual_ortho(arrows[0], blocks[1], x_offset=1.37)
+        # FFN residual (skip around FFN → Add&Norm)
+        res2 = residual_ortho(arrows[1], blocks[3], x_offset=1.37)
+
+        # ── Phase 1: Show pipeline structure ──
         self.play(FadeIn(title), run_time=0.5)
         self.play(
             LaggedStart(*[FadeIn(b, shift=UP * 0.05) for b in blocks], lag_ratio=0.05),
@@ -914,32 +1197,26 @@ class LanguageModelingPipeline(Scene):
         self.play(
             Create(container),
             GrowFromCenter(brace), FadeIn(n_label),
+            GrowArrow(input_arrow), FadeIn(input_label),
+            GrowArrow(output_arrow), FadeIn(output_label),
             Create(res1), Create(res2),
             run_time=0.6,
         )
         self.wait(0.5)
 
         # ── Phase 2: Traveling matrix with per-stage equations ──
-        mat = TensorMatrix(T, D_MODEL, cell_size=0.15, label=None)
+        mat = TensorMatrix(T, D_MODEL, cell_size=0.15, label=None, seed=99)
         mat.move_to(np.array([MAT_X, blocks[0].get_center()[1] - 0.8, 0]))
 
-        mat_label = MathTex("E", font_size=20, color=ACCENT_COLOR)
+        mat_label = MathTex("X_0", font_size=20, color=ACCENT_COLOR)
         mat_label.next_to(mat, DOWN, buff=0.1)
 
         self.play(FadeIn(mat, shift=UP * 0.3), FadeIn(mat_label), run_time=0.5)
 
-        # Stage definitions: (active_block_indices, equation_lines, new_label)
+        # Stage definitions: (active_block_indices, equation_lines, new_label, font_size)
         stages = [
             (
-                [0, 1],
-                [
-                    r"X_0 = E + P",
-                ],
-                "X_0",
-                22,
-            ),
-            (
-                [2],
+                [0],
                 [
                     r"Q = XW_Q,\; K = XW_K,\; V = XW_V",
                     r"M_{ij}=\begin{cases}0,& j\le i\\ -\infty,& j>i\end{cases}",
@@ -950,7 +1227,7 @@ class LanguageModelingPipeline(Scene):
                 20,
             ),
             (
-                [3],
+                [1],
                 [
                     r"X_1 = \text{LayerNorm}\!\left(X_0 + \text{MHA}(X_0)\right)",
                     r"\text{LN}(X)=\frac{X-\mu}{\sqrt{\sigma^2+\epsilon}}\odot\gamma+\beta",
@@ -959,7 +1236,7 @@ class LanguageModelingPipeline(Scene):
                 20,
             ),
             (
-                [4],
+                [2],
                 [
                     r"\text{FFN}(X) = \sigma(XW_1 + b_1)\,W_2 + b_2",
                     r"\sigma=\text{GELU}",
@@ -968,24 +1245,9 @@ class LanguageModelingPipeline(Scene):
                 20,
             ),
             (
-                [5],
+                [3],
                 [r"X_2 = \text{LayerNorm}\!\left(X_1 + \text{FFN}(X_1)\right)"],
                 "X_2",
-                20,
-            ),
-            (
-                [6],
-                [r"Z = X_2\, W_{\text{out}} + b_{\text{out}}"],
-                "Z",
-                22,
-            ),
-            (
-                [7, 8],
-                [
-                    r"p = \text{softmax}(Z)",
-                    r"p(x_t\mid x_{<t}; \theta) = \text{softmax}(z_t)",
-                ],
-                "p",
                 20,
             ),
         ]
@@ -993,20 +1255,16 @@ class LanguageModelingPipeline(Scene):
         prev_eq = None
 
         for s_blocks, eq_lines, new_label, eq_font_size in stages:
-            # Target: vertically center matrix with active block(s)
             target_y = np.mean([blocks[i].get_center()[1] for i in s_blocks])
             target_pos = np.array([MAT_X, target_y, 0])
             label_pos = np.array([MAT_X, target_y - mat.height / 2 - 0.12, 0])
 
-            # Build equation group for this stage
             eq_panel = EquationLabel(eq_lines, font_size=eq_font_size)
             eq_panel.move_to(np.array([EQ_X, target_y, 0]))
 
-            # Keep equations inside the frame
             if eq_panel.get_right()[0] > 6.8:
                 eq_panel.shift(LEFT * (eq_panel.get_right()[0] - 6.8))
 
-            # ── A: Move matrix + highlight active blocks ──
             anims = [mat.animate.move_to(target_pos)]
 
             if new_label:
@@ -1021,7 +1279,6 @@ class LanguageModelingPipeline(Scene):
 
             self.play(*anims, run_time=0.6)
 
-            # ── B: Swap equations ──
             if prev_eq:
                 self.play(FadeOut(prev_eq, shift=UP * 0.15), run_time=0.25)
 
@@ -1034,15 +1291,207 @@ class LanguageModelingPipeline(Scene):
             prev_eq = eq_panel
             self.wait(1.0)
 
-            # ── C: De-highlight blocks ──
             self.play(
                 *[blocks[idx][0].animate.set_stroke(orig_colors[idx], width=2)
                   for idx in s_blocks],
                 run_time=0.3,
             )
 
-        # Final fade of last equation
         if prev_eq:
             self.play(FadeOut(prev_eq), run_time=0.5)
 
+        self.wait(1.0)
+
+    # ------------------------------------------------------------------
+    # PHASE 5 — Output decoding pipeline
+    # ------------------------------------------------------------------
+
+    def show_output_decoding(self):
+        """Linear projection → softmax → next-token probabilities."""
+        # ── Clear previous phase ──
+        self.play(*[FadeOut(m) for m in self.mobjects], run_time=1.5)
+
+        title = Text("Output Decoding", font_size=28, color=ACCENT_COLOR_2)
+        title.to_edge(UP, buff=0.25)
+
+        # ── Layout constants ──
+        BW, BH = 2.5, 0.38
+        GAP = 0.34
+        PIPELINE_X = -1.5
+        MAT_X = PIPELINE_X - BW / 2 - 1.2
+        EQ_X = 3.5
+
+        # ── Block definitions ──
+        block_data = [
+            ("Linear Projection",        ACCENT_COLOR_2, 13),
+            ("Softmax",                   ACCENT_COLOR_2, 13),
+            ("Next-token Probabilities",  YELLOW,         13),
+        ]
+        orig_colors = [c for _, c, _ in block_data]
+
+        def make_block(label, color, fs):
+            box = RoundedRectangle(
+                width=BW, height=BH, corner_radius=0.08,
+                stroke_color=color, stroke_width=2,
+                fill_color=BOX_COLOR, fill_opacity=0.75,
+            )
+            txt = Text(label, font_size=fs, color=color)
+            txt.move_to(box)
+            return VGroup(box, txt)
+
+        blocks = [make_block(*d) for d in block_data]
+
+        pipeline = VGroup(*blocks)
+        pipeline.arrange(UP, buff=GAP)
+        pipeline.move_to(np.array([PIPELINE_X, -0.5, 0]))
+
+        # ── Connecting arrows ──
+        arrows = VGroup()
+        for i in range(len(blocks) - 1):
+            a = Arrow(
+                blocks[i].get_top(), blocks[i + 1].get_bottom(),
+                buff=0.02, color=GRAY_B, stroke_width=1.5,
+                max_tip_length_to_length_ratio=0.25,
+            )
+            arrows.add(a)
+
+        # Input arrow (X_N entering from below)
+        input_arrow = Arrow(
+            blocks[0].get_bottom() + DOWN * 0.6, blocks[0].get_bottom(),
+            buff=0.02, color=GRAY_B, stroke_width=1.5,
+            max_tip_length_to_length_ratio=0.25,
+        )
+        input_label = MathTex("X_N", font_size=18, color=TRANSFORMER_RED)
+        input_label.next_to(input_arrow, DOWN, buff=0.05)
+
+        # ── Phase 1: Show pipeline ──
+        self.play(FadeIn(title), run_time=0.5)
+        self.play(
+            LaggedStart(*[FadeIn(b, shift=UP * 0.05) for b in blocks], lag_ratio=0.05),
+            LaggedStart(*[GrowArrow(a) for a in arrows], lag_ratio=0.05),
+            GrowArrow(input_arrow), FadeIn(input_label),
+            run_time=1.0,
+        )
+        self.wait(0.5)
+
+        # ── Phase 2: Traveling matrix with equations ──
+        mat = TensorMatrix(T, D_MODEL, cell_size=0.15, label=None, seed=55)
+        mat.move_to(np.array([MAT_X, blocks[0].get_center()[1] - 0.8, 0]))
+
+        mat_label = MathTex("X_N", font_size=20, color=TRANSFORMER_RED)
+        mat_label.next_to(mat, DOWN, buff=0.1)
+
+        self.play(FadeIn(mat, shift=UP * 0.3), FadeIn(mat_label), run_time=0.5)
+
+        stages = [
+            (
+                [0],
+                [r"Z = X_N\, W_{\text{vocab}} + b_{\text{vocab}}",
+                 r"Z \in \mathbb{R}^{T \times |V|}"],
+                "Z",
+                22,
+            ),
+            (
+                [1],
+                [r"p_t = \text{softmax}(z_t)",
+                 r"p(x_t \mid x_{<t};\theta) = \frac{e^{z_t[i]}}{\sum_j e^{z_t[j]}}"],
+                "p",
+                20,
+            ),
+        ]
+
+        prev_eq = None
+
+        for s_blocks, eq_lines, new_label, eq_font_size in stages:
+            target_y = np.mean([blocks[i].get_center()[1] for i in s_blocks])
+            target_pos = np.array([MAT_X, target_y, 0])
+            label_pos = np.array([MAT_X, target_y - mat.height / 2 - 0.12, 0])
+
+            eq_panel = EquationLabel(eq_lines, font_size=eq_font_size)
+            eq_panel.move_to(np.array([EQ_X, target_y, 0]))
+
+            if eq_panel.get_right()[0] > 6.8:
+                eq_panel.shift(LEFT * (eq_panel.get_right()[0] - 6.8))
+
+            anims = [mat.animate.move_to(target_pos)]
+
+            if new_label:
+                new_lbl = MathTex(new_label, font_size=20, color=ACCENT_COLOR_2)
+                new_lbl.move_to(label_pos)
+                anims.append(Transform(mat_label, new_lbl))
+            else:
+                anims.append(mat_label.animate.move_to(label_pos))
+
+            for idx in s_blocks:
+                anims.append(blocks[idx][0].animate.set_stroke(YELLOW, width=3))
+
+            self.play(*anims, run_time=0.6)
+
+            if prev_eq:
+                self.play(FadeOut(prev_eq, shift=UP * 0.15), run_time=0.25)
+
+            self.play(FadeIn(eq_panel.background), run_time=0.3)
+            self.play(
+                LaggedStart(*[FadeIn(eq) for eq in eq_panel.equations], lag_ratio=0.3),
+                run_time=max(0.7, len(eq_lines) * 0.45),
+            )
+            self.add(eq_panel)
+            prev_eq = eq_panel
+            self.wait(1.0)
+
+            self.play(
+                *[blocks[idx][0].animate.set_stroke(orig_colors[idx], width=2)
+                  for idx in s_blocks],
+                run_time=0.3,
+            )
+
+        # ── Final stage: show probability distribution ──
+        if prev_eq:
+            self.play(FadeOut(prev_eq), run_time=0.5)
+
+        target_y = blocks[2].get_center()[1]
+        self.play(
+            mat.animate.move_to(np.array([MAT_X, target_y, 0])),
+            mat_label.animate.move_to(
+                np.array([MAT_X, target_y - mat.height / 2 - 0.12, 0])
+            ),
+            blocks[2][0].animate.set_stroke(YELLOW, width=3),
+            run_time=0.6,
+        )
+
+        dist = CompactDistribution(
+            BLACKBOX_ITERATIONS[0]["top_tokens"],
+            BLACKBOX_ITERATIONS[0]["probs"],
+        )
+        dist.move_to(np.array([EQ_X, target_y, 0]))
+
+        sample_eq = EquationLabel(
+            [r"x_t \sim \mathrm{Categorical}\big(p(\cdot \mid x_{<t}; \theta)\big)"],
+            font_size=20,
+        )
+        sample_eq.next_to(dist, UP, buff=0.3)
+
+        self.play(
+            LaggedStart(
+                *[FadeIn(r, shift=LEFT * 0.2) for r in dist.token_groups],
+                lag_ratio=0.08,
+            ),
+            run_time=0.8,
+        )
+        self.play(FadeIn(sample_eq), run_time=0.5)
+
+        # Highlight the selected token
+        sel_idx = BLACKBOX_ITERATIONS[0]["top_tokens"].index(
+            BLACKBOX_ITERATIONS[0]["selected"]
+        )
+        highlight = SurroundingRectangle(
+            dist.token_groups[sel_idx], color=YELLOW, stroke_width=2, buff=0.06,
+        )
+        self.play(Create(highlight), run_time=0.4)
+        self.wait(1.0)
+
+        self.play(
+            blocks[2][0].animate.set_stroke(orig_colors[2], width=2),
+            run_time=0.3,
+        )
         self.wait(1.0)
