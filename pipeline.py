@@ -383,11 +383,23 @@ class LanguageModelingPipeline(Scene):
         self.show_embeddings()
         self.show_positional_encoding()
 
-        self.zoom_back_to_three_stage()
+        # Handoff: X₀ travels from Input Encoding → Transformer Core
+        self.zoom_back_to_three_stage(
+            handoff_from='input',
+            handoff_to='transformer',
+            matrix_label="X_0",
+            narrative_text="X₀ is ready—let's pass it to the Transformer!",
+        )
         self.transition_to_transformer_core()
         self.show_transformer_pipeline()
 
-        self.zoom_back_to_three_stage()
+        # Handoff: X_N travels from Transformer Core → Output Decoding
+        self.zoom_back_to_three_stage(
+            handoff_from='transformer',
+            handoff_to='output',
+            matrix_label="X_N",
+            narrative_text="The Transformer outputs X_N—rich contextual embeddings.",
+        )
         self.transition_to_output_decoding()
         self.show_output_decoding()
         self.wait(2)
@@ -659,8 +671,13 @@ class LanguageModelingPipeline(Scene):
     # Reusable zoom-back helper
     # ------------------------------------------------------------------
 
-    def zoom_back_to_three_stage(self):
-        """Fade out current content and restore the three-stage pipeline view."""
+    def zoom_back_to_three_stage(self, handoff_from=None, handoff_to=None,
+                                  matrix_label=None, narrative_text=None):
+        """Fade out current content and restore the three-stage pipeline view.
+
+        If handoff_from and handoff_to are specified (e.g., 'input', 'transformer', 'output'),
+        show a matrix traveling between those stages with narrative text.
+        """
         self.play(*[FadeOut(m) for m in self.mobjects], run_time=1.0)
 
         title = Text(
@@ -713,18 +730,91 @@ class LanguageModelingPipeline(Scene):
         self.tsp_arrow_1 = arrow_1
         self.tsp_arrow_2 = arrow_2
 
+        # ── Handoff animation: show matrix traveling between stages ──
+        if handoff_from and handoff_to:
+            block_map = {
+                'input': input_block,
+                'transformer': transformer_block,
+                'output': output_block,
+            }
+            color_map = {
+                'input': ACCENT_COLOR,
+                'transformer': TRANSFORMER_RED,
+                'output': ACCENT_COLOR_2,
+            }
+
+            from_block = block_map[handoff_from]
+            to_block = block_map[handoff_to]
+
+            # Create traveling matrix
+            mat = TensorMatrix(3, 4, cell_size=0.12, seed=99)
+            mat.move_to(from_block.get_center())
+            mat.scale(0.8)
+
+            label_text = matrix_label or "X"
+            mat_label = MathTex(label_text, font_size=16, color=color_map[handoff_from])
+            mat_label.next_to(mat, DOWN, buff=0.08)
+
+            self.play(FadeIn(mat), FadeIn(mat_label), run_time=0.5)
+
+            # Show narrative text
+            if narrative_text:
+                narr = Text(narrative_text, font_size=20, color=GRAY_A)
+                narr.to_edge(DOWN, buff=0.6)
+                self.play(FadeIn(narr, shift=UP * 0.2), run_time=0.6)
+                self.wait(1.2)
+                self.play(FadeOut(narr), run_time=0.4)
+
+            # Animate matrix traveling to next block
+            new_label = MathTex(label_text, font_size=16, color=color_map[handoff_to])
+            new_label.next_to(to_block.get_center(), DOWN, buff=0.08)
+
+            # Determine the arrow to highlight based on direction
+            if handoff_from == 'input' and handoff_to == 'transformer':
+                travel_arrow = arrow_1
+            elif handoff_from == 'transformer' and handoff_to == 'output':
+                travel_arrow = arrow_2
+            else:
+                travel_arrow = None
+
+            if travel_arrow:
+                self.play(travel_arrow.animate.set_color(YELLOW), run_time=0.3)
+
+            self.play(
+                mat.animate.move_to(to_block.get_center()).scale(1.0),
+                Transform(mat_label, new_label),
+                run_time=1.2,
+                rate_func=smooth,
+            )
+
+            if travel_arrow:
+                self.play(travel_arrow.animate.set_color(GRAY_B), run_time=0.3)
+
+            # Fade out the matrix before zooming in
+            self.play(FadeOut(mat), FadeOut(mat_label), run_time=0.5)
+
     # ------------------------------------------------------------------
     # PHASE 2.5 — Zoom into each stage
     # ------------------------------------------------------------------
 
     def transition_to_input_encoding(self):
-        """Zoom into the Input Encoding block."""
+        """Zoom into the Input Encoding block with narrative motivation."""
+        # ── Narrative: Why do we need Input Encoding? ──
+        motivation = Text(
+            "Transformers can't process raw text—they need numbers.",
+            font_size=22, color=GRAY_A,
+        )
+        motivation.to_edge(DOWN, buff=0.8)
+        self.play(FadeIn(motivation, shift=UP * 0.2), run_time=0.8)
+        self.wait(1.0)
+        self.play(FadeOut(motivation), run_time=0.5)
+
         zoom_cover = self.zoom_into_block(
             target=self.tsp_input_block,
             box_attr='box',
             fade_out=[self.tsp_title, self.tsp_transformer_block,
                       self.tsp_output_block, self.tsp_arrow_1, self.tsp_arrow_2],
-            question_text="What does an LLM read?",
+            question_text="How do we convert text to numbers?",
             inner_fade_attrs=['title_text', 'separator', 'sub_labels'],
         )
 
@@ -746,42 +836,70 @@ class LanguageModelingPipeline(Scene):
         self.sentence_label = sentence_label
 
     def transition_to_transformer_core(self):
-        """Zoom into the Transformer Core block."""
+        """Zoom into the Transformer Core block with narrative motivation."""
+        # ── Narrative: Why do we need the Transformer? ──
+        motivation = Text(
+            "We have numbers... but they're just random embeddings.",
+            font_size=22, color=GRAY_A,
+        )
+        motivation.to_edge(DOWN, buff=0.8)
+        self.play(FadeIn(motivation, shift=UP * 0.2), run_time=0.8)
+        self.wait(1.0)
+
+        motivation2 = Text(
+            "How do we make sense of this and predict the next word?",
+            font_size=22, color=GRAY_A,
+        )
+        motivation2.to_edge(DOWN, buff=0.8)
+        self.play(Transform(motivation, motivation2), run_time=0.6)
+        self.wait(1.0)
+        self.play(FadeOut(motivation), run_time=0.5)
+
         zoom_cover = self.zoom_into_block(
             target=self.tsp_transformer_block,
             box_attr='box',
             fade_out=[self.tsp_title, self.tsp_input_block,
                       self.tsp_output_block, self.tsp_arrow_1, self.tsp_arrow_2],
-            question_text="How does context emerge?",
+            question_text="This is where the magic happens...",
             inner_fade_attrs=['title_text', 'separator', 'sub_labels'],
             stroke_color=TRANSFORMER_RED,
         )
 
-        inner_title = Text(
-            "Transformer Core",
-            font_size=32, color=TRANSFORMER_RED,
-        )
-        inner_title.to_edge(UP, buff=0.5)
-        self.reveal_after_zoom(zoom_cover, inner_title)
+        # Just fade out the zoom cover - show_transformer_pipeline will handle content
+        self.play(FadeOut(zoom_cover), run_time=0.8)
 
     def transition_to_output_decoding(self):
-        """Zoom into the Output Decoding block."""
+        """Zoom into the Output Decoding block with narrative motivation."""
+        # ── Narrative: Why do we need Output Decoding? ──
+        motivation = Text(
+            "Wait... X_N is still just numbers!",
+            font_size=24, color=YELLOW,
+        )
+        motivation.to_edge(DOWN, buff=0.9)
+        self.play(FadeIn(motivation, shift=UP * 0.2), run_time=0.8)
+        self.wait(1.0)
+
+        motivation2 = Text(
+            "But we wanted words, not more embeddings...",
+            font_size=22, color=GRAY_A,
+        )
+        motivation2.to_edge(DOWN, buff=0.9)
+        self.play(Transform(motivation, motivation2), run_time=0.6)
+        self.wait(1.0)
+        self.play(FadeOut(motivation), run_time=0.5)
+
         zoom_cover = self.zoom_into_block(
             target=self.tsp_output_block,
             box_attr='box',
             fade_out=[self.tsp_title, self.tsp_input_block,
                       self.tsp_transformer_block, self.tsp_arrow_1, self.tsp_arrow_2],
-            question_text="How does it choose the next word?",
+            question_text="How do we turn embeddings back into words?",
             inner_fade_attrs=['title_text', 'separator', 'sub_labels'],
             stroke_color=ACCENT_COLOR_2,
         )
 
-        inner_title = Text(
-            "Output Decoding",
-            font_size=32, color=ACCENT_COLOR_2,
-        )
-        inner_title.to_edge(UP, buff=0.5)
-        self.reveal_after_zoom(zoom_cover, inner_title)
+        # Just fade out the zoom cover - show_output_decoding will handle content
+        self.play(FadeOut(zoom_cover), run_time=0.8)
 
     # ------------------------------------------------------------------
     # PHASE 3 — Detailed pipeline
@@ -1055,7 +1173,19 @@ class LanguageModelingPipeline(Scene):
         self.play(FadeIn(intuition), run_time=0.5)
         self.wait(1.0)
         self.play(FadeOut(intuition), run_time=0.4)
-        self.wait(0.3)
+
+        # ── Narrative conclusion: X₀ is ready ──
+        conclusion = Text(
+            "Now we have X₀—a numeric matrix the Transformer can process!",
+            font_size=20, color=ACCENT_COLOR,
+        )
+        conclusion.next_to(VGroup(e_mat, x0_mat), DOWN, buff=0.6)
+        self.play(FadeIn(conclusion, shift=UP * 0.2), run_time=0.6)
+        self.wait(1.0)
+
+        # ── Store X₀ for handoff animation ──
+        self.x0_matrix = x0_mat
+        self.x0_conclusion = conclusion
 
     # ------------------------------------------------------------------
     # PHASE 4 — Transformer core pipeline
@@ -1300,178 +1430,201 @@ class LanguageModelingPipeline(Scene):
         if prev_eq:
             self.play(FadeOut(prev_eq), run_time=0.5)
 
+        # ── Narrative conclusion: X_N is ready ──
+        conclusion = Text(
+            "After N layers, we have X_N—embeddings enriched with context!",
+            font_size=20, color=TRANSFORMER_RED,
+        )
+        conclusion.to_edge(DOWN, buff=0.6)
+        self.play(FadeIn(conclusion, shift=UP * 0.2), run_time=0.6)
         self.wait(1.0)
+        self.play(FadeOut(conclusion), run_time=0.4)
+
+        self.wait(0.5)
 
     # ------------------------------------------------------------------
     # PHASE 5 — Output decoding pipeline
     # ------------------------------------------------------------------
 
     def show_output_decoding(self):
-        """Linear projection → softmax → next-token probabilities."""
+        """Linear projection → softmax → next-token probabilities.
+
+        Shows that we only use the final row (x_T) which contains context
+        from all previous tokens via attention.
+        """
         # ── Clear previous phase ──
         self.play(*[FadeOut(m) for m in self.mobjects], run_time=1.5)
 
         title = Text("Output Decoding", font_size=28, color=ACCENT_COLOR_2)
         title.to_edge(UP, buff=0.25)
-
-        # ── Layout constants ──
-        BW, BH = 2.5, 0.38
-        GAP = 0.34
-        PIPELINE_X = -1.5
-        MAT_X = PIPELINE_X - BW / 2 - 1.2
-        EQ_X = 3.5
-
-        # ── Block definitions ──
-        block_data = [
-            ("Linear Projection",        ACCENT_COLOR_2, 13),
-            ("Softmax",                   ACCENT_COLOR_2, 13),
-            ("Next-token Probabilities",  YELLOW,         13),
-        ]
-        orig_colors = [c for _, c, _ in block_data]
-
-        def make_block(label, color, fs):
-            box = RoundedRectangle(
-                width=BW, height=BH, corner_radius=0.08,
-                stroke_color=color, stroke_width=2,
-                fill_color=BOX_COLOR, fill_opacity=0.75,
-            )
-            txt = Text(label, font_size=fs, color=color)
-            txt.move_to(box)
-            return VGroup(box, txt)
-
-        blocks = [make_block(*d) for d in block_data]
-
-        pipeline = VGroup(*blocks)
-        pipeline.arrange(UP, buff=GAP)
-        pipeline.move_to(np.array([PIPELINE_X, -0.5, 0]))
-
-        # ── Connecting arrows ──
-        arrows = VGroup()
-        for i in range(len(blocks) - 1):
-            a = Arrow(
-                blocks[i].get_top(), blocks[i + 1].get_bottom(),
-                buff=0.02, color=GRAY_B, stroke_width=1.5,
-                max_tip_length_to_length_ratio=0.25,
-            )
-            arrows.add(a)
-
-        # Input arrow (X_N entering from below)
-        input_arrow = Arrow(
-            blocks[0].get_bottom() + DOWN * 0.6, blocks[0].get_bottom(),
-            buff=0.02, color=GRAY_B, stroke_width=1.5,
-            max_tip_length_to_length_ratio=0.25,
-        )
-        input_label = MathTex("X_N", font_size=18, color=TRANSFORMER_RED)
-        input_label.next_to(input_arrow, DOWN, buff=0.05)
-
-        # ── Phase 1: Show pipeline ──
         self.play(FadeIn(title), run_time=0.5)
-        self.play(
-            LaggedStart(*[FadeIn(b, shift=UP * 0.05) for b in blocks], lag_ratio=0.05),
-            LaggedStart(*[GrowArrow(a) for a in arrows], lag_ratio=0.05),
-            GrowArrow(input_arrow), FadeIn(input_label),
-            run_time=1.0,
+
+        # ── Phase 1: Show X_N and explain we only need the last row ──
+        xn_mat = TensorMatrix(T, D_MODEL, cell_size=0.22, label="X_N", seed=55)
+        xn_mat.move_to(LEFT * 4 + DOWN * 0.3)
+
+        self.play(FadeIn(xn_mat, shift=UP * 0.3), run_time=0.6)
+
+        # Narrative: explain why we only need the last row
+        explain1 = Text(
+            "X_N has T rows—one embedding per token position.",
+            font_size=18, color=GRAY_A,
         )
-        self.wait(0.5)
+        explain1.next_to(xn_mat, DOWN, buff=0.5)
+        self.play(FadeIn(explain1), run_time=0.5)
+        self.wait(0.8)
 
-        # ── Phase 2: Traveling matrix with equations ──
-        mat = TensorMatrix(T, D_MODEL, cell_size=0.15, label=None, seed=55)
-        mat.move_to(np.array([MAT_X, blocks[0].get_center()[1] - 0.8, 0]))
+        explain2 = Text(
+            "But attention lets x_T 'see' all previous tokens!",
+            font_size=18, color=ACCENT_COLOR,
+        )
+        explain2.next_to(explain1, DOWN, buff=0.2)
+        self.play(FadeIn(explain2), run_time=0.5)
+        self.wait(1.0)
 
-        mat_label = MathTex("X_N", font_size=20, color=TRANSFORMER_RED)
-        mat_label.next_to(mat, DOWN, buff=0.1)
+        # Highlight the last row
+        last_row_cells = VGroup(*[xn_mat.get_cell(T - 1, j) for j in range(D_MODEL)])
+        last_row_highlight = SurroundingRectangle(
+            last_row_cells, color=YELLOW, stroke_width=2, buff=0.02,
+        )
+        self.play(Create(last_row_highlight), run_time=0.4)
 
-        self.play(FadeIn(mat, shift=UP * 0.3), FadeIn(mat_label), run_time=0.5)
+        explain3 = Text(
+            "We only need x_T to predict the next token.",
+            font_size=18, color=YELLOW,
+        )
+        explain3.next_to(explain2, DOWN, buff=0.2)
+        self.play(FadeIn(explain3), run_time=0.5)
+        self.wait(1.0)
 
-        stages = [
-            (
-                [0],
-                [r"Z = X_N\, W_{\text{vocab}} + b_{\text{vocab}}",
-                 r"Z \in \mathbb{R}^{T \times |V|}"],
-                "Z",
-                22,
-            ),
-            (
-                [1],
-                [r"p_t = \text{softmax}(z_t)",
-                 r"p(x_t \mid x_{<t};\theta) = \frac{e^{z_t[i]}}{\sum_j e^{z_t[j]}}"],
-                "p",
-                20,
-            ),
-        ]
+        # Extract the last row as a vector
+        xt_vec = TensorMatrix(1, D_MODEL, cell_size=0.22, label="x_T", seed=55)
+        xt_vec.move_to(LEFT * 4 + DOWN * 0.3)
 
-        prev_eq = None
-
-        for s_blocks, eq_lines, new_label, eq_font_size in stages:
-            target_y = np.mean([blocks[i].get_center()[1] for i in s_blocks])
-            target_pos = np.array([MAT_X, target_y, 0])
-            label_pos = np.array([MAT_X, target_y - mat.height / 2 - 0.12, 0])
-
-            eq_panel = EquationLabel(eq_lines, font_size=eq_font_size)
-            eq_panel.move_to(np.array([EQ_X, target_y, 0]))
-
-            if eq_panel.get_right()[0] > 6.8:
-                eq_panel.shift(LEFT * (eq_panel.get_right()[0] - 6.8))
-
-            anims = [mat.animate.move_to(target_pos)]
-
-            if new_label:
-                new_lbl = MathTex(new_label, font_size=20, color=ACCENT_COLOR_2)
-                new_lbl.move_to(label_pos)
-                anims.append(Transform(mat_label, new_lbl))
-            else:
-                anims.append(mat_label.animate.move_to(label_pos))
-
-            for idx in s_blocks:
-                anims.append(blocks[idx][0].animate.set_stroke(YELLOW, width=3))
-
-            self.play(*anims, run_time=0.6)
-
-            if prev_eq:
-                self.play(FadeOut(prev_eq, shift=UP * 0.15), run_time=0.25)
-
-            self.play(FadeIn(eq_panel.background), run_time=0.3)
-            self.play(
-                LaggedStart(*[FadeIn(eq) for eq in eq_panel.equations], lag_ratio=0.3),
-                run_time=max(0.7, len(eq_lines) * 0.45),
-            )
-            self.add(eq_panel)
-            prev_eq = eq_panel
-            self.wait(1.0)
-
-            self.play(
-                *[blocks[idx][0].animate.set_stroke(orig_colors[idx], width=2)
-                  for idx in s_blocks],
-                run_time=0.3,
-            )
-
-        # ── Final stage: show probability distribution ──
-        if prev_eq:
-            self.play(FadeOut(prev_eq), run_time=0.5)
-
-        target_y = blocks[2].get_center()[1]
         self.play(
-            mat.animate.move_to(np.array([MAT_X, target_y, 0])),
-            mat_label.animate.move_to(
-                np.array([MAT_X, target_y - mat.height / 2 - 0.12, 0])
-            ),
-            blocks[2][0].animate.set_stroke(YELLOW, width=3),
-            run_time=0.6,
+            FadeOut(explain1), FadeOut(explain2), FadeOut(explain3),
+            FadeOut(last_row_highlight),
+            run_time=0.5,
+        )
+        self.play(
+            FadeOut(xn_mat),
+            FadeIn(xt_vec),
+            run_time=0.8,
+        )
+        self.wait(0.3)
+
+        # ── Phase 2: Show vocabulary matrix multiplication ──
+        # x_T (1 × d) · W_vocab (d × |V|) = z_T (1 × |V|)
+
+        times_sign = MathTex(r"\times", font_size=28, color=TEXT_COLOR)
+        times_sign.next_to(xt_vec, RIGHT, buff=0.3)
+
+        # Create vocabulary matrix (d × |V|) - shown as d rows, few columns with ellipsis
+        vocab_mat = EmbeddingWeightMatrix(num_cols=D_MODEL, cell_size=0.18, top_rows=3, bottom_rows=2)
+        vocab_mat.next_to(times_sign, RIGHT, buff=0.3)
+
+        vocab_label = Text("Vocabulary Matrix", font_size=14, color=ACCENT_COLOR_2)
+        vocab_label.next_to(vocab_mat, UP, buff=0.15)
+
+        w_label = MathTex(r"W_{\text{vocab}}", font_size=20, color=ACCENT_COLOR_2)
+        w_label.next_to(vocab_mat, DOWN, buff=0.15)
+
+        # Dimension labels
+        brace_d = Brace(vocab_mat, LEFT, buff=0.08, color=GRAY_B)
+        d_label = MathTex(r"d", font_size=14, color=GRAY_B)
+        d_label.next_to(brace_d, LEFT, buff=0.05)
+
+        brace_v = Brace(vocab_mat, UP, buff=0.08, color=GRAY_B)
+        v_label = MathTex(r"|V|", font_size=14, color=GRAY_B)
+        v_label.next_to(brace_v, UP, buff=0.05)
+
+        self.play(
+            FadeIn(times_sign),
+            FadeIn(vocab_mat),
+            FadeIn(vocab_label),
+            FadeIn(w_label),
+            run_time=0.8,
+        )
+        self.play(
+            FadeIn(brace_d), FadeIn(d_label),
+            FadeIn(brace_v), FadeIn(v_label),
+            run_time=0.5,
         )
 
+        # Equals sign and result
+        equals_sign = MathTex(r"=", font_size=28, color=TEXT_COLOR)
+        equals_sign.next_to(vocab_mat, RIGHT, buff=0.3)
+
+        # z_T is 1 × |V| (logits over vocabulary)
+        zt_vec = TensorMatrix(1, D_MODEL, cell_size=0.18, label="z_T (logits)", seed=123)
+        zt_vec.next_to(equals_sign, RIGHT, buff=0.3)
+
+        self.play(FadeIn(equals_sign), FadeIn(zt_vec, shift=LEFT * 0.2), run_time=0.8)
+
+        # Equation panel
+        eq1 = EquationLabel(
+            [r"z_T = x_T \cdot W_{\text{vocab}} + b",
+             r"z_T \in \mathbb{R}^{|V|}"],
+            font_size=20,
+        )
+        eq1.scale(0.8).to_edge(RIGHT, buff=0.3).shift(UP * 2.5)
+        self.play(FadeIn(eq1), run_time=0.6)
+        self.wait(1.0)
+
+        # ── Phase 3: Softmax ──
+        softmax_arrow = Arrow(
+            zt_vec.get_bottom() + DOWN * 0.1,
+            zt_vec.get_bottom() + DOWN * 0.7,
+            buff=0, color=ACCENT_COLOR_2, stroke_width=2,
+        )
+        softmax_label = Text("softmax", font_size=14, color=ACCENT_COLOR_2)
+        softmax_label.next_to(softmax_arrow, RIGHT, buff=0.1)
+
+        pt_vec = TensorMatrix(1, D_MODEL, cell_size=0.18, label="p_T (probs)", seed=200)
+        pt_vec.next_to(softmax_arrow, DOWN, buff=0.15)
+
+        self.play(GrowArrow(softmax_arrow), FadeIn(softmax_label), run_time=0.5)
+        self.play(FadeIn(pt_vec, shift=UP * 0.2), run_time=0.6)
+
+        eq2 = EquationLabel(
+            [r"p_T = \text{softmax}(z_T)",
+             r"p_T[i] = \frac{e^{z_T[i]}}{\sum_j e^{z_T[j]}}"],
+            font_size=20,
+        )
+        eq2.scale(0.8).move_to(eq1.get_center())
+        self.play(Transform(eq1, eq2), run_time=0.6)
+        self.wait(1.0)
+
+        # ── Phase 4: Show probability distribution ──
+        # Clear the matrix visualization and show the distribution
+        self.play(
+            FadeOut(xt_vec), FadeOut(times_sign), FadeOut(vocab_mat),
+            FadeOut(vocab_label), FadeOut(w_label),
+            FadeOut(brace_d), FadeOut(d_label), FadeOut(brace_v), FadeOut(v_label),
+            FadeOut(equals_sign), FadeOut(zt_vec),
+            FadeOut(softmax_arrow), FadeOut(softmax_label), FadeOut(pt_vec),
+            FadeOut(eq1),
+            run_time=0.8,
+        )
+
+        # Show the probability distribution
         dist = CompactDistribution(
             BLACKBOX_ITERATIONS[0]["top_tokens"],
             BLACKBOX_ITERATIONS[0]["probs"],
         )
-        dist.move_to(np.array([EQ_X, target_y, 0]))
+        dist.move_to(ORIGIN)
+
+        dist_title = Text("Next-Token Probabilities", font_size=20, color=YELLOW)
+        dist_title.next_to(dist, UP, buff=0.4)
 
         sample_eq = EquationLabel(
-            [r"x_t \sim \mathrm{Categorical}\big(p(\cdot \mid x_{<t}; \theta)\big)"],
-            font_size=20,
+            [r"x_{T+1} \sim \mathrm{Categorical}(p_T)"],
+            font_size=22,
         )
-        sample_eq.next_to(dist, UP, buff=0.3)
+        sample_eq.next_to(dist, DOWN, buff=0.5)
 
         self.play(
+            FadeIn(dist_title),
             LaggedStart(
                 *[FadeIn(r, shift=LEFT * 0.2) for r in dist.token_groups],
                 lag_ratio=0.08,
@@ -1490,8 +1643,19 @@ class LanguageModelingPipeline(Scene):
         self.play(Create(highlight), run_time=0.4)
         self.wait(1.0)
 
-        self.play(
-            blocks[2][0].animate.set_stroke(orig_colors[2], width=2),
-            run_time=0.3,
+        # ── Final narrative: The complete journey ──
+        final_text = Text(
+            '"The cat sat on the" → "mat"',
+            font_size=24, color=YELLOW,
         )
-        self.wait(1.0)
+        final_text.to_edge(DOWN, buff=0.5)
+        self.play(FadeIn(final_text, shift=UP * 0.2), run_time=0.8)
+        self.wait(0.8)
+
+        conclusion = Text(
+            "Text → Numbers → Context → Words",
+            font_size=20, color=GRAY_A,
+        )
+        conclusion.next_to(final_text, DOWN, buff=0.3)
+        self.play(FadeIn(conclusion), run_time=0.6)
+        self.wait(1.5)
