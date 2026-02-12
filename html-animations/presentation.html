@@ -288,6 +288,20 @@
     color: var(--green);
     font-weight: 600;
   }
+  .ntp-concept-btn {
+    display: inline-block;
+    margin-left: 8px;
+    padding: 1px 8px;
+    border-radius: 6px;
+    border: 1px dashed var(--purple);
+    color: var(--purple);
+    font-size: 0.68rem;
+    font-weight: 600;
+    cursor: pointer;
+    vertical-align: middle;
+    transition: all 0.2s;
+  }
+  .ntp-concept-btn:hover { background: rgba(167,139,250,0.1); }
   .ntp-tag {
     display: inline-block;
     font-size: 0.7rem;
@@ -296,7 +310,12 @@
     border-radius: 6px;
     margin-left: 8px;
     vertical-align: middle;
+    opacity: 0;
+    transform: translateY(3px);
+    transition: opacity 0.25s ease, transform 0.25s ease;
+    pointer-events: none;
   }
+  .ntp-tag.show { opacity: 1; transform: translateY(0); }
   .ntp-tag.fact  { background: rgba(34,211,238,0.15); color: var(--cyan); }
   .ntp-tag.logic { background: rgba(251,146,60,0.15); color: var(--orange); }
   .ntp-tag.code  { background: rgba(167,139,250,0.15); color: var(--purple); }
@@ -829,6 +848,65 @@
     border-radius: 20px;
     margin-bottom: 10px;
   }
+
+  /* reasoning-emergence slides */
+  .pressure-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    max-width: 780px;
+    margin-top: 12px;
+  }
+  @media (max-width: 760px) {
+    .pressure-grid { grid-template-columns: 1fr; }
+  }
+  .pressure-card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px;
+    opacity: 0.28;
+    transform: translateY(8px);
+    transition: opacity 0.35s ease, transform 0.35s ease, border-color 0.35s ease;
+  }
+  .pressure-grid.revealed .pressure-card {
+    opacity: 1;
+    transform: translateY(0);
+    border-color: rgba(108,140,255,0.35);
+  }
+  .pressure-card .title {
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--accent);
+    margin-bottom: 6px;
+    font-weight: 600;
+  }
+  .drama-script {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.82rem;
+    line-height: 1.75;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 14px 16px;
+  }
+  .drama-choices {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 10px;
+  }
+  .drama-choice.correct {
+    background: rgba(74,222,128,0.16);
+    border-color: rgba(74,222,128,0.4);
+    color: var(--green);
+  }
+  .drama-choice.wrong {
+    background: rgba(248,113,113,0.13);
+    border-color: rgba(248,113,113,0.35);
+    color: var(--red);
+  }
 </style>
 </head>
 <body>
@@ -874,7 +952,7 @@
   <div class="card" style="text-align:center; max-width:600px;">
     <p class="small-text" style="margin-bottom:14px; color:var(--text-dim);">Full-Pipeline Animation (3 zoom levels)</p>
     <div class="live-demo-shell" id="liveDemoHost"
-      data-video-relative="../media/videos/pipeline/1080p60/LanguageModelingPipeline.mp4"
+      data-video-relative="LanguageModelingPipeline.mp4"
       data-video-path="/home/maincoder/Documents/inside-LLM/manimations/media/videos/pipeline/1080p60/LanguageModelingPipeline.mp4">
       <div class="live-demo-placeholder">
         <button class="nav-btn primary" id="loadLiveDemoBtn" style="min-width:180px;">Load Demo Video</button>
@@ -1355,7 +1433,134 @@
   <div class="spacer-sm"></div>
   <div class="callout success">
     <span class="icon">✓</span>
-    <span><strong>Key insight:</strong> The entire capability of an LLM — writing code, answering questions, reasoning — emerges from this loop: <em>predict the next token, measure error, update, repeat.</em> Next, you'll experience this objective directly.</span>
+    <span><strong>Key insight:</strong> The entire capability of an LLM — writing code, answering questions, reasoning — emerges from this loop: <em>predict the next token, measure error, update, repeat.</em> Next, let's make that pressure concrete.</span>
+  </div>
+</div>
+
+<!-- ═══════ SLIDE 22 — LOCAL OBJECTIVE, GLOBAL PRESSURE ═══════ -->
+<div class="slide" id="slide-22">
+  <span class="section-tag">Reasoning Emergence</span>
+  <div class="badge concept">Key Idea</div>
+  <h2>Why next-token prediction can produce reasoning-like behavior</h2>
+  <p class="small-text" style="max-width:760px;"><strong>Local objective, global pressure:</strong> the training signal is local (predict one token), but minimizing that error often requires building global structure over the context.</p>
+  <div class="spacer-sm"></div>
+  <div class="card" style="max-width:780px;">
+    <div class="math" style="margin:0;">
+      Objective: maximize P(x<sub>t</sub> | x<sub>&lt;t</sub>) for each token position
+    </div>
+    <div class="spacer-sm"></div>
+    <button class="reveal-btn" onclick="revealReasoningPressure()">Reveal what the model often must infer</button>
+    <div class="pressure-grid" id="reasoningPressureGrid">
+      <div class="pressure-card">
+        <div class="title">Entities</div>
+        <p class="small-text">Who or what is being discussed, and how references resolve across sentences.</p>
+      </div>
+      <div class="pressure-card">
+        <div class="title">Causal Cues</div>
+        <p class="small-text">What caused what, and which events enable or block later outcomes.</p>
+      </div>
+      <div class="pressure-card">
+        <div class="title">Constraints</div>
+        <p class="small-text">What is consistent or impossible given timing, access, and prior facts.</p>
+      </div>
+      <div class="pressure-card">
+        <div class="title">Multi-step Structure</div>
+        <p class="small-text">What comes next in a plan, argument, proof, or narrative arc.</p>
+      </div>
+    </div>
+  </div>
+  <div class="hidden-content" id="reasoningEmergenceQuote">
+    <div class="callout success" style="max-width:780px;">
+      <span class="icon">i</span>
+      <span><strong>So "reasoning" can emerge as an instrumentally useful strategy for reducing prediction error,</strong> even when it is never explicitly specified as a training target.</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ SLIDE 23 — PAKISTANI DRAMA EXAMPLE ═══════ -->
+<div class="slide" id="slide-23">
+  <span class="section-tag">Reasoning Emergence</span>
+  <div class="badge discussion">Interactive Example</div>
+  <h2>Next-token prediction in a Pakistani drama</h2>
+  <p class="small-text" style="max-width:780px;">Nothing explicitly states the answer. To predict the next words, the model must integrate distributed constraints.</p>
+  <div class="spacer-sm"></div>
+  <div class="drama-script" style="max-width:800px;">
+    Karachi mein aik shaam...<br>
+    10:30 baje Shahbaz Ahmed apne office mein be-harkat mila...<br>
+    thori dair baad pata chala ke maut ki wajah zehr tha...<br>
+    Us waqt office mein sirf teen log thay...<br>
+    Farah, jo us ki secretary thi...<br>
+    Salman, jo us ka business partner tha...<br>
+    aur Rukhsana, jo safai karti thi...<br>
+    Farah 9:50 baje office se nikal chuki thi...<br>
+    Salman 10:00 baje meeting ke liye bahar gaya...<br>
+    10:20 baje Rukhsana ne Shahbaz ke liye chai banayi...<br>
+    Forensic report ke mutabiq zehr 10:20 aur 10:30 ke darmiyan liya gaya...<br>
+    CCTV se yeh bhi clear hua ke 10:00 ke baad sirf aik shakhs pantry mein gaya...<br>
+    ...<br>
+    Investigation ke baad shahbaz ki family ne police walon se pucha keh qatil kon tha.<br>
+    Police ne btaya keh tamaam subuton ke mutabik qatil <span class="ntp-blank" id="dramaKillerBlank" data-answer="Rukhsana thi">___</span>
+  </div>
+  <div class="drama-choices" id="dramaChoices">
+    <button class="nav-btn drama-choice" onclick="chooseDramaSuspect('Farah', this)">Farah</button>
+    <button class="nav-btn drama-choice" onclick="chooseDramaSuspect('Salman', this)">Salman</button>
+    <button class="nav-btn drama-choice" onclick="chooseDramaSuspect('Rukhsana', this)">Rukhsana</button>
+    <button class="nav-btn" onclick="revealDramaAnswer()">Reveal token</button>
+  </div>
+  <div class="spacer-sm"></div>
+  <div class="callout warn" id="dramaResult" style="max-width:800px;">
+    <span class="icon">?</span>
+    <span>Select a suspect. Then check whether your choice satisfies the timing + access constraints.</span>
+  </div>
+  <div class="hidden-content" id="dramaWhy">
+    <div class="callout info" style="max-width:800px;">
+      <span class="icon">i</span>
+      <span><strong>Notice:</strong> no line explicitly says "Rukhsana qatil hai." The required information is distributed across the text. Correct next-token prediction requires integrating entity tracking, timing, access, and consistency constraints introduced earlier.</span>
+    </div>
+    <div class="callout success" style="max-width:800px; margin-top:10px;">
+      <span class="icon">→</span>
+      <span><strong>That pressure is exactly what next-token prediction creates during training.</strong></span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ SLIDE 24 — LOCAL OBJECTIVE TO GLOBAL STRUCTURE ═══════ -->
+<div class="slide" id="slide-24">
+  <span class="section-tag">Reasoning Emergence</span>
+  <div class="badge concept">Synthesis</div>
+  <h2>Why a local objective creates global structure</h2>
+  <div class="spacer-sm"></div>
+  <div class="grid-2" style="max-width:820px;">
+    <div class="card">
+      <h3 style="color:var(--accent);">Local objective</h3>
+      <div class="math" style="margin:8px 0 0;">
+        Predict the next token
+      </div>
+      <p class="tiny" style="margin-top:8px;">The training signal never says "identify the killer" or "reason explicitly."</p>
+    </div>
+    <div class="card">
+      <h3 style="color:var(--green);">To do that reliably, infer:</h3>
+      <ul class="obj-list" style="margin-top:8px;">
+        <li data-num="1">entities (who is who)</li>
+        <li data-num="2">state (who was where, and when)</li>
+        <li data-num="3">causality (what enables what)</li>
+        <li data-num="4">constraints (what is impossible)</li>
+        <li data-num="5">narrative consistency</li>
+      </ul>
+    </div>
+  </div>
+  <div class="spacer-sm"></div>
+  <div class="callout success" style="max-width:820px;">
+    <span class="icon">✓</span>
+    <span><strong>Result:</strong> reasoning-like behavior emerges as a <em>means</em>, not a goal.</span>
+  </div>
+  <div class="callout info" style="max-width:820px;">
+    <span class="icon">i</span>
+    <span>In narratives, plans, arguments, and code, accurate next-token prediction often demands internal representations of entities, state, and constraints. So reasoning is not trained directly; it is instrumentally useful for prediction.</span>
+  </div>
+  <div class="speaker-notes">
+    <button class="notes-toggle" onclick="this.nextElementSibling.classList.toggle('open')">speaker notes</button>
+    <div class="notes-body"><p>Close this segment by emphasizing mechanism over mystique: the objective is local, but the easiest way to minimize it across long contexts is to build useful global structure.</p></div>
   </div>
 </div>
 
@@ -1373,26 +1578,32 @@
   <div style="display:flex; flex-direction:column; gap:10px; max-width:780px;" id="ntpGame">
     <div class="ntp-sentence">
       The Eiffel Tower is located in <span class="ntp-blank" onclick="revealNTP(this)" data-answer="Paris">???</span>
+      <span class="ntp-concept-btn" onclick="revealNTPConcept(this)">concept?</span>
       <span class="ntp-tag fact">world knowledge</span>
     </div>
     <div class="ntp-sentence">
       After the rain stopped, the children ran outside to <span class="ntp-blank" onclick="revealNTP(this)" data-answer="play">???</span>
+      <span class="ntp-concept-btn" onclick="revealNTPConcept(this)">concept?</span>
       <span class="ntp-tag lang">language / common sense</span>
     </div>
     <div class="ntp-sentence">
       def fibonacci(n):<br>&nbsp;&nbsp;if n <= 1: return n<br>&nbsp;&nbsp;return fibonacci(n-1) + <span class="ntp-blank" onclick="revealNTP(this)" data-answer="fibonacci(n-2)">???</span>
+      <span class="ntp-concept-btn" onclick="revealNTPConcept(this)">concept?</span>
       <span class="ntp-tag code">code understanding</span>
     </div>
     <div class="ntp-sentence">
       If all roses are flowers, and all flowers need water, then all roses need <span class="ntp-blank" onclick="revealNTP(this)" data-answer="water">???</span>
+      <span class="ntp-concept-btn" onclick="revealNTPConcept(this)">concept?</span>
       <span class="ntp-tag logic">logical reasoning</span>
     </div>
     <div class="ntp-sentence">
       The sum of 127 and 385 is <span class="ntp-blank" onclick="revealNTP(this)" data-answer="512">???</span>
+      <span class="ntp-concept-btn" onclick="revealNTPConcept(this)">concept?</span>
       <span class="ntp-tag math">arithmetic</span>
     </div>
     <div class="ntp-sentence">
       She said "I'm not angry," but the tone of her voice suggested she was actually quite <span class="ntp-blank" onclick="revealNTP(this)" data-answer="upset">???</span>
+      <span class="ntp-concept-btn" onclick="revealNTPConcept(this)">concept?</span>
       <span class="ntp-tag lang">pragmatics / subtext</span>
     </div>
   </div>
@@ -1443,7 +1654,86 @@
   <div class="spacer"></div>
   <div class="callout success" style="max-width:720px;">
     <span class="icon">i</span>
-    <span><strong>The compression hypothesis:</strong> The best way to predict text is to <em>understand</em> the process that generated it. A sufficiently good next-token predictor must build a world model, because that's the most efficient way to compress language.</span>
+    <span><strong>The compression hypothesis:</strong> The best way to predict text is to <em>understand</em> the process that generated it. Next, we'll use compression as a practical lens before zooming out to the full training pipeline.</span>
+  </div>
+</div>
+
+<!-- ═══════ SLIDE 25 — COMPRESSION LENS ═══════ -->
+<div class="slide" id="slide-25">
+  <span class="section-tag">Compression Lens</span>
+  <div class="badge concept">Mental Model</div>
+  <h2>A useful lens: Intelligence as compression</h2>
+  <p class="small-text" style="max-width:780px;">During pretraining, the model learns compressed internal representations that preserve what is useful for predicting text. This is not a full theory of intelligence, but it is a helpful lens.</p>
+  <div class="spacer-sm"></div>
+  <div class="grid-2" style="max-width:820px;">
+    <div class="card">
+      <h3 style="color:var(--accent);">Compression pressure encourages</h3>
+      <ul class="obj-list" style="margin-top:8px;">
+        <li data-num="1">abstraction (categories, roles, relations)</li>
+        <li data-num="2">reusable features across many tasks</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3 style="color:var(--green);">Why this matters</h3>
+      <p class="small-text" style="line-height:1.7;">To predict text efficiently, the model is forced to represent large amounts of structure in a compact internal form.</p>
+      <div class="spacer-sm"></div>
+      <p class="small-text" style="line-height:1.7;">You can view pretraining as building a compact internal model of patterns that matter for prediction.</p>
+    </div>
+  </div>
+  <div class="spacer-sm"></div>
+  <button class="reveal-btn" onclick="document.getElementById('compressionWhy').classList.toggle('revealed')">Why next-token prediction implies compression</button>
+  <div class="hidden-content" id="compressionWhy">
+    <div class="callout warn" style="max-width:820px;">
+      <span class="icon">!</span>
+      <span><strong>Raw problem:</strong> language is high-dimensional; tokens are noisy/redundant/ambiguous; surface forms vary wildly while deeper structures repeat.</span>
+    </div>
+    <div class="callout info" style="max-width:820px; margin-top:10px;">
+      <span class="icon">→</span>
+      <span><strong>A pure memorizer fails:</strong> poor generalization, huge capacity needs, and brittleness to slightly novel phrasing.</span>
+    </div>
+    <div class="callout success" style="max-width:820px; margin-top:10px;">
+      <span class="icon">✓</span>
+      <span><strong>So loss minimization pushes compression:</strong> collapse many surface forms into shared representations; retain what matters for next-token prediction; discard what does not.</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ SLIDE 26 — WHAT GETS COMPRESSED ═══════ -->
+<div class="slide" id="slide-26">
+  <span class="section-tag">Compression Lens</span>
+  <div class="badge concept">Mechanism</div>
+  <h2>What gets compressed, and why it looks like reasoning</h2>
+  <p class="small-text" style="max-width:800px;">These structures are not explicitly labeled in pretraining. They emerge as latent variables that make prediction easier.</p>
+  <div class="spacer-sm"></div>
+  <div class="grid-2" style="max-width:840px;">
+    <div class="card">
+      <h3 style="color:var(--cyan);">What gets compressed</h3>
+      <ul class="obj-list" style="margin-top:8px;">
+        <li data-num="1">entities (people, places, objects)</li>
+        <li data-num="2">roles (subject, object, agent, patient)</li>
+        <li data-num="3">relations (ownership, causality, temporal order)</li>
+        <li data-num="4">abstract patterns (arguments, plans, code structure)</li>
+        <li data-num="5">latent state (what is currently true)</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3 style="color:var(--orange);">Why this appears as reasoning</h3>
+      <p class="small-text" style="line-height:1.7;">In narratives, explanations, mathematics, programming, and multi-step instructions, accurate continuation requires coherent internal state that respects constraints.</p>
+      <div class="spacer-sm"></div>
+      <div class="callout info" style="margin:0;">
+        <span class="icon">i</span>
+        <span>You cannot finish a proof without tracking assumptions, continue a story without tracking who did what, or autocomplete code without tracking scope and types.</span>
+      </div>
+    </div>
+  </div>
+  <div class="spacer-sm"></div>
+  <div class="callout success" style="max-width:840px;">
+    <span class="icon">✓</span>
+    <span><strong>Transfer intuition:</strong> the same compressed internal features that help predict text also help many downstream tasks.</span>
+  </div>
+  <div class="callout info" style="max-width:840px;">
+    <span class="icon">→</span>
+    <span>This lens explains why pretraining transfers broadly. With that framing, now zoom out to the full training pipeline.</span>
   </div>
 </div>
 
@@ -1628,7 +1918,7 @@
   <div class="progress-track">
     <div class="progress-fill" id="progressFill" style="width:0%"></div>
   </div>
-  <span class="slide-counter" id="slideCounter">1 / 22</span>
+  <span class="slide-counter" id="slideCounter">1 / 27</span>
   <button class="nav-btn primary" id="btnNext">Next →</button>
 </div>
 
@@ -1636,7 +1926,7 @@
 // ══════════════════════════════════════
 //  Slide engine
 // ══════════════════════════════════════
-const SLIDE_ORDER = [0, 1, 2, 3, 4, 5, 6, 7, 9, 10, 11, 12, 13, 14, 8, 15, 16, 17, 18, 19, 20, 21];
+const SLIDE_ORDER = [0, 1, 2, 3, 4, 5, 6, 7, 9, 10, 11, 12, 13, 14, 8, 15, 22, 23, 24, 16, 17, 25, 26, 18, 19, 20, 21];
 const TOTAL = SLIDE_ORDER.length;
 let current = 0;
 
@@ -1679,18 +1969,68 @@ function revealIngredient3() {
   document.getElementById('ingredientExplanation').classList.add('revealed');
 }
 
+function revealReasoningPressure() {
+  const grid = document.getElementById('reasoningPressureGrid');
+  const quote = document.getElementById('reasoningEmergenceQuote');
+  if (grid) grid.classList.add('revealed');
+  if (quote) quote.classList.add('revealed');
+}
+
+function revealDramaAnswer() {
+  const blank = document.getElementById('dramaKillerBlank');
+  const why = document.getElementById('dramaWhy');
+  const result = document.getElementById('dramaResult');
+  if (blank && !blank.classList.contains('show')) {
+    blank.textContent = blank.dataset.answer;
+    blank.classList.add('show');
+  }
+  if (why) why.classList.add('revealed');
+  if (result) {
+    result.className = 'callout success';
+    result.style.maxWidth = '800px';
+    result.innerHTML = '<span class="icon">✓</span><span>Best next-token continuation: <strong>Rukhsana thi</strong>, based on timing + access constraints.</span>';
+  }
+}
+
+function chooseDramaSuspect(choice, btn) {
+  const buttons = document.querySelectorAll('#dramaChoices .drama-choice');
+  buttons.forEach(b => b.classList.remove('correct', 'wrong'));
+  if (choice === 'Rukhsana') btn.classList.add('correct');
+  else btn.classList.add('wrong');
+
+  const result = document.getElementById('dramaResult');
+  if (result) {
+    const isCorrect = choice === 'Rukhsana';
+    result.className = isCorrect ? 'callout success' : 'callout warn';
+    result.style.maxWidth = '800px';
+    result.innerHTML = isCorrect
+      ? '<span class="icon">✓</span><span>Consistent choice. Timing and pantry-access constraints point to <strong>Rukhsana</strong>.</span>'
+      : '<span class="icon">!</span><span>This choice conflicts with the timeline/access clues. Re-check who could act between 10:20 and 10:30.</span>';
+  }
+
+  if (choice === 'Rukhsana') {
+    revealDramaAnswer();
+  }
+}
+
 // ══════════════════════════════════════
 //  Live demo video (lazy load)
 // ══════════════════════════════════════
 let liveDemoLoaded = false;
 
-function getLiveDemoSource(host) {
-  // Prefer project-relative path for portability across local servers.
-  if (host.dataset.videoRelative) return host.dataset.videoRelative;
-  if (host.dataset.videoPath && host.dataset.videoPath.startsWith('/')) {
-    return `file://${host.dataset.videoPath}`;
+function getLiveDemoCandidates(host) {
+  const candidates = [];
+  // 1) First try same directory as this HTML file.
+  if (host.dataset.videoRelative) {
+    candidates.push(host.dataset.videoRelative);
   }
-  return host.dataset.videoPath;
+  // 2) Fallback to absolute path.
+  if (host.dataset.videoPath && host.dataset.videoPath.startsWith('/')) {
+    candidates.push(`file://${host.dataset.videoPath}`);
+  } else if (host.dataset.videoPath) {
+    candidates.push(host.dataset.videoPath);
+  }
+  return candidates;
 }
 
 function ensureLiveDemoLoaded() {
@@ -1698,15 +2038,23 @@ function ensureLiveDemoLoaded() {
   const host = document.getElementById('liveDemoHost');
   if (!host) return;
 
-  const src = getLiveDemoSource(host);
-  if (!src) return;
+  const candidates = getLiveDemoCandidates(host);
+  if (!candidates.length) return;
 
   const video = document.createElement('video');
   video.className = 'live-demo-video';
   video.controls = true;
   video.preload = 'metadata';
   video.playsInline = true;
-  video.src = src;
+
+  let idx = 0;
+  const tryNextSource = () => {
+    if (idx >= candidates.length) return;
+    video.src = candidates[idx++];
+    video.load();
+  };
+  video.addEventListener('error', tryNextSource);
+  tryNextSource();
 
   host.innerHTML = '';
   host.appendChild(video);
@@ -1777,11 +2125,19 @@ function revealNTP(el) {
   el.textContent = el.dataset.answer;
   el.classList.add('show');
 }
+function revealNTPConcept(btn) {
+  const sentence = btn.closest('.ntp-sentence');
+  const tag = sentence ? sentence.querySelector('.ntp-tag') : null;
+  if (tag) tag.classList.add('show');
+  btn.style.display = 'none';
+}
 function revealAllNTP() {
   $$('.ntp-blank').forEach(el => {
     el.textContent = el.dataset.answer;
     el.classList.add('show');
   });
+  $$('.ntp-concept-btn').forEach(btn => { btn.style.display = 'none'; });
+  $$('.ntp-tag').forEach(tag => tag.classList.add('show'));
 }
 
 // ══════════════════════════════════════
@@ -1882,6 +2238,29 @@ function onSlideEnter(n) {
     $('#lossAfterVal').textContent = afterLoss.toFixed(2);
     $('#afterCorrectPct').textContent = (VOCAB[0].after * 100).toFixed(0) + '%';
     $('#afterLossText').textContent = afterLoss.toFixed(2);
+  }
+  if (n === 22) {
+    const grid = document.getElementById('reasoningPressureGrid');
+    const quote = document.getElementById('reasoningEmergenceQuote');
+    if (grid) grid.classList.remove('revealed');
+    if (quote) quote.classList.remove('revealed');
+  }
+  if (n === 23) {
+    const blank = document.getElementById('dramaKillerBlank');
+    const why = document.getElementById('dramaWhy');
+    const result = document.getElementById('dramaResult');
+    const buttons = document.querySelectorAll('#dramaChoices .drama-choice');
+    if (blank) {
+      blank.textContent = '___';
+      blank.classList.remove('show');
+    }
+    if (why) why.classList.remove('revealed');
+    buttons.forEach(b => b.classList.remove('correct', 'wrong'));
+    if (result) {
+      result.className = 'callout warn';
+      result.style.maxWidth = '800px';
+      result.innerHTML = '<span class="icon">?</span><span>Select a suspect. Then check whether your choice satisfies the timing + access constraints.</span>';
+    }
   }
 }
 
