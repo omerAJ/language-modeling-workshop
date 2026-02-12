@@ -27,6 +27,8 @@ TOKEN_IDS = [464, 3797, 3332, 319, 262]
 T = 5  # sequence length
 D_MODEL = 8  # visual cell count for the d dimension (labels show "d")
 
+wrap_width = config.frame_width * 0.85
+
 # Autoregressive iterations for the black-box demonstration
 BLACKBOX_ITERATIONS = [
     {
@@ -53,6 +55,32 @@ EQUATION_BG = "#101624"
 EQUATION_STROKE = "#fdd835"
 TRANSFORMER_RED = "#e57373"
 SLOW_FACTOR = 1.2
+
+
+# =============================================================================
+# UTILITY FUNCTIONS
+# =============================================================================
+
+def clamp_to_frame(mobj, buff=0.2):
+    """Ensures mobj stays fully inside the screen bounds.
+
+    Parameters:
+        mobj : Mobject  – The object to clamp.
+        buff : float    – Margin from screen edges.
+    """
+    left_bound = -config.frame_x_radius + buff
+    right_bound = config.frame_x_radius - buff
+    bottom_bound = -config.frame_y_radius + buff
+    top_bound = config.frame_y_radius - buff
+
+    if mobj.get_left()[0] < left_bound:
+        mobj.shift((left_bound - mobj.get_left()[0]) * RIGHT)
+    if mobj.get_right()[0] > right_bound:
+        mobj.shift((right_bound - mobj.get_right()[0]) * LEFT)
+    if mobj.get_bottom()[1] < bottom_bound:
+        mobj.shift((bottom_bound - mobj.get_bottom()[1]) * UP)
+    if mobj.get_top()[1] > top_bound:
+        mobj.shift((top_bound - mobj.get_top()[1]) * DOWN)
 
 
 # =============================================================================
@@ -401,7 +429,7 @@ class LanguageModelingPipeline(Scene):
             handoff_from='transformer',
             handoff_to='output',
             matrix_label="X_N",
-            narrative_text="X_N is still just numbers... but we wanted words!",
+            narrative_text="",
         )
         self.transition_to_output_decoding()
         self.show_output_decoding()
@@ -419,6 +447,7 @@ class LanguageModelingPipeline(Scene):
             font_size=30, color=ACCENT_COLOR,
         )
         title.to_edge(UP, buff=0.5)
+        clamp_to_frame(title)
         self.play(Write(title), run_time=1)
 
         llm_box = LLMBlackBox()
@@ -430,11 +459,13 @@ class LanguageModelingPipeline(Scene):
             font_size=24,
         )
         ar_eq.next_to(llm_box, UP, buff=0.35)
+        clamp_to_frame(ar_eq)
         self.play(FadeIn(ar_eq), run_time=0.8)
 
         current_text = SENTENCE
         sentence = Text(f'"{current_text}"', font_size=20, color=TEXT_COLOR)
         sentence.next_to(llm_box, LEFT, buff=1.6)
+        clamp_to_frame(sentence)
 
         arrow_in = Arrow(
             sentence.get_right(), llm_box.get_left(),
@@ -506,6 +537,7 @@ class LanguageModelingPipeline(Scene):
         selected = data["selected"]
         flying = Text(selected, font_size=22, color=YELLOW, weight=BOLD)
         flying.move_to(dist.token_groups[sel_idx][0])
+        clamp_to_frame(flying)
 
         target = self.bb_sentence.get_right() + RIGHT * 0.25 + UP * 0.25
         self.play(FadeIn(flying, scale=1.2), run_time=0.2)
@@ -522,6 +554,7 @@ class LanguageModelingPipeline(Scene):
 
         new_sentence = Text(f'"{new_text}"', font_size=20, color=TEXT_COLOR)
         new_sentence.move_to(self.bb_sentence.get_center())
+        clamp_to_frame(new_sentence)
 
         new_arrow_in = Arrow(
             new_sentence.get_right(), self.bb_box.get_left(),
@@ -553,6 +586,7 @@ class LanguageModelingPipeline(Scene):
         question = Text(question_text, font_size=28, color=ACCENT_COLOR)
         # Center question on screen to avoid going off edges
         question.move_to(ORIGIN + DOWN * 2.5)
+        clamp_to_frame(question)
         self.play(Write(question), run_time=1.2)
         self.wait(0.8)
 
@@ -617,6 +651,7 @@ class LanguageModelingPipeline(Scene):
             font_size=28, color=ACCENT_COLOR,
         )
         title.to_edge(UP, buff=0.3)
+        clamp_to_frame(title)
         self.reveal_after_zoom(zoom_cover, title)
         self.tsp_title = title
 
@@ -642,6 +677,8 @@ class LanguageModelingPipeline(Scene):
         input_block.move_to(LEFT * 4.4 + DOWN * 0.3)
         transformer_block.move_to(DOWN * 0.3)
         output_block.move_to(RIGHT * 4.4 + DOWN * 0.3)
+        clamp_to_frame(input_block)
+        clamp_to_frame(output_block)
 
         arrow_1 = Arrow(
             input_block.get_right(), transformer_block.get_left(),
@@ -689,6 +726,7 @@ class LanguageModelingPipeline(Scene):
             font_size=28, color=ACCENT_COLOR,
         )
         title.to_edge(UP, buff=0.3)
+        clamp_to_frame(title)
 
         input_block = PipelineStageBlock(
             title="Input Encoding",
@@ -710,6 +748,8 @@ class LanguageModelingPipeline(Scene):
         input_block.move_to(LEFT * 4.4 + DOWN * 0.3)
         transformer_block.move_to(DOWN * 0.3)
         output_block.move_to(RIGHT * 4.4 + DOWN * 0.3)
+        clamp_to_frame(input_block)
+        clamp_to_frame(output_block)
 
         arrow_1 = Arrow(
             input_block.get_right(), transformer_block.get_left(),
@@ -753,7 +793,9 @@ class LanguageModelingPipeline(Scene):
             # Show narrative question FIRST
             if narrative_text:
                 narr = Text(narrative_text, font_size=20, color=GRAY_A)
+                narr.set(width=wrap_width)
                 narr.to_edge(DOWN, buff=0.6)
+                clamp_to_frame(narr)
                 self.play(FadeIn(narr, shift=UP * 0.2), run_time=0.6)
                 self.wait(1.2)
                 self.play(FadeOut(narr), run_time=0.4)
@@ -769,13 +811,14 @@ class LanguageModelingPipeline(Scene):
             mat_group.scale(1.2)
 
             spawn_pos = from_block.get_bottom()
-            rest_pos = from_block.get_bottom() + DOWN * 0.5
-            target_pos = to_block.get_bottom() + DOWN * 0.5
+            rest_pos = from_block.get_bottom() + DOWN * 0.6
+            target_pos = to_block.get_bottom() + DOWN * 0.6
 
             mat_group.move_to(spawn_pos)
+            clamp_to_frame(mat_group)
 
             # Stage 1 — Emerge from block
-            self.play(GrowFromEdge(mat_group, UP), run_time=0.5)
+            self.play(GrowFromEdge(mat_group, UP), run_time=0.7)
 
             # Stage 2 — Drop to resting position
             self.play(
@@ -800,10 +843,16 @@ class LanguageModelingPipeline(Scene):
             # Stage 3 — Travel to next block
             self.play(
                 mat_group.animate.move_to(target_pos).scale(1.0),
-                mat_label.animate.set_color(color_map[handoff_to]),
                 run_time=1.2,
                 rate_func=smooth,
             )
+
+            # Change label color AFTER movement (prevents desync)
+            self.play(
+                mat_group[1].animate.set_color(color_map[handoff_to]),
+                run_time=0.3,
+            )
+
 
             if travel_arrow:
                 self.play(travel_arrow.animate.set_color(GRAY_B), run_time=0.3)
@@ -826,6 +875,7 @@ class LanguageModelingPipeline(Scene):
             font_size=22, color=GRAY_A,
         )
         motivation.to_edge(DOWN, buff=0.8)
+        clamp_to_frame(motivation)
         self.play(FadeIn(motivation, shift=UP * 0.2), run_time=0.8)
         self.wait(1.0)
         self.play(FadeOut(motivation), run_time=0.5)
@@ -844,11 +894,13 @@ class LanguageModelingPipeline(Scene):
             font_size=32, color=ACCENT_COLOR,
         )
         inner_title.to_edge(UP, buff=0.5)
+        clamp_to_frame(inner_title)
 
         sentence_label = Text("Input:", font_size=20, color=GRAY_B)
         sentence_text = Text(f'"{SENTENCE}"', font_size=28, color=TEXT_COLOR)
         sentence_group = VGroup(sentence_label, sentence_text).arrange(RIGHT, buff=0.3)
         sentence_group.next_to(inner_title, DOWN, buff=0.8)
+        clamp_to_frame(sentence_group)
 
         self.reveal_after_zoom(zoom_cover, inner_title, sentence_label, sentence_text)
 
@@ -897,14 +949,16 @@ class LanguageModelingPipeline(Scene):
             font_size=24, color=YELLOW,
         )
         motivation.to_edge(DOWN, buff=0.9)
+        clamp_to_frame(motivation)
         self.play(FadeIn(motivation, shift=UP * 0.2), run_time=0.8)
         self.wait(1.0)
 
         motivation2 = Text(
-            "But embeddings aren’t words… you can’t read them.",
-            font_size=22, color=GRAY_A,
+            "But embeddings aren't words… you can't read them.",
+            font_size=24, color=YELLOW,
         )
         motivation2.to_edge(DOWN, buff=0.9)
+        clamp_to_frame(motivation2)
         self.play(Transform(motivation, motivation2), run_time=0.6)
         self.wait(1.0)
         
@@ -938,6 +992,7 @@ class LanguageModelingPipeline(Scene):
         """Text → token boxes."""
         stage_label = Text("1. Tokenization", font_size=24, color=ACCENT_COLOR_2)
         stage_label.to_edge(LEFT, buff=0.5).shift(UP * 2)
+        clamp_to_frame(stage_label)
 
         token_row = TokenRow(TOKENS)
         token_row.next_to(self.sentence_text, DOWN, buff=1)
@@ -955,6 +1010,7 @@ class LanguageModelingPipeline(Scene):
             font_size=28,
         )
         eq.scale(0.7).to_edge(RIGHT, buff=0.8).shift(UP * 1.5)
+        clamp_to_frame(eq)
 
         self.play(FadeIn(stage_label))
         self.play(GrowArrow(arrow), run_time=0.5)
@@ -974,6 +1030,7 @@ class LanguageModelingPipeline(Scene):
         """Tokens → integer IDs."""
         new_stage = Text("2. Token IDs", font_size=24, color=ACCENT_COLOR_2)
         new_stage.move_to(self.stage_label)
+        clamp_to_frame(new_stage)
 
         id_row = IdRow(TOKEN_IDS)
         id_row.next_to(self.token_row, DOWN, buff=0.8)
@@ -995,6 +1052,7 @@ class LanguageModelingPipeline(Scene):
             font_size=26,
         )
         new_eq.scale(0.7).move_to(self.current_eq)
+        clamp_to_frame(new_eq)
 
         self.play(Transform(self.stage_label, new_stage))
         self.play(
@@ -1025,6 +1083,7 @@ class LanguageModelingPipeline(Scene):
 
         new_stage = Text("3. Embedding Lookup", font_size=24, color=ACCENT_COLOR_2)
         new_stage.move_to(self.stage_label).shift(RIGHT * 0.5)
+        clamp_to_frame(new_stage)
 
         new_eq = EquationLabel(
             [
@@ -1034,6 +1093,7 @@ class LanguageModelingPipeline(Scene):
             font_size=26,
         )
         new_eq.scale(0.7).move_to(self.current_eq)
+        clamp_to_frame(new_eq)
 
         # ── Weight matrix W_E: |V| × d ──
         weight_mat = EmbeddingWeightMatrix(num_cols=D_MODEL, cell_size=0.22)
@@ -1041,14 +1101,17 @@ class LanguageModelingPipeline(Scene):
 
         w_label = MathTex(r"W_E", font_size=26, color=ACCENT_COLOR)
         w_label.next_to(weight_mat, DOWN, buff=0.2)
+        clamp_to_frame(w_label)
 
         brace_v = Brace(weight_mat, LEFT, buff=0.1, color=GRAY_B)
         v_label = MathTex(r"|V|", font_size=18, color=GRAY_B)
         v_label.next_to(brace_v, LEFT, buff=0.08)
+        clamp_to_frame(v_label)
 
         brace_d_w = Brace(weight_mat, UP, buff=0.1, color=GRAY_B)
         d_label_w = MathTex(r"d", font_size=18, color=GRAY_B)
         d_label_w.next_to(brace_d_w, UP, buff=0.05)
+        clamp_to_frame(d_label_w)
 
         weight_group = VGroup(
             weight_mat, w_label, brace_v, v_label, brace_d_w, d_label_w,
@@ -1107,14 +1170,17 @@ class LanguageModelingPipeline(Scene):
         )
         e_label = MathTex(r"E", font_size=24, color=ACCENT_COLOR)
         e_label.next_to(result_border, DOWN, buff=0.15)
+        clamp_to_frame(e_label)
 
         brace_t = Brace(result_border, LEFT, buff=0.1, color=GRAY_B)
         t_label = MathTex(r"t", font_size=18, color=GRAY_B)
         t_label.next_to(brace_t, LEFT, buff=0.05)
+        clamp_to_frame(t_label)
 
         brace_d_e = Brace(result_border, UP, buff=0.1, color=GRAY_B)
         d_label_e = MathTex(r"d", font_size=18, color=GRAY_B)
         d_label_e.next_to(brace_d_e, UP, buff=0.05)
+        clamp_to_frame(d_label_e)
 
         result_decor = VGroup(
             result_border, e_label, brace_t, t_label, brace_d_e, d_label_e,
@@ -1154,6 +1220,7 @@ class LanguageModelingPipeline(Scene):
         # ── Update stage label ──
         new_stage = Text("4. Positional Encoding", font_size=24, color=ACCENT_COLOR_2)
         new_stage.move_to(self.stage_label)
+        clamp_to_frame(new_stage)
         self.play(Transform(self.stage_label, new_stage), run_time=0.5)
 
         # ── Reposition E matrix to the left ──
@@ -1163,12 +1230,14 @@ class LanguageModelingPipeline(Scene):
         # ── Build E + P = X₀ layout ──
         plus = MathTex("+", font_size=32, color=TEXT_COLOR)
         plus.next_to(e_mat, RIGHT, buff=0.3)
+        clamp_to_frame(plus)
 
         pe_mat = TensorMatrix(T, D_MODEL, cell_size=0.22, label="P: t × d", seed=77)
         pe_mat.next_to(plus, RIGHT, buff=0.3)
 
         equals = MathTex("=", font_size=32, color=TEXT_COLOR)
         equals.next_to(pe_mat, RIGHT, buff=0.3)
+        clamp_to_frame(equals)
 
         x0_mat = TensorMatrix(T, D_MODEL, cell_size=0.22, label="X₀: t × d", seed=99)
         x0_mat.next_to(equals, RIGHT, buff=0.3)
@@ -1183,6 +1252,7 @@ class LanguageModelingPipeline(Scene):
             font_size=22,
         )
         new_eq.scale(0.7).to_edge(RIGHT, buff=0.3).shift(UP * 2.5)
+        clamp_to_frame(new_eq)
 
         # ── Animate ──
         self.play(FadeIn(plus), FadeIn(pe_mat, shift=DOWN * 0.2), run_time=0.8)
@@ -1200,6 +1270,7 @@ class LanguageModelingPipeline(Scene):
         )
 
         intuition.next_to(VGroup(e_mat, x0_mat), DOWN, buff=0.6)
+        clamp_to_frame(intuition)
         self.play(FadeIn(intuition), run_time=0.5)
         self.wait(1.0)
         self.play(FadeOut(intuition), run_time=0.4)
@@ -1210,6 +1281,7 @@ class LanguageModelingPipeline(Scene):
             font_size=20, color=ACCENT_COLOR,
         )
         conclusion.next_to(VGroup(e_mat, x0_mat), DOWN, buff=0.6)
+        clamp_to_frame(conclusion)
         self.play(FadeIn(conclusion, shift=UP * 0.2), run_time=0.6)
         self.wait(1.0)
 
@@ -1228,6 +1300,7 @@ class LanguageModelingPipeline(Scene):
 
         title = Text("Transformer Core", font_size=28, color=TRANSFORMER_RED)
         title.to_edge(UP, buff=0.25)
+        clamp_to_frame(title)
 
         # ── Layout constants ──
         BW, BH = 2.5, 0.38
@@ -1279,6 +1352,7 @@ class LanguageModelingPipeline(Scene):
         brace = Brace(container, RIGHT, buff=0.15, color=GRAY_B)
         n_label = MathTex(r"\times N", font_size=18, color=GRAY_B)
         n_label.next_to(brace, RIGHT, buff=0.08)
+        clamp_to_frame(n_label)
 
         # ── Residual arrows ──
         from manim import CubicBezier
@@ -1332,6 +1406,7 @@ class LanguageModelingPipeline(Scene):
         )
         input_label = MathTex("X_0", font_size=18, color=ACCENT_COLOR)
         input_label.next_to(input_arrow, DOWN, buff=0.05)
+        clamp_to_frame(input_label)
 
         # Output arrow (X₂ leaving from top)
         output_arrow = Arrow(
@@ -1341,6 +1416,7 @@ class LanguageModelingPipeline(Scene):
         )
         output_label = MathTex("X_N", font_size=18, color=ACCENT_COLOR)
         output_label.next_to(output_arrow, UP, buff=0.05)
+        clamp_to_frame(output_label)
 
         # Attention residual (skip around MHA → Add&Norm)
         res1 = residual_ortho(arrows[0], blocks[1], x_offset=1.37)
@@ -1370,6 +1446,7 @@ class LanguageModelingPipeline(Scene):
 
         mat_label = MathTex("X_0", font_size=20, color=ACCENT_COLOR)
         mat_label.next_to(mat, DOWN, buff=0.1)
+        clamp_to_frame(mat_label)
 
         self.play(FadeIn(mat, shift=UP * 0.3), FadeIn(mat_label), run_time=0.5)
 
@@ -1421,6 +1498,7 @@ class LanguageModelingPipeline(Scene):
 
             eq_panel = EquationLabel(eq_lines, font_size=eq_font_size)
             eq_panel.move_to(np.array([EQ_X, target_y, 0]))
+            clamp_to_frame(eq_panel)
 
             if eq_panel.get_right()[0] > 6.8:
                 eq_panel.shift(LEFT * (eq_panel.get_right()[0] - 6.8))
@@ -1430,6 +1508,7 @@ class LanguageModelingPipeline(Scene):
             if new_label:
                 new_lbl = MathTex(new_label, font_size=20, color=ACCENT_COLOR)
                 new_lbl.move_to(label_pos)
+                clamp_to_frame(new_lbl)
                 anims.append(Transform(mat_label, new_lbl))
             else:
                 anims.append(mat_label.animate.move_to(label_pos))
@@ -1461,25 +1540,41 @@ class LanguageModelingPipeline(Scene):
             self.play(FadeOut(prev_eq), run_time=0.5)
 
         # ── Narrative conclusion: X_N is ready (step-by-step) ──
+        wrap_width = config.frame_width * 0.85
+
         conclusion_q = Text(
             "Does the transformer core transform our embedding matrix into another embedding matrix?",
-            font_size=20, color=TRANSFORMER_RED,
+            font_size=20,
+            color=TRANSFORMER_RED,
         )
+        conclusion_q.set(width=wrap_width)
         conclusion_q.to_edge(DOWN, buff=0.8)
+        clamp_to_frame(conclusion_q)
 
         conclusion_a = Text(
             "Yes — but now it contains rich, context-aware representations of each token based on the full sequence.",
-            font_size=20, color=TRANSFORMER_RED,
+            font_size=20,
+            color=TRANSFORMER_RED,
         )
-        conclusion_a.next_to(conclusion_q, DOWN, buff=0.2)
+        conclusion_a.set(width=wrap_width)
+        conclusion_a.move_to(conclusion_q)  # keeps transition visually clean
+        clamp_to_frame(conclusion_a)
 
         self.play(FadeIn(conclusion_q, shift=UP * 0.2), run_time=0.6)
         self.wait(0.8)
-        self.play(FadeIn(conclusion_a, shift=UP * 0.1), run_time=0.5)
+
+        # Crossfade Q → A
+        self.play(
+            FadeOut(conclusion_q, shift=UP * 0.1),
+            FadeIn(conclusion_a, shift=UP * 0.1),
+            run_time=0.6,
+        )
+
         self.wait(1.0)
-        self.play(FadeOut(VGroup(conclusion_q, conclusion_a)), run_time=0.4)
+        self.play(FadeOut(conclusion_a), run_time=0.4)
 
         self.wait(0.5)
+
 
 
     # ------------------------------------------------------------------
@@ -1497,6 +1592,7 @@ class LanguageModelingPipeline(Scene):
 
         title = Text("Output Decoding", font_size=28, color=ACCENT_COLOR_2)
         title.to_edge(UP, buff=0.25)
+        clamp_to_frame(title)
         self.play(FadeIn(title), run_time=0.5)
 
         subtitle = Text(
@@ -1505,6 +1601,7 @@ class LanguageModelingPipeline(Scene):
             color=GRAY_A,
         )
         subtitle.next_to(title, DOWN, buff=0.15)
+        clamp_to_frame(subtitle)
         self.play(FadeIn(subtitle), run_time=0.6)
         self.wait(0.3)
 
@@ -1520,6 +1617,7 @@ class LanguageModelingPipeline(Scene):
             font_size=18, color=GRAY_A,
         )
         explain1.next_to(xn_mat, DOWN, buff=0.5)
+        clamp_to_frame(explain1)
         self.play(FadeIn(explain1), run_time=0.5)
         self.wait(0.8)
 
@@ -1528,6 +1626,7 @@ class LanguageModelingPipeline(Scene):
             font_size=18, color=ACCENT_COLOR,
         )
         explain2.next_to(explain1, DOWN, buff=0.2)
+        clamp_to_frame(explain2)
         self.play(FadeIn(explain2), run_time=0.5)
         self.wait(1.0)
 
@@ -1543,6 +1642,7 @@ class LanguageModelingPipeline(Scene):
             font_size=18, color=YELLOW,
         )
         explain3.next_to(explain2, DOWN, buff=0.2)
+        clamp_to_frame(explain3)
         self.play(FadeIn(explain3), run_time=0.5)
         self.wait(1.0)
 
@@ -1566,26 +1666,31 @@ class LanguageModelingPipeline(Scene):
         # x_T (1 × d) · W_vocab (d × |V|) = z_T (1 × |V|)
 
         times_sign = MathTex(r"\times", font_size=28, color=TEXT_COLOR)
-        times_sign.next_to(xt_vec, RIGHT, buff=0.3)
+        times_sign.next_to(xt_vec, RIGHT, buff=1.0)
+        clamp_to_frame(times_sign)
 
         # Create vocabulary matrix (d × |V|) - shown as d rows, few columns with ellipsis
         vocab_mat = EmbeddingWeightMatrix(num_cols=D_MODEL, cell_size=0.18, top_rows=3, bottom_rows=2)
-        vocab_mat.next_to(times_sign, RIGHT, buff=0.3)
+        vocab_mat.next_to(times_sign, RIGHT, buff=1.0)
 
         vocab_label = Text("Vocabulary Matrix", font_size=14, color=ACCENT_COLOR_2)
-        vocab_label.next_to(vocab_mat, UP, buff=0.15)
+        vocab_label.next_to(vocab_mat, UP, buff=1.30)
+        clamp_to_frame(vocab_label)
 
         w_label = MathTex(r"W_{\text{vocab}}", font_size=20, color=ACCENT_COLOR_2)
         w_label.next_to(vocab_mat, DOWN, buff=0.15)
+        clamp_to_frame(w_label)
 
         # Dimension labels
         brace_d = Brace(vocab_mat, LEFT, buff=0.08, color=GRAY_B)
         d_label = MathTex(r"d", font_size=14, color=GRAY_B)
         d_label.next_to(brace_d, LEFT, buff=0.05)
+        clamp_to_frame(d_label)
 
         brace_v = Brace(vocab_mat, UP, buff=0.08, color=GRAY_B)
         v_label = MathTex(r"|V|", font_size=14, color=GRAY_B)
         v_label.next_to(brace_v, UP, buff=0.05)
+        clamp_to_frame(v_label)
 
         self.play(
             FadeIn(times_sign),
@@ -1603,6 +1708,7 @@ class LanguageModelingPipeline(Scene):
         # Equals sign and result
         equals_sign = MathTex(r"=", font_size=28, color=TEXT_COLOR)
         equals_sign.next_to(vocab_mat, RIGHT, buff=0.3)
+        clamp_to_frame(equals_sign)
 
         # z_T is 1 × |V| (logits over vocabulary)
         zt_vec = TensorMatrix(1, D_MODEL, cell_size=0.18, label="z_T (logits)", seed=123)
@@ -1617,6 +1723,7 @@ class LanguageModelingPipeline(Scene):
             font_size=20,
         )
         eq1.scale(0.8).to_edge(RIGHT, buff=0.3).shift(UP * 2.5)
+        clamp_to_frame(eq1)
         self.play(FadeIn(eq1), run_time=0.6)
         self.wait(1.0)
 
@@ -1628,6 +1735,7 @@ class LanguageModelingPipeline(Scene):
         )
         softmax_label = Text("softmax", font_size=14, color=ACCENT_COLOR_2)
         softmax_label.next_to(softmax_arrow, RIGHT, buff=0.1)
+        clamp_to_frame(softmax_label)
 
         pt_vec = TensorMatrix(1, D_MODEL, cell_size=0.18, label="p_T (probs)", seed=200)
         pt_vec.next_to(softmax_arrow, DOWN, buff=0.15)
@@ -1641,6 +1749,7 @@ class LanguageModelingPipeline(Scene):
             font_size=20,
         )
         eq2.scale(0.8).move_to(eq1.get_center())
+        clamp_to_frame(eq2)
         self.play(Transform(eq1, eq2), run_time=0.6)
         self.wait(1.0)
 
@@ -1665,12 +1774,14 @@ class LanguageModelingPipeline(Scene):
 
         dist_title = Text("Next-Token Probabilities", font_size=20, color=YELLOW)
         dist_title.next_to(dist, UP, buff=0.4)
+        clamp_to_frame(dist_title)
 
         sample_eq = EquationLabel(
             [r"x_{T+1} \sim \mathrm{Categorical}(p_T)"],
             font_size=22,
         )
         sample_eq.next_to(dist, DOWN, buff=0.5)
+        clamp_to_frame(sample_eq)
 
         self.play(
             FadeIn(dist_title),
@@ -1697,7 +1808,8 @@ class LanguageModelingPipeline(Scene):
             '"The cat sat on the" → "mat"',
             font_size=24, color=YELLOW,
         )
-        final_text.to_edge(DOWN, buff=0.5)
+        final_text.to_edge(DOWN, buff=1.0)
+        clamp_to_frame(final_text)
         self.play(FadeIn(final_text, shift=UP * 0.2), run_time=0.8)
         self.wait(0.8)
 
@@ -1706,5 +1818,6 @@ class LanguageModelingPipeline(Scene):
             font_size=20, color=GRAY_A,
         )
         conclusion.next_to(final_text, DOWN, buff=0.3)
+        clamp_to_frame(conclusion)
         self.play(FadeIn(conclusion), run_time=0.6)
         self.wait(1.5)

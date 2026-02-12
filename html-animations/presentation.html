@@ -1,0 +1,1818 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 1 — Language Modeling from Scratch</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --bg: #0f1117;
+    --surface: #1a1d27;
+    --surface2: #242836;
+    --border: #2e3345;
+    --text: #f3f3f5;
+    --text-dim: #8a8fa8;
+    --accent: #6c8cff;
+    --accent-glow: rgba(108,140,255,0.25);
+    --green: #4ade80;
+    --green-glow: rgba(74,222,128,0.2);
+    --red: #f87171;
+    --orange: #fb923c;
+    --purple: #a78bfa;
+    --yellow: #facc15;
+    --cyan: #22d3ee;
+    --pink: #f472b6;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── Slide system ── */
+  .slide-container {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+  }
+  .slide {
+    position: absolute;
+    inset: 0;
+    display: none;
+    flex-direction: column;
+    padding: 40px 60px 80px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+    animation: fadeSlideIn 0.45s ease;
+  }
+  .slide.active { display: flex; }
+
+  @keyframes fadeSlideIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .slide.centered {
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+
+  /* ── Typography ── */
+  h1 {
+    font-size: 2.6rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.15;
+    background: linear-gradient(135deg, var(--accent), var(--purple));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  h1.large { font-size: 3.2rem; }
+  h2 {
+    font-size: 1.6rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 12px;
+  }
+  h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+  .subtitle {
+    font-size: 1.15rem;
+    color: var(--text-dim);
+    margin-top: 8px;
+    line-height: 1.5;
+    max-width: 700px;
+  }
+  .small-text {
+    font-size: 0.85rem;
+    color: var(--text-dim);
+    line-height: 1.55;
+  }
+  .tiny {
+    font-size: 0.75rem;
+    color: var(--text-dim);
+  }
+
+  /* ── Highlight spans ── */
+  .hl        { color: var(--accent); font-weight: 600; }
+  .hl-green  { color: var(--green);  font-weight: 600; }
+  .hl-red    { color: var(--red);    font-weight: 600; }
+  .hl-orange { color: var(--orange); font-weight: 600; }
+  .hl-purple { color: var(--purple); font-weight: 600; }
+  .hl-yellow { color: var(--yellow); font-weight: 600; }
+  .hl-cyan   { color: var(--cyan);   font-weight: 600; }
+  .hl-pink   { color: var(--pink);   font-weight: 600; }
+
+  /* ── Cards ── */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 24px;
+    position: relative;
+    overflow: hidden;
+  }
+  .card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse at top left, rgba(108,140,255,0.04), transparent 60%);
+    pointer-events: none;
+  }
+
+  /* ── Callouts ── */
+  .callout {
+    display: flex;
+    gap: 10px;
+    padding: 14px 18px;
+    border-radius: 10px;
+    font-size: 0.85rem;
+    line-height: 1.55;
+  }
+  .callout.info    { background: rgba(108,140,255,0.08); border: 1px solid rgba(108,140,255,0.18); color: #b8c7ff; }
+  .callout.warn    { background: rgba(251,146,60,0.08);  border: 1px solid rgba(251,146,60,0.18);  color: #fdc89b; }
+  .callout.success { background: rgba(74,222,128,0.08);  border: 1px solid rgba(74,222,128,0.18);  color: #9eefbe; }
+  .callout.question { background: rgba(167,139,250,0.08); border: 1px solid rgba(167,139,250,0.18); color: #cbb8ff; }
+  .callout.pink    { background: rgba(244,114,182,0.08); border: 1px solid rgba(244,114,182,0.18); color: #fbb8d8; }
+  .callout .icon { flex-shrink: 0; font-size: 1.1rem; }
+
+  /* ── Badges / pills ── */
+  .badge {
+    display: inline-block;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 4px 12px;
+    border-radius: 20px;
+    margin-bottom: 12px;
+  }
+  .badge.day1 { background: rgba(108,140,255,0.15); color: var(--accent); }
+  .badge.activity { background: rgba(74,222,128,0.15); color: var(--green); }
+  .badge.concept { background: rgba(167,139,250,0.15); color: var(--purple); }
+  .badge.discussion { background: rgba(251,146,60,0.15); color: var(--orange); }
+  .badge.deepdive { background: rgba(250,204,21,0.15); color: var(--yellow); }
+
+  /* ── Grid layouts ── */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+  @media (max-width: 800px) {
+    .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+  }
+
+  /* ── Flow diagrams ── */
+  .flow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin: 16px 0;
+  }
+  .flow-box {
+    padding: 12px 20px;
+    border-radius: 10px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-align: center;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    min-width: 100px;
+  }
+  .flow-arrow {
+    color: var(--text-dim);
+    font-size: 1.3rem;
+    flex-shrink: 0;
+  }
+  .flow-box.data    { border-color: rgba(34,211,238,0.4); color: var(--cyan); background: rgba(34,211,238,0.06); }
+  .flow-box.model   { border-color: rgba(108,140,255,0.4); color: var(--accent); background: rgba(108,140,255,0.06); }
+  .flow-box.loss    { border-color: rgba(248,113,113,0.4); color: var(--red); background: rgba(248,113,113,0.06); }
+  .flow-box.grad    { border-color: rgba(251,146,60,0.4); color: var(--orange); background: rgba(251,146,60,0.06); }
+  .flow-box.param   { border-color: rgba(167,139,250,0.4); color: var(--purple); background: rgba(167,139,250,0.06); }
+  .flow-box.green   { border-color: rgba(74,222,128,0.4); color: var(--green); background: rgba(74,222,128,0.06); }
+  .flow-box.pink    { border-color: rgba(244,114,182,0.4); color: var(--pink); background: rgba(244,114,182,0.06); }
+  .flow-box.yellow  { border-color: rgba(250,204,21,0.4); color: var(--yellow); background: rgba(250,204,21,0.06); }
+
+  /* ── Interactive reveal ── */
+  .reveal-btn {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 10px 24px;
+    border-radius: 10px;
+    border: 1px dashed var(--purple);
+    background: rgba(167,139,250,0.08);
+    color: var(--purple);
+    cursor: pointer;
+    transition: all 0.3s;
+    margin-top: 8px;
+  }
+  .reveal-btn:hover { background: rgba(167,139,250,0.15); }
+  .hidden-content {
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+    transition: max-height 0.6s ease, opacity 0.4s ease, margin 0.4s ease;
+    margin-top: 0;
+  }
+  .hidden-content.revealed {
+    max-height: 600px;
+    opacity: 1;
+    margin-top: 16px;
+  }
+
+  /* ── NTP game ── */
+  .ntp-sentence {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.15rem;
+    line-height: 1.7;
+    padding: 18px 22px;
+    background: var(--surface2);
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    margin: 10px 0;
+  }
+  .ntp-blank {
+    display: inline-block;
+    min-width: 80px;
+    border-bottom: 2px dashed var(--orange);
+    color: var(--orange);
+    text-align: center;
+    padding: 0 4px;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+  .ntp-blank.show {
+    border-bottom-color: var(--green);
+    color: var(--green);
+    font-weight: 600;
+  }
+  .ntp-tag {
+    display: inline-block;
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 6px;
+    margin-left: 8px;
+    vertical-align: middle;
+  }
+  .ntp-tag.fact  { background: rgba(34,211,238,0.15); color: var(--cyan); }
+  .ntp-tag.logic { background: rgba(251,146,60,0.15); color: var(--orange); }
+  .ntp-tag.code  { background: rgba(167,139,250,0.15); color: var(--purple); }
+  .ntp-tag.lang  { background: rgba(108,140,255,0.15); color: var(--accent); }
+  .ntp-tag.math  { background: rgba(250,204,21,0.15); color: var(--yellow); }
+
+  /* ── Math formulas ── */
+  .math {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1rem;
+    text-align: center;
+    padding: 16px;
+    background: var(--surface2);
+    border-radius: 10px;
+    margin: 12px 0;
+    color: var(--yellow);
+    letter-spacing: 0.02em;
+    line-height: 1.6;
+  }
+  .math-big { font-size: 1.3rem; padding: 22px; }
+
+  /* ── Animated gradient line ── */
+  .gradient-line {
+    height: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--purple), var(--accent));
+    background-size: 200% 100%;
+    animation: shimmer 2s linear infinite;
+    border-radius: 2px;
+    margin: 10px 0;
+  }
+  @keyframes shimmer {
+    0%   { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+
+  /* ── Token display ── */
+  .token-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.05rem;
+    margin: 12px 0;
+  }
+  .tok {
+    display: inline-flex;
+    align-items: center;
+    padding: 5px 12px;
+    border-radius: 7px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    white-space: nowrap;
+  }
+  .tok.input  { border-color: var(--accent); background: rgba(108,140,255,0.1); }
+  .tok.target { border-color: var(--green);  background: rgba(74,222,128,0.1); color: var(--green); font-weight: 600; }
+  .tok.blank  { border: 2px dashed var(--orange); color: var(--orange); min-width: 60px; justify-content: center; cursor: pointer; }
+  .tok.done   { border: 1px solid var(--text-dim); color: var(--text-dim); cursor: default; opacity: 0.5; }
+
+  /* ── Pipeline boxes ── */
+  .pipeline-box {
+    padding: 20px;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    position: relative;
+  }
+  .pipeline-box h3 { font-size: 1rem; margin-bottom: 6px; }
+  .pipeline-box .small-text { font-size: 0.8rem; }
+  .pipeline-box .pipe-num {
+    position: absolute;
+    top: -10px; left: -10px;
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #fff;
+  }
+
+  /* ── Not-in-objective list ── */
+  .not-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 12px 0;
+  }
+  .not-item {
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    background: rgba(248,113,113,0.06);
+    border: 1px solid rgba(248,113,113,0.2);
+    color: var(--red);
+    position: relative;
+    padding-left: 32px;
+  }
+  .not-item::before {
+    content: '✕';
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-weight: 700;
+    font-size: 0.75rem;
+  }
+
+  /* ── Data stats ── */
+  .data-stat { text-align: center; padding: 16px; }
+  .data-stat .big-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 2rem;
+    font-weight: 700;
+  }
+  .data-stat .stat-label {
+    font-size: 0.78rem;
+    color: var(--text-dim);
+    margin-top: 2px;
+  }
+
+  /* ── Bar chart (for loss deep-dive slides) ── */
+  .bar-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 6px;
+    height: 28px;
+  }
+  .bar-word {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    width: 75px;
+    text-align: right;
+    color: var(--text-dim);
+    flex-shrink: 0;
+  }
+  .bar-track {
+    flex: 1;
+    height: 22px;
+    background: var(--surface2);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+  .bar-fill {
+    height: 100%;
+    border-radius: 6px;
+    transition: width 1s cubic-bezier(0.22, 1, 0.36, 1);
+    min-width: 0;
+  }
+  .bar-fill.predicted { background: linear-gradient(90deg, var(--accent), var(--purple)); }
+  .bar-fill.target-fill { background: linear-gradient(90deg, var(--green), #34d399); }
+  .bar-pct {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--text-dim);
+    width: 48px;
+    text-align: left;
+    flex-shrink: 0;
+  }
+
+  /* dual chart layout */
+  .dual-charts {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-top: 10px;
+  }
+  @media (max-width: 640px) {
+    .dual-charts { grid-template-columns: 1fr; }
+  }
+  .chart-col {
+    background: var(--surface2);
+    border-radius: 10px;
+    padding: 14px;
+  }
+  .chart-title {
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 8px;
+  }
+
+  /* loss display */
+  .loss-display {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    margin: 16px 0;
+    flex-wrap: wrap;
+  }
+  .loss-box {
+    text-align: center;
+    padding: 14px 24px;
+    border-radius: 12px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    min-width: 130px;
+  }
+  .loss-box .label {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-dim);
+    margin-bottom: 4px;
+  }
+  .loss-box .value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.4rem;
+    font-weight: 700;
+  }
+  .loss-box .value.high { color: var(--red); }
+  .loss-box .value.low  { color: var(--green); }
+  .loss-box .formula {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--text-dim);
+    margin-top: 4px;
+  }
+  .comparison-arrow {
+    font-size: 2rem;
+    color: var(--text-dim);
+    animation: pulseOpacity 1.5s ease-in-out infinite;
+  }
+  @keyframes pulseOpacity {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  /* loss meter */
+  .loss-meter {
+    width: 100%;
+    height: 10px;
+    border-radius: 6px;
+    background: var(--surface2);
+    margin: 8px 0;
+    overflow: hidden;
+  }
+  .loss-meter-fill {
+    height: 100%;
+    border-radius: 6px;
+    transition: width 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  /* before / after */
+  .before-after {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 16px;
+    align-items: start;
+    margin-top: 10px;
+  }
+  @media (max-width: 640px) {
+    .before-after { grid-template-columns: 1fr; }
+  }
+  .ba-col {
+    background: var(--surface2);
+    border-radius: 10px;
+    padding: 14px;
+  }
+  .ba-col .ba-label {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+  .ba-col.before .ba-label { color: var(--red); }
+  .ba-col.after  .ba-label { color: var(--green); }
+  .ba-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    color: var(--text-dim);
+    padding-top: 40px;
+  }
+
+  /* backprop arrows */
+  .backprop-arrows {
+    display: flex;
+    justify-content: center;
+    gap: 4px;
+    margin: 8px 0;
+    font-size: 1.3rem;
+  }
+  .backprop-arrows span {
+    color: var(--orange);
+    animation: flowLeft 1s ease-in-out infinite;
+    animation-delay: 0.45s;
+  }
+  .backprop-arrows span:nth-child(2) { animation-delay: 0.30s; }
+  .backprop-arrows span:nth-child(3) { animation-delay: 0.15s; }
+  .backprop-arrows span:nth-child(4) { animation-delay: 0.0s; }
+  @keyframes flowLeft {
+    0%, 100% { opacity: 0.2; }
+    50% { opacity: 1; }
+  }
+
+  /* flow node (for backprop) */
+  .update-flow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin: 14px 0;
+    flex-wrap: wrap;
+  }
+  .flow-node {
+    padding: 10px 18px;
+    border-radius: 10px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    text-align: center;
+    border: 1px solid var(--border);
+  }
+  .flow-node.loss-node   { background: rgba(248,113,113,0.1); border-color: rgba(248,113,113,0.3); color: var(--red); }
+  .flow-node.grad-node   { background: rgba(251,146,60,0.1);  border-color: rgba(251,146,60,0.3);  color: var(--orange); }
+  .flow-node.param-node  { background: rgba(167,139,250,0.1); border-color: rgba(167,139,250,0.3); color: var(--purple); }
+  .flow-node.better-node { background: rgba(74,222,128,0.1);  border-color: rgba(74,222,128,0.3);  color: var(--green); }
+
+  /* ── Bottom nav ── */
+  .bottom-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 24px;
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    z-index: 10;
+    flex-shrink: 0;
+  }
+  .progress-track {
+    flex: 1;
+    height: 3px;
+    background: var(--surface2);
+    border-radius: 3px;
+    margin: 0 20px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--purple));
+    border-radius: 3px;
+    transition: width 0.4s ease;
+  }
+  .nav-btn {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 600;
+    padding: 8px 22px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--surface2);
+    color: var(--text);
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .nav-btn:hover { background: var(--border); }
+  .nav-btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .nav-btn.primary:hover { background: #5a7bef; }
+  .nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+  .slide-counter {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--text-dim);
+    min-width: 60px;
+    text-align: center;
+  }
+
+  /* ── Speaker notes ── */
+  .speaker-notes { margin-top: auto; padding-top: 16px; }
+  .notes-toggle {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.72rem;
+    font-weight: 500;
+    color: var(--text-dim);
+    background: none;
+    border: 1px solid var(--border);
+    padding: 4px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .notes-toggle:hover { background: var(--surface2); }
+  .notes-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease, opacity 0.3s ease;
+    opacity: 0;
+  }
+  .notes-body.open {
+    max-height: 400px;
+    opacity: 1;
+    margin-top: 8px;
+  }
+  .notes-body p {
+    font-size: 0.8rem;
+    color: var(--text-dim);
+    line-height: 1.55;
+    font-style: italic;
+    padding: 10px 14px;
+    background: var(--surface2);
+    border-radius: 8px;
+    border-left: 3px solid var(--accent);
+  }
+
+  /* ── Spacers ── */
+  .spacer-sm { height: 12px; }
+  .spacer    { height: 20px; }
+  .spacer-lg { height: 32px; }
+
+  /* ── Objective list ── */
+  .obj-list { list-style: none; margin: 10px 0; }
+  .obj-list li {
+    padding: 10px 16px 10px 36px;
+    border-radius: 8px;
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    position: relative;
+  }
+  .obj-list li::before {
+    content: attr(data-num);
+    position: absolute;
+    left: 12px;
+    top: 10px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--accent);
+  }
+
+  .loop-arrow-anim { animation: pulseGlow 1.5s ease-in-out infinite; }
+  @keyframes pulseGlow { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
+
+  .section-tag {
+    position: absolute;
+    top: 18px; left: 28px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--text-dim);
+    opacity: 0.5;
+  }
+
+  /* network box (for forward-pass slide) */
+  .network-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    padding: 16px 24px;
+    background: linear-gradient(135deg, rgba(108,140,255,0.08), rgba(167,139,250,0.08));
+    border: 1px solid rgba(108,140,255,0.2);
+    border-radius: 12px;
+    margin: 0 auto;
+    max-width: 340px;
+    position: relative;
+  }
+  .network-box .nn-label { font-weight: 600; font-size: 0.9rem; }
+  .network-box .nn-sub   { font-size: 0.72rem; color: var(--text-dim); }
+  .network-box .param-badge {
+    position: absolute;
+    top: -10px; right: -10px;
+    font-size: 0.65rem;
+    font-weight: 600;
+    background: var(--purple);
+    color: #fff;
+    padding: 3px 9px;
+    border-radius: 12px;
+  }
+  .arrow-down {
+    text-align: center;
+    color: var(--text-dim);
+    font-size: 1.4rem;
+    margin: 4px 0;
+    animation: bobDown 1.2s ease-in-out infinite;
+  }
+  @keyframes bobDown { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(5px); } }
+
+  /* context row (for loss slides) */
+  .context-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin: 14px 0 6px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.05rem;
+  }
+  .ctx-tok {
+    padding: 5px 12px;
+    border-radius: 7px;
+    border: 1px solid var(--accent);
+    background: rgba(108,140,255,0.1);
+  }
+  .ctx-blank {
+    padding: 5px 12px;
+    border-radius: 7px;
+    border: 2px dashed var(--orange);
+    color: var(--orange);
+    min-width: 60px;
+    text-align: center;
+    animation: pulseBorder 1.5s ease-in-out infinite;
+  }
+  @keyframes pulseBorder {
+    0%, 100% { border-color: var(--orange); }
+    50% { border-color: rgba(251,146,60,0.3); }
+  }
+
+  /* step label pill (for loss deep-dive slides) */
+  .step-label {
+    display: inline-block;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--yellow);
+    background: rgba(250,204,21,0.1);
+    padding: 3px 10px;
+    border-radius: 20px;
+    margin-bottom: 10px;
+  }
+</style>
+</head>
+<body>
+
+<div class="slide-container" id="slideContainer">
+
+<!-- ═══════ SLIDE 0 — TITLE ═══════ -->
+<div class="slide centered" id="slide-0">
+  <div class="badge day1">Day 1</div>
+  <h1 class="large">Language Modeling<br>from Scratch</h1>
+  <div class="spacer-sm"></div>
+  <p class="subtitle">How LLMs learn, what they compute, and what "data work" really means</p>
+  <div class="spacer-lg"></div>
+  <div class="gradient-line" style="width:200px;"></div>
+</div>
+
+<!-- ═══════ SLIDE 1 — OBJECTIVES ═══════ -->
+<div class="slide" id="slide-1">
+  <span class="section-tag">Day 1</span>
+  <div class="badge day1">Objectives</div>
+  <h2>By the end of today, you'll have a mental model of:</h2>
+  <div class="spacer-sm"></div>
+  <ul class="obj-list">
+    <li data-num="1">What an LLM <span class="hl">computes at runtime</span> — tokens in, probability distribution out</li>
+    <li data-num="2">Why <span class="hl-green">next-token training</span> can create complex capabilities</li>
+    <li data-num="3">What <span class="hl-purple">"training an LLM"</span> concretely means: <span class="hl-cyan">data</span> → <span class="hl">pretrain</span> → <span class="hl-orange">post-train/alignment</span> → <span class="hl-green">eval</span></li>
+    <li data-num="4">What <span class="hl-cyan">"data work"</span> actually entails — collection, cleaning, dedup, filtering, annotation</li>
+  </ul>
+  <div class="speaker-notes">
+    <button class="notes-toggle" onclick="this.nextElementSibling.classList.toggle('open')">speaker notes</button>
+    <div class="notes-body"><p>These four objectives are what we want every participant to walk away with. They don't need to implement a transformer — just hold the correct mental model.</p></div>
+  </div>
+</div>
+
+<!-- ═══════ SLIDE 2 — OPENING ═══════ -->
+<div class="slide" id="slide-2">
+  <span class="section-tag">Opening</span>
+  <div class="badge concept">Live Demo</div>
+  <h2>Let's watch an LLM complete a sentence</h2>
+  <div class="spacer-sm"></div>
+  <p class="small-text" style="max-width:680px;">We know why we're all here — understanding LLMs. So let's start by watching what actually happens when an LLM processes a simple sentence.</p>
+  <div class="spacer"></div>
+  <div class="card" style="text-align:center; max-width:600px;">
+    <p class="small-text" style="margin-bottom:14px; color:var(--text-dim);">Full-Pipeline Animation (3 zoom levels)</p>
+    <div class="flow">
+      <div class="flow-box model" style="font-size:0.78rem;">LLM as a<br>black box</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box param" style="font-size:0.78rem;">Input Encoding<br>Transformer<br>Output Decoding</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box green" style="font-size:0.78rem;">Attention, MLP<br>Softmax, Embeddings<br>LayerNorm...</div>
+    </div>
+    <p class="tiny">Zoom level 1 → 2 → 3</p>
+  </div>
+  <div class="spacer"></div>
+  <div class="callout info">
+    <span class="icon">i</span>
+    <span><em>"Over two days, we'll reduce LLMs to a small set of operations: tokens become vectors, vectors undergo repeated structured transforms, and we end with a probability distribution over the next token. By the end you'll be able to trace a forward pass end-to-end, understand what each matrix multiplication is doing, and connect those mechanics to the model's behavior — both its strengths and its failure modes."</em></span>
+  </div>
+  <div class="speaker-notes">
+    <button class="notes-toggle" onclick="this.nextElementSibling.classList.toggle('open')">speaker notes</button>
+    <div class="notes-body"><p>Play the pipeline animation video here. Let it run fully. Then use the framing quote to set the tone for the two-day workshop.</p></div>
+  </div>
+</div>
+
+<!-- ═══════ SLIDE 3 — THREE INGREDIENTS ═══════ -->
+<div class="slide" id="slide-3">
+  <span class="section-tag">The Big Picture</span>
+  <div class="badge discussion">Audience Interaction</div>
+  <h2>LLMs have three ingredients</h2>
+  <div class="spacer-sm"></div>
+  <div class="grid-3" id="ingredientsGrid">
+    <div class="card" style="text-align:center;">
+      <div style="font-size:2.2rem; margin-bottom:8px;">1</div>
+      <h3 style="color:var(--cyan);">Data</h3>
+      <p class="small-text">What the model is exposed to — trillions of tokens from the internet, books, code, and more</p>
+    </div>
+    <div class="card" style="text-align:center;">
+      <div style="font-size:2.2rem; margin-bottom:8px;">2</div>
+      <h3 style="color:var(--accent);">Architecture</h3>
+      <p class="small-text">The function class (Transformer) that maps input context → output logits</p>
+    </div>
+    <div class="card" style="text-align:center;" id="ingredient3Card">
+      <div style="font-size:2.2rem; margin-bottom:8px;">3</div>
+      <div id="ingredient3Hidden">
+        <h3 style="color:var(--purple);">???</h3>
+        <p class="small-text" style="color:var(--text-dim);">What's the missing ingredient?</p>
+        <button class="reveal-btn" onclick="revealIngredient3()" style="margin-top:12px;">Reveal</button>
+      </div>
+      <div id="ingredient3Revealed" style="display:none;">
+        <h3 style="color:var(--purple);">Learning</h3>
+        <p class="small-text">The <span class="hl-yellow">objective</span> (next-token prediction), the <span class="hl-orange">optimizer</span> (Adam), and the <span class="hl-purple">compute budget</span> that makes it feasible</p>
+      </div>
+    </div>
+  </div>
+  <div class="hidden-content" id="ingredientExplanation">
+    <div class="callout info">
+      <span class="icon">i</span>
+      <span><strong>Learning</strong> means three things: (1) the <span class="hl-yellow">objective we train on</span> — e.g., next-token prediction using cross-entropy loss, (2) the <span class="hl-orange">optimization process</span> — SGD/Adam variants, learning rate schedules, and (3) the <span class="hl-purple">compute budget</span> — thousands of GPUs for weeks.</span>
+    </div>
+  </div>
+  <div class="speaker-notes">
+    <button class="notes-toggle" onclick="this.nextElementSibling.classList.toggle('open')">speaker notes</button>
+    <div class="notes-body"><p>Ask the audience: "What's the missing ingredient besides data and architecture?" Let them discuss for 30s. Then click reveal.</p></div>
+  </div>
+</div>
+
+<!-- ═══════ SLIDE 4 — WORKSHOP ROADMAP ═══════ -->
+<div class="slide" id="slide-4">
+  <span class="section-tag">Roadmap</span>
+  <div class="badge day1">Structure</div>
+  <h2>Workshop roadmap</h2>
+  <div class="spacer-sm"></div>
+  <div class="grid-2">
+    <div class="card" style="border-color: rgba(108,140,255,0.3);">
+      <div class="badge day1">Day 1 — Today</div>
+      <h3 style="color:var(--accent);">How learning happens + data quality</h3>
+      <ul style="list-style:none; margin-top:10px;">
+        <li class="small-text" style="padding:5px 0 5px 20px; position:relative;"><span style="position:absolute;left:0;color:var(--accent);">→</span> Inference vs. training</li>
+        <li class="small-text" style="padding:5px 0 5px 20px; position:relative;"><span style="position:absolute;left:0;color:var(--accent);">→</span> Next-token prediction objective</li>
+        <li class="small-text" style="padding:5px 0 5px 20px; position:relative;"><span style="position:absolute;left:0;color:var(--accent);">→</span> Loss, gradients, parameter updates</li>
+        <li class="small-text" style="padding:5px 0 5px 20px; position:relative;"><span style="position:absolute;left:0;color:var(--accent);">→</span> Why NTP works (interactive)</li>
+        <li class="small-text" style="padding:5px 0 5px 20px; position:relative;"><span style="position:absolute;left:0;color:var(--accent);">→</span> The full training pipeline</li>
+        <li class="small-text" style="padding:5px 0 5px 20px; position:relative;"><span style="position:absolute;left:0;color:var(--accent);">→</span> Data work: collection → annotation</li>
+      </ul>
+    </div>
+    <div class="card" style="border-color: rgba(167,139,250,0.25); opacity:0.6;">
+      <div class="badge concept">Day 2 — Tomorrow</div>
+      <h3 style="color:var(--purple);">What the model computes internally</h3>
+      <ul style="list-style:none; margin-top:10px;">
+        <li class="small-text" style="padding:5px 0 5px 20px; position:relative;"><span style="position:absolute;left:0;color:var(--purple);">→</span> Tokenization & embeddings</li>
+        <li class="small-text" style="padding:5px 0 5px 20px; position:relative;"><span style="position:absolute;left:0;color:var(--purple);">→</span> Self-attention mechanics</li>
+        <li class="small-text" style="padding:5px 0 5px 20px; position:relative;"><span style="position:absolute;left:0;color:var(--purple);">→</span> Feed-forward layers</li>
+        <li class="small-text" style="padding:5px 0 5px 20px; position:relative;"><span style="position:absolute;left:0;color:var(--purple);">→</span> Full forward pass end-to-end</li>
+        <li class="small-text" style="padding:5px 0 5px 20px; position:relative;"><span style="position:absolute;left:0;color:var(--purple);">→</span> Connecting mechanics to behavior</li>
+      </ul>
+    </div>
+  </div>
+  <div class="spacer-sm"></div>
+  <div class="callout info">
+    <span class="icon">i</span>
+    <span><strong>Day 1 = why the weights end up where they are.</strong> Day 2 = what those weights actually do to your input.</span>
+  </div>
+  <div class="speaker-notes">
+    <button class="notes-toggle" onclick="this.nextElementSibling.classList.toggle('open')">speaker notes</button>
+    <div class="notes-body"><p>"You just saw inference: a sentence goes in, a next-token distribution comes out, we sample, repeat. But none of that is useful unless the weights have been fit. So the workshop splits cleanly."</p></div>
+  </div>
+</div>
+
+<!-- ═══════ SLIDE 5 — INFERENCE LOOP ═══════ -->
+<div class="slide" id="slide-5">
+  <span class="section-tag">Inference vs Training</span>
+  <div class="badge concept">Concept</div>
+  <h2>The inference (use-time) loop</h2>
+  <p class="small-text" style="max-width:600px;">At inference, the model does a simple repeated cycle: read context, predict next token, append, repeat. No learning happens — weights are frozen.</p>
+  <div class="spacer"></div>
+  <div class="card" style="max-width:760px; margin: 0 auto;">
+    <div class="flow">
+      <div class="flow-box data">Context<br>tokens</div>
+      <div class="flow-arrow loop-arrow-anim">→</div>
+      <div class="flow-box model">Model<br><span class="tiny">(frozen weights)</span></div>
+      <div class="flow-arrow loop-arrow-anim">→</div>
+      <div class="flow-box yellow">Logits</div>
+      <div class="flow-arrow loop-arrow-anim">→</div>
+      <div class="flow-box pink">Softmax</div>
+      <div class="flow-arrow loop-arrow-anim">→</div>
+      <div class="flow-box green">Sample<br>next token</div>
+    </div>
+    <div style="text-align:center; margin-top:8px;">
+      <span class="tiny" style="color:var(--orange);">↻ append token to context and repeat</span>
+    </div>
+  </div>
+  <div class="spacer"></div>
+  <div class="token-row" id="inferenceDemo">
+    <span class="tok input">The</span>
+    <span class="tok input">capital</span>
+    <span class="tok input">of</span>
+    <span class="tok input">Pakistan</span>
+    <span class="tok input">is</span>
+    <span class="tok blank" id="infCurrent">click</span>
+  </div>
+  <p class="tiny" id="infHint">Click the blank to simulate one inference step</p>
+  <div class="speaker-notes">
+    <button class="notes-toggle" onclick="this.nextElementSibling.classList.toggle('open')">speaker notes</button>
+    <div class="notes-body"><p>"You already saw the inference loop in the animation: it's a repeated forward pass. The model reads all context tokens, produces a probability distribution, we sample from it, append the result, and go again. Crucially: no weights change during inference."</p></div>
+  </div>
+</div>
+
+<!-- ═══════ SLIDE 6 — TRAINING LOOP ═══════ -->
+<div class="slide" id="slide-6">
+  <span class="section-tag">Inference vs Training</span>
+  <div class="badge concept">Concept</div>
+  <h2>The training (learning) loop</h2>
+  <p class="small-text" style="max-width:640px;">Training uses the <em>same forward pass</em>, but adds two critical things: a <span class="hl-green">target answer</span> (from training data) and a <span class="hl-red">weight update</span> step.</p>
+  <div class="spacer"></div>
+  <div class="card" style="max-width:800px; margin:0 auto;">
+    <div class="flow">
+      <div class="flow-box data">Context<br>tokens</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box model">Model<br><span class="tiny">(learnable weights)</span></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box yellow">Logits</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box pink">Softmax</div>
+    </div>
+    <div class="spacer-sm"></div>
+    <div style="text-align:center; font-size:1.2rem; color:var(--text-dim);">↓ compare</div>
+    <div class="spacer-sm"></div>
+    <div class="flow">
+      <div class="flow-box green">True next<br>token</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box loss">Compute<br>loss</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box grad">Compute<br>gradients</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box param">Update<br>weights</div>
+    </div>
+    <div style="text-align:center; margin-top:10px;">
+      <span class="tiny" style="color:var(--orange);">↻ repeat for every token in the training data</span>
+    </div>
+  </div>
+  <div class="spacer"></div>
+  <div class="grid-2" style="max-width:700px;">
+    <div class="callout info" style="margin:0;"><span class="icon">≡</span><span><strong>Same as inference:</strong> forward pass through the model</span></div>
+    <div class="callout warn" style="margin:0;"><span class="icon">+</span><span><strong>New in training:</strong> target token, loss computation, weight update</span></div>
+  </div>
+  <div class="speaker-notes">
+    <button class="notes-toggle" onclick="this.nextElementSibling.classList.toggle('open')">speaker notes</button>
+    <div class="notes-body"><p>"Training uses the same forward pass, but adds two things: (1) a target 'correct next token' from the training data, and (2) an update step that changes the weights."</p></div>
+  </div>
+</div>
+
+<!-- ═══════ SLIDE 7 — PRETRAINING OBJECTIVE ═══════ -->
+<div class="slide" id="slide-7">
+  <span class="section-tag">Pretraining</span>
+  <div class="badge concept">Core Concept</div>
+  <h2>The pretraining objective</h2>
+  <p class="small-text" style="max-width:680px;">We train on sequences of tokens. For each position, the model sees the prefix and predicts what comes next.</p>
+  <div class="spacer-sm"></div>
+  <div class="card" style="max-width:750px;">
+    <p class="small-text" style="margin-bottom:10px;">Given a sequence <span class="hl">x<sub>1</sub>, x<sub>2</sub>, ... , x<sub>T</sub></span>, for each position <span class="hl">t</span>:</p>
+    <div class="token-row" style="font-size:0.95rem;">
+      <span class="tok input">x<sub>1</sub></span>
+      <span class="tok input">x<sub>2</sub></span>
+      <span class="tok input" style="color:var(--text-dim);">...</span>
+      <span class="tok input">x<sub>t-1</sub></span>
+      <span class="tok blank" style="font-size:0.85rem; cursor:default;">x<sub>t</sub> = ?</span>
+    </div>
+    <p class="tiny" style="margin-top:6px;">Model sees prefix x<sub>&lt;t</sub> and produces P(x<sub>t</sub> | x<sub>&lt;t</sub>) over the entire vocabulary</p>
+  </div>
+  <div class="spacer-sm"></div>
+  <div class="math math-big">
+    L = − <sup>1</sup>/<sub>T</sub> Σ<sub>t=1..T</sub> log P<sub>θ</sub>(x<sub>t</sub> | x<sub>&lt;t</sub>)
+  </div>
+  <p class="tiny" style="text-align:center;">Cross-entropy loss = negative log-likelihood of the correct next token, averaged over all positions</p>
+  <div class="spacer"></div>
+  <div class="callout warn">
+    <span class="icon">!</span>
+    <span><strong>Key insight:</strong> This is <span class="hl-orange">distribution-matching</span>, not decision-making. The model is trained to shape its probability distribution to match the empirical distribution of text.</span>
+  </div>
+  <div class="speaker-notes">
+    <button class="notes-toggle" onclick="this.nextElementSibling.classList.toggle('open')">speaker notes</button>
+    <div class="notes-body"><p>"The loss is the negative log-probability assigned to the actual next token from the dataset. That's it. If the model assigns high probability to the observed token, the loss is low; if low probability, the loss is high."</p></div>
+  </div>
+</div>
+
+<!-- ═══════ SLIDE 8 — WHAT'S NOT IN THE LOSS ═══════ -->
+<div class="slide" id="slide-8">
+  <span class="section-tag">Pretraining</span>
+  <div class="badge concept">Critical Point</div>
+  <h2>What the loss does <em>not</em> contain</h2>
+  <p class="small-text" style="max-width:640px;">Pretraining has no explicit term for any of these. If the model exhibits them, they must be <em>instrumentally useful for predicting text</em>.</p>
+  <div class="spacer"></div>
+  <div class="not-list">
+    <div class="not-item">Truth</div>
+    <div class="not-item">Reasoning</div>
+    <div class="not-item">Helpfulness</div>
+    <div class="not-item">Safety</div>
+    <div class="not-item">Intelligence</div>
+    <div class="not-item">Goals</div>
+    <div class="not-item">World model</div>
+    <div class="not-item">Consistency</div>
+  </div>
+  <div class="spacer-sm"></div>
+  <div class="math">
+    L = −log P<sub>θ</sub>(x<sub>t</sub> | x<sub>&lt;t</sub>) &nbsp;&nbsp; ← <span style="color:var(--text-dim); font-size:0.82rem;">that's the ENTIRE signal</span>
+  </div>
+  <div class="spacer-sm"></div>
+  <div class="callout success">
+    <span class="icon">i</span>
+    <span><strong>The narrow bottleneck:</strong> Everything the model learns has to pass through this single constraint — lowering next-token prediction error. This explains both <span class="hl-green">emergence</span> and <span class="hl-red">brittleness</span>.</span>
+  </div>
+  <div class="spacer-sm"></div>
+  <div class="callout question">
+    <span class="icon">?</span>
+    <span><strong>Think about it:</strong> Why would a model learn facts, reasoning, or code just from predicting the next token? Let's see the mechanics of how this actually works...</span>
+  </div>
+  <div class="speaker-notes">
+    <button class="notes-toggle" onclick="this.nextElementSibling.classList.toggle('open')">speaker notes</button>
+    <div class="notes-body"><p>"There are no terms here for truth, reasoning, helpfulness, safety, goals, or intelligence. Everything the model learns has to pass through this very narrow bottleneck — lowering next-token prediction error."</p></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!--  SLIDES 9–14 : NEXT-TOKEN LOSS DEEP DIVE          -->
+<!--  (embedded from next-token-loss.html)              -->
+<!-- ═══════════════════════════════════════════════════ -->
+
+<!-- ═══════ SLIDE 9 — THE TASK ═══════ -->
+<div class="slide" id="slide-9">
+  <span class="section-tag">Deep Dive</span>
+  <div class="badge deepdive">Step 1 — The Task</div>
+  <h2>Predict the next token</h2>
+  <p class="small-text" style="max-width:640px;">During training, the model sees a sequence of tokens and must predict what comes next. Let's walk through one concrete example.</p>
+  <div class="spacer-sm"></div>
+  <div class="card" style="max-width:700px;">
+    <div class="context-row">
+      <span class="ctx-tok">"The</span>
+      <span class="ctx-tok">capital</span>
+      <span class="ctx-tok">of</span>
+      <span class="ctx-tok">Pakistan</span>
+      <span class="ctx-tok">is</span>
+      <span class="ctx-blank">???</span>
+    </div>
+    <div class="spacer-sm"></div>
+    <div class="callout info" style="margin:0;">
+      <span class="icon">i</span>
+      <span>The model receives <span class="hl">input context tokens</span> and must produce a probability for <em>every word in its vocabulary</em> as the next token. The training data already contains the answer — we just hide it and ask the model to guess.</span>
+    </div>
+  </div>
+  <div class="speaker-notes">
+    <button class="notes-toggle" onclick="this.nextElementSibling.classList.toggle('open')">speaker notes</button>
+    <div class="notes-body"><p>Set up the concrete example. This is one single training step — we'll trace it all the way through loss computation to parameter update.</p></div>
+  </div>
+</div>
+
+<!-- ═══════ SLIDE 10 — FORWARD PASS ═══════ -->
+<div class="slide" id="slide-10">
+  <span class="section-tag">Deep Dive</span>
+  <div class="badge deepdive">Step 2 — Forward Pass</div>
+  <h2>The model outputs a probability distribution</h2>
+  <p class="small-text" style="max-width:660px;">The input tokens flow through billions of parameters — attention layers, feed-forward networks — and out comes a <span class="hl">probability distribution over the entire vocabulary</span>.</p>
+
+  <div class="spacer-sm"></div>
+  <div style="max-width:700px;">
+    <div class="context-row" style="justify-content:center;">
+      <span class="ctx-tok">"The</span>
+      <span class="ctx-tok">capital</span>
+      <span class="ctx-tok">of</span>
+      <span class="ctx-tok">Pakistan</span>
+      <span class="ctx-tok">is</span>
+    </div>
+    <div class="arrow-down">↓</div>
+    <div class="network-box">
+      <div>
+        <div class="nn-label">Transformer</div>
+        <div class="nn-sub">attention + FFN layers</div>
+      </div>
+      <span class="param-badge">~7 B params</span>
+    </div>
+    <div class="arrow-down">↓</div>
+    <div class="chart-title" style="color:var(--text-dim); margin-top:8px;">Model's predicted distribution (softmax output)</div>
+    <div id="predictedChart"></div>
+  </div>
+  <div class="spacer-sm"></div>
+  <div class="callout info" style="max-width:700px;">
+    <span class="icon">i</span>
+    <span>The final layer outputs a <span class="hl">logit</span> for each vocabulary token, then <span class="hl">softmax</span> converts these to probabilities that sum to 1. An untrained model spreads probability almost evenly — basically guessing randomly.</span>
+  </div>
+</div>
+
+<!-- ═══════ SLIDE 11 — TARGET DISTRIBUTION ═══════ -->
+<div class="slide" id="slide-11">
+  <span class="section-tag">Deep Dive</span>
+  <div class="badge deepdive">Step 3 — The Target</div>
+  <h2>What the model <em>should</em> have predicted</h2>
+  <p class="small-text" style="max-width:640px;">We know the correct next token from the training data. The <span class="hl-green">target distribution</span> puts 100% probability on the correct answer.</p>
+  <div class="spacer-sm"></div>
+  <div class="dual-charts" style="max-width:720px;">
+    <div class="chart-col">
+      <div class="chart-title" style="color:var(--accent);">Model's prediction</div>
+      <div id="dualPredicted"></div>
+    </div>
+    <div class="chart-col">
+      <div class="chart-title" style="color:var(--green);">Target (ground truth)</div>
+      <div id="dualTarget"></div>
+    </div>
+  </div>
+  <div class="spacer-sm"></div>
+  <div class="callout warn" style="max-width:720px;">
+    <span class="icon">!</span>
+    <span>The model only gave <span class="hl" id="correctPctText">8%</span> to <span class="hl-green">"Islamabad"</span>, but the target says it should be <span class="hl-green">100%</span>. That gap is what the <span class="hl-red">loss function</span> measures.</span>
+  </div>
+</div>
+
+<!-- ═══════ SLIDE 12 — LOSS COMPUTATION ═══════ -->
+<div class="slide" id="slide-12">
+  <span class="section-tag">Deep Dive</span>
+  <div class="badge deepdive">Step 4 — Compute the Loss</div>
+  <h2>Cross-entropy loss: how wrong is the model?</h2>
+  <p class="small-text" style="max-width:680px;">The loss measures the gap between prediction and target. For next-token prediction, we use <span class="hl-yellow">cross-entropy loss</span>.</p>
+  <div class="spacer-sm"></div>
+  <div class="math math-big" style="max-width:700px;">
+    Loss = −log( P<sub>model</sub>("Islamabad") ) = −log(<span id="lossPval">0.08</span>) = <span id="lossResult" class="hl-red">2.53</span>
+  </div>
+  <div class="loss-display">
+    <div class="loss-box">
+      <div class="label">P(Islamabad)</div>
+      <div class="value high" id="lossProbDisplay">0.08</div>
+    </div>
+    <div class="comparison-arrow">→</div>
+    <div class="loss-box">
+      <div class="label">Loss</div>
+      <div class="value high" id="lossValueDisplay">2.53</div>
+      <div class="formula">−log(p)</div>
+    </div>
+  </div>
+  <div style="max-width:400px; margin:0 auto;">
+    <div style="display:flex; justify-content:space-between; font-size:0.72rem; color:var(--text-dim); margin-bottom:2px;">
+      <span class="hl-green">low loss (good)</span>
+      <span class="hl-red">high loss (bad)</span>
+    </div>
+    <div class="loss-meter">
+      <div class="loss-meter-fill" id="lossMeter" style="width:0%; background: linear-gradient(90deg, var(--green), var(--yellow), var(--red));"></div>
+    </div>
+  </div>
+  <div class="spacer-sm"></div>
+  <div class="callout info" style="max-width:700px;">
+    <span class="icon">i</span>
+    <span><span class="hl-yellow">Intuition:</span> if the model gave 100% to "Islamabad", loss = −log(1) = <span class="hl-green">0</span> (perfect). If only 1%, loss = −log(0.01) = <span class="hl-red">4.6</span> (terrible). The loss captures "how surprised the model is by the right answer."</span>
+  </div>
+</div>
+
+<!-- ═══════ SLIDE 13 — BACKPROPAGATION ═══════ -->
+<div class="slide" id="slide-13">
+  <span class="section-tag">Deep Dive</span>
+  <div class="badge deepdive">Step 5 — Backpropagation</div>
+  <h2>Compute gradients and update parameters</h2>
+  <p class="small-text" style="max-width:680px;">The loss signal flows <em>backwards</em> through the network. For each parameter, we compute: "how much would changing this parameter reduce the loss?" Then we nudge every parameter in that direction.</p>
+  <div class="spacer-sm"></div>
+  <div class="update-flow">
+    <div class="flow-node loss-node">Loss = 2.53</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-node grad-node">∂Loss/∂θ<br><small>compute gradients</small></div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-node param-node">θ = θ − η·∇Loss<br><small>update params</small></div>
+  </div>
+  <div class="backprop-arrows">
+    <span>◂</span><span>◂</span><span>◂</span><span>◂</span>
+    <span style="font-size:0.8rem; color:var(--text-dim); animation:none; margin-left:4px;">gradients flow backward</span>
+  </div>
+  <div class="math" style="max-width:500px; margin:10px auto;">
+    θ<sub>new</sub> = θ<sub>old</sub> − η · ∂Loss/∂θ
+  </div>
+  <div class="callout info" style="max-width:700px;">
+    <span class="icon">i</span>
+    <span><span class="hl-purple">η (eta)</span> is the <strong>learning rate</strong> — a small number (e.g., 1e-4) that controls step size. The <span class="hl-orange">gradient ∂Loss/∂θ</span> tells us the direction and magnitude of adjustment needed for each of the billions of parameters.</span>
+  </div>
+  <div class="speaker-notes">
+    <button class="notes-toggle" onclick="this.nextElementSibling.classList.toggle('open')">speaker notes</button>
+    <div class="notes-body"><p>"This is the part that actually makes learning happen. The gradient is a vector pointing in the direction of steepest increase of the loss — so we go the opposite direction to decrease it."</p></div>
+  </div>
+</div>
+
+<!-- ═══════ SLIDE 14 — AFTER UPDATE ═══════ -->
+<div class="slide" id="slide-14">
+  <span class="section-tag">Deep Dive</span>
+  <div class="badge deepdive">Step 6 — After Update</div>
+  <h2>The model improves!</h2>
+  <p class="small-text" style="max-width:660px;">After updating the parameters, the model assigns <em>more</em> probability to the correct token. Repeat this millions of times across a massive dataset, and the model learns language.</p>
+  <div class="spacer-sm"></div>
+  <div class="before-after" style="max-width:720px;">
+    <div class="ba-col before">
+      <div class="ba-label">Before update</div>
+      <div id="beforeBars"></div>
+    </div>
+    <div class="ba-arrow">→</div>
+    <div class="ba-col after">
+      <div class="ba-label">After update</div>
+      <div id="afterBars"></div>
+    </div>
+  </div>
+  <div class="loss-display">
+    <div class="loss-box">
+      <div class="label">Loss before</div>
+      <div class="value high">2.53</div>
+    </div>
+    <div class="comparison-arrow">→</div>
+    <div class="loss-box">
+      <div class="label">Loss after</div>
+      <div class="value low" id="lossAfterVal">1.27</div>
+    </div>
+  </div>
+  <div class="callout success" style="max-width:720px;">
+    <span class="icon">✓</span>
+    <span>The model now assigns <span class="hl-green" id="afterCorrectPct">28%</span> to "Islamabad" (up from <span class="hl-red">8%</span>). The loss dropped from <span class="hl-red">2.53</span> to <span class="hl-green" id="afterLossText">1.27</span>. After many more steps, the model will learn to confidently predict "Islamabad" — and generalize to countless other facts.</span>
+  </div>
+</div>
+
+<!-- ═══════ SLIDE 15 — BIG PICTURE (training loop) ═══════ -->
+<div class="slide" id="slide-15">
+  <span class="section-tag">Deep Dive</span>
+  <div class="badge deepdive">The Big Picture</div>
+  <h2>Training = repeating this loop trillions of times</h2>
+  <p class="small-text" style="max-width:680px;">Every token in the training corpus becomes a learning signal. The model sees text, predicts the next token, measures how wrong it was, and adjusts.</p>
+  <div class="spacer"></div>
+  <div class="update-flow" style="gap: 10px;">
+    <div class="flow-box model">Input tokens</div>
+    <div class="flow-arrow loop-arrow-anim">→</div>
+    <div class="flow-box param">Forward pass</div>
+    <div class="flow-arrow loop-arrow-anim">→</div>
+    <div class="flow-box model">Predicted dist.</div>
+    <div class="flow-arrow loop-arrow-anim">→</div>
+    <div class="flow-box loss">Loss</div>
+    <div class="flow-arrow loop-arrow-anim">→</div>
+    <div class="flow-box grad">Gradients</div>
+    <div class="flow-arrow loop-arrow-anim">→</div>
+    <div class="flow-box green">Update θ</div>
+  </div>
+  <div class="gradient-line"></div>
+  <div class="grid-3" style="margin-top:14px;">
+    <div class="callout info" style="margin:0;"><span><strong>Dataset:</strong> trillions of tokens from books, web, code…</span></div>
+    <div class="callout info" style="margin:0;"><span><strong>Steps:</strong> millions of gradient updates</span></div>
+    <div class="callout info" style="margin:0;"><span><strong>Result:</strong> a model that can predict (and generate) fluent text</span></div>
+  </div>
+  <div class="spacer-sm"></div>
+  <div class="callout success">
+    <span class="icon">✓</span>
+    <span><strong>Key insight:</strong> The entire capability of an LLM — writing code, answering questions, reasoning — emerges from this simple loop: <em>predict the next token, measure the error, update, repeat.</em></span>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!--  BACK TO MAIN PRESENTATION FLOW               -->
+<!-- ═══════════════════════════════════════════════ -->
+
+<!-- ═══════ SLIDE 16 — YOU ARE THE LANGUAGE MODEL ═══════ -->
+<div class="slide" id="slide-16">
+  <span class="section-tag">Activity</span>
+  <div class="badge activity">Interactive Activity</div>
+  <h2>You Are the Language Model</h2>
+  <p class="small-text" style="max-width:660px;">Try to predict the next token. Notice what <em>kind of knowledge</em> you need each time. This is the same task the model trains on — and it requires <strong>far more than memorization</strong>.</p>
+  <div class="spacer-sm"></div>
+  <div style="display:flex; flex-direction:column; gap:10px; max-width:780px;" id="ntpGame">
+    <div class="ntp-sentence">
+      The Eiffel Tower is located in <span class="ntp-blank" onclick="revealNTP(this)" data-answer="Paris">???</span>
+      <span class="ntp-tag fact">world knowledge</span>
+    </div>
+    <div class="ntp-sentence">
+      After the rain stopped, the children ran outside to <span class="ntp-blank" onclick="revealNTP(this)" data-answer="play">???</span>
+      <span class="ntp-tag lang">language / common sense</span>
+    </div>
+    <div class="ntp-sentence">
+      def fibonacci(n):<br>&nbsp;&nbsp;if n <= 1: return n<br>&nbsp;&nbsp;return fibonacci(n-1) + <span class="ntp-blank" onclick="revealNTP(this)" data-answer="fibonacci(n-2)">???</span>
+      <span class="ntp-tag code">code understanding</span>
+    </div>
+    <div class="ntp-sentence">
+      If all roses are flowers, and all flowers need water, then all roses need <span class="ntp-blank" onclick="revealNTP(this)" data-answer="water">???</span>
+      <span class="ntp-tag logic">logical reasoning</span>
+    </div>
+    <div class="ntp-sentence">
+      The sum of 127 and 385 is <span class="ntp-blank" onclick="revealNTP(this)" data-answer="512">???</span>
+      <span class="ntp-tag math">arithmetic</span>
+    </div>
+    <div class="ntp-sentence">
+      She said "I'm not angry," but the tone of her voice suggested she was actually quite <span class="ntp-blank" onclick="revealNTP(this)" data-answer="upset">???</span>
+      <span class="ntp-tag lang">pragmatics / subtext</span>
+    </div>
+  </div>
+  <div class="spacer-sm"></div>
+  <button class="reveal-btn" onclick="revealAllNTP()">Reveal all answers</button>
+  <div class="speaker-notes">
+    <button class="notes-toggle" onclick="this.nextElementSibling.classList.toggle('open')">speaker notes</button>
+    <div class="notes-body"><p>Let participants think about each one before clicking. The point: "just predicting the next word" requires world knowledge, code understanding, logic, arithmetic, pragmatics. To predict well, you must understand deeply.</p></div>
+  </div>
+</div>
+
+<!-- ═══════ SLIDE 17 — WHY NTP WORKS ═══════ -->
+<div class="slide" id="slide-17">
+  <span class="section-tag">Activity</span>
+  <div class="badge concept">Key Takeaway</div>
+  <h2>Why next-token prediction creates capable models</h2>
+  <div class="spacer-sm"></div>
+  <div class="card" style="max-width:720px;">
+    <p class="small-text" style="line-height:1.7;">To predict the next token <em>well</em> across all of internet text, the model must develop internal representations of:</p>
+    <div class="spacer-sm"></div>
+    <div class="grid-3" style="gap:10px;">
+      <div class="callout info" style="margin:0; flex-direction:column; text-align:center;">
+        <strong style="color:var(--cyan);">Facts</strong>
+        <span class="tiny">"The capital of Pakistan is <strong>Islamabad</strong>"</span>
+      </div>
+      <div class="callout info" style="margin:0; flex-direction:column; text-align:center; background:rgba(167,139,250,0.08); border-color:rgba(167,139,250,0.18); color:#cbb8ff;">
+        <strong style="color:var(--purple);">Syntax</strong>
+        <span class="tiny">"She <strong>doesn't</strong> like..." not "She don't like..."</span>
+      </div>
+      <div class="callout info" style="margin:0; flex-direction:column; text-align:center; background:rgba(251,146,60,0.08); border-color:rgba(251,146,60,0.18); color:#fdc89b;">
+        <strong style="color:var(--orange);">Logic</strong>
+        <span class="tiny">"If A then B; A; therefore <strong>B</strong>"</span>
+      </div>
+      <div class="callout info" style="margin:0; flex-direction:column; text-align:center; background:rgba(250,204,21,0.08); border-color:rgba(250,204,21,0.18); color:#fde68a;">
+        <strong style="color:var(--yellow);">Math</strong>
+        <span class="tiny">"2 + 2 = <strong>4</strong>"</span>
+      </div>
+      <div class="callout info" style="margin:0; flex-direction:column; text-align:center; background:rgba(244,114,182,0.08); border-color:rgba(244,114,182,0.18); color:#fbb8d8;">
+        <strong style="color:var(--pink);">Social cues</strong>
+        <span class="tiny">"'I'm fine' (said angrily) means <strong>not fine</strong>"</span>
+      </div>
+      <div class="callout info" style="margin:0; flex-direction:column; text-align:center; background:rgba(74,222,128,0.08); border-color:rgba(74,222,128,0.18); color:#9eefbe;">
+        <strong style="color:var(--green);">Code patterns</strong>
+        <span class="tiny">"for i in range(n): <strong>...</strong>"</span>
+      </div>
+    </div>
+  </div>
+  <div class="spacer"></div>
+  <div class="callout success" style="max-width:720px;">
+    <span class="icon">i</span>
+    <span><strong>The compression hypothesis:</strong> The best way to predict text is to <em>understand</em> the process that generated it. A sufficiently good next-token predictor must build a world model, because that's the most efficient way to compress language.</span>
+  </div>
+</div>
+
+<!-- ═══════ SLIDE 18 — THE FULL TRAINING PIPELINE ═══════ -->
+<div class="slide" id="slide-18">
+  <span class="section-tag">Training Pipeline</span>
+  <div class="badge concept">Overview</div>
+  <h2>The LLM training pipeline</h2>
+  <p class="small-text">From raw internet text to a useful assistant — four major stages.</p>
+  <div class="spacer"></div>
+  <div class="grid-4" style="gap:12px;">
+    <div class="pipeline-box" style="border-color: rgba(34,211,238,0.3);">
+      <div class="pipe-num" style="background:var(--cyan);">1</div>
+      <h3 style="color:var(--cyan);">Data</h3>
+      <p class="small-text">Collect, clean, deduplicate, and filter trillions of tokens from the web, books, code</p>
+    </div>
+    <div class="pipeline-box" style="border-color: rgba(108,140,255,0.3);">
+      <div class="pipe-num" style="background:var(--accent);">2</div>
+      <h3 style="color:var(--accent);">Pretrain</h3>
+      <p class="small-text">Train on next-token prediction across the entire dataset, learning general language understanding</p>
+    </div>
+    <div class="pipeline-box" style="border-color: rgba(251,146,60,0.3);">
+      <div class="pipe-num" style="background:var(--orange);">3</div>
+      <h3 style="color:var(--orange);">Post-train</h3>
+      <p class="small-text">Fine-tune with human feedback (SFT + RLHF/DPO) to make the model helpful, harmless, and honest</p>
+    </div>
+    <div class="pipeline-box" style="border-color: rgba(74,222,128,0.3);">
+      <div class="pipe-num" style="background:var(--green);">4</div>
+      <h3 style="color:var(--green);">Eval</h3>
+      <p class="small-text">Benchmark on tasks, red-team for safety, measure calibration, test in real-world scenarios</p>
+    </div>
+  </div>
+  <div class="spacer"></div>
+  <div class="flow">
+    <div class="flow-box data" style="font-size:0.78rem;">Raw text<br><span class="tiny">~10T tokens</span></div>
+    <div class="flow-arrow loop-arrow-anim">→</div>
+    <div class="flow-box data" style="font-size:0.78rem;">Clean data<br><span class="tiny">~2-5T tokens</span></div>
+    <div class="flow-arrow loop-arrow-anim">→</div>
+    <div class="flow-box model" style="font-size:0.78rem;">Pretrain<br><span class="tiny">weeks on 1000s of GPUs</span></div>
+    <div class="flow-arrow loop-arrow-anim">→</div>
+    <div class="flow-box grad" style="font-size:0.78rem;">Align<br><span class="tiny">SFT + RLHF</span></div>
+    <div class="flow-arrow loop-arrow-anim">→</div>
+    <div class="flow-box green" style="font-size:0.78rem;">Deploy<br><span class="tiny">serve to users</span></div>
+  </div>
+  <div class="speaker-notes">
+    <button class="notes-toggle" onclick="this.nextElementSibling.classList.toggle('open')">speaker notes</button>
+    <div class="notes-body"><p>Give a high-level overview. Emphasize that pretraining is the expensive, foundational step. Post-training is comparatively cheap but crucial for usability.</p></div>
+  </div>
+</div>
+
+<!-- ═══════ SLIDE 19 — DATA WORK ═══════ -->
+<div class="slide" id="slide-19">
+  <span class="section-tag">Data</span>
+  <div class="badge day1">Deep Dive</div>
+  <h2>What "data work" actually entails</h2>
+  <p class="small-text" style="max-width:640px;">Data quality is arguably the most important factor in LLM training. Garbage in, garbage out — but at scale, "garbage" is nuanced.</p>
+  <div class="spacer"></div>
+  <div style="display:flex; flex-direction:column; gap:12px; max-width:780px;">
+    <div class="card" style="display:flex; gap:16px; align-items:start; padding:18px 20px;">
+      <div style="font-size:1.6rem; line-height:1;">1</div>
+      <div>
+        <h3 style="color:var(--cyan); font-size:0.95rem;">Collection</h3>
+        <p class="small-text">Web crawls (Common Crawl), books, academic papers, code repositories (GitHub), Wikipedia, forums, multilingual sources. Scale: billions of web pages.</p>
+      </div>
+    </div>
+    <div class="card" style="display:flex; gap:16px; align-items:start; padding:18px 20px;">
+      <div style="font-size:1.6rem; line-height:1;">2</div>
+      <div>
+        <h3 style="color:var(--accent); font-size:0.95rem;">Cleaning</h3>
+        <p class="small-text">Remove boilerplate (nav bars, footers, ads), fix encoding issues, strip HTML/JS artifacts, filter out non-natural-language content.</p>
+      </div>
+    </div>
+    <div class="card" style="display:flex; gap:16px; align-items:start; padding:18px 20px;">
+      <div style="font-size:1.6rem; line-height:1;">3</div>
+      <div>
+        <h3 style="color:var(--orange); font-size:0.95rem;">Deduplication</h3>
+        <p class="small-text">Exact dedup (hash-based) and fuzzy dedup (MinHash/LSH). Duplicates cause memorization, poor generalization, and wasted compute. Typically removes 30-50% of data.</p>
+      </div>
+    </div>
+    <div class="card" style="display:flex; gap:16px; align-items:start; padding:18px 20px;">
+      <div style="font-size:1.6rem; line-height:1;">4</div>
+      <div>
+        <h3 style="color:var(--purple); font-size:0.95rem;">Quality Filtering</h3>
+        <p class="small-text">Heuristic filters (length, language, perplexity) and classifier-based filtering. Domain-specific upsampling for code, math, etc.</p>
+      </div>
+    </div>
+    <div class="card" style="display:flex; gap:16px; align-items:start; padding:18px 20px;">
+      <div style="font-size:1.6rem; line-height:1;">5</div>
+      <div>
+        <h3 style="color:var(--green); font-size:0.95rem;">Annotation & Curation</h3>
+        <p class="small-text">For post-training: human-written demonstrations (SFT data), preference rankings (RLHF), safety labels. Quality of annotation directly determines alignment quality.</p>
+      </div>
+    </div>
+  </div>
+  <div class="speaker-notes">
+    <button class="notes-toggle" onclick="this.nextElementSibling.classList.toggle('open')">speaker notes</button>
+    <div class="notes-body"><p>Spend time on each step. Give examples of what "bad data" looks like. Data work is unglamorous but accounts for a huge fraction of model quality.</p></div>
+  </div>
+</div>
+
+<!-- ═══════ SLIDE 20 — DATA BY THE NUMBERS ═══════ -->
+<div class="slide" id="slide-20">
+  <span class="section-tag">Data</span>
+  <div class="badge day1">Scale</div>
+  <h2>Data by the numbers</h2>
+  <div class="spacer"></div>
+  <div class="grid-4">
+    <div class="card" style="text-align:center; padding:20px;">
+      <div class="data-stat">
+        <div class="big-num" style="color:var(--cyan);">~15T</div>
+        <div class="stat-label">tokens in Llama 3's training set</div>
+      </div>
+    </div>
+    <div class="card" style="text-align:center; padding:20px;">
+      <div class="data-stat">
+        <div class="big-num" style="color:var(--accent);">~100+</div>
+        <div class="stat-label">languages represented</div>
+      </div>
+    </div>
+    <div class="card" style="text-align:center; padding:20px;">
+      <div class="data-stat">
+        <div class="big-num" style="color:var(--orange);">~50%</div>
+        <div class="stat-label">data removed by dedup alone</div>
+      </div>
+    </div>
+    <div class="card" style="text-align:center; padding:20px;">
+      <div class="data-stat">
+        <div class="big-num" style="color:var(--green);">~100K</div>
+        <div class="stat-label">human-labeled examples for alignment</div>
+      </div>
+    </div>
+  </div>
+  <div class="spacer"></div>
+  <div class="callout warn" style="max-width:720px;">
+    <span class="icon">!</span>
+    <span><strong>Data is running out.</strong> We're approaching the point where most useful public text has been used. This drives research into synthetic data generation, multi-epoch training, and more efficient learning.</span>
+  </div>
+  <div class="spacer-sm"></div>
+  <div class="callout info" style="max-width:720px;">
+    <span class="icon">i</span>
+    <span><strong>Chinchilla scaling laws:</strong> For a compute-optimal model, scale data and parameters roughly equally. But recent models over-train: more data, same params → better inference-time efficiency.</span>
+  </div>
+</div>
+
+<!-- ═══════ SLIDE 21 — DAY 1 RECAP ═══════ -->
+<div class="slide" id="slide-21">
+  <span class="section-tag">Wrap-up</span>
+  <div class="badge day1">Summary</div>
+  <h2>Day 1 Recap</h2>
+  <div class="spacer-sm"></div>
+  <div style="display:flex; flex-direction:column; gap:12px; max-width:720px;">
+    <div class="callout success" style="margin:0;">
+      <span class="icon">1</span>
+      <span><strong>LLMs compute a function:</strong> tokens in → probability distribution out, by running through attention layers and feed-forward networks. At inference, we sample and repeat.</span>
+    </div>
+    <div class="callout success" style="margin:0;">
+      <span class="icon">2</span>
+      <span><strong>They learn via next-token prediction:</strong> the loss is simply −log P(correct token). This narrow objective, applied at massive scale, produces emergent capabilities — because predicting text well requires understanding the world.</span>
+    </div>
+    <div class="callout success" style="margin:0;">
+      <span class="icon">3</span>
+      <span><strong>Training = data → pretrain → post-train → eval:</strong> Pretraining is the foundation (expensive, general). Post-training (alignment) makes the model useful and safe.</span>
+    </div>
+    <div class="callout success" style="margin:0;">
+      <span class="icon">4</span>
+      <span><strong>Data work is critical:</strong> collection, cleaning, dedup, filtering, annotation. Data quality is the single biggest lever for model quality.</span>
+    </div>
+  </div>
+  <div class="spacer"></div>
+  <div class="gradient-line" style="max-width:400px; margin:0 auto;"></div>
+  <div class="spacer-sm"></div>
+  <div style="text-align:center;">
+    <p class="small-text" style="color:var(--text-dim);">Tomorrow: <span class="hl-purple">what the model computes internally</span> — tokenization, embeddings, attention, FFN, the full forward pass.</p>
+  </div>
+</div>
+
+</div><!-- /slide-container -->
+
+<!-- ── Bottom navigation bar ── -->
+<div class="bottom-bar">
+  <button class="nav-btn" id="btnPrev" disabled>← Back</button>
+  <div class="progress-track">
+    <div class="progress-fill" id="progressFill" style="width:0%"></div>
+  </div>
+  <span class="slide-counter" id="slideCounter">1 / 22</span>
+  <button class="nav-btn primary" id="btnNext">Next →</button>
+</div>
+
+<script>
+// ══════════════════════════════════════
+//  Slide engine
+// ══════════════════════════════════════
+const TOTAL = document.querySelectorAll('.slide').length;
+let current = 0;
+
+const $ = s => document.querySelector(s);
+const $$ = s => document.querySelectorAll(s);
+
+function goTo(n) {
+  if (n < 0 || n >= TOTAL) return;
+  $$('.slide').forEach(s => s.classList.remove('active'));
+  document.getElementById(`slide-${n}`).classList.add('active');
+  current = n;
+  $('#btnPrev').disabled = n === 0;
+  $('#btnNext').textContent = n === TOTAL - 1 ? 'Restart ↺' : 'Next →';
+  $('#slideCounter').textContent = `${n + 1} / ${TOTAL}`;
+  $('#progressFill').style.width = `${(n / (TOTAL - 1)) * 100}%`;
+
+  // trigger animations for specific slides
+  onSlideEnter(n);
+}
+
+$('#btnNext').addEventListener('click', () => {
+  if (current === TOTAL - 1) goTo(0);
+  else goTo(current + 1);
+});
+$('#btnPrev').addEventListener('click', () => goTo(current - 1));
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); $('#btnNext').click(); }
+  if (e.key === 'ArrowLeft') { e.preventDefault(); $('#btnPrev').click(); }
+});
+
+// ══════════════════════════════════════
+//  Ingredient 3 reveal
+// ══════════════════════════════════════
+function revealIngredient3() {
+  document.getElementById('ingredient3Hidden').style.display = 'none';
+  document.getElementById('ingredient3Revealed').style.display = 'block';
+  document.getElementById('ingredient3Card').style.borderColor = 'rgba(167,139,250,0.4)';
+  document.getElementById('ingredientExplanation').classList.add('revealed');
+}
+
+// ══════════════════════════════════════
+//  Inference demo (fixed: 3 steps only)
+// ══════════════════════════════════════
+const INF_TOKENS = ['Islamabad', '.', '⟨EOS⟩'];
+let infStep = 0;
+
+function animateInference() {
+  if (infStep >= INF_TOKENS.length) return;
+
+  const row = document.getElementById('inferenceDemo');
+  const cur = document.getElementById('infCurrent');
+
+  // convert current blank → filled token
+  cur.removeAttribute('id');
+  cur.classList.remove('blank');
+  cur.style.cursor = 'default';
+  cur.onclick = null;
+
+  const tok = INF_TOKENS[infStep];
+  cur.textContent = tok;
+
+  if (tok === '⟨EOS⟩') {
+    // end-of-sentence styling
+    cur.classList.add('done');
+  } else {
+    cur.classList.add('target');
+    cur.style.borderStyle = 'solid';
+  }
+
+  infStep++;
+
+  // add next blank if not finished
+  if (infStep < INF_TOKENS.length) {
+    setTimeout(() => {
+      const newBlank = document.createElement('span');
+      newBlank.className = 'tok blank';
+      newBlank.id = 'infCurrent';
+      newBlank.textContent = 'click';
+      newBlank.onclick = animateInference;
+      row.appendChild(newBlank);
+    }, 350);
+  } else {
+    // all done — update hint text
+    document.getElementById('infHint').textContent = 'Generation complete — the model produced 3 tokens.';
+    document.getElementById('infHint').style.color = 'var(--green)';
+  }
+}
+
+// ══════════════════════════════════════
+//  NTP game
+// ══════════════════════════════════════
+function revealNTP(el) {
+  if (el.classList.contains('show')) return;
+  el.textContent = el.dataset.answer;
+  el.classList.add('show');
+}
+function revealAllNTP() {
+  $$('.ntp-blank').forEach(el => {
+    el.textContent = el.dataset.answer;
+    el.classList.add('show');
+  });
+}
+
+// ══════════════════════════════════════
+//  Bar chart builder (for loss deep-dive)
+// ══════════════════════════════════════
+const VOCAB = [
+  { word: 'Islamabad', predicted: 0.08, target: 1.00, after: 0.28 },
+  { word: 'Karachi',   predicted: 0.11, target: 0.00, after: 0.06 },
+  { word: 'the',       predicted: 0.14, target: 0.00, after: 0.09 },
+  { word: 'Lahore',    predicted: 0.06, target: 0.00, after: 0.03 },
+  { word: 'a',         predicted: 0.10, target: 0.00, after: 0.07 },
+  { word: 'Peshawar',  predicted: 0.04, target: 0.00, after: 0.03 },
+  { word: 'Delhi',     predicted: 0.05, target: 0.00, after: 0.02 },
+  { word: 'not',       predicted: 0.07, target: 0.00, after: 0.05 },
+  { word: '...',       predicted: 0.35, target: 0.00, after: 0.37 },
+];
+
+function buildBars(container, data, type) {
+  const el = typeof container === 'string' ? $(container) : container;
+  if (!el) return;
+  el.innerHTML = '';
+  data.forEach((d, i) => {
+    const row = document.createElement('div');
+    row.className = 'bar-row';
+
+    const wordEl = document.createElement('div');
+    wordEl.className = 'bar-word';
+    wordEl.textContent = d.word;
+    if (d.word === 'Islamabad') wordEl.style.color = 'var(--green)';
+
+    const track = document.createElement('div');
+    track.className = 'bar-track';
+
+    const fill = document.createElement('div');
+    fill.className = 'bar-fill ' + type;
+    const pctWidth = d.value > 0 ? Math.max(d.value * 100, 1.5) : 0;
+    fill.style.width = '0%';
+    setTimeout(() => { fill.style.width = pctWidth + '%'; }, 80 + i * 50);
+
+    track.appendChild(fill);
+
+    const pctEl = document.createElement('div');
+    pctEl.className = 'bar-pct';
+    pctEl.textContent = (d.value * 100).toFixed(1) + '%';
+
+    row.appendChild(wordEl);
+    row.appendChild(track);
+    row.appendChild(pctEl);
+    el.appendChild(row);
+  });
+}
+
+function predictedData() { return VOCAB.map(v => ({ word: v.word, value: v.predicted })); }
+function targetData()    { return VOCAB.map(v => ({ word: v.word, value: v.target })); }
+function afterData()     { return VOCAB.map(v => ({ word: v.word, value: v.after })); }
+
+// ══════════════════════════════════════
+//  Slide-specific enter logic
+// ══════════════════════════════════════
+function onSlideEnter(n) {
+  // Slide 10: forward pass — build predicted chart
+  if (n === 10) {
+    buildBars('#predictedChart', predictedData(), 'predicted');
+  }
+  // Slide 11: target comparison — dual charts
+  if (n === 11) {
+    buildBars('#dualPredicted', predictedData(), 'predicted');
+    buildBars('#dualTarget', targetData(), 'target-fill');
+    const pct = VOCAB[0].predicted;
+    $('#correctPctText').textContent = (pct * 100).toFixed(0) + '%';
+  }
+  // Slide 12: loss computation
+  if (n === 12) {
+    const p = VOCAB[0].predicted;
+    const loss = -Math.log(p);
+    $('#lossPval').textContent = p.toFixed(2);
+    $('#lossResult').textContent = loss.toFixed(2);
+    $('#lossProbDisplay').textContent = p.toFixed(2);
+    $('#lossValueDisplay').textContent = loss.toFixed(2);
+    const meter = $('#lossMeter');
+    meter.style.width = '0%';
+    setTimeout(() => { meter.style.width = Math.min(loss / 5 * 100, 100) + '%'; }, 200);
+  }
+  // Slide 14: before/after
+  if (n === 14) {
+    buildBars('#beforeBars', predictedData(), 'predicted');
+    setTimeout(() => {
+      buildBars('#afterBars', afterData(), 'target-fill');
+    }, 300);
+    const afterLoss = -Math.log(VOCAB[0].after);
+    $('#lossAfterVal').textContent = afterLoss.toFixed(2);
+    $('#afterCorrectPct').textContent = (VOCAB[0].after * 100).toFixed(0) + '%';
+    $('#afterLossText').textContent = afterLoss.toFixed(2);
+  }
+}
+
+// ══════════════════════════════════════
+//  Init
+// ══════════════════════════════════════
+goTo(0);
+</script>
+</body>
+</html>
