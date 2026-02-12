@@ -208,6 +208,32 @@
   .flow-box.pink    { border-color: rgba(244,114,182,0.4); color: var(--pink); background: rgba(244,114,182,0.06); }
   .flow-box.yellow  { border-color: rgba(250,204,21,0.4); color: var(--yellow); background: rgba(250,204,21,0.06); }
 
+  /* ── Live demo video ── */
+  .live-demo-shell {
+    width: 100%;
+    max-width: 760px;
+    margin: 16px auto 0;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--surface2);
+    overflow: hidden;
+  }
+  .live-demo-placeholder {
+    min-height: 280px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 10px;
+    padding: 20px;
+  }
+  .live-demo-video {
+    width: 100%;
+    display: block;
+    background: #000;
+    max-height: 420px;
+  }
+
   /* ── Interactive reveal ── */
   .reveal-btn {
     font-family: 'Inter', sans-serif;
@@ -847,14 +873,15 @@
   <div class="spacer"></div>
   <div class="card" style="text-align:center; max-width:600px;">
     <p class="small-text" style="margin-bottom:14px; color:var(--text-dim);">Full-Pipeline Animation (3 zoom levels)</p>
-    <div class="flow">
-      <div class="flow-box model" style="font-size:0.78rem;">LLM as a<br>black box</div>
-      <div class="flow-arrow">→</div>
-      <div class="flow-box param" style="font-size:0.78rem;">Input Encoding<br>Transformer<br>Output Decoding</div>
-      <div class="flow-arrow">→</div>
-      <div class="flow-box green" style="font-size:0.78rem;">Attention, MLP<br>Softmax, Embeddings<br>LayerNorm...</div>
+    <div class="live-demo-shell" id="liveDemoHost"
+      data-video-relative="../media/videos/pipeline/1080p60/LanguageModelingPipeline.mp4"
+      data-video-path="/home/maincoder/Documents/inside-LLM/manimations/media/videos/pipeline/1080p60/LanguageModelingPipeline.mp4">
+      <div class="live-demo-placeholder">
+        <button class="nav-btn primary" id="loadLiveDemoBtn" style="min-width:180px;">Load Demo Video</button>
+        <p class="tiny">Large file is lazy-loaded only when this slide is opened.</p>
+      </div>
     </div>
-    <p class="tiny">Zoom level 1 → 2 → 3</p>
+    <p class="tiny">Zoom level 1 → 2 → 3 (controls appear after load)</p>
   </div>
   <div class="spacer"></div>
   <div class="callout info">
@@ -981,7 +1008,7 @@
     <span class="tok input">of</span>
     <span class="tok input">Pakistan</span>
     <span class="tok input">is</span>
-    <span class="tok blank" id="infCurrent">click</span>
+    <span class="tok blank" id="infCurrent" onclick="animateInference()">click</span>
   </div>
   <p class="tiny" id="infHint">Click the blank to simulate one inference step</p>
   <div class="speaker-notes">
@@ -995,42 +1022,35 @@
   <span class="section-tag">Inference vs Training</span>
   <div class="badge concept">Concept</div>
   <h2>The training (learning) loop</h2>
-  <p class="small-text" style="max-width:640px;">Training uses the <em>same forward pass</em>, but adds two critical things: a <span class="hl-green">target answer</span> (from training data) and a <span class="hl-red">weight update</span> step.</p>
+  <p class="small-text" style="max-width:700px;">Training uses <span class="hl-yellow">teacher forcing</span>: for each sequence, inputs are <span class="hl">x<sub>1..T-1</sub></span> and targets are the same sequence shifted by one token <span class="hl-green">x<sub>2..T</sub></span>. We compute loss at every position, backpropagate, then update weights once per mini-batch.</p>
   <div class="spacer"></div>
-  <div class="card" style="max-width:800px; margin:0 auto;">
+  <div class="card" style="max-width:860px; margin:0 auto;">
     <div class="flow">
-      <div class="flow-box data">Context<br>tokens</div>
+      <div class="flow-box data">Mini-batch<br>token sequences</div>
       <div class="flow-arrow">→</div>
-      <div class="flow-box model">Model<br><span class="tiny">(learnable weights)</span></div>
+      <div class="flow-box model">Causal LM forward<br><span class="tiny">(masked self-attention)</span></div>
       <div class="flow-arrow">→</div>
-      <div class="flow-box yellow">Logits</div>
+      <div class="flow-box yellow">Logits at<br>each position</div>
       <div class="flow-arrow">→</div>
-      <div class="flow-box pink">Softmax</div>
-    </div>
-    <div class="spacer-sm"></div>
-    <div style="text-align:center; font-size:1.2rem; color:var(--text-dim);">↓ compare</div>
-    <div class="spacer-sm"></div>
-    <div class="flow">
-      <div class="flow-box green">True next<br>token</div>
+      <div class="flow-box loss">Cross-entropy vs<br>shifted targets</div>
       <div class="flow-arrow">→</div>
-      <div class="flow-box loss">Compute<br>loss</div>
+      <div class="flow-box grad">Backpropagate<br>gradients</div>
       <div class="flow-arrow">→</div>
-      <div class="flow-box grad">Compute<br>gradients</div>
-      <div class="flow-arrow">→</div>
-      <div class="flow-box param">Update<br>weights</div>
+      <div class="flow-box param">AdamW step<br>update θ</div>
     </div>
     <div style="text-align:center; margin-top:10px;">
-      <span class="tiny" style="color:var(--orange);">↻ repeat for every token in the training data</span>
+      <span class="tiny" style="color:var(--orange);">↻ repeat over many mini-batches for many epochs/tokens</span>
     </div>
   </div>
   <div class="spacer"></div>
-  <div class="grid-2" style="max-width:700px;">
-    <div class="callout info" style="margin:0;"><span class="icon">≡</span><span><strong>Same as inference:</strong> forward pass through the model</span></div>
-    <div class="callout warn" style="margin:0;"><span class="icon">+</span><span><strong>New in training:</strong> target token, loss computation, weight update</span></div>
+  <div class="grid-3" style="max-width:860px;">
+    <div class="callout info" style="margin:0;"><span class="icon">1</span><span><strong>Inputs/targets:</strong> predict token <em>t+1</em> from prefix up to <em>t</em> at every position</span></div>
+    <div class="callout warn" style="margin:0;"><span class="icon">2</span><span><strong>Optimization unit:</strong> gradients from the whole mini-batch are aggregated before one optimizer step</span></div>
+    <div class="callout success" style="margin:0;"><span class="icon">3</span><span><strong>Core difference vs inference:</strong> only training runs backward pass + parameter updates</span></div>
   </div>
   <div class="speaker-notes">
     <button class="notes-toggle" onclick="this.nextElementSibling.classList.toggle('open')">speaker notes</button>
-    <div class="notes-body"><p>"Training uses the same forward pass, but adds two things: (1) a target 'correct next token' from the training data, and (2) an update step that changes the weights."</p></div>
+    <div class="notes-body"><p>"Be precise here: training is next-token prediction at every position in a batch, with shifted labels. Loss is averaged, gradients are backpropagated, and then the optimizer updates parameters once per batch."</p></div>
   </div>
 </div>
 
@@ -1039,7 +1059,7 @@
   <span class="section-tag">Pretraining</span>
   <div class="badge concept">Core Concept</div>
   <h2>The pretraining objective</h2>
-  <p class="small-text" style="max-width:680px;">We train on sequences of tokens. For each position, the model sees the prefix and predicts what comes next.</p>
+  <p class="small-text" style="max-width:700px;">Now that we've separated inference from training, we can state the exact learning objective: for each position, the model sees the prefix and predicts the next token.</p>
   <div class="spacer-sm"></div>
   <div class="card" style="max-width:750px;">
     <p class="small-text" style="margin-bottom:10px;">Given a sequence <span class="hl">x<sub>1</sub>, x<sub>2</sub>, ... , x<sub>T</sub></span>, for each position <span class="hl">t</span>:</p>
@@ -1062,6 +1082,11 @@
     <span class="icon">!</span>
     <span><strong>Key insight:</strong> This is <span class="hl-orange">distribution-matching</span>, not decision-making. The model is trained to shape its probability distribution to match the empirical distribution of text.</span>
   </div>
+  <div class="spacer-sm"></div>
+  <div class="callout info">
+    <span class="icon">→</span>
+    <span><strong>Transition:</strong> Let's jump in and take a deeper dive into <em>one training iteration</em>, step by step.</span>
+  </div>
   <div class="speaker-notes">
     <button class="notes-toggle" onclick="this.nextElementSibling.classList.toggle('open')">speaker notes</button>
     <div class="notes-body"><p>"The loss is the negative log-probability assigned to the actual next token from the dataset. That's it. If the model assigns high probability to the observed token, the loss is low; if low probability, the loss is high."</p></div>
@@ -1073,7 +1098,7 @@
   <span class="section-tag">Pretraining</span>
   <div class="badge concept">Critical Point</div>
   <h2>What the loss does <em>not</em> contain</h2>
-  <p class="small-text" style="max-width:640px;">Pretraining has no explicit term for any of these. If the model exhibits them, they must be <em>instrumentally useful for predicting text</em>.</p>
+  <p class="small-text" style="max-width:700px;">After tracing one full iteration, notice what supervision signal the model actually receives. Pretraining has no explicit term for any of these; if they emerge, they must be <em>instrumentally useful for predicting text</em>.</p>
   <div class="spacer"></div>
   <div class="not-list">
     <div class="not-item">Truth</div>
@@ -1097,7 +1122,7 @@
   <div class="spacer-sm"></div>
   <div class="callout question">
     <span class="icon">?</span>
-    <span><strong>Think about it:</strong> Why would a model learn facts, reasoning, or code just from predicting the next token? Let's see the mechanics of how this actually works...</span>
+    <span><strong>Think about it:</strong> Why would a model learn facts, reasoning, or code from only this signal? Next we'll zoom back out from one step to the full repeated training loop.</span>
   </div>
   <div class="speaker-notes">
     <button class="notes-toggle" onclick="this.nextElementSibling.classList.toggle('open')">speaker notes</button>
@@ -1115,7 +1140,7 @@
   <span class="section-tag">Deep Dive</span>
   <div class="badge deepdive">Step 1 — The Task</div>
   <h2>Predict the next token</h2>
-  <p class="small-text" style="max-width:640px;">During training, the model sees a sequence of tokens and must predict what comes next. Let's walk through one concrete example.</p>
+  <p class="small-text" style="max-width:700px;">Let's jump in and take a deeper dive into one training iteration. We'll trace one concrete example from input context to parameter update.</p>
   <div class="spacer-sm"></div>
   <div class="card" style="max-width:700px;">
     <div class="context-row">
@@ -1271,7 +1296,7 @@
   <span class="section-tag">Deep Dive</span>
   <div class="badge deepdive">Step 6 — After Update</div>
   <h2>The model improves!</h2>
-  <p class="small-text" style="max-width:660px;">After updating the parameters, the model assigns <em>more</em> probability to the correct token. Repeat this millions of times across a massive dataset, and the model learns language.</p>
+  <p class="small-text" style="max-width:700px;">That completes one training iteration: after the update, the model assigns <em>more</em> probability to the correct token. Repeating this loop at scale is how the model learns language.</p>
   <div class="spacer-sm"></div>
   <div class="before-after" style="max-width:720px;">
     <div class="ba-col before">
@@ -1306,7 +1331,7 @@
   <span class="section-tag">Deep Dive</span>
   <div class="badge deepdive">The Big Picture</div>
   <h2>Training = repeating this loop trillions of times</h2>
-  <p class="small-text" style="max-width:680px;">Every token in the training corpus becomes a learning signal. The model sees text, predicts the next token, measures how wrong it was, and adjusts.</p>
+  <p class="small-text" style="max-width:700px;">We just traced one iteration in detail. Real training is exactly that same loop repeated over massive batches and datasets, until the parameters encode useful predictive structure.</p>
   <div class="spacer"></div>
   <div class="update-flow" style="gap: 10px;">
     <div class="flow-box model">Input tokens</div>
@@ -1330,7 +1355,7 @@
   <div class="spacer-sm"></div>
   <div class="callout success">
     <span class="icon">✓</span>
-    <span><strong>Key insight:</strong> The entire capability of an LLM — writing code, answering questions, reasoning — emerges from this simple loop: <em>predict the next token, measure the error, update, repeat.</em></span>
+    <span><strong>Key insight:</strong> The entire capability of an LLM — writing code, answering questions, reasoning — emerges from this loop: <em>predict the next token, measure error, update, repeat.</em> Next, you'll experience this objective directly.</span>
   </div>
 </div>
 
@@ -1343,7 +1368,7 @@
   <span class="section-tag">Activity</span>
   <div class="badge activity">Interactive Activity</div>
   <h2>You Are the Language Model</h2>
-  <p class="small-text" style="max-width:660px;">Try to predict the next token. Notice what <em>kind of knowledge</em> you need each time. This is the same task the model trains on — and it requires <strong>far more than memorization</strong>.</p>
+  <p class="small-text" style="max-width:700px;">Now you run the same objective yourself: predict the next token. Notice what <em>kind of knowledge</em> each example requires. This is why next-token training yields more than memorization.</p>
   <div class="spacer-sm"></div>
   <div style="display:flex; flex-direction:column; gap:10px; max-width:780px;" id="ntpGame">
     <div class="ntp-sentence">
@@ -1611,7 +1636,8 @@
 // ══════════════════════════════════════
 //  Slide engine
 // ══════════════════════════════════════
-const TOTAL = document.querySelectorAll('.slide').length;
+const SLIDE_ORDER = [0, 1, 2, 3, 4, 5, 6, 7, 9, 10, 11, 12, 13, 14, 8, 15, 16, 17, 18, 19, 20, 21];
+const TOTAL = SLIDE_ORDER.length;
 let current = 0;
 
 const $ = s => document.querySelector(s);
@@ -1620,7 +1646,8 @@ const $$ = s => document.querySelectorAll(s);
 function goTo(n) {
   if (n < 0 || n >= TOTAL) return;
   $$('.slide').forEach(s => s.classList.remove('active'));
-  document.getElementById(`slide-${n}`).classList.add('active');
+  const slideId = SLIDE_ORDER[n];
+  document.getElementById(`slide-${slideId}`).classList.add('active');
   current = n;
   $('#btnPrev').disabled = n === 0;
   $('#btnNext').textContent = n === TOTAL - 1 ? 'Restart ↺' : 'Next →';
@@ -1628,7 +1655,7 @@ function goTo(n) {
   $('#progressFill').style.width = `${(n / (TOTAL - 1)) * 100}%`;
 
   // trigger animations for specific slides
-  onSlideEnter(n);
+  onSlideEnter(slideId);
 }
 
 $('#btnNext').addEventListener('click', () => {
@@ -1650,6 +1677,48 @@ function revealIngredient3() {
   document.getElementById('ingredient3Revealed').style.display = 'block';
   document.getElementById('ingredient3Card').style.borderColor = 'rgba(167,139,250,0.4)';
   document.getElementById('ingredientExplanation').classList.add('revealed');
+}
+
+// ══════════════════════════════════════
+//  Live demo video (lazy load)
+// ══════════════════════════════════════
+let liveDemoLoaded = false;
+
+function getLiveDemoSource(host) {
+  // Prefer project-relative path for portability across local servers.
+  if (host.dataset.videoRelative) return host.dataset.videoRelative;
+  if (host.dataset.videoPath && host.dataset.videoPath.startsWith('/')) {
+    return `file://${host.dataset.videoPath}`;
+  }
+  return host.dataset.videoPath;
+}
+
+function ensureLiveDemoLoaded() {
+  if (liveDemoLoaded) return;
+  const host = document.getElementById('liveDemoHost');
+  if (!host) return;
+
+  const src = getLiveDemoSource(host);
+  if (!src) return;
+
+  const video = document.createElement('video');
+  video.className = 'live-demo-video';
+  video.controls = true;
+  video.preload = 'metadata';
+  video.playsInline = true;
+  video.src = src;
+
+  host.innerHTML = '';
+  host.appendChild(video);
+  liveDemoLoaded = true;
+}
+
+function pauseLiveDemoIfNeeded() {
+  const host = document.getElementById('liveDemoHost');
+  if (!host) return;
+  const video = host.querySelector('video');
+  if (!video) return;
+  video.pause();
 }
 
 // ══════════════════════════════════════
@@ -1773,6 +1842,13 @@ function afterData()     { return VOCAB.map(v => ({ word: v.word, value: v.after
 //  Slide-specific enter logic
 // ══════════════════════════════════════
 function onSlideEnter(n) {
+  // Slide 2: lazy load live demo video only when needed
+  if (n === 2) {
+    ensureLiveDemoLoaded();
+  } else {
+    pauseLiveDemoIfNeeded();
+  }
+
   // Slide 10: forward pass — build predicted chart
   if (n === 10) {
     buildBars('#predictedChart', predictedData(), 'predicted');
@@ -1812,6 +1888,11 @@ function onSlideEnter(n) {
 // ══════════════════════════════════════
 //  Init
 // ══════════════════════════════════════
+const loadLiveDemoBtn = document.getElementById('loadLiveDemoBtn');
+if (loadLiveDemoBtn) {
+  loadLiveDemoBtn.addEventListener('click', ensureLiveDemoLoaded);
+}
+
 goTo(0);
 </script>
 </body>
