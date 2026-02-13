@@ -2057,171 +2057,10 @@
   </div>
 </div>
 
-<!-- ═══════ SLIDE 27 — BRIDGE: ONE UPDATE → SYSTEM ═══════ -->
-<div class="slide" id="slide-27">
-  <span class="section-tag">Training Pipeline</span>
-  <div class="badge concept">Bridge</div>
-  <h2>One update → a system that scales</h2>
-  <p class="small-text" style="max-width:780px;">We just traced one training update end-to-end. Now: how do we make <span class="hl">billions</span> of updates work reliably and predictably?</p>
-  <div class="spacer"></div>
-  <div class="card" style="max-width:800px;">
-    <p class="small-text" style="margin-bottom:14px;">A modern LLM training run is a coordinated system:</p>
-    <div class="grid-3" style="gap:12px;">
-      <div class="callout info" style="margin:0; flex-direction:column; text-align:center;">
-        <strong style="color:var(--cyan);">Data System</strong>
-        <span class="tiny">What the model is exposed to — source selection, cleaning, mixing</span>
-      </div>
-      <div class="callout info" style="margin:0; flex-direction:column; text-align:center; background:rgba(251,146,60,0.08); border-color:rgba(251,146,60,0.18); color:#fdc89b;">
-        <strong style="color:var(--orange);">Optimization System</strong>
-        <span class="tiny">How learning is executed — distributed training, stability, monitoring</span>
-      </div>
-      <div class="callout info" style="margin:0; flex-direction:column; text-align:center; background:rgba(74,222,128,0.08); border-color:rgba(74,222,128,0.18); color:#9eefbe;">
-        <strong style="color:var(--green);">Evaluation Loop</strong>
-        <span class="tiny">How failures drive iteration — benchmarks, human eval, data fixes</span>
-      </div>
-    </div>
-  </div>
-  <div class="spacer"></div>
-  <div class="callout warn" style="max-width:800px;">
-    <span class="icon">!</span>
-    <span><strong>The math is simple;</strong> making it run at scale is <em>engineering</em>. Next we'll map the full pipeline from raw data to deployed assistant.</span>
-  </div>
-  <div class="speaker-notes">
-    <button class="notes-toggle" onclick="this.nextElementSibling.classList.toggle('open')">speaker notes</button>
-    <div class="notes-body"><p>Use this as the bridge from the deep-dive step-by-step update to "real training." Keep the focus on systems thinking: reliability, scale, and repeatability.</p></div>
-  </div>
-</div>
-
-<!-- ═══════ SLIDE 18 — PIPELINE MAP ═══════ -->
-<div class="slide" id="slide-18">
-  <span class="section-tag">Training Pipeline</span>
-  <div class="badge concept">Overview</div>
-  <h2>From raw text to deployed assistant</h2>
-  <p class="small-text" style="max-width:780px;">The same transformer architecture flows through every stage — only the <span class="hl">data</span>, <span class="hl-orange">objective</span>, and <span class="hl-green">feedback signal</span> change.</p>
-  <div class="spacer-sm"></div>
-
-  <div class="pipeline-v">
-    <div class="pv-step">
-      <div class="pv-dot cyan">1</div>
-      <div class="pv-body">
-        <h4><span class="hl-cyan">Collect raw corpora</span> <span class="pv-tag data">data</span></h4>
-        <div class="pv-detail">Web crawls, books, code repos, academic papers, multilingual sources &mdash; \(\sim\!10\text{T}\) tokens of raw text.</div>
-      </div>
-    </div>
-    <div class="pv-step">
-      <div class="pv-dot cyan">2</div>
-      <div class="pv-body">
-        <h4><span class="hl-cyan">Clean, deduplicate &amp; filter</span> <span class="pv-tag data">data</span></h4>
-        <div class="pv-detail">Strip boilerplate, fuzzy-dedup (MinHash), quality classifiers, language ID &rarr; \(\sim\!2\text{T}&ndash;5\text{T}\) usable tokens.</div>
-      </div>
-    </div>
-    <div class="pv-step">
-      <div class="pv-dot cyan">3</div>
-      <div class="pv-body">
-        <h4><span class="hl-cyan">Tokenize &amp; package</span> <span class="pv-tag data">data</span></h4>
-        <div class="pv-detail">BPE tokenizer maps text to integer IDs. Pack into fixed-length sequences, shuffle, and shard across GPUs.</div>
-      </div>
-    </div>
-    <div class="pv-step">
-      <div class="pv-dot accent">4</div>
-      <div class="pv-body">
-        <h4><span class="hl">Pretrain</span> <span class="pv-tag train">training</span></h4>
-        <div class="pv-detail">Next-token prediction on \(10^3\!+\) GPUs for weeks. The model learns grammar, facts, reasoning, and code from raw data alone.</div>
-      </div>
-    </div>
-    <div class="pv-step">
-      <div class="pv-dot orange">5</div>
-      <div class="pv-body">
-        <h4><span class="hl-orange">Supervised fine-tuning (SFT)</span> <span class="pv-tag align">alignment</span></h4>
-        <div class="pv-detail">Train on instruction &rarr; response pairs. Teaches the model to follow directions and produce assistant-style output.</div>
-      </div>
-    </div>
-    <div class="pv-step">
-      <div class="pv-dot orange">6</div>
-      <div class="pv-body">
-        <h4><span class="hl-orange">Preference training &amp; RLHF</span> <span class="pv-tag align">alignment</span></h4>
-        <div class="pv-detail">Reward model learns from human rankings (A &gt; B). Policy optimization nudges the model toward preferred behavior while staying close to the SFT baseline.</div>
-      </div>
-    </div>
-    <div class="pv-step">
-      <div class="pv-dot green">7</div>
-      <div class="pv-body">
-        <h4><span class="hl-green">Evaluate &amp; iterate</span> <span class="pv-tag eval">eval</span></h4>
-        <div class="pv-detail">Run benchmarks, red-teaming, and human evals. Gaps feed back into new data collection and training runs &mdash; the loop repeats.</div>
-      </div>
-    </div>
-    <div class="pv-step">
-      <div class="pv-dot green">8</div>
-      <div class="pv-body">
-        <h4><span class="hl-green">Deploy</span></h4>
-        <div class="pv-detail">Serve via API with guardrails, monitoring, and usage policies. Real-world feedback informs the next training cycle.</div>
-      </div>
-    </div>
-  </div>
-
-  <div class="spacer-sm"></div>
-  <div class="callout info" style="max-width:820px;">
-    <span class="icon">i</span>
-    <span><strong>One architecture, many signals:</strong> every stage reuses the same transformer. What changes is the data it trains on and the objective it optimizes.</span>
-  </div>
-  <div class="speaker-notes">
-    <button class="notes-toggle" onclick="this.nextElementSibling.classList.toggle('open')">speaker notes</button>
-    <div class="notes-body"><p>This is the road map for the rest of the section. Walk through each step briefly — later slides zoom into each one. Emphasize that the architecture stays the same; data + objective change what is learned.</p></div>
-  </div>
-</div>
-
-<!-- ═══════ SLIDE 28 — DATA PIPELINE ZOOM (STEPS 1-3) ═══════ -->
-<div class="slide" id="slide-28">
-  <span class="section-tag">Training Pipeline</span>
-  <div class="badge deepdive">Step 1-3 Zoom-In</div>
-  <h2>Before training: raw text becomes learnable tokens</h2>
-  <p class="small-text" style="max-width:820px;">This is still data engineering, not model alignment. We shape noisy internet-scale text into a clean, diverse, efficiently packaged token stream the optimizer can learn from.</p>
-  <div class="spacer-sm"></div>
-  <div class="flow" style="justify-content:flex-start;">
-    <div class="flow-box data">Collect</div>
-    <div class="flow-arrow">→</div>
-    <div class="flow-box data">Clean / filter</div>
-    <div class="flow-arrow">→</div>
-    <div class="flow-box yellow">Dedup</div>
-    <div class="flow-arrow">→</div>
-    <div class="flow-box model">Tokenize / package</div>
-  </div>
-  <div class="spacer-sm"></div>
-  <div class="grid-2" style="max-width:860px;">
-    <div class="card">
-      <h3 style="color:var(--cyan);">What happens in steps 1-3</h3>
-      <ul class="obj-list" style="margin-top:8px;">
-        <li data-num="1"><strong>Collect:</strong> web, books, code, papers, multilingual sources.</li>
-        <li data-num="2"><strong>Clean/filter:</strong> remove boilerplate, spam, malformed text, low-quality shards.</li>
-        <li data-num="3"><strong>Dedup:</strong> reduce near-duplicates so the model sees broader coverage.</li>
-        <li data-num="4"><strong>Tokenize/package:</strong> map text to IDs, pack into fixed-length sequences, shuffle/shard for training.</li>
-      </ul>
-    </div>
-    <div class="card">
-      <h3 style="color:var(--green);">Why this stage exists</h3>
-      <div class="callout info" style="margin:0;">
-        <span class="icon">i</span>
-        <span>Raw corpora are messy, repetitive, and uneven. Without preprocessing, training wastes compute and overfits narrow patterns.</span>
-      </div>
-      <div class="spacer-sm"></div>
-      <div class="callout success" style="margin:0;">
-        <span class="icon">✓</span>
-        <span>After this stage, tokens are not just scraped text. They are engineered training examples designed for stable large-scale optimization.</span>
-      </div>
-      <div class="spacer-sm"></div>
-      <p class="small-text">We stop here for now: no annotation depth yet. This slide only establishes how and why pretraining data is prepared.</p>
-    </div>
-  </div>
-  <div class="speaker-notes">
-    <button class="notes-toggle" onclick="this.nextElementSibling.classList.toggle('open')">speaker notes</button>
-    <div class="notes-body"><p>Keep this brisk. The takeaway is that "tokens" are engineered artifacts, not raw internet text dumped into GPUs. Save annotation specifics for the post-training section.</p></div>
-  </div>
-</div>
-
 <!-- ═══════ SLIDE 29 — PRETRAINING AT SCALE (STEP 4) ═══════ -->
 <div class="slide" id="slide-29">
-  <span class="section-tag">Training Pipeline</span>
-  <div class="badge concept">Step 4</div>
+  <span class="section-tag">Pretraining</span>
+  <div class="badge concept">Scale</div>
   <h2>Pretraining at scale: next-token prediction repeated billions of times</h2>
   <p class="small-text" style="max-width:840px;">One objective, huge exposure: the model repeatedly predicts the next token across a massive distribution. This is where the model first learns language itself: structure, syntax, grammar, and broad semantic regularities.</p>
   <div class="spacer-sm"></div>
@@ -2277,8 +2116,8 @@
 
 <!-- ═══════ SLIDE 30 — DATA DISTRIBUTION DRIVES CAPABILITIES ═══════ -->
 <div class="slide" id="slide-30">
-  <span class="section-tag">Training Pipeline</span>
-  <div class="badge concept">Bridge From Pretraining</div>
+  <span class="section-tag">Pretraining</span>
+  <div class="badge concept">Data Mixture</div>
   <h2>Data drives capabilities: the training distribution is the lever</h2>
   <p class="small-text" style="max-width:860px;">After the model has base language competence, the next question is: <em>what data mix do we continue training on?</em> Capability profile follows that distributional mixture (often in mid-training).</p>
   <div class="spacer-sm"></div>
@@ -2325,7 +2164,7 @@
 
 <!-- ═══════ SLIDE 31 — COMPLETION TO CHAT WRAPPER (ACTIVITY) ═══════ -->
 <div class="slide" id="slide-31">
-  <span class="section-tag">Bridge To Alignment</span>
+  <span class="section-tag">From Pretraining to Chat</span>
   <div class="badge activity">Interactive</div>
   <h2>It's still just a text completer</h2>
   <p class="small-text" style="max-width:860px;">We've pretrained a powerful model — but it was only ever trained to <span class="hl">predict the next token</span>. What happens when we actually try to use it?</p>
@@ -2421,8 +2260,8 @@ What is the capital of ...</div>
 
 <!-- ═══════ SLIDE 32 — WHY POST-TRAINING EXISTS (STEPS 5-6) ═══════ -->
 <div class="slide" id="slide-32">
-  <span class="section-tag">Training Pipeline</span>
-  <div class="badge concept">Steps 5-6</div>
+  <span class="section-tag">Post-training</span>
+  <div class="badge concept">Alignment</div>
   <h2>Why post-training exists: from context steering to behavior shaping</h2>
   <p class="small-text" style="max-width:920px;">Templates steer behavior at inference time by changing context. Post-training changes behavior at training time by updating parameters so assistant-style responses are more consistent, robust, and policy-constrained.</p>
   <div class="spacer-sm"></div>
@@ -2483,7 +2322,7 @@ What is the capital of ...</div>
   <div class="progress-track">
     <div class="progress-fill" id="progressFill" style="width:0%"></div>
   </div>
-  <span class="slide-counter" id="slideCounter">1 / 26</span>
+  <span class="slide-counter" id="slideCounter">1 / 23</span>
   <button class="nav-btn primary" id="btnNext">Next →</button>
 </div>
 
@@ -2491,7 +2330,7 @@ What is the capital of ...</div>
 // ══════════════════════════════════════
 //  Slide engine
 // ══════════════════════════════════════
-const SLIDE_ORDER = [0, 1, 2, 3, 4, 5, 6, 7, 9, 10, 11, 12, 13, 14, 8, 22, 23, 24, 16, 27, 18, 28, 29, 30, 31, 32];
+const SLIDE_ORDER = [0, 1, 2, 3, 4, 5, 6, 7, 9, 10, 11, 12, 13, 14, 8, 22, 23, 24, 16, 29, 30, 31, 32];
 const TOTAL = SLIDE_ORDER.length;
 let current = 0;
 
