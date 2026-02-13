@@ -200,6 +200,23 @@
     min-width: 100px;
   }
   .flow-arrow {
+    display: none;          /* arrows now live as ::before on each box */
+  }
+  .flow .flow-box ~ .flow-box {
+    position: relative;
+    margin-left: 24px;
+  }
+  .flow .flow-box ~ .flow-box::before {
+    content: '→';
+    position: absolute;
+    right: calc(100% + 4px);
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-dim);
+    font-size: 1.3rem;
+    pointer-events: none;
+  }
+  .flow-loop {
     color: var(--text-dim);
     font-size: 1.3rem;
     flex-shrink: 0;
@@ -1364,7 +1381,7 @@
 
     <div style="text-align:center; margin-top:8px;">
       <span class="tiny" style="color:var(--orange);">
-        ↻ append token to context and repeat (model runs at the token level)
+        ↻ append token to context and repeat
       </span>
     </div>
   </div>
@@ -1399,42 +1416,107 @@
 </div>
 
 
+
+
 <!-- ═══════ SLIDE 6 — TRAINING LOOP ═══════ -->
 <div class="slide" id="slide-6">
   <span class="section-tag">Inference vs Training</span>
   <div class="badge concept">Concept</div>
   <h2>The training (learning) loop</h2>
-  <p class="small-text" style="max-width:700px;">Training uses <span class="hl-yellow">teacher forcing</span>: for each sequence, inputs are <span class="hl">\(x_{1:T-1}\)</span> and targets are the same sequence shifted by one token <span class="hl-green">\(x_{2:T}\)</span>. We compute loss at every position, backpropagate, then update weights once per mini-batch.</p>
+
+  <p class="small-text" style="max-width:650px;">
+    Training runs the same forward computation as inference,
+    but with known next tokens.
+    The model’s predictions are compared to the true next tokens,
+    and the resulting error is used to improve the model.
+  </p>
+
   <div class="spacer"></div>
-  <div class="card" style="max-width:860px; margin:0 auto;">
+
+  <div class="card" style="max-width:900px; margin: 0 auto;">
+
+    <!-- FORWARD PASS (SAME AS INFERENCE) -->
+    <div class="flow" style="margin-bottom:10px;">
+      <div class="flow-box data">Tokenized<br>sequences</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box model">
+        Transformer Blocks<br><span class="tiny">(same computation)</span>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box yellow">
+        Logits<br><span class="tiny">(predictions)</span>
+      </div>
+    </div>
+
+    <!-- FEEDBACK + UPDATE -->
     <div class="flow">
-      <div class="flow-box data">Mini-batch<br>token sequences</div>
+      <div class="flow-box target">
+        True next tokens<br><span class="tiny">(teacher forcing)</span>
+      </div>
       <div class="flow-arrow">→</div>
-      <div class="flow-box model">Causal LM forward<br><span class="tiny">(masked self-attention)</span></div>
+      <div class="flow-box loss">
+        Compute error<br><span class="tiny">(loss)</span>
+      </div>
       <div class="flow-arrow">→</div>
-      <div class="flow-box yellow">Logits at<br>each position</div>
+      <div class="flow-box grad">
+        Send error backward<br><span class="tiny">(gradients)</span>
+      </div>
       <div class="flow-arrow">→</div>
-      <div class="flow-box loss">Cross-entropy vs<br>shifted targets</div>
-      <div class="flow-arrow">→</div>
-      <div class="flow-box grad">Backpropagate<br>gradients</div>
-      <div class="flow-arrow">→</div>
-      <div class="flow-box param">AdamW step<br>update θ</div>
+      <div class="flow-box param">
+        Update the model
+      </div>
     </div>
+
     <div style="text-align:center; margin-top:10px;">
-      <span class="tiny" style="color:var(--orange);">↻ repeat over many mini-batches for many epochs/tokens</span>
+      <span class="tiny" style="color:var(--orange);">
+        ↻ repeat over many batches so predictions improve
+      </span>
     </div>
   </div>
+
   <div class="spacer"></div>
-  <div class="grid-3" style="max-width:860px;">
-    <div class="callout info" style="margin:0;"><span class="icon">1</span><span><strong>Inputs/targets:</strong> predict token <em>\(t+1\)</em> from prefix up to <em>\(t\)</em> at every position</span></div>
-    <div class="callout warn" style="margin:0;"><span class="icon">2</span><span><strong>Optimization unit:</strong> gradients from the whole mini-batch are aggregated before one optimizer step</span></div>
-    <div class="callout success" style="margin:0;"><span class="icon">3</span><span><strong>Core difference vs inference:</strong> only training runs backward pass + parameter updates</span></div>
+
+  <div class="grid-3" style="max-width:900px;">
+    <div class="callout info" style="margin:0;">
+      <span class="icon">1</span>
+      <span>
+        <strong>Same forward pass:</strong>
+        training uses the exact same computation as inference
+      </span>
+    </div>
+
+    <div class="callout warn" style="margin:0;">
+      <span class="icon">2</span>
+      <span>
+        <strong>Extra signal:</strong>
+        training compares predictions to known next tokens
+      </span>
+    </div>
+
+    <div class="callout success" style="margin:0;">
+      <span class="icon">3</span>
+      <span>
+        <strong>Key difference:</strong>
+        only training sends feedback backward to change the model
+      </span>
+    </div>
   </div>
+
   <div class="speaker-notes">
-    <button class="notes-toggle" onclick="this.nextElementSibling.classList.toggle('open')">speaker notes</button>
-    <div class="notes-body"><p>"Be precise here: training is next-token prediction at every position in a batch, with shifted labels. Loss is averaged, gradients are backpropagated, and then the optimizer updates parameters once per batch."</p></div>
+    <button class="notes-toggle" onclick="this.nextElementSibling.classList.toggle('open')">
+      speaker notes
+    </button>
+    <div class="notes-body">
+      <p>
+        “Training is not a different machine.
+        It’s the same forward pass you just saw,
+        plus a feedback signal that says how wrong the prediction was.
+        That feedback slowly reshapes the model so future predictions improve.”
+      </p>
+    </div>
   </div>
 </div>
+
 
 <!-- ═══════ SLIDE 7 — PRETRAINING OBJECTIVE ═══════ -->
 <div class="slide" id="slide-7">
@@ -2222,7 +2304,7 @@
       <div class="flow-box loss">Compute loss</div>
       <div class="flow-arrow">→</div>
       <div class="flow-box grad">Update weights</div>
-      <div class="flow-arrow loop-arrow-anim">↺</div>
+      <div class="flow-loop loop-arrow-anim">↺</div>
     </div>
   </div>
   <div class="spacer-sm"></div>
