@@ -1880,39 +1880,6 @@
   </div>
 </div>
 
-<!-- ═══════ SLIDE 15 — BIG PICTURE (training loop) ═══════ -->
-<div class="slide" id="slide-15">
-  <span class="section-tag">Deep Dive</span>
-  <div class="badge deepdive">The Big Picture</div>
-  <h2>\(\text{Training} =\) repeating this loop trillions of times</h2>
-  <p class="small-text" style="max-width:700px;">We just traced one iteration in detail. Real training is exactly that same loop repeated over massive batches and datasets, until the parameters encode useful predictive structure.</p>
-  <div class="spacer"></div>
-  <div class="update-flow" style="gap: 10px;">
-    <div class="flow-box model">Input tokens</div>
-    <div class="flow-arrow loop-arrow-anim">→</div>
-    <div class="flow-box param">Forward pass</div>
-    <div class="flow-arrow loop-arrow-anim">→</div>
-    <div class="flow-box model">Predicted dist.</div>
-    <div class="flow-arrow loop-arrow-anim">→</div>
-    <div class="flow-box loss">Loss</div>
-    <div class="flow-arrow loop-arrow-anim">→</div>
-    <div class="flow-box grad">Gradients</div>
-    <div class="flow-arrow loop-arrow-anim">→</div>
-    <div class="flow-box green">Update \(\theta\)</div>
-  </div>
-  <div class="gradient-line"></div>
-  <div class="grid-3" style="margin-top:14px;">
-    <div class="callout info" style="margin:0;"><span><strong>Dataset:</strong> trillions of tokens from books, web, code…</span></div>
-    <div class="callout info" style="margin:0;"><span><strong>Steps:</strong> millions of gradient updates</span></div>
-    <div class="callout info" style="margin:0;"><span><strong>Result:</strong> a model that can predict (and generate) fluent text</span></div>
-  </div>
-  <div class="spacer-sm"></div>
-  <div class="callout success">
-    <span class="icon">✓</span>
-    <span><strong>Key insight:</strong> The entire capability of an LLM — writing code, answering questions, reasoning — emerges from this loop: <em>predict the next token, measure error, update, repeat.</em> Next, let's make that pressure concrete.</span>
-  </div>
-</div>
-
 <!-- ═══════ SLIDE 22 — LOCAL OBJECTIVE, GLOBAL PRESSURE ═══════ -->
 <div class="slide" id="slide-22">
   <span class="section-tag">Reasoning Emergence</span>
@@ -2639,7 +2606,7 @@ What is the capital of ...</div>
   <div class="progress-track">
     <div class="progress-fill" id="progressFill" style="width:0%"></div>
   </div>
-  <span class="slide-counter" id="slideCounter">1 / 30</span>
+  <span class="slide-counter" id="slideCounter">1 / 29</span>
   <button class="nav-btn primary" id="btnNext">Next →</button>
 </div>
 
@@ -2647,7 +2614,7 @@ What is the capital of ...</div>
 // ══════════════════════════════════════
 //  Slide engine
 // ══════════════════════════════════════
-const SLIDE_ORDER = [0, 1, 2, 3, 4, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15, 8, 22, 23, 24, 16, 17, 25, 26, 27, 18, 28, 29, 30, 31, 32];
+const SLIDE_ORDER = [0, 1, 2, 3, 4, 5, 6, 7, 9, 10, 11, 12, 13, 14, 8, 22, 23, 24, 16, 17, 25, 26, 27, 18, 28, 29, 30, 31, 32];
 const TOTAL = SLIDE_ORDER.length;
 let current = 0;
 
