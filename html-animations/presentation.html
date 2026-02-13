@@ -125,12 +125,13 @@
     border-radius: 14px;
     padding: 24px;
     position: relative;
-    overflow: hidden;
+    overflow: visible;
   }
   .card::before {
     content: '';
     position: absolute;
     inset: 0;
+    border-radius: inherit;
     background: radial-gradient(ellipse at top left, rgba(108,140,255,0.04), transparent 60%);
     pointer-events: none;
   }
@@ -261,9 +262,13 @@
     margin-top: 0;
   }
   .hidden-content.revealed {
-    max-height: 600px;
+    max-height: 2000px;
     opacity: 1;
     margin-top: 16px;
+  }
+  .hidden-content.revealed.settled {
+    max-height: none;
+    overflow: visible;
   }
 
   /* ── NTP game ── */
@@ -936,28 +941,6 @@
   .mix-seg.code { background: linear-gradient(90deg, rgba(167,139,250,0.95), rgba(108,140,255,0.95)); }
   .mix-seg.lit  { background: linear-gradient(90deg, rgba(34,211,238,0.95), rgba(74,222,128,0.95)); }
 
-  /* completion-wrapper activity */
-  .wrapper-choices {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-top: 10px;
-  }
-  .wrapper-choice.selected {
-    background: rgba(108,140,255,0.14);
-    border-color: rgba(108,140,255,0.45);
-    color: var(--accent);
-  }
-  .wrapper-choice.correct {
-    background: rgba(74,222,128,0.16);
-    border-color: rgba(74,222,128,0.4);
-    color: var(--green);
-  }
-  .wrapper-choice.wrong {
-    background: rgba(248,113,113,0.13);
-    border-color: rgba(248,113,113,0.35);
-    color: var(--red);
-  }
   .prompt-block {
     font-family: 'JetBrains Mono', monospace;
     font-size: 0.76rem;
@@ -1066,7 +1049,7 @@
   <div class="badge day1">Day 1</div>
   <h1 class="large">Language Modeling<br>from Scratch</h1>
   <div class="spacer-sm"></div>
-  <p class="subtitle">How LLMs learn, what they compute, and what "data work" really means</p>
+  <p class="subtitle">From data to behavior: the full language-modeling pipeline</p>
   <div class="spacer-lg"></div>
   <div class="gradient-line" style="width:200px;"></div>
 </div>
@@ -2154,51 +2137,96 @@
 <!-- ═══════ SLIDE 31 — COMPLETION TO CHAT WRAPPER (ACTIVITY) ═══════ -->
 <div class="slide" id="slide-31">
   <span class="section-tag">Bridge To Alignment</span>
-  <div class="badge activity">Audience Activity</div>
-  <h2>Completion model -> chat behavior via formatting</h2>
-  <p class="small-text" style="max-width:840px;">Before alignment, a pretrained model is a next-token completer. Ask the room first: which prompt wrapper most reliably elicits assistant-style behavior?</p>
+  <div class="badge activity">Interactive</div>
+  <h2>It's still just a text completer</h2>
+  <p class="small-text" style="max-width:860px;">We've pretrained a powerful model — but it was only ever trained to <span class="hl">predict the next token</span>. What happens when we actually try to use it?</p>
   <div class="spacer-sm"></div>
-  <div class="grid-2" style="max-width:900px;">
-    <div class="card">
-      <h3 style="color:var(--accent);">Vote first, then reveal</h3>
-      <p class="small-text">Same pretrained completion model, same user intent. Which format is most likely to produce a helpful assistant answer?</p>
-      <div class="wrapper-choices" id="wrapperChoices">
-        <button class="nav-btn wrapper-choice" data-choice="A" onclick="chooseWrapperOption('A', this)">A) Raw question</button>
-        <button class="nav-btn wrapper-choice" data-choice="B" onclick="chooseWrapperOption('B', this)">B) Chat format</button>
-        <button class="nav-btn wrapper-choice" data-choice="C" onclick="chooseWrapperOption('C', this)">C) Q/A pattern</button>
-      </div>
-      <button class="reveal-btn" onclick="revealWrapperSolution()">Reveal and discuss</button>
-      <div class="callout warn" id="wrapperResult" style="max-width:100%; margin-top:12px;">
-        <span class="icon">?</span>
-        <span>Pick an option first. Then reveal the expected outcome.</span>
-      </div>
-    </div>
-    <div class="card">
-      <h3 style="color:var(--cyan);">Prompt variants</h3>
-      <div class="prompt-block">A) How do I center a div in CSS?</div>
-      <div class="spacer-sm"></div>
-      <div class="prompt-block">B) System: You are a helpful assistant.
-User: How do I center a div in CSS?
-Assistant:</div>
-      <div class="spacer-sm"></div>
-      <div class="prompt-block">C) Q: How do I center a div in CSS?
-A:</div>
-    </div>
-  </div>
-  <div class="hidden-content" id="wrapperReveal">
+
+  <!-- PHASE 1: the dumb response -->
+  <div class="card" style="max-width:860px;" id="completionPhase1">
+    <h3 style="color:var(--accent); margin-bottom:10px;">What does the base model do with this prompt?</h3>
+    <div class="prompt-block">What is the capital of France?</div>
     <div class="spacer-sm"></div>
-    <div class="callout success" style="max-width:900px;">
-      <span class="icon">i</span>
-      <span><strong>Why B usually wins:</strong> chat formatting strongly cues role behavior the model has seen in text patterns.</span>
-    </div>
-    <div class="callout warn" style="max-width:900px;">
-      <span class="icon">!</span>
-      <span><strong>But it is inconsistent:</strong> prompt wrappers can coax assistant tone, yet reliability/safety vary because behavior is not explicitly aligned yet.</span>
+    <button class="reveal-btn" onclick="revealDumbResponse()">Reveal the actual output</button>
+    <div class="hidden-content" id="dumbResponseReveal">
+      <div class="prompt-block" style="margin-top:10px; border-color:rgba(248,113,113,0.4);"><span style="color:var(--text-dim);">What is the capital of France?</span>
+What is the capital of Germany?
+What is the capital of Italy?
+What is the capital of Spain?
+What is the capital of ...</div>
+      <div class="callout warn" style="margin-top:10px;">
+        <span class="icon">!</span>
+        <span><strong>It continued the pattern, not answered the question.</strong> The model learned to predict text — and quiz lists are common on the internet. It has no concept of "being helpful."</span>
+      </div>
     </div>
   </div>
+
+  <div class="spacer-sm"></div>
+
+  <!-- PHASE 2: fix it with formatting -->
+  <div class="hidden-content" id="completionPhase2">
+    <div class="card" style="max-width:860px;">
+      <h3 style="color:var(--green); margin-bottom:10px;">Can we fix this without changing the model?</h3>
+      <p class="small-text">The weights are frozen. All you can change is the <span class="hl">prompt</span>. How do you steer the completion toward an answer?</p>
+      <div class="spacer-sm"></div>
+      <div class="grid-3" style="gap:12px;">
+        <div class="card" style="padding:14px;">
+          <p class="tiny" style="color:var(--text-dim); margin-bottom:6px;">Chat — get a helpful reply</p>
+          <div class="prompt-block" style="font-size:0.72rem;">What is the capital of France?</div>
+          <button class="reveal-btn" style="margin-top:8px; font-size:0.75rem; padding:6px 14px;" onclick="revealFix('chat')">Show fix</button>
+          <div class="hidden-content" id="fixChat">
+            <div class="prompt-block" style="font-size:0.72rem; border-color:rgba(74,222,128,0.4);">User: What is the capital of France?
+<strong style="color:var(--green);">Assistant:</strong></div>
+            <p class="tiny" style="margin-top:6px; color:var(--green);">→ "The capital of France is Paris."</p>
+          </div>
+        </div>
+        <div class="card" style="padding:14px;">
+          <p class="tiny" style="color:var(--text-dim); margin-bottom:6px;">Math — get the answer</p>
+          <div class="prompt-block" style="font-size:0.72rem;">347 + 128</div>
+          <button class="reveal-btn" style="margin-top:8px; font-size:0.75rem; padding:6px 14px;" onclick="revealFix('math')">Show fix</button>
+          <div class="hidden-content" id="fixMath">
+            <div class="prompt-block" style="font-size:0.72rem; border-color:rgba(74,222,128,0.4);">347 + 128 <strong style="color:var(--green);">=</strong></div>
+            <p class="tiny" style="margin-top:6px; color:var(--green);">→ "475"</p>
+          </div>
+        </div>
+        <div class="card" style="padding:14px;">
+          <p class="tiny" style="color:var(--text-dim); margin-bottom:6px;">Code — get the implementation</p>
+          <div class="prompt-block" style="font-size:0.72rem;">fibonacci function</div>
+          <button class="reveal-btn" style="margin-top:8px; font-size:0.75rem; padding:6px 14px;" onclick="revealFix('code')">Show fix</button>
+          <div class="hidden-content" id="fixCode">
+            <div class="prompt-block" style="font-size:0.72rem; border-color:rgba(74,222,128,0.4);"><strong style="color:var(--green);">def fibonacci(n):</strong>
+    """Return the nth Fibonacci number."""</div>
+            <p class="tiny" style="margin-top:6px; color:var(--green);">→ completes the function body</p>
+          </div>
+        </div>
+      </div>
+      <div class="hidden-content" id="fixTakeaway">
+        <div class="spacer-sm"></div>
+        <div class="callout success" style="margin:0;">
+          <span class="icon">✓</span>
+          <span><strong>You're not changing the model.</strong> You're changing the distribution of likely continuations by shaping the context into a pattern where the "next token" is naturally the reply. <code>Assistant:</code> makes a reply likely. <code>=</code> makes an answer likely. A function signature makes code likely.</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="hidden-content" id="fixBridge">
+      <div class="spacer-sm"></div>
+
+      <!-- PHASE 3: why this isn't enough -->
+      <div class="callout warn" style="max-width:860px;">
+        <span class="icon">!</span>
+        <span><strong>But this is brittle.</strong> Change the wording slightly and the model drifts. It may roleplay the user, ignore instructions, or produce unsafe output. Formatting tricks steer — they don't <em>align</em>.</span>
+      </div>
+      <div class="callout info" style="max-width:860px; margin-top:8px;">
+        <span class="icon">→</span>
+        <span><strong>This is exactly why post-training exists.</strong> Instead of hoping the right context steers behavior, we update the weights so assistant-style responses become the default. That's next.</span>
+      </div>
+    </div>
+  </div>
+
   <div class="speaker-notes">
     <button class="notes-toggle" onclick="this.nextElementSibling.classList.toggle('open')">speaker notes</button>
-    <div class="notes-body"><p>Pause and get a room vote before revealing. The point is "chat is partly a formatting convention," then immediately highlight inconsistency to motivate post-training.</p></div>
+    <div class="notes-body"><p>Sequence: (1) show prompt, ask audience to predict output, (2) reveal the dumb continuation — get laughs, (3) ask "how do we fix this without retraining?", (4) show the formatting examples, (5) emphasize this is brittle → bridge to post-training.</p></div>
   </div>
 </div>
 
@@ -2206,32 +2234,41 @@ A:</div>
 <div class="slide" id="slide-32">
   <span class="section-tag">Training Pipeline</span>
   <div class="badge concept">Steps 5-6</div>
-  <h2>Why post-training exists: SFT then preferences/RLHF</h2>
-  <p class="small-text" style="max-width:860px;">Prompting a completion model can look assistant-like, but not consistently. Post-training adds explicit signals for instruction-following, preferences, and safety constraints.</p>
+  <h2>Why post-training exists: from context steering to behavior shaping</h2>
+  <p class="small-text" style="max-width:920px;">Templates steer behavior at inference time by changing context. Post-training changes behavior at training time by updating parameters so assistant-style responses are more consistent, robust, and policy-constrained.</p>
+  <div class="spacer-sm"></div>
+  <div class="callout warn" style="max-width:900px; margin:0;">
+    <span class="icon">!</span>
+    <span><strong>Before alignment:</strong> "Assistant:" can steer continuation, but outcomes still drift with phrasing, context, and prompt hacks.</span>
+  </div>
+  <div class="callout info" style="max-width:900px; margin-top:10px;">
+    <span class="icon">i</span>
+    <span><strong>Inference-time trick:</strong> shape context. <strong>Post-training:</strong> shape parameters.</span>
+  </div>
   <div class="spacer-sm"></div>
   <div class="grid-2" style="max-width:900px;">
     <div class="card" style="border-color: rgba(251,146,60,0.3);">
       <div class="badge discussion" style="margin-bottom:8px;">Step 5</div>
       <h3 style="color:var(--orange);">Supervised fine-tuning (SFT)</h3>
       <ul class="obj-list" style="margin-top:8px;">
-        <li data-num="1">Train on instruction -> response examples.</li>
-        <li data-num="2">Teach consistent instruction-following and assistant response style.</li>
-        <li data-num="3">Reduce dependence on fragile prompt hacks.</li>
+        <li data-num="1">Train on chat demonstrations: user turns -> assistant replies.</li>
+        <li data-num="2">Teach stable instruction-following and response structure.</li>
+        <li data-num="3">Make assistant-style continuation the default, not a formatting coincidence.</li>
       </ul>
     </div>
     <div class="card" style="border-color: rgba(251,146,60,0.3);">
       <div class="badge discussion" style="margin-bottom:8px;">Step 6</div>
       <h3 style="color:var(--orange);">Preference training + RLHF</h3>
       <ul class="obj-list" style="margin-top:8px;">
-        <li data-num="1">Use human preference data (A > B) to define better behavior.</li>
-        <li data-num="2">Optimize toward helpful, harmless, honest outputs under constraints.</li>
-        <li data-num="3">Shape refusal style, policy adherence, and risk-sensitive behavior.</li>
+        <li data-num="1">Use human rankings to distinguish better vs worse candidate replies.</li>
+        <li data-num="2">Push behavior toward helpfulness, policy compliance, and safer refusals.</li>
+        <li data-num="3">Improve robustness beyond specific templates or token tricks.</li>
       </ul>
     </div>
   </div>
   <div class="spacer-sm"></div>
   <div class="flow" style="justify-content:flex-start;">
-    <div class="flow-box model">Pretrained completer</div>
+    <div class="flow-box model">Base completer + chat template</div>
     <div class="flow-arrow">→</div>
     <div class="flow-box loss">SFT</div>
     <div class="flow-arrow">→</div>
@@ -2241,11 +2278,11 @@ A:</div>
   </div>
   <div class="callout info" style="max-width:900px;">
     <span class="icon">i</span>
-    <span><strong>Guardrails are applied here and at deployment-time,</strong> not in base pretraining.</span>
+    <span><strong>The model is still autoregressive next-token generation.</strong> Alignment changes the distribution it learns to generate from.</span>
   </div>
   <div class="speaker-notes">
     <button class="notes-toggle" onclick="this.nextElementSibling.classList.toggle('open')">speaker notes</button>
-    <div class="notes-body"><p>Connect directly to the previous activity: "prompting gave us a hint of assistant behavior; alignment gives us reliability and constraints." Emphasize guardrails are post-training and deployment concerns.</p></div>
+    <div class="notes-body"><p>Bridge directly from the activity: "We can coerce a reply with suffixes, but that is fragile. SFT and preference training make assistant behavior consistent and constrained." Keep repeating: still autoregressive, now better conditioned by training.</p></div>
   </div>
 </div>
 
@@ -2360,68 +2397,38 @@ function chooseDramaSuspect(choice, btn) {
 // ══════════════════════════════════════
 //  Completion wrapper activity
 // ══════════════════════════════════════
-let selectedWrapperOption = null;
-
-function chooseWrapperOption(choice, btn) {
-  const buttons = document.querySelectorAll('#wrapperChoices .wrapper-choice');
-  buttons.forEach(b => b.classList.remove('selected'));
-  if (btn) btn.classList.add('selected');
-  selectedWrapperOption = choice;
-
-  const result = document.getElementById('wrapperResult');
-  if (result) {
-    result.className = 'callout info';
-    result.style.maxWidth = '100%';
-    result.innerHTML = `<span class="icon">i</span><span>You picked <strong>${choice}</strong>. Now reveal the solution.</span>`;
-  }
-}
-
-function revealWrapperSolution() {
-  const buttons = document.querySelectorAll('#wrapperChoices .wrapper-choice');
-  const result = document.getElementById('wrapperResult');
-  const reveal = document.getElementById('wrapperReveal');
-  const correct = 'B';
-
-  buttons.forEach(b => {
-    b.classList.remove('correct', 'wrong');
-    if (b.dataset.choice === correct) b.classList.add('correct');
-  });
-
-  if (selectedWrapperOption && selectedWrapperOption !== correct) {
-    const picked = document.querySelector(`#wrapperChoices .wrapper-choice[data-choice="${selectedWrapperOption}"]`);
-    if (picked) picked.classList.add('wrong');
-  }
-
+function revealDumbResponse() {
+  const reveal = document.getElementById('dumbResponseReveal');
   if (reveal) reveal.classList.add('revealed');
-
-  if (!result) return;
-  result.style.maxWidth = '100%';
-  if (!selectedWrapperOption) {
-    result.className = 'callout warn';
-    result.innerHTML = '<span class="icon">!</span><span>No option selected. Expected answer is <strong>B (chat format)</strong>; it best cues assistant-role behavior.</span>';
-    return;
-  }
-  if (selectedWrapperOption === correct) {
-    result.className = 'callout success';
-    result.innerHTML = '<span class="icon">✓</span><span>Correct. Chat-style formatting most reliably triggers assistant-like completions.</span>';
-    return;
-  }
-  result.className = 'callout warn';
-  result.innerHTML = '<span class="icon">!</span><span>Reasonable guess, but <strong>B</strong> is typically more reliable. Role tags and turn formatting better anchor assistant behavior.</span>';
+  // After a short pause, show phase 2
+  setTimeout(function() {
+    const phase2 = document.getElementById('completionPhase2');
+    if (phase2) phase2.classList.add('revealed');
+  }, 600);
 }
 
-function resetWrapperActivity() {
-  selectedWrapperOption = null;
-  const buttons = document.querySelectorAll('#wrapperChoices .wrapper-choice');
-  const result = document.getElementById('wrapperResult');
-  const reveal = document.getElementById('wrapperReveal');
+var fixesRevealed = { chat: false, math: false, code: false };
 
-  buttons.forEach(b => b.classList.remove('selected', 'correct', 'wrong'));
-  if (reveal) reveal.classList.remove('revealed');
-  if (!result) return;
-  result.className = 'callout warn';
-  result.style.maxWidth = '100%';
-  result.innerHTML = '<span class="icon">?</span><span>Pick an option first. Then reveal the expected outcome.</span>';
+function revealFix(which) {
+  var el = document.getElementById('fix' + which.charAt(0).toUpperCase() + which.slice(1));
+  if (el) el.classList.add('revealed');
+  fixesRevealed[which] = true;
+  if (fixesRevealed.chat && fixesRevealed.math && fixesRevealed.code) {
+    setTimeout(function() {
+      var t = document.getElementById('fixTakeaway');
+      var b = document.getElementById('fixBridge');
+      if (t) t.classList.add('revealed');
+      if (b) b.classList.add('revealed');
+    }, 400);
+  }
+}
+
+function resetCompletionActivity() {
+  fixesRevealed = { chat: false, math: false, code: false };
+  ['dumbResponseReveal', 'completionPhase2', 'fixChat', 'fixMath', 'fixCode', 'fixTakeaway', 'fixBridge'].forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el) el.classList.remove('revealed', 'settled');
+  });
 }
 
 // ══════════════════════════════════════
@@ -2657,8 +2664,8 @@ function onSlideEnter(n) {
   if (n === 22) {
     const grid = document.getElementById('reasoningPressureGrid');
     const quote = document.getElementById('reasoningEmergenceQuote');
-    if (grid) grid.classList.remove('revealed');
-    if (quote) quote.classList.remove('revealed');
+    if (grid) grid.classList.remove('revealed', 'settled');
+    if (quote) quote.classList.remove('revealed', 'settled');
   }
   if (n === 23) {
     const blank = document.getElementById('dramaKillerBlank');
@@ -2669,7 +2676,7 @@ function onSlideEnter(n) {
       blank.textContent = '___';
       blank.classList.remove('show');
     }
-    if (why) why.classList.remove('revealed');
+    if (why) why.classList.remove('revealed', 'settled');
     buttons.forEach(b => b.classList.remove('correct', 'wrong'));
     if (result) {
       result.className = 'callout warn';
@@ -2678,7 +2685,7 @@ function onSlideEnter(n) {
     }
   }
   if (n === 31) {
-    resetWrapperActivity();
+    resetCompletionActivity();
   }
 }
 
@@ -2689,6 +2696,18 @@ const loadLiveDemoBtn = document.getElementById('loadLiveDemoBtn');
 if (loadLiveDemoBtn) {
   loadLiveDemoBtn.addEventListener('click', ensureLiveDemoLoaded);
 }
+
+// settle hidden-content after reveal transition so scroll works
+// After reveal transition, remove max-height constraint so slide can scroll
+document.addEventListener('transitionend', function(e) {
+  var el = e.target;
+  if (!el.classList.contains('hidden-content') || e.propertyName !== 'max-height') return;
+  if (el.classList.contains('revealed')) {
+    el.classList.add('settled');
+  } else {
+    el.classList.remove('settled');
+  }
+});
 
 goTo(0);
 </script>
