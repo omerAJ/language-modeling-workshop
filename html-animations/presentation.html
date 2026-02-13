@@ -26,6 +26,7 @@
     --yellow: #facc15;
     --cyan: #22d3ee;
     --pink: #f472b6;
+    --slide-max-width: 1100px;
   }
 
   body {
@@ -49,7 +50,7 @@
     inset: 0;
     display: none;
     flex-direction: column;
-    padding: 40px 60px 80px;
+    padding: 40px max(60px, calc((100vw - var(--slide-max-width)) / 2)) 80px;
     overflow-y: auto;
     scrollbar-width: thin;
     scrollbar-color: var(--border) transparent;
@@ -173,6 +174,9 @@
   .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
   @media (max-width: 800px) {
     .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 768px) {
+    .slide { padding: 30px 24px 70px; }
   }
 
   /* ── Flow diagrams ── */
