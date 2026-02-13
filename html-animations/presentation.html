@@ -2057,85 +2057,6 @@
   </div>
 </div>
 
-<!-- ═══════ SLIDE 25 — COMPRESSION LENS ═══════ -->
-<div class="slide" id="slide-25">
-  <span class="section-tag">Compression Lens</span>
-  <div class="badge concept">Mental Model</div>
-  <h2>A useful lens: Intelligence as compression</h2>
-  <p class="small-text" style="max-width:780px;">During pretraining, the model learns compressed internal representations that preserve what is useful for predicting text. This is not a full theory of intelligence, but it is a helpful lens.</p>
-  <div class="spacer-sm"></div>
-  <div class="grid-2" style="max-width:820px;">
-    <div class="card">
-      <h3 style="color:var(--accent);">Compression pressure encourages</h3>
-      <ul class="obj-list" style="margin-top:8px;">
-        <li data-num="1">abstraction (categories, roles, relations)</li>
-        <li data-num="2">reusable features across many tasks</li>
-      </ul>
-    </div>
-    <div class="card">
-      <h3 style="color:var(--green);">Why this matters</h3>
-      <p class="small-text" style="line-height:1.7;">To predict text efficiently, the model is forced to represent large amounts of structure in a compact internal form.</p>
-      <div class="spacer-sm"></div>
-      <p class="small-text" style="line-height:1.7;">You can view pretraining as building a compact internal model of patterns that matter for prediction.</p>
-    </div>
-  </div>
-  <div class="spacer-sm"></div>
-  <button class="reveal-btn" onclick="document.getElementById('compressionWhy').classList.toggle('revealed')">Why next-token prediction implies compression</button>
-  <div class="hidden-content" id="compressionWhy">
-    <div class="callout warn" style="max-width:820px;">
-      <span class="icon">!</span>
-      <span><strong>Raw problem:</strong> language is high-dimensional; tokens are noisy/redundant/ambiguous; surface forms vary wildly while deeper structures repeat.</span>
-    </div>
-    <div class="callout info" style="max-width:820px; margin-top:10px;">
-      <span class="icon">→</span>
-      <span><strong>A pure memorizer fails:</strong> poor generalization, huge capacity needs, and brittleness to slightly novel phrasing.</span>
-    </div>
-    <div class="callout success" style="max-width:820px; margin-top:10px;">
-      <span class="icon">✓</span>
-      <span><strong>So loss minimization pushes compression:</strong> collapse many surface forms into shared representations; retain what matters for next-token prediction; discard what does not.</span>
-    </div>
-  </div>
-</div>
-
-<!-- ═══════ SLIDE 26 — WHAT GETS COMPRESSED ═══════ -->
-<div class="slide" id="slide-26">
-  <span class="section-tag">Compression Lens</span>
-  <div class="badge concept">Mechanism</div>
-  <h2>What gets compressed, and why it looks like reasoning</h2>
-  <p class="small-text" style="max-width:800px;">These structures are not explicitly labeled in pretraining. They emerge as latent variables that make prediction easier.</p>
-  <div class="spacer-sm"></div>
-  <div class="grid-2" style="max-width:840px;">
-    <div class="card">
-      <h3 style="color:var(--cyan);">What gets compressed</h3>
-      <ul class="obj-list" style="margin-top:8px;">
-        <li data-num="1">entities (people, places, objects)</li>
-        <li data-num="2">roles (subject, object, agent, patient)</li>
-        <li data-num="3">relations (ownership, causality, temporal order)</li>
-        <li data-num="4">abstract patterns (arguments, plans, code structure)</li>
-        <li data-num="5">latent state (what is currently true)</li>
-      </ul>
-    </div>
-    <div class="card">
-      <h3 style="color:var(--orange);">Why this appears as reasoning</h3>
-      <p class="small-text" style="line-height:1.7;">In narratives, explanations, mathematics, programming, and multi-step instructions, accurate continuation requires coherent internal state that respects constraints.</p>
-      <div class="spacer-sm"></div>
-      <div class="callout info" style="margin:0;">
-        <span class="icon">i</span>
-        <span>You cannot finish a proof without tracking assumptions, continue a story without tracking who did what, or autocomplete code without tracking scope and types.</span>
-      </div>
-    </div>
-  </div>
-  <div class="spacer-sm"></div>
-  <div class="callout success" style="max-width:840px;">
-    <span class="icon">✓</span>
-    <span><strong>Transfer intuition:</strong> the same compressed internal features that help predict text also help many downstream tasks.</span>
-  </div>
-  <div class="callout info" style="max-width:840px;">
-    <span class="icon">→</span>
-    <span>This lens explains why pretraining transfers broadly. With that framing, now zoom out to the full training pipeline.</span>
-  </div>
-</div>
-
 <!-- ═══════ SLIDE 27 — BRIDGE: ONE UPDATE → SYSTEM ═══════ -->
 <div class="slide" id="slide-27">
   <span class="section-tag">Training Pipeline</span>
@@ -2562,7 +2483,7 @@ What is the capital of ...</div>
   <div class="progress-track">
     <div class="progress-fill" id="progressFill" style="width:0%"></div>
   </div>
-  <span class="slide-counter" id="slideCounter">1 / 28</span>
+  <span class="slide-counter" id="slideCounter">1 / 26</span>
   <button class="nav-btn primary" id="btnNext">Next →</button>
 </div>
 
@@ -2570,7 +2491,7 @@ What is the capital of ...</div>
 // ══════════════════════════════════════
 //  Slide engine
 // ══════════════════════════════════════
-const SLIDE_ORDER = [0, 1, 2, 3, 4, 5, 6, 7, 9, 10, 11, 12, 13, 14, 8, 22, 23, 24, 16, 25, 26, 27, 18, 28, 29, 30, 31, 32];
+const SLIDE_ORDER = [0, 1, 2, 3, 4, 5, 6, 7, 9, 10, 11, 12, 13, 14, 8, 22, 23, 24, 16, 27, 18, 28, 29, 30, 31, 32];
 const TOTAL = SLIDE_ORDER.length;
 let current = 0;
 
