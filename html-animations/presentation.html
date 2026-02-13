@@ -1087,8 +1087,8 @@
 <!-- ═══════ SLIDE 1 — OBJECTIVES ═══════ -->
 <!-- ═══════ SLIDE 1 — OBJECTIVES ═══════ -->
 <div class="slide" id="slide-1">
-  <span class="section-tag">Day 1</span>
-  <div class="badge day1">Today’s goal: leave with a clear internal map of how large language models actually work.</div>
+  <span class="section-tag">Setup</span>
+  <div class="badge day1">Objectives</div>
   <h2>By the end, you should understand:</h2>
   <div class="spacer-sm"></div>
   <ul class="obj-list">
@@ -1105,7 +1105,7 @@
 
 <!-- ═══════ SLIDE 2 — OPENING ═══════ -->
 <div class="slide" id="slide-2">
-  <span class="section-tag">Opening</span>
+  <span class="section-tag">Setup</span>
   <div class="badge concept">Live Demo</div>
   <h2>Let's watch an LLM complete a sentence</h2>
   <div class="spacer-sm"></div>
@@ -1135,8 +1135,8 @@
 
 <!-- ═══════ SLIDE 3 — THREE INGREDIENTS ═══════ -->
 <div class="slide" id="slide-3">
-  <span class="section-tag">The Big Picture</span>
-  <div class="badge discussion">Quick Check-in</div>
+  <span class="section-tag">Setup</span>
+  <div class="badge discussion">Audience Prompt</div>
   <h2>What makes an LLM work</h2>
   <div class="spacer-sm"></div>
 
@@ -1242,8 +1242,8 @@
 
 <!-- ═══════ SLIDE 4 — WORKSHOP ROADMAP ═══════ -->
 <div class="slide" id="slide-4">
-  <span class="section-tag">Roadmap</span>
-  <div class="badge day1">Causality</div>
+  <span class="section-tag">Setup</span>
+  <div class="badge day1">Roadmap</div>
   <h2>Workshop roadmap</h2>
   <div class="spacer-sm"></div>
 
@@ -1335,7 +1335,7 @@
 <!-- ═══════ SLIDE 5 — INFERENCE LOOP ═══════ -->
 <div class="slide" id="slide-5">
   <span class="section-tag">Inference vs Training</span>
-  <div class="badge concept">Concept</div>
+  <div class="badge concept">Inference Loop</div>
   <h2>The inference (use-time) loop</h2>
 
   <p class="small-text" style="max-width:600px;">
@@ -1425,7 +1425,7 @@
 <!-- ═══════ SLIDE 6 — TRAINING LOOP ═══════ -->
 <div class="slide" id="slide-6">
   <span class="section-tag">Inference vs Training</span>
-  <div class="badge concept">Concept</div>
+  <div class="badge concept">Training Loop</div>
   <h2>The training (learning) loop</h2>
 
   <p class="small-text" style="max-width:680px;">
@@ -1538,8 +1538,8 @@
 
 <!-- ═══════ SLIDE 7 — TRAINING OBJECTIVE ═══════ -->
 <div class="slide" id="slide-7">
-  <span class="section-tag">Training</span>
-  <div class="badge concept">Core Concept</div>
+  <span class="section-tag">Pretraining Objective</span>
+  <div class="badge concept">Objective</div>
   <h2>The training objective</h2>
 
   <p class="small-text" style="max-width:760px;">
@@ -1649,8 +1649,8 @@
 
 <!-- ═══════ SLIDE 8 — WHAT'S NOT IN THE LOSS ═══════ -->
 <div class="slide" id="slide-8">
-  <span class="section-tag">Pretraining</span>
-  <div class="badge concept">Critical Point</div>
+  <span class="section-tag">Pretraining Objective</span>
+  <div class="badge concept">Key Insight</div>
   <h2>What the loss does <em>not</em> contain</h2>
   <p class="small-text" style="max-width:700px;">After tracing one full iteration, notice what supervision signal the model actually receives. Training has no explicit term for any of these; if they emerge, they must be <em>instrumentally useful for predicting text</em>.</p>
   <div class="spacer"></div>
@@ -1691,7 +1691,7 @@
 
 <!-- ═══════ SLIDE 9 — THE TASK ═══════ -->
 <div class="slide" id="slide-9">
-  <span class="section-tag">Deep Dive</span>
+  <span class="section-tag">Deep Dive: One Update</span>
   <div class="badge deepdive">Step 1 — The Task</div>
   <h2>Predict the next token</h2>
   <p class="small-text" style="max-width:700px;">Let's jump in and take a deeper dive into one training iteration. We'll trace one concrete example from input context to parameter update.</p>
@@ -1719,7 +1719,7 @@
 
 <!-- ═══════ SLIDE 10 — FORWARD PASS ═══════ -->
 <div class="slide" id="slide-10">
-  <span class="section-tag">Deep Dive</span>
+  <span class="section-tag">Deep Dive: One Update</span>
   <div class="badge deepdive">Step 2 — Forward Pass</div>
   <h2>The model outputs a probability distribution</h2>
   <p class="small-text" style="max-width:660px;">The input tokens flow through billions of parameters — attention layers, feed-forward networks — and out comes a <span class="hl">probability distribution over the entire vocabulary</span>.</p>
@@ -1754,7 +1754,7 @@
 
 <!-- ═══════ SLIDE 11 — TARGET DISTRIBUTION ═══════ -->
 <div class="slide" id="slide-11">
-  <span class="section-tag">Deep Dive</span>
+  <span class="section-tag">Deep Dive: One Update</span>
   <div class="badge deepdive">Step 3 — The Target</div>
   <h2>What the model <em>should</em> have predicted</h2>
   <p class="small-text" style="max-width:640px;">We know the correct next token from the training data. The <span class="hl-green">target distribution</span> puts \(100\%\) probability on the correct answer.</p>
@@ -1778,7 +1778,7 @@
 
 <!-- ═══════ SLIDE 12 — LOSS COMPUTATION ═══════ -->
 <div class="slide" id="slide-12">
-  <span class="section-tag">Deep Dive</span>
+  <span class="section-tag">Deep Dive: One Update</span>
   <div class="badge deepdive">Step 4 — Compute the Loss</div>
   <h2>Cross-entropy loss: how wrong is the model?</h2>
   <p class="small-text" style="max-width:680px;">The loss measures the gap between prediction and target. For next-token prediction, we use <span class="hl-yellow">cross-entropy loss</span>.</p>
@@ -1816,7 +1816,7 @@
 
 <!-- ═══════ SLIDE 13 — BACKPROPAGATION ═══════ -->
 <div class="slide" id="slide-13">
-  <span class="section-tag">Deep Dive</span>
+  <span class="section-tag">Deep Dive: One Update</span>
   <div class="badge deepdive">Step 5 — Backpropagation</div>
   <h2>Compute gradients and update parameters</h2>
   <p class="small-text" style="max-width:680px;">The loss signal flows <em>backwards</em> through the network. For each parameter, we compute: "how much would changing this parameter reduce the loss?" Then we nudge every parameter in that direction.</p>
@@ -1847,7 +1847,7 @@
 
 <!-- ═══════ SLIDE 14 — AFTER UPDATE ═══════ -->
 <div class="slide" id="slide-14">
-  <span class="section-tag">Deep Dive</span>
+  <span class="section-tag">Deep Dive: One Update</span>
   <div class="badge deepdive">Step 6 — After Update</div>
   <h2>The model improves!</h2>
   <p class="small-text" style="max-width:700px;">That completes one training iteration: after the update, the model assigns <em>more</em> probability to the correct token. Repeating this loop at scale is how the model learns language.</p>
@@ -1970,7 +1970,7 @@
 <!-- ═══════ SLIDE 24 — LOCAL OBJECTIVE TO GLOBAL STRUCTURE ═══════ -->
 <div class="slide" id="slide-24">
   <span class="section-tag">Reasoning Emergence</span>
-  <div class="badge concept">Synthesis</div>
+  <div class="badge concept">Takeaway</div>
   <h2>In the drama, the next token depends on the whole story</h2>
   <p class="small-text" style="max-width:820px;">Nothing explicitly says who the killer is. The correct continuation is implied by timing + access constraints distributed across many lines.</p>
   <div class="spacer-sm"></div>
@@ -2013,7 +2013,7 @@
 <!-- ═══════ SLIDE 16 — YOU ARE THE LANGUAGE MODEL ═══════ -->
 <div class="slide" id="slide-16">
   <span class="section-tag">Activity</span>
-  <div class="badge activity">Interactive Activity</div>
+  <div class="badge activity">Interactive</div>
   <h2>You Are the Language Model</h2>
   <p class="small-text" style="max-width:700px;">Now you run the same objective yourself: predict the next token. Notice what <em>kind of knowledge</em> each example requires. This is why next-token training yields more than memorization.</p>
   <div class="spacer-sm"></div>
@@ -2059,7 +2059,7 @@
 
 <!-- ═══════ SLIDE 29 — PRETRAINING AT SCALE (STEP 4) ═══════ -->
 <div class="slide" id="slide-29">
-  <span class="section-tag">Pretraining</span>
+  <span class="section-tag">Scale &amp; Data</span>
   <div class="badge concept">Scale</div>
   <h2>Pretraining at scale: next-token prediction repeated billions of times</h2>
   <p class="small-text" style="max-width:840px;">One objective, huge exposure: the model repeatedly predicts the next token across a massive distribution. This is where the model first learns language itself: structure, syntax, grammar, and broad semantic regularities.</p>
@@ -2116,7 +2116,7 @@
 
 <!-- ═══════ SLIDE 30 — DATA DISTRIBUTION DRIVES CAPABILITIES ═══════ -->
 <div class="slide" id="slide-30">
-  <span class="section-tag">Pretraining</span>
+  <span class="section-tag">Scale &amp; Data</span>
   <div class="badge concept">Data Mixture</div>
   <h2>Data drives capabilities: the training distribution is the lever</h2>
   <p class="small-text" style="max-width:860px;">After the model has base language competence, the next question is: <em>what data mix do we continue training on?</em> Capability profile follows that distributional mixture (often in mid-training).</p>
@@ -2164,7 +2164,7 @@
 
 <!-- ═══════ SLIDE 31 — COMPLETION TO CHAT WRAPPER (ACTIVITY) ═══════ -->
 <div class="slide" id="slide-31">
-  <span class="section-tag">From Pretraining to Chat</span>
+  <span class="section-tag">Alignment</span>
   <div class="badge activity">Interactive</div>
   <h2>It's still just a text completer</h2>
   <p class="small-text" style="max-width:860px;">We've pretrained a powerful model — but it was only ever trained to <span class="hl">predict the next token</span>. What happens when we actually try to use it?</p>
@@ -2260,8 +2260,8 @@ What is the capital of ...</div>
 
 <!-- ═══════ SLIDE 32 — WHY POST-TRAINING EXISTS (STEPS 5-6) ═══════ -->
 <div class="slide" id="slide-32">
-  <span class="section-tag">Post-training</span>
-  <div class="badge concept">Alignment</div>
+  <span class="section-tag">Alignment</span>
+  <div class="badge concept">Post-training</div>
   <h2>Why post-training exists: from context steering to behavior shaping</h2>
   <p class="small-text" style="max-width:920px;">Templates steer behavior at inference time by changing context. Post-training changes behavior at training time by updating parameters so assistant-style responses are more consistent, robust, and policy-constrained.</p>
   <div class="spacer-sm"></div>
