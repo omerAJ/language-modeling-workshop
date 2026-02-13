@@ -340,6 +340,13 @@
     line-height: 1.6;
   }
   .math-big { font-size: 1.3rem; padding: 22px; }
+  .math mjx-container {
+    margin: 0 auto !important;
+    color: inherit;
+  }
+  .math mjx-container[display="true"] {
+    margin: 0 auto !important;
+  }
 
   /* ── Animated gradient line ── */
   .gradient-line {
@@ -912,6 +919,18 @@
     color: var(--red);
   }
 </style>
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['\\(', '\\)']],
+      displayMath: [['\\[', '\\]']]
+    },
+    options: {
+      skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+  };
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
 </head>
 <body>
 
@@ -1104,7 +1123,7 @@
   <span class="section-tag">Inference vs Training</span>
   <div class="badge concept">Concept</div>
   <h2>The training (learning) loop</h2>
-  <p class="small-text" style="max-width:700px;">Training uses <span class="hl-yellow">teacher forcing</span>: for each sequence, inputs are <span class="hl">x<sub>1..T-1</sub></span> and targets are the same sequence shifted by one token <span class="hl-green">x<sub>2..T</sub></span>. We compute loss at every position, backpropagate, then update weights once per mini-batch.</p>
+  <p class="small-text" style="max-width:700px;">Training uses <span class="hl-yellow">teacher forcing</span>: for each sequence, inputs are <span class="hl">\(x_{1:T-1}\)</span> and targets are the same sequence shifted by one token <span class="hl-green">\(x_{2:T}\)</span>. We compute loss at every position, backpropagate, then update weights once per mini-batch.</p>
   <div class="spacer"></div>
   <div class="card" style="max-width:860px; margin:0 auto;">
     <div class="flow">
@@ -1126,7 +1145,7 @@
   </div>
   <div class="spacer"></div>
   <div class="grid-3" style="max-width:860px;">
-    <div class="callout info" style="margin:0;"><span class="icon">1</span><span><strong>Inputs/targets:</strong> predict token <em>t+1</em> from prefix up to <em>t</em> at every position</span></div>
+    <div class="callout info" style="margin:0;"><span class="icon">1</span><span><strong>Inputs/targets:</strong> predict token <em>\(t+1\)</em> from prefix up to <em>\(t\)</em> at every position</span></div>
     <div class="callout warn" style="margin:0;"><span class="icon">2</span><span><strong>Optimization unit:</strong> gradients from the whole mini-batch are aggregated before one optimizer step</span></div>
     <div class="callout success" style="margin:0;"><span class="icon">3</span><span><strong>Core difference vs inference:</strong> only training runs backward pass + parameter updates</span></div>
   </div>
@@ -1144,21 +1163,21 @@
   <p class="small-text" style="max-width:700px;">Now that we've separated inference from training, we can state the exact learning objective: for each position, the model sees the prefix and predicts the next token.</p>
   <div class="spacer-sm"></div>
   <div class="card" style="max-width:750px;">
-    <p class="small-text" style="margin-bottom:10px;">Given a sequence <span class="hl">x<sub>1</sub>, x<sub>2</sub>, ... , x<sub>T</sub></span>, for each position <span class="hl">t</span>:</p>
+    <p class="small-text" style="margin-bottom:10px;">Given a sequence <span class="hl">\(x_1, x_2, \ldots, x_T\)</span>, for each position <span class="hl">\(t\)</span>:</p>
     <div class="token-row" style="font-size:0.95rem;">
-      <span class="tok input">x<sub>1</sub></span>
-      <span class="tok input">x<sub>2</sub></span>
-      <span class="tok input" style="color:var(--text-dim);">...</span>
-      <span class="tok input">x<sub>t-1</sub></span>
-      <span class="tok blank" style="font-size:0.85rem; cursor:default;">x<sub>t</sub> = ?</span>
+      <span class="tok input">\(x_1\)</span>
+      <span class="tok input">\(x_2\)</span>
+      <span class="tok input" style="color:var(--text-dim);">\(\ldots\)</span>
+      <span class="tok input">\(x_{t-1}\)</span>
+      <span class="tok blank" style="font-size:0.85rem; cursor:default;">\(x_t = ?\)</span>
     </div>
-    <p class="tiny" style="margin-top:6px;">Model sees prefix x<sub>&lt;t</sub> and produces P(x<sub>t</sub> | x<sub>&lt;t</sub>) over the entire vocabulary</p>
+    <p class="tiny" style="margin-top:6px;">Model sees prefix \(x_{\lt t}\) and produces \(P(x_t \mid x_{\lt t})\) over the entire vocabulary</p>
   </div>
   <div class="spacer-sm"></div>
   <div class="math math-big">
-    L = − <sup>1</sup>/<sub>T</sub> Σ<sub>t=1..T</sub> log P<sub>θ</sub>(x<sub>t</sub> | x<sub>&lt;t</sub>)
+    \[\mathcal{L} = -\frac{1}{T}\sum_{t=1}^{T}\log P_{\theta}(x_t \mid x_{\lt t})\]
   </div>
-  <p class="tiny" style="text-align:center;">Cross-entropy loss = negative log-likelihood of the correct next token, averaged over all positions</p>
+  <p class="tiny" style="text-align:center;">Cross-entropy loss \(=\) negative log-likelihood of the correct next token, averaged over all positions</p>
   <div class="spacer"></div>
   <div class="callout warn">
     <span class="icon">!</span>
@@ -1194,7 +1213,7 @@
   </div>
   <div class="spacer-sm"></div>
   <div class="math">
-    L = −log P<sub>θ</sub>(x<sub>t</sub> | x<sub>&lt;t</sub>) &nbsp;&nbsp; ← <span style="color:var(--text-dim); font-size:0.82rem;">that's the ENTIRE signal</span>
+    \[\mathcal{L} = -\log P_{\theta}(x_t \mid x_{\lt t})\] <span style="color:var(--text-dim); font-size:0.82rem;">\(\leftarrow\) that's the ENTIRE signal</span>
   </div>
   <div class="spacer-sm"></div>
   <div class="callout success">
@@ -1267,7 +1286,7 @@
         <div class="nn-label">Transformer</div>
         <div class="nn-sub">attention + FFN layers</div>
       </div>
-      <span class="param-badge">~7 B params</span>
+      <span class="param-badge">\(\sim 7 \times 10^9\) params</span>
     </div>
     <div class="arrow-down">↓</div>
     <div class="chart-title" style="color:var(--text-dim); margin-top:8px;">Model's predicted distribution (softmax output)</div>
@@ -1276,7 +1295,7 @@
   <div class="spacer-sm"></div>
   <div class="callout info" style="max-width:700px;">
     <span class="icon">i</span>
-    <span>The final layer outputs a <span class="hl">logit</span> for each vocabulary token, then <span class="hl">softmax</span> converts these to probabilities that sum to 1. An untrained model spreads probability almost evenly — basically guessing randomly.</span>
+    <span>The final layer outputs a <span class="hl">logit</span> for each vocabulary token, then <span class="hl">softmax</span> converts these to probabilities satisfying \(\sum_i p_i = 1\). An untrained model spreads probability almost evenly — basically guessing randomly.</span>
   </div>
 </div>
 
@@ -1285,7 +1304,7 @@
   <span class="section-tag">Deep Dive</span>
   <div class="badge deepdive">Step 3 — The Target</div>
   <h2>What the model <em>should</em> have predicted</h2>
-  <p class="small-text" style="max-width:640px;">We know the correct next token from the training data. The <span class="hl-green">target distribution</span> puts 100% probability on the correct answer.</p>
+  <p class="small-text" style="max-width:640px;">We know the correct next token from the training data. The <span class="hl-green">target distribution</span> puts \(100\%\) probability on the correct answer.</p>
   <div class="spacer-sm"></div>
   <div class="dual-charts" style="max-width:720px;">
     <div class="chart-col">
@@ -1300,7 +1319,7 @@
   <div class="spacer-sm"></div>
   <div class="callout warn" style="max-width:720px;">
     <span class="icon">!</span>
-    <span>The model only gave <span class="hl" id="correctPctText">8%</span> to <span class="hl-green">"Islamabad"</span>, but the target says it should be <span class="hl-green">100%</span>. That gap is what the <span class="hl-red">loss function</span> measures.</span>
+    <span>The model only gave <span class="hl" id="correctPctText">\(8\%\)</span> to <span class="hl-green">"Islamabad"</span>, but the target says it should be <span class="hl-green">\(100\%\)</span>. That gap is what the <span class="hl-red">loss function</span> measures.</span>
   </div>
 </div>
 
@@ -1311,23 +1330,23 @@
   <h2>Cross-entropy loss: how wrong is the model?</h2>
   <p class="small-text" style="max-width:680px;">The loss measures the gap between prediction and target. For next-token prediction, we use <span class="hl-yellow">cross-entropy loss</span>.</p>
   <div class="spacer-sm"></div>
-  <div class="math math-big" style="max-width:700px;">
-    Loss = −log( P<sub>model</sub>("Islamabad") ) = −log(<span id="lossPval">0.08</span>) = <span id="lossResult" class="hl-red">2.53</span>
+  <div class="math math-big" style="max-width:700px;" id="lossFormula">
+    \[\mathcal{L} = -\log(P_{\text{model}}(\text{"Islamabad"})) = -\log(0.08) = 2.53\]
   </div>
   <div class="loss-display">
     <div class="loss-box">
-      <div class="label">P(Islamabad)</div>
-      <div class="value high" id="lossProbDisplay">0.08</div>
+      <div class="label">\(P(\text{Islamabad})\)</div>
+      <div class="value high" id="lossProbDisplay">\(0.08\)</div>
     </div>
     <div class="comparison-arrow">→</div>
     <div class="loss-box">
-      <div class="label">Loss</div>
-      <div class="value high" id="lossValueDisplay">2.53</div>
-      <div class="formula">−log(p)</div>
+      <div class="label">\(\mathcal{L}\)</div>
+      <div class="value high" id="lossValueDisplay">\(2.53\)</div>
+      <div class="formula">\(\mathcal{L} = -\log(p)\)</div>
     </div>
   </div>
   <div style="max-width:400px; margin:0 auto;">
-    <div style="display:flex; justify-content:space-between; font-size:0.72rem; color:var(--text-dim); margin-bottom:2px;">
+    <div style="display:flex; justify-content:space-between; gap: 24px; font-size:0.72rem; color:var(--text-dim); margin-bottom:2px;">
       <span class="hl-green">low loss (good)</span>
       <span class="hl-red">high loss (bad)</span>
     </div>
@@ -1338,7 +1357,7 @@
   <div class="spacer-sm"></div>
   <div class="callout info" style="max-width:700px;">
     <span class="icon">i</span>
-    <span><span class="hl-yellow">Intuition:</span> if the model gave 100% to "Islamabad", loss = −log(1) = <span class="hl-green">0</span> (perfect). If only 1%, loss = −log(0.01) = <span class="hl-red">4.6</span> (terrible). The loss captures "how surprised the model is by the right answer."</span>
+    <span><span class="hl-yellow">Intuition:</span> if the model gave \(100\%\) to "Islamabad", \(\mathcal{L} = -\log(1) =\) <span class="hl-green">\(0\)</span> (perfect). If only \(1\%\), \(\mathcal{L} = -\log(0.01) \approx\) <span class="hl-red">\(4.6\)</span> (terrible). The loss captures "how surprised the model is by the right answer."</span>
   </div>
 </div>
 
@@ -1350,22 +1369,22 @@
   <p class="small-text" style="max-width:680px;">The loss signal flows <em>backwards</em> through the network. For each parameter, we compute: "how much would changing this parameter reduce the loss?" Then we nudge every parameter in that direction.</p>
   <div class="spacer-sm"></div>
   <div class="update-flow">
-    <div class="flow-node loss-node">Loss = 2.53</div>
+    <div class="flow-node loss-node">\(\mathcal{L} = 2.53\)</div>
     <div class="flow-arrow">→</div>
-    <div class="flow-node grad-node">∂Loss/∂θ<br><small>compute gradients</small></div>
+    <div class="flow-node grad-node">\(\frac{\partial \mathcal{L}}{\partial \theta}\)<br><small>compute gradients</small></div>
     <div class="flow-arrow">→</div>
-    <div class="flow-node param-node">θ = θ − η·∇Loss<br><small>update params</small></div>
+    <div class="flow-node param-node">\(\theta \leftarrow \theta - \eta \nabla \mathcal{L}\)<br><small>update params</small></div>
   </div>
   <div class="backprop-arrows">
     <span>◂</span><span>◂</span><span>◂</span><span>◂</span>
     <span style="font-size:0.8rem; color:var(--text-dim); animation:none; margin-left:4px;">gradients flow backward</span>
   </div>
   <div class="math" style="max-width:500px; margin:10px auto;">
-    θ<sub>new</sub> = θ<sub>old</sub> − η · ∂Loss/∂θ
+    \[\theta_{\text{new}} = \theta_{\text{old}} - \eta \frac{\partial \mathcal{L}}{\partial \theta}\]
   </div>
   <div class="callout info" style="max-width:700px;">
     <span class="icon">i</span>
-    <span><span class="hl-purple">η (eta)</span> is the <strong>learning rate</strong> — a small number (e.g., 1e-4) that controls step size. The <span class="hl-orange">gradient ∂Loss/∂θ</span> tells us the direction and magnitude of adjustment needed for each of the billions of parameters.</span>
+    <span><span class="hl-purple">\(\eta\) (eta)</span> is the <strong>learning rate</strong> — a small number (e.g., \(10^{-4}\)) that controls step size. The <span class="hl-orange">gradient \(\frac{\partial \mathcal{L}}{\partial \theta}\)</span> tells us the direction and magnitude of adjustment needed for each of the billions of parameters.</span>
   </div>
   <div class="speaker-notes">
     <button class="notes-toggle" onclick="this.nextElementSibling.classList.toggle('open')">speaker notes</button>
@@ -1394,17 +1413,17 @@
   <div class="loss-display">
     <div class="loss-box">
       <div class="label">Loss before</div>
-      <div class="value high">2.53</div>
+      <div class="value high">\(2.53\)</div>
     </div>
     <div class="comparison-arrow">→</div>
     <div class="loss-box">
       <div class="label">Loss after</div>
-      <div class="value low" id="lossAfterVal">1.27</div>
+      <div class="value low" id="lossAfterVal">\(1.27\)</div>
     </div>
   </div>
   <div class="callout success" style="max-width:720px;">
     <span class="icon">✓</span>
-    <span>The model now assigns <span class="hl-green" id="afterCorrectPct">28%</span> to "Islamabad" (up from <span class="hl-red">8%</span>). The loss dropped from <span class="hl-red">2.53</span> to <span class="hl-green" id="afterLossText">1.27</span>. After many more steps, the model will learn to confidently predict "Islamabad" — and generalize to countless other facts.</span>
+    <span>The model now assigns <span class="hl-green" id="afterCorrectPct">\(28\%\)</span> to "Islamabad" (up from <span class="hl-red">\(8\%\)</span>). The loss dropped from <span class="hl-red">\(2.53\)</span> to <span class="hl-green" id="afterLossText">\(1.27\)</span>. After many more steps, the model will learn to confidently predict "Islamabad" — and generalize to countless other facts.</span>
   </div>
 </div>
 
@@ -1412,7 +1431,7 @@
 <div class="slide" id="slide-15">
   <span class="section-tag">Deep Dive</span>
   <div class="badge deepdive">The Big Picture</div>
-  <h2>Training = repeating this loop trillions of times</h2>
+  <h2>\(\text{Training} =\) repeating this loop trillions of times</h2>
   <p class="small-text" style="max-width:700px;">We just traced one iteration in detail. Real training is exactly that same loop repeated over massive batches and datasets, until the parameters encode useful predictive structure.</p>
   <div class="spacer"></div>
   <div class="update-flow" style="gap: 10px;">
@@ -1426,7 +1445,7 @@
     <div class="flow-arrow loop-arrow-anim">→</div>
     <div class="flow-box grad">Gradients</div>
     <div class="flow-arrow loop-arrow-anim">→</div>
-    <div class="flow-box green">Update θ</div>
+    <div class="flow-box green">Update \(\theta\)</div>
   </div>
   <div class="gradient-line"></div>
   <div class="grid-3" style="margin-top:14px;">
@@ -1450,7 +1469,7 @@
   <div class="spacer-sm"></div>
   <div class="card" style="max-width:780px;">
     <div class="math" style="margin:0;">
-      Objective: maximize P(x<sub>t</sub> | x<sub>&lt;t</sub>) for each token position
+      \[\text{Objective: } \max_{\theta} \; P_{\theta}(x_t \mid x_{\lt t}) \text{ for each token position}\]
     </div>
     <div class="spacer-sm"></div>
     <button class="reveal-btn" onclick="revealReasoningPressure()">Reveal what the model often must infer</button>
@@ -1538,7 +1557,7 @@
     <div class="card">
       <h3 style="color:var(--accent);">Local objective</h3>
       <div class="math" style="margin:8px 0 0;">
-        Predict the next token
+        \[\hat{x}_t = \arg\max_{x_t} P_{\theta}(x_t \mid x_{\lt t})\]
       </div>
       <p class="tiny" style="margin-top:8px;">The training signal never says "identify the killer" or "reason explicitly."</p>
     </div>
@@ -1601,7 +1620,7 @@
       <span class="ntp-tag logic">logical reasoning</span>
     </div>
     <div class="ntp-sentence">
-      The sum of 127 and 385 is <span class="ntp-blank" onclick="revealNTP(this)" data-answer="512">???</span>
+      The sum of \(127\) and \(385\) is <span class="ntp-blank" onclick="revealNTP(this)" data-answer="512">???</span>
       <span class="ntp-concept-btn" onclick="revealNTPConcept(this)">concept?</span>
       <span class="ntp-tag math">arithmetic</span>
     </div>
@@ -1639,11 +1658,11 @@
       </div>
       <div class="callout info" style="margin:0; flex-direction:column; text-align:center; background:rgba(251,146,60,0.08); border-color:rgba(251,146,60,0.18); color:#fdc89b;">
         <strong style="color:var(--orange);">Logic</strong>
-        <span class="tiny">"If A then B; A; therefore <strong>B</strong>"</span>
+        <span class="tiny">\(\text{If } A \Rightarrow B,\; A,\; \therefore B\)</span>
       </div>
       <div class="callout info" style="margin:0; flex-direction:column; text-align:center; background:rgba(250,204,21,0.08); border-color:rgba(250,204,21,0.18); color:#fde68a;">
         <strong style="color:var(--yellow);">Math</strong>
-        <span class="tiny">"2 + 2 = <strong>4</strong>"</span>
+        <span class="tiny">\(\,2 + 2 = 4\,\)</span>
       </div>
       <div class="callout info" style="margin:0; flex-direction:column; text-align:center; background:rgba(244,114,182,0.08); border-color:rgba(244,114,182,0.18); color:#fbb8d8;">
         <strong style="color:var(--pink);">Social cues</strong>
@@ -1772,11 +1791,11 @@
   </div>
   <div class="spacer"></div>
   <div class="flow">
-    <div class="flow-box data" style="font-size:0.78rem;">Raw text<br><span class="tiny">~10T tokens</span></div>
+    <div class="flow-box data" style="font-size:0.78rem;">Raw text<br><span class="tiny">\(\sim 10\text{T}\) tokens</span></div>
     <div class="flow-arrow loop-arrow-anim">→</div>
-    <div class="flow-box data" style="font-size:0.78rem;">Clean data<br><span class="tiny">~2-5T tokens</span></div>
+    <div class="flow-box data" style="font-size:0.78rem;">Clean data<br><span class="tiny">\(\sim 2\text{T}-5\text{T}\) tokens</span></div>
     <div class="flow-arrow loop-arrow-anim">→</div>
-    <div class="flow-box model" style="font-size:0.78rem;">Pretrain<br><span class="tiny">weeks on 1000s of GPUs</span></div>
+    <div class="flow-box model" style="font-size:0.78rem;">Pretrain<br><span class="tiny">weeks on \(10^3\!+\) GPUs</span></div>
     <div class="flow-arrow loop-arrow-anim">→</div>
     <div class="flow-box grad" style="font-size:0.78rem;">Align<br><span class="tiny">SFT + RLHF</span></div>
     <div class="flow-arrow loop-arrow-anim">→</div>
@@ -1814,7 +1833,7 @@
       <div style="font-size:1.6rem; line-height:1;">3</div>
       <div>
         <h3 style="color:var(--orange); font-size:0.95rem;">Deduplication</h3>
-        <p class="small-text">Exact dedup (hash-based) and fuzzy dedup (MinHash/LSH). Duplicates cause memorization, poor generalization, and wasted compute. Typically removes 30-50% of data.</p>
+        <p class="small-text">Exact dedup (hash-based) and fuzzy dedup (MinHash/LSH). Duplicates cause memorization, poor generalization, and wasted compute. Typically removes \(30\%-50\%\) of data.</p>
       </div>
     </div>
     <div class="card" style="display:flex; gap:16px; align-items:start; padding:18px 20px;">
@@ -1847,25 +1866,25 @@
   <div class="grid-4">
     <div class="card" style="text-align:center; padding:20px;">
       <div class="data-stat">
-        <div class="big-num" style="color:var(--cyan);">~15T</div>
+        <div class="big-num" style="color:var(--cyan);">\(\sim 15\text{T}\)</div>
         <div class="stat-label">tokens in Llama 3's training set</div>
       </div>
     </div>
     <div class="card" style="text-align:center; padding:20px;">
       <div class="data-stat">
-        <div class="big-num" style="color:var(--accent);">~100+</div>
+        <div class="big-num" style="color:var(--accent);">\(\sim 100+\)</div>
         <div class="stat-label">languages represented</div>
       </div>
     </div>
     <div class="card" style="text-align:center; padding:20px;">
       <div class="data-stat">
-        <div class="big-num" style="color:var(--orange);">~50%</div>
+        <div class="big-num" style="color:var(--orange);">\(\sim 50\%\)</div>
         <div class="stat-label">data removed by dedup alone</div>
       </div>
     </div>
     <div class="card" style="text-align:center; padding:20px;">
       <div class="data-stat">
-        <div class="big-num" style="color:var(--green);">~100K</div>
+        <div class="big-num" style="color:var(--green);">\(\sim 100\text{K}\)</div>
         <div class="stat-label">human-labeled examples for alignment</div>
       </div>
     </div>
@@ -1895,11 +1914,11 @@
     </div>
     <div class="callout success" style="margin:0;">
       <span class="icon">2</span>
-      <span><strong>They learn via next-token prediction:</strong> the loss is simply −log P(correct token). This narrow objective, applied at massive scale, produces emergent capabilities — because predicting text well requires understanding the world.</span>
+      <span><strong>They learn via next-token prediction:</strong> the loss is simply \(-\log P(\text{correct token})\). This narrow objective, applied at massive scale, produces emergent capabilities — because predicting text well requires understanding the world.</span>
     </div>
     <div class="callout success" style="margin:0;">
       <span class="icon">3</span>
-      <span><strong>Training = data → pretrain → post-train → eval:</strong> Pretraining is the foundation (expensive, general). Post-training (alignment) makes the model useful and safe.</span>
+      <span><strong>\(\text{Training} = \text{data} \to \text{pretrain} \to \text{post-train} \to \text{eval}\):</strong> Pretraining is the foundation (expensive, general). Post-training (alignment) makes the model useful and safe.</span>
     </div>
     <div class="callout success" style="margin:0;">
       <span class="icon">4</span>
@@ -1936,6 +1955,10 @@ let current = 0;
 
 const $ = s => document.querySelector(s);
 const $$ = s => document.querySelectorAll(s);
+function typesetMath(root = document) {
+  if (!window.MathJax || !window.MathJax.typesetPromise) return;
+  window.MathJax.typesetPromise([root]).catch(() => {});
+}
 
 function goTo(n) {
   if (n < 0 || n >= TOTAL) return;
@@ -1950,6 +1973,7 @@ function goTo(n) {
 
   // trigger animations for specific slides
   onSlideEnter(slideId);
+  typesetMath(document.getElementById(`slide-${slideId}`));
 }
 
 $('#btnNext').addEventListener('click', () => {
@@ -2185,13 +2209,16 @@ function buildBars(container, data, type) {
 
     const pctEl = document.createElement('div');
     pctEl.className = 'bar-pct';
-    pctEl.textContent = (d.value * 100).toFixed(1) + '%';
+    pctEl.textContent = `\\(${(d.value * 100).toFixed(1)}\\%\\)`;
 
     row.appendChild(wordEl);
     row.appendChild(track);
     row.appendChild(pctEl);
     el.appendChild(row);
   });
+  // Bars can be inserted after slide-enter (e.g., delayed "after update" chart),
+  // so explicitly typeset newly injected LaTeX labels here.
+  typesetMath(el);
 }
 
 function predictedData() { return VOCAB.map(v => ({ word: v.word, value: v.predicted })); }
@@ -2218,16 +2245,17 @@ function onSlideEnter(n) {
     buildBars('#dualPredicted', predictedData(), 'predicted');
     buildBars('#dualTarget', targetData(), 'target-fill');
     const pct = VOCAB[0].predicted;
-    $('#correctPctText').textContent = (pct * 100).toFixed(0) + '%';
+    $('#correctPctText').textContent = `\\(${(pct * 100).toFixed(0)}\\%\\)`;
   }
   // Slide 12: loss computation
   if (n === 12) {
     const p = VOCAB[0].predicted;
     const loss = -Math.log(p);
-    $('#lossPval').textContent = p.toFixed(2);
-    $('#lossResult').textContent = loss.toFixed(2);
-    $('#lossProbDisplay').textContent = p.toFixed(2);
-    $('#lossValueDisplay').textContent = loss.toFixed(2);
+    const pText = p.toFixed(2);
+    const lossText = loss.toFixed(2);
+    $('#lossFormula').textContent = `\\[\\mathcal{L} = -\\log(P_{\\text{model}}(\\text{\"Islamabad\"})) = -\\log(${pText}) = ${lossText}\\]`;
+    $('#lossProbDisplay').textContent = `\\(${pText}\\)`;
+    $('#lossValueDisplay').textContent = `\\(${lossText}\\)`;
     const meter = $('#lossMeter');
     meter.style.width = '0%';
     setTimeout(() => { meter.style.width = Math.min(loss / 5 * 100, 100) + '%'; }, 200);
@@ -2239,9 +2267,9 @@ function onSlideEnter(n) {
       buildBars('#afterBars', afterData(), 'target-fill');
     }, 300);
     const afterLoss = -Math.log(VOCAB[0].after);
-    $('#lossAfterVal').textContent = afterLoss.toFixed(2);
-    $('#afterCorrectPct').textContent = (VOCAB[0].after * 100).toFixed(0) + '%';
-    $('#afterLossText').textContent = afterLoss.toFixed(2);
+    $('#lossAfterVal').textContent = `\\(${afterLoss.toFixed(2)}\\)`;
+    $('#afterCorrectPct').textContent = `\\(${(VOCAB[0].after * 100).toFixed(0)}\\%\\)`;
+    $('#afterLossText').textContent = `\\(${afterLoss.toFixed(2)}\\)`;
   }
   if (n === 22) {
     const grid = document.getElementById('reasoningPressureGrid');
