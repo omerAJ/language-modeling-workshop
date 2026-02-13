@@ -1652,7 +1652,7 @@
   <span class="section-tag">Pretraining</span>
   <div class="badge concept">Critical Point</div>
   <h2>What the loss does <em>not</em> contain</h2>
-  <p class="small-text" style="max-width:700px;">After tracing one full iteration, notice what supervision signal the model actually receives. Pretraining has no explicit term for any of these; if they emerge, they must be <em>instrumentally useful for predicting text</em>.</p>
+  <p class="small-text" style="max-width:700px;">After tracing one full iteration, notice what supervision signal the model actually receives. Training has no explicit term for any of these; if they emerge, they must be <em>instrumentally useful for predicting text</em>.</p>
   <div class="spacer"></div>
   <div class="not-list">
     <div class="not-item">Truth</div>
@@ -1666,7 +1666,7 @@
   </div>
   <div class="spacer-sm"></div>
   <div class="math">
-    \[\mathcal{L} = -\log P_{\theta}(x_t \mid x_{\lt t})\] <span style="color:var(--text-dim); font-size:0.82rem;">\(\leftarrow\) that's the ENTIRE signal</span>
+    \[\mathcal{L} = -\log P_{\theta}(x_t \mid x_{\lt t})\] <span style="color:var(--text-dim); font-size:0.82rem;"> that's the ENTIRE signal</span>
   </div>
   <div class="spacer-sm"></div>
   <div class="callout success">
