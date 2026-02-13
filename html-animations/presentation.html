@@ -216,15 +216,17 @@
   /* ── Live demo video ── */
   .live-demo-shell {
     width: 100%;
-    max-width: 760px;
-    margin: 16px auto 0;
+    max-width: 100%;
+    margin: 0;
     border: 1px solid var(--border);
     border-radius: 12px;
     background: var(--surface2);
     overflow: hidden;
+    aspect-ratio: 16 / 9;
   }
   .live-demo-placeholder {
-    min-height: 280px;
+    height: 100%;
+    min-height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -234,9 +236,16 @@
   }
   .live-demo-video {
     width: 100%;
+    height: 100%;
     display: block;
     background: #000;
-    max-height: 420px;
+    object-fit: contain;
+  }
+
+  .forward-pass-caption {
+    font-size: 0.95rem;
+    margin-top: 18px;
+    opacity: 0.9;
   }
 
   /* ── Interactive reveal ── */
@@ -1055,16 +1064,17 @@
 </div>
 
 <!-- ═══════ SLIDE 1 — OBJECTIVES ═══════ -->
+<!-- ═══════ SLIDE 1 — OBJECTIVES ═══════ -->
 <div class="slide" id="slide-1">
   <span class="section-tag">Day 1</span>
-  <div class="badge day1">Objectives</div>
-  <h2>By the end of today, you'll have a mental model of:</h2>
+  <div class="badge day1">Today’s goal: leave with a clear internal map of how large language models actually work.</div>
+  <h2>By the end, you should understand:</h2>
   <div class="spacer-sm"></div>
   <ul class="obj-list">
     <li data-num="1">What an LLM <span class="hl">computes at runtime</span> — tokens in, probability distribution out</li>
-    <li data-num="2">Why <span class="hl-green">next-token training</span> can create complex capabilities</li>
-    <li data-num="3">What <span class="hl-purple">"training an LLM"</span> concretely means: <span class="hl-cyan">data</span> → <span class="hl">pretrain</span> → <span class="hl-orange">post-train/alignment</span> → <span class="hl-green">eval</span></li>
-    <li data-num="4">What <span class="hl-cyan">"data work"</span> actually entails — collection, cleaning, dedup, filtering, annotation</li>
+    <li data-num="2">How a simple objective like <span class="hl-green">next-token prediction</span> can create complex capabilities</li>
+    <li data-num="3">What <span class="hl-purple">"training an LLM"</span> concretely means: <span class="hl-cyan">data</span> → <span class="hl">train</span> → <span class="hl-orange">align</span> → <span class="hl-green">eval</span></li>
+    <li data-num="4">How <span class="hl-cyan">raw text becomes the data that shapes models</span> — collection, cleaning, deduplication, filtering, and annotation</li>
   </ul>
   <div class="speaker-notes">
     <button class="notes-toggle" onclick="this.nextElementSibling.classList.toggle('open')">speaker notes</button>
@@ -1078,10 +1088,9 @@
   <div class="badge concept">Live Demo</div>
   <h2>Let's watch an LLM complete a sentence</h2>
   <div class="spacer-sm"></div>
-  <p class="small-text" style="max-width:680px;">We know why we're all here — understanding LLMs. So let's start by watching what actually happens when an LLM processes a simple sentence.</p>
   <div class="spacer"></div>
-  <div class="card" style="text-align:center; max-width:600px;">
-    <p class="small-text" style="margin-bottom:14px; color:var(--text-dim);">Full-Pipeline Animation (3 zoom levels)</p>
+  <div class="card" style="text-align:center; max-width:100%; margin:0 auto;">
+    <p class="small-text" style="margin-bottom:14px; color:var(--text-dim);">LLM Forward Pass Animation</p>
     <div class="live-demo-shell" id="liveDemoHost"
       data-video-relative="LanguageModelingPipeline.mp4"
       data-video-path="/home/maincoder/Documents/inside-LLM/manimations/media/videos/pipeline/1080p60/LanguageModelingPipeline.mp4">
@@ -1090,7 +1099,7 @@
         <p class="tiny">Large file is lazy-loaded only when this slide is opened.</p>
       </div>
     </div>
-    <p class="tiny">Zoom level 1 → 2 → 3 (controls appear after load)</p>
+    <p class="tiny forward-pass-caption">Black box → Functional stages → Computational mechanisms</p>
   </div>
   <div class="spacer"></div>
   <div class="callout info">
@@ -1106,111 +1115,262 @@
 <!-- ═══════ SLIDE 3 — THREE INGREDIENTS ═══════ -->
 <div class="slide" id="slide-3">
   <span class="section-tag">The Big Picture</span>
-  <div class="badge discussion">Audience Interaction</div>
-  <h2>LLMs have three ingredients</h2>
+  <div class="badge discussion">Quick Check-in</div>
+  <h2>What makes an LLM work</h2>
   <div class="spacer-sm"></div>
+
   <div class="grid-3" id="ingredientsGrid">
-    <div class="card" style="text-align:center;">
+    <!-- INGREDIENT 1 -->
+    <div class="card" style="text-align:center;" id="ingredient1Card">
       <div style="font-size:2.2rem; margin-bottom:8px;">1</div>
-      <h3 style="color:var(--cyan);">Data</h3>
-      <p class="small-text">What the model is exposed to — trillions of tokens from the internet, books, code, and more</p>
+      <div id="ingredient1Hidden">
+        <h3 style="color:var(--cyan);">???</h3>
+        <p class="small-text" style="color:var(--text-dim);">Click to reveal</p>
+        <button class="reveal-btn" onclick="revealIngredient(1)" style="margin-top:12px;">Reveal</button>
+      </div>
+      <div id="ingredient1Revealed" style="display:none;">
+        <h3 style="color:var(--cyan);">Data</h3>
+        <p class="small-text">
+          corpus · scale · quality
+        </p>
+      </div>
     </div>
-    <div class="card" style="text-align:center;">
+
+    <!-- INGREDIENT 2 -->
+    <div class="card" style="text-align:center;" id="ingredient2Card">
       <div style="font-size:2.2rem; margin-bottom:8px;">2</div>
-      <h3 style="color:var(--accent);">Architecture</h3>
-      <p class="small-text">The function class (Transformer) that maps input context → output logits</p>
+      <div id="ingredient2Hidden">
+        <h3 style="color:var(--accent);">???</h3>
+        <p class="small-text" style="color:var(--text-dim);">Click to reveal</p>
+        <button class="reveal-btn" onclick="revealIngredient(2)" style="margin-top:12px;">Reveal</button>
+      </div>
+      <div id="ingredient2Revealed" style="display:none;">
+        <h3 style="color:var(--accent);">Architecture</h3>
+        <p class="small-text">
+          structure · information flow · parameters
+        </p>
+      </div>
     </div>
+
+    <!-- INGREDIENT 3 -->
     <div class="card" style="text-align:center;" id="ingredient3Card">
       <div style="font-size:2.2rem; margin-bottom:8px;">3</div>
       <div id="ingredient3Hidden">
         <h3 style="color:var(--purple);">???</h3>
-        <p class="small-text" style="color:var(--text-dim);">What's the missing ingredient?</p>
-        <button class="reveal-btn" onclick="revealIngredient3()" style="margin-top:12px;">Reveal</button>
+        <p class="small-text" style="color:var(--text-dim);">Click to reveal</p>
+        <button class="reveal-btn" onclick="revealIngredient(3)" style="margin-top:12px;">Reveal</button>
       </div>
       <div id="ingredient3Revealed" style="display:none;">
-        <h3 style="color:var(--purple);">Learning</h3>
-        <p class="small-text">The <span class="hl-yellow">objective</span> (next-token prediction), the <span class="hl-orange">optimizer</span> (Adam), and the <span class="hl-purple">compute budget</span> that makes it feasible</p>
+        <h3 style="color:var(--purple);">Learning Dynamics</h3>
+        <p class="small-text">
+          objective · feedback · compute
+        </p>
       </div>
     </div>
   </div>
-  <div class="hidden-content" id="ingredientExplanation">
+
+  <!-- DATA EXPLANATION -->
+  <div class="hidden-content" id="ingredientExplanation1">
     <div class="callout info">
       <span class="icon">i</span>
-      <span><strong>Learning</strong> means three things: (1) the <span class="hl-yellow">objective we train on</span> — e.g., next-token prediction using cross-entropy loss, (2) the <span class="hl-orange">optimization process</span> — SGD/Adam variants, learning rate schedules, and (3) the <span class="hl-purple">compute budget</span> — thousands of GPUs for weeks.</span>
+      <span>
+        <strong>Data</strong> is three things:
+        (1) the <span class="hl-cyan">raw corpus</span> — books, web pages, code, and conversations,
+        (2) the <span class="hl-yellow">scale</span> — trillions of tokens, because statistical patterns only emerge with massive coverage, and
+        (3) the <span class="hl-orange">quality</span> — filtering, deduplication, and curation that determine what the model actually learns.
+      </span>
     </div>
   </div>
+
+  <!-- ARCHITECTURE EXPLANATION -->
+  <div class="hidden-content" id="ingredientExplanation2">
+    <div class="callout info">
+      <span class="icon">i</span>
+      <span>
+        <strong>Architecture</strong> is three things:
+        (1) the <span class="hl-cyan">Transformer</span> — a neural network built around self-attention,
+        (2) the <span class="hl-yellow">information flow</span> — attention mixes information across tokens, while residual connections preserve and accumulate it across layers, and
+        (3) the <span class="hl-orange">parameter space</span> — billions of tunable weights that store a compressed statistical model of language.
+      </span>
+    </div>
+  </div>
+
+  <!-- LEARNING EXPLANATION -->
+  <div class="hidden-content" id="ingredientExplanation3">
+    <div class="callout info">
+      <span class="icon">i</span>
+      <span>
+        <strong>Learning</strong> here means three things:
+        (1) the <span class="hl-yellow">training objective</span> — next-token prediction via cross-entropy loss,
+        (2) the <span class="hl-orange">optimization process</span> — the feedback loop that turns prediction error into parameter updates, and
+        (3) <span class="hl-purple">computation at scale</span> — thousands of GPUs running for weeks.
+      </span>
+    </div>
+  </div>
+
   <div class="speaker-notes">
     <button class="notes-toggle" onclick="this.nextElementSibling.classList.toggle('open')">speaker notes</button>
-    <div class="notes-body"><p>Ask the audience: "What's the missing ingredient besides data and architecture?" Let them discuss for 30s. Then click reveal.</p></div>
+    <div class="notes-body">
+      <p>
+        Ask: “When people say data, architecture, or learning — what do they actually mean?”
+        Reveal each ingredient, then pause on its decomposition before moving on.
+      </p>
+    </div>
   </div>
 </div>
 
 <!-- ═══════ SLIDE 4 — WORKSHOP ROADMAP ═══════ -->
 <div class="slide" id="slide-4">
   <span class="section-tag">Roadmap</span>
-  <div class="badge day1">Structure</div>
+  <div class="badge day1">Causality</div>
   <h2>Workshop roadmap</h2>
   <div class="spacer-sm"></div>
+
   <div class="grid-2">
+    <!-- DAY 1 -->
     <div class="card" style="border-color: rgba(108,140,255,0.3);">
       <div class="badge day1">Day 1 — Today</div>
-      <h3 style="color:var(--accent);">How learning happens + data quality</h3>
+      <h3 style="color:var(--accent);">Why LLMs behave the way they do</h3>
       <ul style="list-style:none; margin-top:10px;">
-        <li class="small-text" style="padding:5px 0 5px 20px; position:relative;"><span style="position:absolute;left:0;color:var(--accent);">→</span> Inference vs. training</li>
-        <li class="small-text" style="padding:5px 0 5px 20px; position:relative;"><span style="position:absolute;left:0;color:var(--accent);">→</span> Next-token prediction objective</li>
-        <li class="small-text" style="padding:5px 0 5px 20px; position:relative;"><span style="position:absolute;left:0;color:var(--accent);">→</span> Loss, gradients, parameter updates</li>
-        <li class="small-text" style="padding:5px 0 5px 20px; position:relative;"><span style="position:absolute;left:0;color:var(--accent);">→</span> Why NTP works (interactive)</li>
-        <li class="small-text" style="padding:5px 0 5px 20px; position:relative;"><span style="position:absolute;left:0;color:var(--accent);">→</span> The full training pipeline</li>
-        <li class="small-text" style="padding:5px 0 5px 20px; position:relative;"><span style="position:absolute;left:0;color:var(--accent);">→</span> Data work: collection → annotation</li>
+        <li class="small-text" style="padding:5px 0 5px 20px; position:relative;">
+          <span style="position:absolute;left:0;color:var(--accent);">→</span>
+          Inference vs. training
+        </li>
+        <li class="small-text" style="padding:5px 0 5px 20px; position:relative;">
+          <span style="position:absolute;left:0;color:var(--accent);">→</span>
+          Next-token prediction objective
+        </li>
+        <li class="small-text" style="padding:5px 0 5px 20px; position:relative;">
+          <span style="position:absolute;left:0;color:var(--accent);">→</span>
+          Loss → gradients → parameter updates
+        </li>
+        <li class="small-text" style="padding:5px 0 5px 20px; position:relative;">
+          <span style="position:absolute;left:0;color:var(--accent);">→</span>
+          Why next-token prediction works
+        </li>
+        <li class="small-text" style="padding:5px 0 5px 20px; position:relative;">
+          <span style="position:absolute;left:0;color:var(--accent);">→</span>
+          From one update to a full training pipeline
+        </li>
+        <li class="small-text" style="padding:5px 0 5px 20px; position:relative;">
+          <span style="position:absolute;left:0;color:var(--accent);">→</span>
+          Data work: collection → filtering → annotation
+        </li>
       </ul>
+      <div class="callout info" style="margin-top:14px;">
+        <span class="icon">i</span>
+        <span>Treat the model as a <strong>system being shaped.</strong></span>
+      </div>
     </div>
+
+    <!-- DAY 2 -->
     <div class="card" style="border-color: rgba(167,139,250,0.25); opacity:0.6;">
       <div class="badge concept">Day 2 — Tomorrow</div>
-      <h3 style="color:var(--purple);">What the model computes internally</h3>
+      <h3 style="color:var(--purple);">How a Transformer processes text and computes the next word</h3>
       <ul style="list-style:none; margin-top:10px;">
-        <li class="small-text" style="padding:5px 0 5px 20px; position:relative;"><span style="position:absolute;left:0;color:var(--purple);">→</span> Tokenization & embeddings</li>
-        <li class="small-text" style="padding:5px 0 5px 20px; position:relative;"><span style="position:absolute;left:0;color:var(--purple);">→</span> Self-attention mechanics</li>
-        <li class="small-text" style="padding:5px 0 5px 20px; position:relative;"><span style="position:absolute;left:0;color:var(--purple);">→</span> Feed-forward layers</li>
-        <li class="small-text" style="padding:5px 0 5px 20px; position:relative;"><span style="position:absolute;left:0;color:var(--purple);">→</span> Full forward pass end-to-end</li>
-        <li class="small-text" style="padding:5px 0 5px 20px; position:relative;"><span style="position:absolute;left:0;color:var(--purple);">→</span> Connecting mechanics to behavior</li>
+        <li class="small-text" style="padding:5px 0 5px 20px; position:relative;">
+          <span style="position:absolute;left:0;color:var(--purple);">→</span>
+          Tokenization & embeddings
+        </li>
+        <li class="small-text" style="padding:5px 0 5px 20px; position:relative;">
+          <span style="position:absolute;left:0;color:var(--purple);">→</span>
+          Self-attention mechanics
+        </li>
+        <li class="small-text" style="padding:5px 0 5px 20px; position:relative;">
+          <span style="position:absolute;left:0;color:var(--purple);">→</span>
+          Feed-forward layers
+        </li>
+        <li class="small-text" style="padding:5px 0 5px 20px; position:relative;">
+          <span style="position:absolute;left:0;color:var(--purple);">→</span>
+          Full forward pass end-to-end
+        </li>
+        <li class="small-text" style="padding:5px 0 5px 20px; position:relative;">
+          <span style="position:absolute;left:0;color:var(--purple);">→</span>
+          Connecting mechanics to behavior
+        </li>
       </ul>
+      <div class="callout info" style="margin-top:14px;">
+        <span class="icon">i</span>
+        <span>Treat it as a <strong>machine executing computation.</strong></span>
+      </div>
     </div>
   </div>
-  <div class="spacer-sm"></div>
-  <div class="callout info">
-    <span class="icon">i</span>
-    <span><strong>Day 1 = why the weights end up where they are.</strong> Day 2 = what those weights actually do to your input.</span>
-  </div>
+
   <div class="speaker-notes">
-    <button class="notes-toggle" onclick="this.nextElementSibling.classList.toggle('open')">speaker notes</button>
-    <div class="notes-body"><p>"You just saw inference: a sentence goes in, a next-token distribution comes out, we sample, repeat. But none of that is useful unless the weights have been fit. So the workshop splits cleanly."</p></div>
+    <button class="notes-toggle" onclick="this.nextElementSibling.classList.toggle('open')">
+      speaker notes
+    </button>
+    <div class="notes-body">
+      <p>
+        “You’ve already seen inference: context goes in, a next-token distribution comes out.
+        But that behavior only exists because of how the weights were trained.
+        Today is the causal story. Tomorrow we zoom all the way into the computation.”
+      </p>
+    </div>
   </div>
 </div>
+
 
 <!-- ═══════ SLIDE 5 — INFERENCE LOOP ═══════ -->
 <div class="slide" id="slide-5">
   <span class="section-tag">Inference vs Training</span>
   <div class="badge concept">Concept</div>
   <h2>The inference (use-time) loop</h2>
-  <p class="small-text" style="max-width:600px;">At inference, the model does a simple repeated cycle: read context, predict next token, append, repeat. No learning happens — weights are frozen.</p>
+
+  <p class="small-text" style="max-width:600px;">
+    At use time, the model runs a fixed computation.
+    The input text is tokenized once. After that, the model repeatedly predicts the next token,
+    which is decoded for display and appended to the context.
+  </p>
+
   <div class="spacer"></div>
-  <div class="card" style="max-width:760px; margin: 0 auto;">
+
+  <div class="card" style="max-width:900px; margin: 0 auto;">
+
+    <!-- ONE-TIME SETUP -->
+    <div class="flow" style="margin-bottom:10px;">
+      <div class="flow-box data">Text<br>input</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box blue">Tokenize<br><span class="tiny">(one-time)</span></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box data">Context<br>tokens</div>
+    </div>
+
+    <!-- REPEATED LOOP -->
     <div class="flow">
       <div class="flow-box data">Context<br>tokens</div>
       <div class="flow-arrow loop-arrow-anim">→</div>
-      <div class="flow-box model">Model<br><span class="tiny">(frozen weights)</span></div>
+
+      <div class="flow-box model">
+        Transformer Blocks<br><span class="tiny">(fixed)</span>
+      </div>
       <div class="flow-arrow loop-arrow-anim">→</div>
-      <div class="flow-box yellow">Logits</div>
+
+      <div class="flow-box yellow">
+        Logits<br><span class="tiny">(scores for each token)</span>
+      </div>
       <div class="flow-arrow loop-arrow-anim">→</div>
+
       <div class="flow-box pink">Softmax</div>
       <div class="flow-arrow loop-arrow-anim">→</div>
+
       <div class="flow-box green">Sample<br>next token</div>
+      <div class="flow-arrow loop-arrow-anim">→</div>
+
+      <div class="flow-box purple">
+        Decode<br><span class="tiny">(token → text)</span>
+      </div>
     </div>
+
     <div style="text-align:center; margin-top:8px;">
-      <span class="tiny" style="color:var(--orange);">↻ append token to context and repeat</span>
+      <span class="tiny" style="color:var(--orange);">
+        ↻ append token to context and repeat (model runs at the token level)
+      </span>
     </div>
   </div>
+
   <div class="spacer"></div>
+
   <div class="token-row" id="inferenceDemo">
     <span class="tok input">The</span>
     <span class="tok input">capital</span>
@@ -1219,12 +1379,25 @@
     <span class="tok input">is</span>
     <span class="tok blank" id="infCurrent" onclick="animateInference()">click</span>
   </div>
-  <p class="tiny" id="infHint">Click the blank to simulate one inference step</p>
+
+  <p class="tiny" id="infHint">
+    Click the blank to simulate one inference step
+  </p>
+
   <div class="speaker-notes">
-    <button class="notes-toggle" onclick="this.nextElementSibling.classList.toggle('open')">speaker notes</button>
-    <div class="notes-body"><p>"You already saw the inference loop in the animation: it's a repeated forward pass. The model reads all context tokens, produces a probability distribution, we sample from it, append the result, and go again. Crucially: no weights change during inference."</p></div>
+    <button class="notes-toggle" onclick="this.nextElementSibling.classList.toggle('open')">
+      speaker notes
+    </button>
+    <div class="notes-body">
+      <p>
+        “The model never produces words directly — it produces token IDs.
+        Decoding just turns those IDs into readable text.
+        The loop itself runs entirely at the token level.”
+      </p>
+    </div>
   </div>
 </div>
+
 
 <!-- ═══════ SLIDE 6 — TRAINING LOOP ═══════ -->
 <div class="slide" id="slide-6">
@@ -2341,13 +2514,29 @@ document.addEventListener('keydown', e => {
 });
 
 // ══════════════════════════════════════
-//  Ingredient 3 reveal
+//  Ingredient reveal (all three)
 // ══════════════════════════════════════
-function revealIngredient3() {
-  document.getElementById('ingredient3Hidden').style.display = 'none';
-  document.getElementById('ingredient3Revealed').style.display = 'block';
-  document.getElementById('ingredient3Card').style.borderColor = 'rgba(167,139,250,0.4)';
-  document.getElementById('ingredientExplanation').classList.add('revealed');
+var ingredientColors = {
+  1: 'rgba(0,255,255,0.35)',
+  2: 'rgba(108,140,255,0.35)',
+  3: 'rgba(167,139,250,0.4)'
+};
+
+function revealIngredient(n) {
+  document.getElementById('ingredient' + n + 'Hidden').style.display = 'none';
+  document.getElementById('ingredient' + n + 'Revealed').style.display = 'block';
+  document.getElementById('ingredient' + n + 'Card').style.borderColor = ingredientColors[n];
+  document.getElementById('ingredientExplanation' + n).classList.add('revealed');
+}
+
+function resetIngredients() {
+  for (var i = 1; i <= 3; i++) {
+    document.getElementById('ingredient' + i + 'Hidden').style.display = '';
+    document.getElementById('ingredient' + i + 'Revealed').style.display = 'none';
+    document.getElementById('ingredient' + i + 'Card').style.borderColor = '';
+    var exp = document.getElementById('ingredientExplanation' + i);
+    exp.classList.remove('revealed', 'settled');
+  }
 }
 
 function revealReasoningPressure() {
@@ -2624,6 +2813,11 @@ function onSlideEnter(n) {
     ensureLiveDemoLoaded();
   } else {
     pauseLiveDemoIfNeeded();
+  }
+
+  // Slide 3: reset ingredients
+  if (n === 3) {
+    resetIngredients();
   }
 
   // Slide 10: forward pass — build predicted chart
