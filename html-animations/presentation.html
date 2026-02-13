@@ -223,12 +223,16 @@
   }
   .flow-box.data    { border-color: rgba(34,211,238,0.4); color: var(--cyan); background: rgba(34,211,238,0.06); }
   .flow-box.model   { border-color: rgba(108,140,255,0.4); color: var(--accent); background: rgba(108,140,255,0.06); }
+  .flow-box.blue    { border-color: rgba(108,140,255,0.4); color: var(--accent); background: rgba(108,140,255,0.06); }
   .flow-box.loss    { border-color: rgba(248,113,113,0.4); color: var(--red); background: rgba(248,113,113,0.06); }
   .flow-box.grad    { border-color: rgba(251,146,60,0.4); color: var(--orange); background: rgba(251,146,60,0.06); }
   .flow-box.param   { border-color: rgba(167,139,250,0.4); color: var(--purple); background: rgba(167,139,250,0.06); }
+  .flow-box.target  { border-color: rgba(74,222,128,0.5); color: var(--green); background: rgba(74,222,128,0.08); border-style: dashed; }
   .flow-box.green   { border-color: rgba(74,222,128,0.4); color: var(--green); background: rgba(74,222,128,0.06); }
   .flow-box.pink    { border-color: rgba(244,114,182,0.4); color: var(--pink); background: rgba(244,114,182,0.06); }
   .flow-box.yellow  { border-color: rgba(250,204,21,0.4); color: var(--yellow); background: rgba(250,204,21,0.06); }
+  /* Backward flow — arrows point left for backpropagation */
+  .flow.flow-backward .flow-box ~ .flow-box::before { content: '←'; }
 
   /* ── Live demo video ── */
   .live-demo-shell {
@@ -1424,82 +1428,95 @@
   <div class="badge concept">Concept</div>
   <h2>The training (learning) loop</h2>
 
-  <p class="small-text" style="max-width:650px;">
-    Training runs the same forward computation as inference,
-    but with known next tokens.
-    The model’s predictions are compared to the true next tokens,
-    and the resulting error is used to improve the model.
+  <p class="small-text" style="max-width:680px;">
+    Training uses the <strong>same forward pass</strong> as inference — but adds a teacher.
+    The error flows <em>backward</em> through the network, reshaping it one batch at a time.
   </p>
 
-  <div class="spacer"></div>
+  <div class="spacer-sm"></div>
 
-  <div class="card" style="max-width:900px; margin: 0 auto;">
-
-    <!-- FORWARD PASS (SAME AS INFERENCE) -->
-    <div class="flow" style="margin-bottom:10px;">
-      <div class="flow-box data">Tokenized<br>sequences</div>
-      <div class="flow-arrow">→</div>
-      <div class="flow-box model">
-        Transformer Blocks<br><span class="tiny">(same computation)</span>
-      </div>
-      <div class="flow-arrow">→</div>
-      <div class="flow-box yellow">
-        Logits<br><span class="tiny">(predictions)</span>
-      </div>
-    </div>
-
-    <!-- FEEDBACK + UPDATE -->
-    <div class="flow">
-      <div class="flow-box target">
-        True next tokens<br><span class="tiny">(teacher forcing)</span>
-      </div>
-      <div class="flow-arrow">→</div>
-      <div class="flow-box loss">
-        Compute error<br><span class="tiny">(loss)</span>
-      </div>
-      <div class="flow-arrow">→</div>
-      <div class="flow-box grad">
-        Send error backward<br><span class="tiny">(gradients)</span>
-      </div>
-      <div class="flow-arrow">→</div>
-      <div class="flow-box param">
-        Update the model
-      </div>
-    </div>
-
-    <div style="text-align:center; margin-top:10px;">
-      <span class="tiny" style="color:var(--orange);">
-        ↻ repeat over many batches so predictions improve
-      </span>
-    </div>
+  <!-- Step controls -->
+  <div style="display:flex; gap:6px; justify-content:center; flex-wrap:wrap; margin-bottom:14px;">
+    <button class="reveal-btn" onclick="trainStep(1)" id="trainBtn1">1 · Forward</button>
+    <button class="reveal-btn" onclick="trainStep(2)" id="trainBtn2">2 · Teacher</button>
+    <button class="reveal-btn" onclick="trainStep(3)" id="trainBtn3">3 · Loss</button>
+    <button class="reveal-btn" onclick="trainStep(4)" id="trainBtn4">4 · Backprop</button>
+    <button class="reveal-btn" onclick="trainStep(5)" id="trainBtn5">5 · Update</button>
   </div>
 
-  <div class="spacer"></div>
+  <div class="card" style="max-width:960px; margin:0 auto; overflow:visible; position:relative;">
 
-  <div class="grid-3" style="max-width:900px;">
-    <div class="callout info" style="margin:0;">
-      <span class="icon">1</span>
-      <span>
-        <strong>Same forward pass:</strong>
-        training uses the exact same computation as inference
-      </span>
+    <!-- ── PHASE 1: FORWARD PASS (same as inference) ── -->
+    <div class="flow" id="trainFwd" style="opacity:0.25; transition:opacity 0.4s;">
+      <div class="flow-box data">Context<br>tokens</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box model" id="trainTransformer">Transformer<br>Blocks<br><span class="tiny">(weights θ)</span></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box yellow">Logits<br><span class="tiny">(raw scores)</span></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box pink">Softmax</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box green">Predicted<br>next token</div>
     </div>
 
-    <div class="callout warn" style="margin:0;">
-      <span class="icon">2</span>
-      <span>
-        <strong>Extra signal:</strong>
-        training compares predictions to known next tokens
-      </span>
+    <!-- ── PHASE 2: GROUND TRUTH COMPARISON ── -->
+    <div id="trainCompare" style="display:none;">
+      <div style="display:flex; align-items:center; justify-content:center; gap:16px; margin:10px 0 4px;">
+        <div class="flow-box green" style="opacity:0.65; min-width:90px;">Predicted<br><span class="tiny">P(token)</span></div>
+        <span style="font-size:1.6rem; color:var(--red); font-weight:700;">&#x2260;</span>
+        <div class="flow-box target" style="min-width:90px;">Actual<br><span class="tiny">(from data)</span></div>
+      </div>
+      <p class="tiny" style="text-align:center; color:var(--text-dim); margin:0;">
+        teacher forcing — the correct next token is always known during training
+      </p>
     </div>
 
-    <div class="callout success" style="margin:0;">
-      <span class="icon">3</span>
-      <span>
-        <strong>Key difference:</strong>
-        only training sends feedback backward to change the model
-      </span>
+    <!-- ── PHASE 3: LOSS COMPUTATION ── -->
+    <div id="trainLoss" style="display:none; text-align:center; margin:8px 0;">
+      <div style="color:var(--text-dim); font-size:1.1rem;">&#x2193;</div>
+      <div class="flow-box loss" style="display:inline-block;">
+        Cross-Entropy Loss<br>
+        <span class="tiny">L = &minus;log P(correct token)</span>
+      </div>
+      <p class="tiny" style="color:var(--red); margin:4px 0 0;">
+        "How surprised was the model by the right answer?"
+      </p>
     </div>
+
+    <!-- ── PHASE 4: BACKPROPAGATION ── -->
+    <div id="trainBackprop" style="display:none; margin-top:8px;">
+      <p class="tiny" style="text-align:center; color:var(--orange); margin:0 0 6px;">
+        &#x2193; error signal flows backward through every layer (chain rule)
+      </p>
+      <div class="flow flow-backward">
+        <div class="flow-box param">&#x2202;L/&#x2202;&#x03B8;<br><span class="tiny">gradient for<br>every weight</span></div>
+        <div class="flow-arrow">&larr;</div>
+        <div class="flow-box grad">Backpropagate<br><span class="tiny">layer N &rarr; N&minus;1<br>&rarr; &hellip; &rarr; layer 1</span></div>
+        <div class="flow-arrow">&larr;</div>
+        <div class="flow-box loss">L<br><span class="tiny">error at<br>output</span></div>
+      </div>
+    </div>
+
+    <!-- ── PHASE 5: WEIGHT UPDATE + FEEDBACK LOOP ── -->
+    <div id="trainUpdate" style="display:none; text-align:center; margin-top:8px;">
+      <div style="color:var(--text-dim); font-size:1.1rem;">&#x2193;</div>
+      <div class="flow-box param" style="display:inline-block; border-width:2px;">
+        &#x03B8; &larr; &#x03B8; &minus; &#x03B7; &middot; &#x2207;L<br>
+        <span class="tiny">nudge every weight to reduce the loss</span>
+      </div>
+      <div style="margin-top:12px;">
+        <span style="color:var(--orange); font-size:1rem;">
+          &#x21BB; updated weights feed back into the Transformer — repeat with next batch
+        </span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Step explanation callout -->
+  <div id="trainExplain" class="callout info" style="max-width:750px; margin:10px auto 0; display:none;">
+    <span class="icon">i</span>
+    <span id="trainExplainText"></span>
   </div>
 
   <div class="speaker-notes">
@@ -1508,54 +1525,127 @@
     </button>
     <div class="notes-body">
       <p>
-        “Training is not a different machine.
-        It’s the same forward pass you just saw,
-        plus a feedback signal that says how wrong the prediction was.
-        That feedback slowly reshapes the model so future predictions improve.”
+        Walk through each step. Emphasize: "The forward pass is identical to inference.
+        Training only adds the teacher signal and backward pass.
+        Backpropagation is just the chain rule applied mechanically —
+        for each weight, how much did it contribute to the error?
+        Then nudge it to contribute less."
       </p>
     </div>
   </div>
 </div>
 
 
-<!-- ═══════ SLIDE 7 — PRETRAINING OBJECTIVE ═══════ -->
+<!-- ═══════ SLIDE 7 — TRAINING OBJECTIVE ═══════ -->
 <div class="slide" id="slide-7">
-  <span class="section-tag">Pretraining</span>
+  <span class="section-tag">Training</span>
   <div class="badge concept">Core Concept</div>
-  <h2>The pretraining objective</h2>
-  <p class="small-text" style="max-width:700px;">Now that we've separated inference from training, we can state the exact learning objective: for each position, the model sees the prefix and predicts the next token.</p>
+  <h2>The training objective</h2>
+
+  <p class="small-text" style="max-width:760px;">
+    Objective: make the model assign high probability to the training text.
+    With a causal language model, this factorizes into next-token prediction at every position.
+  </p>
+
   <div class="spacer-sm"></div>
-  <div class="card" style="max-width:750px;">
-    <p class="small-text" style="margin-bottom:10px;">Given a sequence <span class="hl">\(x_1, x_2, \ldots, x_T\)</span>, for each position <span class="hl">\(t\)</span>:</p>
-    <div class="token-row" style="font-size:0.95rem;">
-      <span class="tok input">\(x_1\)</span>
-      <span class="tok input">\(x_2\)</span>
-      <span class="tok input" style="color:var(--text-dim);">\(\ldots\)</span>
-      <span class="tok input">\(x_{t-1}\)</span>
-      <span class="tok blank" style="font-size:0.85rem; cursor:default;">\(x_t = ?\)</span>
+
+  <div class="card" style="max-width:860px;">
+    <p class="small-text" style="margin-bottom:10px;">
+      Given a token sequence <span class="hl">\(x_1, x_2, \ldots, x_T\)</span>, training uses <span class="hl-yellow">teacher forcing</span>:
+    </p>
+
+    <div class="grid-2" style="gap:14px;">
+      <div>
+        <p class="tiny" style="margin:0 0 6px 0; color:var(--text-dim);">Inputs (prefixes)</p>
+        <div class="token-row" style="font-size:0.95rem;">
+          <span class="tok input">\(x_1\)</span>
+          <span class="tok input">\(x_2\)</span>
+          <span class="tok input" style="color:var(--text-dim);">\(\ldots\)</span>
+          <span class="tok input">\(x_{T-1}\)</span>
+        </div>
+      </div>
+
+      <div>
+        <p class="tiny" style="margin:0 0 6px 0; color:var(--text-dim);">Targets (next tokens)</p>
+        <div class="token-row" style="font-size:0.95rem;">
+          <span class="tok target">\(x_2\)</span>
+          <span class="tok target">\(x_3\)</span>
+          <span class="tok target" style="color:var(--text-dim);">\(\ldots\)</span>
+          <span class="tok target">\(x_T\)</span>
+        </div>
+      </div>
     </div>
-    <p class="tiny" style="margin-top:6px;">Model sees prefix \(x_{\lt t}\) and produces \(P(x_t \mid x_{\lt t})\) over the entire vocabulary</p>
+
+    <p class="tiny" style="margin-top:10px;">
+      At each position \(t\), the model outputs a distribution \(P_{\theta}(\,\cdot \mid x_{\le t})\) and is scored on the true next token \(x_{t+1}\).
+    </p>
   </div>
+
   <div class="spacer-sm"></div>
-  <div class="math math-big">
-    \[\mathcal{L} = -\frac{1}{T}\sum_{t=1}^{T}\log P_{\theta}(x_t \mid x_{\lt t})\]
-  </div>
-  <p class="tiny" style="text-align:center;">Cross-entropy loss \(=\) negative log-likelihood of the correct next token, averaged over all positions</p>
-  <div class="spacer"></div>
-  <div class="callout warn">
-    <span class="icon">!</span>
-    <span><strong>Key insight:</strong> This is <span class="hl-orange">distribution-matching</span>, not decision-making. The model is trained to shape its probability distribution to match the empirical distribution of text.</span>
-  </div>
-  <div class="spacer-sm"></div>
+
   <div class="callout info">
     <span class="icon">→</span>
-    <span><strong>Transition:</strong> Let's jump in and take a deeper dive into <em>one training iteration</em>, step by step.</span>
+    <span>
+      <strong>Objective (maximize likelihood):</strong>
+      maximize the average log-probability the model assigns to the true next token.
+    </span>
   </div>
+
+  <div class="math math-big">
+    \[
+      \max_{\theta}\;\; \frac{1}{T-1}\sum_{t=1}^{T-1}\log P_{\theta}(x_{t+1}\mid x_{\le t})
+    \]
+  </div>
+
+  <div class="callout warn">
+    <span class="icon">!</span>
+    <span>
+      <strong>Equivalent form (minimize loss):</strong>
+      minimizing negative log-likelihood is the same objective, written as a loss function (cross-entropy).
+    </span>
+  </div>
+
+  <div class="math math-big">
+    \[
+      \mathcal{L}(\theta)
+      = -\frac{1}{T-1}\sum_{t=1}^{T-1}\log P_{\theta}(x_{t+1}\mid x_{\le t})
+    \]
+  </div>
+
+  <p class="tiny" style="text-align:center;">
+    Lower loss means the model assigns higher probability to the tokens that actually occurred in the dataset
+  </p>
+
+  <div class="spacer"></div>
+
+  <div class="callout warn">
+    <span class="icon">!</span>
+    <span>
+      <strong>Key insight:</strong> this is <span class="hl-orange">distribution matching</span>, not decision-making:
+      it reshapes probabilities to fit observed text, without any explicit notion of truth or goals.
+    </span>
+  </div>
+
+  <div class="spacer-sm"></div>
+
+  <div class="callout info">
+    <span class="icon">→</span>
+    <span>
+      <strong>Next:</strong> one training iteration end-to-end: forward → loss → backward → update.
+    </span>
+  </div>
+
   <div class="speaker-notes">
     <button class="notes-toggle" onclick="this.nextElementSibling.classList.toggle('open')">speaker notes</button>
-    <div class="notes-body"><p>"The loss is the negative log-probability assigned to the actual next token from the dataset. That's it. If the model assigns high probability to the observed token, the loss is low; if low probability, the loss is high."</p></div>
+    <div class="notes-body">
+      <p>
+        “State the objective first: maximize likelihood of the training text under the model. Then show the equivalent loss: negative log-likelihood (cross-entropy).
+        Emphasize the shift: inputs are prefixes, targets are the next tokens.”
+      </p>
+    </div>
   </div>
 </div>
+
 
 <!-- ═══════ SLIDE 8 — WHAT'S NOT IN THE LOSS ═══════ -->
 <div class="slide" id="slide-8">
@@ -1694,7 +1784,7 @@
   <p class="small-text" style="max-width:680px;">The loss measures the gap between prediction and target. For next-token prediction, we use <span class="hl-yellow">cross-entropy loss</span>.</p>
   <div class="spacer-sm"></div>
   <div class="math math-big" style="max-width:700px;" id="lossFormula">
-    \[\mathcal{L} = -\log(P_{\text{model}}(\text{"Islamabad"})) = -\log(0.08) = 2.53\]
+    \[\mathcal{L} = -\log(P_{\text{model}}(\text{Islamabad})) = -\log(0.08) = 2.53\]
   </div>
   <div class="loss-display">
     <div class="loss-box">
@@ -2557,7 +2647,7 @@ What is the capital of ...</div>
 // ══════════════════════════════════════
 //  Slide engine
 // ══════════════════════════════════════
-const SLIDE_ORDER = [0, 1, 2, 3, 4, 5, 6, 7, 9, 10, 11, 12, 13, 14, 8, 15, 22, 23, 24, 16, 17, 25, 26, 27, 18, 28, 29, 30, 31, 32];
+const SLIDE_ORDER = [0, 1, 2, 3, 4, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15, 8, 22, 23, 24, 16, 17, 25, 26, 27, 18, 28, 29, 30, 31, 32];
 const TOTAL = SLIDE_ORDER.length;
 let current = 0;
 
@@ -2807,6 +2897,81 @@ function animateInference() {
 }
 
 // ══════════════════════════════════════
+//  Training loop (slide 6) — 5-phase interactive reveal
+// ══════════════════════════════════════
+var trainPhase = 0;
+var trainExplanations = {
+  1: '<strong>Forward pass</strong> — identical to inference. Tokens go in, the Transformer processes them through all its layers, and a probability distribution over possible next tokens comes out. Nothing is different yet.',
+  2: '<strong>The teacher signal</strong> — during training, we already know the correct next token. It\'s simply the next word in the training data. This ground truth is what makes learning possible — the model doesn\'t have to figure out what\'s right on its own.',
+  3: '<strong>Cross-entropy loss</strong> — measures how much probability the model gave to the correct token. High confidence in the right answer \u2192 low loss. Surprised by it \u2192 high loss. One number that captures "how wrong was the prediction."',
+  4: '<strong>Backpropagation</strong> — the chain rule traces the loss backward through every layer. For each of the billions of weights, it answers: "how much did <em>you</em> contribute to the error?" This produces a gradient \u2202L/\u2202\u03B8 for every single parameter.',
+  5: '<strong>Weight update</strong> — each weight is nudged in the direction that reduces the loss. The learning rate \u03B7 controls step size. After updating, the next batch runs through a slightly better model. Repeat billions of times.'
+};
+
+function trainStep(phase) {
+  trainPhase = phase;
+
+  // Highlight active button, dim future ones
+  for (var i = 1; i <= 5; i++) {
+    var btn = document.getElementById('trainBtn' + i);
+    btn.style.opacity = i <= phase ? '1' : '0.45';
+    btn.style.borderColor = i === phase ? 'var(--cyan)' : '';
+  }
+
+  // Phase 1: forward pass lights up
+  document.getElementById('trainFwd').style.opacity = phase >= 1 ? '1' : '0.25';
+
+  // Phase 2: comparison
+  document.getElementById('trainCompare').style.display = phase >= 2 ? '' : 'none';
+
+  // Phase 3: loss
+  document.getElementById('trainLoss').style.display = phase >= 3 ? '' : 'none';
+
+  // Phase 4: backpropagation
+  document.getElementById('trainBackprop').style.display = phase >= 4 ? '' : 'none';
+
+  // Phase 5: update + loop-back
+  document.getElementById('trainUpdate').style.display = phase >= 5 ? '' : 'none';
+
+  // Highlight transformer box during backprop & update
+  var tfBox = document.getElementById('trainTransformer');
+  if (phase === 4) {
+    tfBox.style.borderColor = 'rgba(251,146,60,0.6)';
+    tfBox.style.boxShadow = '0 0 8px rgba(251,146,60,0.2)';
+  } else if (phase === 5) {
+    tfBox.style.borderColor = 'var(--orange)';
+    tfBox.style.boxShadow = '0 0 14px rgba(251,146,60,0.35)';
+  } else {
+    tfBox.style.borderColor = '';
+    tfBox.style.boxShadow = '';
+  }
+
+  // Explanation callout
+  var explainDiv = document.getElementById('trainExplain');
+  var explainText = document.getElementById('trainExplainText');
+  explainDiv.style.display = '';
+  explainText.innerHTML = trainExplanations[phase];
+}
+
+function resetTrainLoop() {
+  trainPhase = 0;
+  document.getElementById('trainFwd').style.opacity = '0.25';
+  document.getElementById('trainCompare').style.display = 'none';
+  document.getElementById('trainLoss').style.display = 'none';
+  document.getElementById('trainBackprop').style.display = 'none';
+  document.getElementById('trainUpdate').style.display = 'none';
+  document.getElementById('trainExplain').style.display = 'none';
+  var tfBox = document.getElementById('trainTransformer');
+  tfBox.style.borderColor = '';
+  tfBox.style.boxShadow = '';
+  for (var i = 1; i <= 5; i++) {
+    var btn = document.getElementById('trainBtn' + i);
+    btn.style.opacity = '';
+    btn.style.borderColor = '';
+  }
+}
+
+// ══════════════════════════════════════
 //  NTP game
 // ══════════════════════════════════════
 function revealNTP(el) {
@@ -2902,6 +3067,11 @@ function onSlideEnter(n) {
     resetIngredients();
   }
 
+  // Slide 6: reset training loop
+  if (n === 6) {
+    resetTrainLoop();
+  }
+
   // Slide 10: forward pass — build predicted chart
   if (n === 10) {
     buildBars('#predictedChart', predictedData(), 'predicted');
@@ -2919,7 +3089,7 @@ function onSlideEnter(n) {
     const loss = -Math.log(p);
     const pText = p.toFixed(2);
     const lossText = loss.toFixed(2);
-    $('#lossFormula').textContent = `\\[\\mathcal{L} = -\\log(P_{\\text{model}}(\\text{\"Islamabad\"})) = -\\log(${pText}) = ${lossText}\\]`;
+    $('#lossFormula').textContent = `\\[\\mathcal{L} = -\\log(P_{\\text{model}}(\\text{Islamabad})) = -\\log(${pText}) = ${lossText}\\]`;
     $('#lossProbDisplay').textContent = `\\(${pText}\\)`;
     $('#lossValueDisplay').textContent = `\\(${lossText}\\)`;
     const meter = $('#lossMeter');
