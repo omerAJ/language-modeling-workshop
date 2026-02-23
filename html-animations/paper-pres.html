@@ -1,0 +1,1189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Distribution-Guided Quantum Machine Unlearning - Thesis Defense Deck</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;600&display=swap');
+
+  :root {
+    --bg: #071018;
+    --bg-soft: #0b1724;
+    --panel: rgba(12, 26, 40, 0.86);
+    --panel-strong: rgba(17, 32, 48, 0.95);
+    --line: rgba(125, 165, 201, 0.28);
+    --ink: #eaf3fb;
+    --muted: #9ab0c3;
+    --accent: #27d2b2;
+    --accent-2: #ffa24f;
+    --accent-3: #60a8ff;
+    --danger: #ff6f6f;
+    --good: #65e099;
+    --slide-max: 1120px;
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html, body {
+    height: 100%;
+  }
+
+  body {
+    font-family: 'IBM Plex Sans', sans-serif;
+    background:
+      radial-gradient(1400px 600px at 12% -20%, rgba(39, 210, 178, 0.16), transparent 65%),
+      radial-gradient(1200px 520px at 88% -20%, rgba(96, 168, 255, 0.18), transparent 62%),
+      linear-gradient(150deg, #071018 0%, #0a1522 55%, #0b1a2a 100%);
+    color: var(--ink);
+    overflow: hidden;
+    line-height: 1.45;
+  }
+
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background-image: linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+                      linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+    background-size: 52px 52px;
+    opacity: 0.45;
+  }
+
+  .deck {
+    position: relative;
+    height: 100%;
+  }
+
+  .slide {
+    position: absolute;
+    inset: 0;
+    display: none;
+    overflow: auto;
+    padding: clamp(22px, 4vw, 54px) clamp(20px, 6vw, 82px) 122px;
+  }
+
+  .slide.active {
+    display: block;
+    animation: slideIn 0.46s ease;
+  }
+
+  @keyframes slideIn {
+    from {
+      opacity: 0;
+      transform: translateY(14px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .inner {
+    width: min(var(--slide-max), 100%);
+    margin: 0 auto;
+  }
+
+  .eyebrow {
+    display: inline-block;
+    font-size: 0.72rem;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--accent);
+    border: 1px solid rgba(39, 210, 178, 0.35);
+    padding: 4px 12px;
+    border-radius: 999px;
+    margin-bottom: 16px;
+    font-weight: 600;
+  }
+
+  h1, h2, h3 {
+    font-family: 'Sora', sans-serif;
+    letter-spacing: -0.02em;
+  }
+
+  h1 {
+    font-size: clamp(2rem, 5vw, 3.35rem);
+    line-height: 1.08;
+    margin-bottom: 14px;
+  }
+
+  h2 {
+    font-size: clamp(1.6rem, 3.2vw, 2.45rem);
+    line-height: 1.14;
+    margin-bottom: 14px;
+  }
+
+  h3 {
+    font-size: clamp(1rem, 2vw, 1.2rem);
+    margin-bottom: 8px;
+  }
+
+  .title-gradient {
+    background: linear-gradient(115deg, #eaf3fb 0%, #95e7d8 45%, #86bfff 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .lead {
+    color: var(--muted);
+    font-size: clamp(1rem, 1.9vw, 1.2rem);
+    max-width: 900px;
+    margin-bottom: 24px;
+  }
+
+  .kicker {
+    color: #c6d9ea;
+    font-size: 0.98rem;
+    margin-top: 4px;
+  }
+
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  .grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+  }
+
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 18px 18px 16px;
+    backdrop-filter: blur(6px);
+  }
+
+  .card p,
+  .card li,
+  .data-table {
+    color: #cfe0ee;
+  }
+
+  .card strong {
+    color: #f0f8ff;
+  }
+
+  .card ul {
+    margin-left: 18px;
+  }
+
+  .card li {
+    margin-bottom: 6px;
+  }
+
+  .metric {
+    border: 1px solid rgba(96, 168, 255, 0.34);
+    background: rgba(13, 29, 45, 0.94);
+  }
+
+  .metric .value {
+    font-family: 'Sora', sans-serif;
+    font-size: 1.35rem;
+    font-weight: 700;
+    margin-top: 6px;
+    color: #d9e8f8;
+  }
+
+  .metric .delta-bad {
+    color: var(--danger);
+  }
+
+  .metric .delta-good {
+    color: var(--good);
+  }
+
+  .delta-bad {
+    color: var(--danger);
+  }
+
+  .delta-good {
+    color: var(--good);
+  }
+
+  .mono {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.92rem;
+  }
+
+  .formula {
+    margin-top: 10px;
+    background: var(--panel-strong);
+    border: 1px solid rgba(39, 210, 178, 0.28);
+    border-radius: 14px;
+    padding: 14px 16px;
+    color: #f2fbff;
+    font-size: 1.03rem;
+  }
+
+  .formula + .formula {
+    margin-top: 10px;
+  }
+
+  .soft {
+    color: var(--muted);
+    font-size: 0.92rem;
+    margin-top: 8px;
+  }
+
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 10px;
+    margin-top: 10px;
+  }
+
+  .step {
+    background: var(--panel);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: 12px;
+    padding: 12px;
+    min-height: 120px;
+  }
+
+  .step .num {
+    font-family: 'IBM Plex Mono', monospace;
+    color: var(--accent-2);
+    font-size: 0.82rem;
+    margin-bottom: 6px;
+    font-weight: 600;
+  }
+
+  .step .txt {
+    color: #d3e3f2;
+    font-size: 0.9rem;
+  }
+
+  .pill-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 12px;
+  }
+
+  .pill {
+    border-radius: 999px;
+    border: 1px solid rgba(255,255,255,0.22);
+    padding: 7px 13px;
+    font-size: 0.82rem;
+    color: #d8e7f4;
+    background: rgba(16, 31, 48, 0.88);
+  }
+
+  .pill.good {
+    border-color: rgba(101, 224, 153, 0.45);
+    color: #bdf3d2;
+  }
+
+  .pill.warn {
+    border-color: rgba(255, 162, 79, 0.5);
+    color: #ffd5ad;
+  }
+
+  .pill.info {
+    border-color: rgba(96, 168, 255, 0.5);
+    color: #c8e0ff;
+  }
+
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 8px;
+    font-size: 0.94rem;
+  }
+
+  .data-table th,
+  .data-table td {
+    border-bottom: 1px solid rgba(255,255,255,0.12);
+    text-align: left;
+    padding: 9px 8px;
+  }
+
+  .data-table th {
+    color: #e6f2fd;
+    font-weight: 600;
+    font-size: 0.86rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .row-forgotten td {
+    background: rgba(255, 111, 111, 0.08);
+  }
+
+  .chart {
+    margin-top: 10px;
+  }
+
+  .chart-row {
+    display: grid;
+    grid-template-columns: 190px 1fr 64px;
+    align-items: center;
+    gap: 10px;
+    margin: 8px 0;
+  }
+
+  .chart-label {
+    color: #d3e3f1;
+    font-size: 0.87rem;
+  }
+
+  .track {
+    position: relative;
+    height: 11px;
+    background: rgba(255,255,255,0.12);
+    border-radius: 999px;
+    overflow: hidden;
+  }
+
+  .fill {
+    position: absolute;
+    inset: 0 auto 0 0;
+    border-radius: inherit;
+  }
+
+  .fill.before {
+    background: linear-gradient(90deg, #ffa24f, #ffc17f);
+  }
+
+  .fill.after {
+    background: linear-gradient(90deg, #30dcb8, #79f0d7);
+  }
+
+  .chart-val {
+    font-family: 'IBM Plex Mono', monospace;
+    color: #e5f2ff;
+    font-size: 0.84rem;
+    text-align: right;
+  }
+
+  .matrix-pair {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 12px;
+  }
+
+  .cm-box {
+    background: rgba(14, 30, 46, 0.9);
+    border: 1px solid rgba(255,255,255,0.18);
+    border-radius: 10px;
+    padding: 10px;
+  }
+
+  .cm-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.72rem;
+    color: #d8e8f8;
+    font-weight: 600;
+  }
+
+  .cm-head .acc {
+    font-family: 'IBM Plex Mono', monospace;
+    color: #bbd5eb;
+  }
+
+  .cm-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 4px;
+    margin-top: 8px;
+  }
+
+  .cm-grid .cell {
+    text-align: center;
+    padding: 9px 4px;
+    border-radius: 6px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #ebf6ff;
+    background: rgba(255,255,255,0.12);
+  }
+
+  .cm-grid.blue .cell {
+    background: rgba(96, 168, 255, var(--a, 0.2));
+  }
+
+  .cm-grid.red .cell {
+    background: rgba(255, 111, 111, var(--a, 0.2));
+  }
+
+  .cm-axis {
+    margin-top: 6px;
+    font-size: 0.7rem;
+    color: #9eb7ca;
+  }
+
+  .ablation-graphs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 8px;
+  }
+
+  .ablation-card {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 14px 14px 12px;
+  }
+
+  .ablation-card h3 {
+    font-size: 0.98rem;
+    margin-bottom: 6px;
+  }
+
+  .legend-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 8px;
+  }
+
+  .legend-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.68rem;
+    color: #c8dced;
+    border: 1px solid rgba(255,255,255,0.18);
+    border-radius: 999px;
+    padding: 2px 8px;
+  }
+
+  .legend-chip::before {
+    content: "";
+    width: 9px;
+    height: 9px;
+    border-radius: 999px;
+  }
+
+  .legend-chip.acc::before {
+    background: linear-gradient(180deg, #87bfff, #3c8cf2);
+  }
+
+  .legend-chip.pf::before {
+    background: linear-gradient(180deg, #ffb87d, #ff6f6f);
+  }
+
+  .bar-grid {
+    height: 138px;
+    display: flex;
+    align-items: flex-end;
+    gap: 10px;
+    padding: 8px 4px 0;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+  }
+
+  .bar-group {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .bar-pair {
+    height: 118px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    gap: 4px;
+  }
+
+  .bar {
+    width: 12px;
+    height: calc(var(--h) * 1%);
+    border-radius: 4px 4px 2px 2px;
+  }
+
+  .bar.acc {
+    background: linear-gradient(180deg, #87bfff, #3c8cf2);
+  }
+
+  .bar.pf {
+    background: linear-gradient(180deg, #ffb87d, #ff6f6f);
+  }
+
+  .group-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.65rem;
+    color: #b2c9db;
+  }
+
+  .scale-note {
+    margin-top: 7px;
+    font-size: 0.67rem;
+    color: #96b0c4;
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(12px);
+    transition: opacity 0.45s ease, transform 0.45s ease;
+    transition-delay: var(--d, 0s);
+  }
+
+  .slide.active .reveal {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .controls {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 100;
+    padding: 10px 14px 12px;
+    background: linear-gradient(to top, rgba(6, 13, 22, 0.98), rgba(6, 13, 22, 0.7), transparent);
+  }
+
+  .controls-inner {
+    width: min(var(--slide-max), calc(100% - 10px));
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: auto 1fr auto auto;
+    gap: 10px;
+    align-items: center;
+  }
+
+  .nav-btn {
+    border: 1px solid rgba(255,255,255,0.23);
+    background: rgba(17, 31, 46, 0.94);
+    color: #e6f3ff;
+    border-radius: 10px;
+    padding: 8px 12px;
+    font-size: 0.86rem;
+    cursor: pointer;
+  }
+
+  .nav-btn:hover {
+    border-color: rgba(39, 210, 178, 0.58);
+  }
+
+  .nav-btn:disabled {
+    opacity: 0.4;
+    cursor: default;
+  }
+
+  .progress {
+    height: 8px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.15);
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    transition: width 0.28s ease;
+  }
+
+  .counter {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.8rem;
+    color: #bfd4e6;
+  }
+
+  .hint {
+    font-size: 0.78rem;
+    color: #86a3ba;
+  }
+
+  mjx-container,
+  mjx-container * {
+    user-select: text !important;
+    -webkit-user-select: text !important;
+  }
+
+  @media (max-width: 930px) {
+    .grid-2, .grid-3 {
+      grid-template-columns: 1fr;
+    }
+    .matrix-pair {
+      grid-template-columns: 1fr;
+    }
+    .ablation-graphs {
+      grid-template-columns: 1fr;
+    }
+    .steps {
+      grid-template-columns: 1fr 1fr;
+    }
+    .chart-row {
+      grid-template-columns: 1fr;
+      gap: 4px;
+    }
+    .chart-val {
+      text-align: left;
+    }
+    .controls-inner {
+      grid-template-columns: auto 1fr auto;
+    }
+    .hint {
+      display: none;
+    }
+  }
+</style>
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['\\(', '\\)']],
+      displayMath: [['\\[', '\\]']]
+    },
+    options: {
+      skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+  };
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+</head>
+<body>
+  <main class="deck" id="deck">
+
+    <section class="slide active">
+      <div class="inner">
+        <p class="eyebrow reveal" style="--d:0.02s;">Thesis Defense</p>
+        <h1 class="title-gradient reveal" style="--d:0.08s;">Distribution-Guided and Constrained<br>Quantum Machine Unlearning</h1>
+        <p class="lead reveal" style="--d:0.14s;">
+          Core claim: data-driven forget targets plus anchor-based constraints can suppress a target class in a variational quantum classifier while retaining useful behavior on the remaining classes.
+        </p>
+        <div class="grid-3 reveal" style="--d:0.2s;">
+          <div class="card metric">
+            <div class="kicker">Thesis scope</div>
+            <div class="value">Class-level QMU</div>
+            <p>Constrained optimization instead of full retraining.</p>
+          </div>
+          <div class="card metric">
+            <div class="kicker">Datasets</div>
+            <div class="value">Iris + Covertype</div>
+            <p>Low-complexity and higher-complexity settings.</p>
+          </div>
+          <div class="card metric">
+            <div class="kicker">Headline outcome</div>
+            <div class="value">Strong forgetting</div>
+            <p>Forgotten-class recall sharply reduced with limited retained-class damage.</p>
+          </div>
+        </div>
+        <p class="soft reveal" style="--d:0.24s;">Presenter: Nausherwan Malik</p>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="inner">
+        <p class="eyebrow reveal" style="--d:0.02s;">Problem</p>
+        <h2 class="reveal" style="--d:0.08s;">What this thesis is solving</h2>
+        <div class="grid-2">
+          <div class="card reveal" style="--d:0.14s;">
+            <h3>Goal of unlearning</h3>
+            <p>Remove influence of a forgotten subset \(D_f\) from a trained model without retraining from scratch.</p>
+            <div class="formula mono">
+              \[
+              U(D, D_f, A(D)) \approx A(D \setminus D_f)
+              \]
+            </div>
+            <p class="soft">In this thesis: targeted <strong>class unlearning</strong> for quantum classifiers.</p>
+          </div>
+          <div class="card reveal" style="--d:0.2s;">
+            <h3>Gap in prior quantum unlearning</h3>
+            <ul>
+              <li>Most existing evaluations are on toy datasets.</li>
+              <li>Unlearning updates are often unconstrained and can drift randomly.</li>
+              <li>Forgetting can stay weak or damage retained behavior.</li>
+            </ul>
+            <div class="matrix-pair">
+              <div class="cm-box">
+                <div class="cm-head">
+                  <span>Uniform Target (Before)</span>
+                  <span class="acc">Acc = 0.633</span>
+                </div>
+                <div class="cm-grid blue">
+                  <span class="cell" style="--a:0.62;">14</span>
+                  <span class="cell" style="--a:0.70;">16</span>
+                  <span class="cell" style="--a:0.14;">0</span>
+                  <span class="cell" style="--a:0.20;">2</span>
+                  <span class="cell" style="--a:0.95;">24</span>
+                  <span class="cell" style="--a:0.26;">4</span>
+                  <span class="cell" style="--a:0.14;">0</span>
+                  <span class="cell" style="--a:0.52;">11</span>
+                  <span class="cell" style="--a:0.82;">19</span>
+                </div>
+                <div class="cm-axis">rows: true class, cols: predicted</div>
+              </div>
+              <div class="cm-box">
+                <div class="cm-head">
+                  <span>Uniform Target (After)</span>
+                  <span class="acc">Acc = 0.578</span>
+                </div>
+                <div class="cm-grid red">
+                  <span class="cell" style="--a:0.62;">14</span>
+                  <span class="cell" style="--a:0.66;">15</span>
+                  <span class="cell" style="--a:0.18;">1</span>
+                  <span class="cell" style="--a:0.20;">2</span>
+                  <span class="cell" style="--a:0.95;">24</span>
+                  <span class="cell" style="--a:0.26;">4</span>
+                  <span class="cell" style="--a:0.14;">0</span>
+                  <span class="cell" style="--a:0.70;">16</span>
+                  <span class="cell" style="--a:0.62;">14</span>
+                </div>
+                <div class="cm-axis">forgotten class still frequently predicted</div>
+              </div>
+            </div>
+            <p class="soft">Appendix A (Covertype): forgotten-class mean probability only drops \(0.405 \rightarrow 0.373\), indicating incomplete forgetting.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="inner">
+        <p class="eyebrow reveal" style="--d:0.02s;">Method</p>
+        <h2 class="reveal" style="--d:0.08s;">Distribution-guided + constrained unlearning</h2>
+        <p class="lead reveal" style="--d:0.14s;">
+          The method combines a distribution-guided target for forgotten-class samples with explicit preservation constraints on retained anchors.
+        </p>
+        <div class="steps reveal" style="--d:0.2s;">
+          <div class="step">
+            <div class="num">Step 1</div>
+            <div class="txt">Train baseline VQC to obtain \(w_{\text{orig}}\) and predictive distributions \(p_{w_{\text{orig}}}(y\mid x)\).</div>
+          </div>
+          <div class="step">
+            <div class="num">Step 2</div>
+            <div class="txt">Split data into forget set \(F\) (class \(f\)) and anchor set \(A\) (retained classes).</div>
+          </div>
+          <div class="step">
+            <div class="num">Step 3</div>
+            <div class="txt">Build target \(q\) with \(q_f=0\), based on distribution statistics from \(F\).</div>
+          </div>
+          <div class="step">
+            <div class="num">Step 4</div>
+            <div class="txt">Optimize unlearning objective with forget term, anchor-preservation term, and parameter anchoring.</div>
+          </div>
+          <div class="step">
+            <div class="num">Step 5</div>
+            <div class="txt">Evaluate forgetting and compare against a gold retrained model.</div>
+          </div>
+        </div>
+        <div class="pill-row reveal" style="--d:0.24s;">
+          <span class="pill info">Contribution 1: Target design matters</span>
+          <span class="pill info">Contribution 2: Lagrangian interpretation</span>
+          <span class="pill info">Contribution 3: Empirical validation on 2 datasets</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="inner">
+        <p class="eyebrow reveal" style="--d:0.02s;">Objective</p>
+        <h2 class="reveal" style="--d:0.08s;">Optimization formulation</h2>
+        <div class="grid-2">
+          <div class="card reveal" style="--d:0.14s;">
+            <h3>Distribution-guided forget target</h3>
+            <div class="formula mono">
+              \[
+              q_k \propto \Big(\mathbb{E}_{x \in S}\; p_{w_{\text{orig}}}(k\mid x)\Big)^{\beta},\quad k \neq f,\quad q_f=0
+              \]
+            </div>
+            <p class="soft">\(\beta\) controls how sharply mass is concentrated toward the most similar retained class.</p>
+          </div>
+          <div class="card reveal" style="--d:0.2s;">
+            <h3>Unlearning objective</h3>
+            <div class="formula mono">
+              \[
+              J(w)=\mathbb{E}_{x\in F}\!\left[\sum_k q_k \log p_w(k\mid x)\right]
+              +\alpha \mathbb{E}_{x\in A}\!\left[\sum_k p_{w_{\text{orig}}}(k\mid x)\log p_w(k\mid x)\right]
+              -\lambda\lVert w-w_{\text{orig}}\rVert_2^2
+              \]
+            </div>
+            <p class="soft">Interpretation: maximize forgetting while constraining divergence from retained behavior and original parameters.</p>
+          </div>
+        </div>
+        <div class="card reveal" style="--d:0.24s; margin-top:14px;">
+          <p><strong>Theorem 1:</strong> this objective is equivalent (up to constants) to a Lagrangian relaxation of constraints on anchor KL and parameter drift.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="inner">
+        <p class="eyebrow reveal" style="--d:0.02s;">Setup</p>
+        <h2 class="reveal" style="--d:0.08s;">Experimental configuration</h2>
+        <div class="grid-3 reveal" style="--d:0.14s;">
+          <div class="card">
+            <h3>Model</h3>
+            <ul>
+              <li>6-qubit variational quantum classifier</li>
+              <li>Data reuploading + hardware-efficient ansatz</li>
+              <li>3 repetitions of ring CNOT entanglement</li>
+              <li>72 trainable parameters</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Data</h3>
+            <ul>
+              <li>Iris (3-class, 4 features)</li>
+              <li>Covertype classes 3/5/7 remapped to 0/1/2</li>
+              <li>Covertype reduced to 4 features via PCA</li>
+              <li>Inputs scaled to \([0,\pi]\)</li>
+            </ul>
+          </div>
+          <div class="card">
+            <h3>Training and unlearning</h3>
+            <ul>
+              <li>Parameter-shift gradients</li>
+              <li>Adam + cosine schedule</li>
+              <li>300 iterations, batch size 10</li>
+              <li>Default unlearning: \(\alpha=1.0,\lambda=0.01,\beta=1.0\)</li>
+            </ul>
+          </div>
+        </div>
+        <div class="pill-row reveal" style="--d:0.2s;">
+          <span class="pill info">Noiseless statevector simulator (Qiskit)</span>
+          <span class="pill warn">Focus is algorithmic behavior, not hardware noise</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="inner">
+        <p class="eyebrow reveal" style="--d:0.02s;">Results</p>
+        <h2 class="reveal" style="--d:0.08s;">Selective forgetting with retained utility</h2>
+        <div class="card reveal" style="--d:0.14s;">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Dataset</th>
+                <th>Class</th>
+                <th>Recall Before</th>
+                <th>Recall After</th>
+                <th>Delta</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Covertype</td>
+                <td>0</td>
+                <td>0.467</td>
+                <td>0.467</td>
+                <td>0.000</td>
+              </tr>
+              <tr>
+                <td>Covertype</td>
+                <td>1</td>
+                <td>0.800</td>
+                <td>0.800</td>
+                <td>0.000</td>
+              </tr>
+              <tr class="row-forgotten">
+                <td>Covertype</td>
+                <td>2 (forgotten)</td>
+                <td>0.633</td>
+                <td>0.067</td>
+                <td class="delta-bad">-0.566</td>
+              </tr>
+              <tr>
+                <td>Iris</td>
+                <td>0</td>
+                <td>1.000</td>
+                <td>1.000</td>
+                <td>0.000</td>
+              </tr>
+              <tr>
+                <td>Iris</td>
+                <td>1</td>
+                <td>1.000</td>
+                <td>0.800</td>
+                <td class="delta-bad">-0.200</td>
+              </tr>
+              <tr class="row-forgotten">
+                <td>Iris</td>
+                <td>2 (forgotten)</td>
+                <td>1.000</td>
+                <td>0.000</td>
+                <td class="delta-bad">-1.000</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="grid-2 reveal" style="--d:0.2s; margin-top:14px;">
+          <div class="card metric">
+            <div class="kicker">Covertype: forgotten-class mean probability</div>
+            <div class="value">0.4055 → <span class="delta-good">0.2715</span></div>
+          </div>
+          <div class="card metric">
+            <div class="kicker">Iris: forgotten-class mean probability</div>
+            <div class="value">0.4155 → <span class="delta-good">0.2098</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="inner">
+        <p class="eyebrow reveal" style="--d:0.02s;">Baselines</p>
+        <h2 class="reveal" style="--d:0.08s;">Closeness to retraining and target-design impact</h2>
+        <div class="grid-2">
+          <div class="card reveal" style="--d:0.14s;">
+            <h3>Alignment with gold retrained model (Covertype, retained labels)</h3>
+            <table class="data-table" style="margin-top:4px;">
+              <thead>
+                <tr>
+                  <th>Metric</th>
+                  <th>Value</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr><td>Mean KL</td><td>0.0468</td></tr>
+                <tr><td>Median KL</td><td>0.0342</td></tr>
+                <tr><td>Max KL</td><td>0.1625</td></tr>
+              </tbody>
+            </table>
+            <p class="soft">Indicates close retained-class behavior relative to full retraining.</p>
+          </div>
+          <div class="card reveal" style="--d:0.2s;">
+            <h3>Why distribution-guided targets beat uniform targets</h3>
+            <p class="soft" style="margin-top:0;">Lower \(p_f\) on forgotten samples is better.</p>
+            <div class="chart">
+              <div class="chart-row">
+                <div class="chart-label">Before unlearning</div>
+                <div class="track"><span class="fill before" style="width:100%;"></span></div>
+                <div class="chart-val">0.405</div>
+              </div>
+              <div class="chart-row">
+                <div class="chart-label">After (uniform target)</div>
+                <div class="track"><span class="fill after" style="width:92.1%;"></span></div>
+                <div class="chart-val">0.373</div>
+              </div>
+              <div class="chart-row">
+                <div class="chart-label">After (proposed target)</div>
+                <div class="track"><span class="fill after" style="width:67.0%; background:linear-gradient(90deg,#27d2b2,#a0f3df);"></span></div>
+                <div class="chart-val">0.2715</div>
+              </div>
+            </div>
+            <p class="soft">Uniform redistribution suppresses weakly; distribution-guided redistribution is substantially stronger.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="inner">
+        <p class="eyebrow reveal" style="--d:0.02s;">Ablations</p>
+        <h2 class="reveal" style="--d:0.08s;">Sensitivity and tuning behavior (Covertype)</h2>
+        <div class="grid-2 reveal" style="--d:0.12s;">
+          <div class="card">
+            <h3>Distribution sharpness \(\beta\)</h3>
+            <p>For \(\beta \in \{0.25,0.5,0.75,1.0\}\), accuracy stays in 0.400-0.422 and \(p_f\) in 0.269-0.261.</p>
+            <p class="soft">Interpretation: robust to moderate \(\beta\) changes.</p>
+          </div>
+          <div class="card">
+            <h3>Anchor set size</h3>
+            <p>Anchor fraction 10% -> 25% strongly improves retention; then performance saturates.</p>
+            <p class="soft">A modest anchor subset is often sufficient.</p>
+          </div>
+          <div class="card">
+            <h3>Anchor weight \(\alpha\)</h3>
+            <p>\(\alpha=0\): strongest forgetting (\(p_f=0.214\)) but weak retention (acc 0.300). \(\alpha=1\): balanced (acc 0.411, \(p_f=0.261\)).</p>
+          </div>
+          <div class="card">
+            <h3>Parameter anchoring \(\lambda\)</h3>
+            <p>\(\lambda=0.1\) improves retention (acc 0.433) but weakens forgetting (\(p_f=0.334\)).</p>
+            <p class="soft">Consistent with the Lagrangian trade-off.</p>
+          </div>
+        </div>
+        <p class="lead reveal" style="--d:0.14s;">Now the same findings as graphs from Appendix C (Tables C.4-C.7), plotting after-unlearning accuracy and \(p_f\) (lower is better).</p>
+        <div class="ablation-graphs reveal" style="--d:0.16s;">
+          <div class="ablation-card">
+            <h3>Table C.4 - Distribution Sharpness (\(\beta\))</h3>
+            <div class="legend-row">
+              <span class="legend-chip acc">Accuracy</span>
+              <span class="legend-chip pf">\(p_f\)</span>
+            </div>
+            <div class="bar-grid">
+              <div class="bar-group"><div class="bar-pair"><span class="bar acc" style="--h:35;"></span><span class="bar pf" style="--h:100;"></span></div><span class="group-label">0.25</span></div>
+              <div class="bar-group"><div class="bar-pair"><span class="bar acc" style="--h:67;"></span><span class="bar pf" style="--h:81;"></span></div><span class="group-label">0.50</span></div>
+              <div class="bar-group"><div class="bar-pair"><span class="bar acc" style="--h:100;"></span><span class="bar pf" style="--h:53;"></span></div><span class="group-label">0.75</span></div>
+              <div class="bar-group"><div class="bar-pair"><span class="bar acc" style="--h:67;"></span><span class="bar pf" style="--h:25;"></span></div><span class="group-label">1.00</span></div>
+            </div>
+            <p class="scale-note">Accuracy: 0.400-0.422, \(p_f\): 0.269-0.261 (stable across \(\beta\)).</p>
+          </div>
+          <div class="ablation-card">
+            <h3>Table C.5 - Anchor Fraction</h3>
+            <div class="legend-row">
+              <span class="legend-chip acc">Accuracy</span>
+              <span class="legend-chip pf">\(p_f\)</span>
+            </div>
+            <div class="bar-grid">
+              <div class="bar-group"><div class="bar-pair"><span class="bar acc" style="--h:25;"></span><span class="bar pf" style="--h:25;"></span></div><span class="group-label">10%</span></div>
+              <div class="bar-group"><div class="bar-pair"><span class="bar acc" style="--h:87;"></span><span class="bar pf" style="--h:93;"></span></div><span class="group-label">25%</span></div>
+              <div class="bar-group"><div class="bar-pair"><span class="bar acc" style="--h:100;"></span><span class="bar pf" style="--h:93;"></span></div><span class="group-label">50%</span></div>
+              <div class="bar-group"><div class="bar-pair"><span class="bar acc" style="--h:87;"></span><span class="bar pf" style="--h:100;"></span></div><span class="group-label">100%</span></div>
+            </div>
+            <p class="scale-note">Retention improves strongly by 25% anchor size and then saturates.</p>
+          </div>
+          <div class="ablation-card">
+            <h3>Table C.6 - Anchor Weight (\(\alpha\))</h3>
+            <div class="legend-row">
+              <span class="legend-chip acc">Accuracy</span>
+              <span class="legend-chip pf">\(p_f\)</span>
+            </div>
+            <div class="bar-grid">
+              <div class="bar-group"><div class="bar-pair"><span class="bar acc" style="--h:25;"></span><span class="bar pf" style="--h:25;"></span></div><span class="group-label">\(\alpha=0\)</span></div>
+              <div class="bar-group"><div class="bar-pair"><span class="bar acc" style="--h:100;"></span><span class="bar pf" style="--h:88;"></span></div><span class="group-label">\(\alpha=1\)</span></div>
+              <div class="bar-group"><div class="bar-pair"><span class="bar acc" style="--h:92;"></span><span class="bar pf" style="--h:100;"></span></div><span class="group-label">\(\alpha=2\)</span></div>
+            </div>
+            <p class="scale-note">\(\alpha=0\) forgets hardest but harms retention; \(\alpha=1\) is the balanced point.</p>
+          </div>
+          <div class="ablation-card">
+            <h3>Table C.7 - Parameter Anchor (\(\lambda\))</h3>
+            <div class="legend-row">
+              <span class="legend-chip acc">Accuracy</span>
+              <span class="legend-chip pf">\(p_f\)</span>
+            </div>
+            <div class="bar-grid">
+              <div class="bar-group"><div class="bar-pair"><span class="bar acc" style="--h:25;"></span><span class="bar pf" style="--h:25;"></span></div><span class="group-label">0</span></div>
+              <div class="bar-group"><div class="bar-pair"><span class="bar acc" style="--h:25;"></span><span class="bar pf" style="--h:34;"></span></div><span class="group-label">0.01</span></div>
+              <div class="bar-group"><div class="bar-pair"><span class="bar acc" style="--h:100;"></span><span class="bar pf" style="--h:100;"></span></div><span class="group-label">0.10</span></div>
+            </div>
+            <p class="scale-note">Higher \(\lambda\) stabilizes retention but weakens forgetting strength.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <div class="inner">
+        <p class="eyebrow reveal" style="--d:0.02s;">Takeaways</p>
+        <h2 class="reveal" style="--d:0.08s;">What this thesis establishes</h2>
+        <div class="grid-2">
+          <div class="card reveal" style="--d:0.14s;">
+            <h3>Main conclusions</h3>
+            <ul>
+              <li>Target design is central: distribution-guided targets improve forgetting quality over uniform targets.</li>
+              <li>Anchor-based constraints preserve retained behavior and provide explicit control knobs \((\alpha,\lambda)\).</li>
+              <li>Unlearned models can stay close to gold retraining behavior on retained classes (low KL).</li>
+            </ul>
+          </div>
+          <div class="card reveal" style="--d:0.2s;">
+            <h3>Scope and next steps</h3>
+            <ul>
+              <li>Experiments are on noiseless simulation, not hardware-noisy execution.</li>
+              <li>Primary evaluation is class-level unlearning in a 3-class setting.</li>
+              <li>Future directions: information-theoretic perspectives for quantum unlearning.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="pill-row reveal" style="--d:0.24s;">
+          <span class="pill good">Bottom line: controlled and interpretable QMU is feasible for variational classifiers.</span>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <div class="controls">
+    <div class="controls-inner">
+      <button class="nav-btn" id="prevBtn" type="button">Back</button>
+      <div class="progress" aria-label="Slide progress">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+      <div class="counter" id="counter">1 / 9</div>
+      <button class="nav-btn" id="nextBtn" type="button">Next</button>
+    </div>
+    <div class="controls-inner" style="margin-top:6px; grid-template-columns:1fr;">
+      <div class="hint">Use Left/Right arrows, Space, or swipe on mobile.</div>
+    </div>
+  </div>
+
+<script>
+  const slides = Array.from(document.querySelectorAll('.slide'));
+  const totalSlides = slides.length;
+  const prevBtn = document.getElementById('prevBtn');
+  const nextBtn = document.getElementById('nextBtn');
+  const counter = document.getElementById('counter');
+  const progressFill = document.getElementById('progressFill');
+
+  let current = 0;
+
+  function typesetSlide(slide) {
+    if (!window.MathJax || !window.MathJax.typesetPromise) return;
+    window.MathJax.typesetPromise([slide]).catch(() => {});
+  }
+
+  function showSlide(index) {
+    if (index < 0 || index >= totalSlides) return;
+    slides.forEach((slide, i) => {
+      slide.classList.toggle('active', i === index);
+    });
+    current = index;
+    prevBtn.disabled = current === 0;
+    nextBtn.textContent = current === totalSlides - 1 ? 'Restart' : 'Next';
+    counter.textContent = `${current + 1} / ${totalSlides}`;
+    progressFill.style.width = `${(current / (totalSlides - 1)) * 100}%`;
+    typesetSlide(slides[current]);
+  }
+
+  function nextSlide() {
+    if (current === totalSlides - 1) {
+      showSlide(0);
+      return;
+    }
+    showSlide(current + 1);
+  }
+
+  function prevSlide() {
+    showSlide(current - 1);
+  }
+
+  prevBtn.addEventListener('click', prevSlide);
+  nextBtn.addEventListener('click', nextSlide);
+
+  document.addEventListener('keydown', (event) => {
+    const tag = document.activeElement ? document.activeElement.tagName.toLowerCase() : '';
+    if (tag === 'input' || tag === 'textarea') return;
+    if (event.key === 'ArrowRight' || event.key === ' ') {
+      event.preventDefault();
+      nextSlide();
+    } else if (event.key === 'ArrowLeft') {
+      event.preventDefault();
+      prevSlide();
+    }
+  });
+
+  let touchStartX = null;
+  document.addEventListener('touchstart', (event) => {
+    if (!event.touches || event.touches.length !== 1) return;
+    touchStartX = event.touches[0].clientX;
+  }, { passive: true });
+
+  document.addEventListener('touchend', (event) => {
+    if (touchStartX === null || !event.changedTouches || event.changedTouches.length !== 1) return;
+    const deltaX = event.changedTouches[0].clientX - touchStartX;
+    if (Math.abs(deltaX) > 45) {
+      if (deltaX < 0) nextSlide();
+      else prevSlide();
+    }
+    touchStartX = null;
+  }, { passive: true });
+
+  showSlide(0);
+</script>
+</body>
+</html>
