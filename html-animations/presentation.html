@@ -2319,6 +2319,7 @@ What is the capital of ...</div>
 <!-- ── Bottom navigation bar ── -->
 <div class="bottom-bar">
   <button class="nav-btn" id="btnPrev" disabled>← Back</button>
+  <button class="nav-btn" id="btnSkip">Skip Slide →</button>
   <div class="progress-track">
     <div class="progress-fill" id="progressFill" style="width:0%"></div>
   </div>
@@ -2349,6 +2350,7 @@ function goTo(n) {
   current = n;
   $('#btnPrev').disabled = n === 0;
   $('#btnNext').textContent = n === TOTAL - 1 ? 'Restart ↺' : 'Next →';
+  $('#btnSkip').textContent = n === TOTAL - 1 ? 'Restart ↺' : 'Skip Slide →';
   $('#slideCounter').textContent = `${n + 1} / ${TOTAL}`;
   $('#progressFill').style.width = `${(n / (TOTAL - 1)) * 100}%`;
 
@@ -2357,14 +2359,151 @@ function goTo(n) {
   typesetMath(document.getElementById(`slide-${slideId}`));
 }
 
-$('#btnNext').addEventListener('click', () => {
+function goToNextSlide() {
   if (current === TOTAL - 1) goTo(0);
   else goTo(current + 1);
-});
+}
+
+function runSlideInteractionStep(slideId) {
+  // Slide 2: load demo video
+  if (slideId === 2) {
+    if (!liveDemoLoaded) {
+      ensureLiveDemoLoaded();
+      return true;
+    }
+    return false;
+  }
+
+  // Slide 3: reveal 3 core components in order
+  if (slideId === 3) {
+    for (var i = 1; i <= 3; i++) {
+      var hidden = document.getElementById('ingredient' + i + 'Hidden');
+      if (hidden && hidden.style.display !== 'none') {
+        revealIngredient(i);
+        return true;
+      }
+    }
+    return false;
+  }
+
+  // Slide 5: run 3-step inference demo before advancing
+  if (slideId === 5) {
+    if (infStep < INF_TOKENS.length) {
+      if (document.getElementById('infCurrent')) {
+        animateInference();
+      }
+      return true;
+    }
+    return false;
+  }
+
+  // Slide 6: training loop phases 1..5
+  if (slideId === 6) {
+    if (trainPhase < 5) {
+      trainStep(trainPhase + 1);
+      return true;
+    }
+    return false;
+  }
+
+  // Slide 16: reveal one blank, then its concept, sentence-by-sentence
+  if (slideId === 16) {
+    var rows = document.querySelectorAll('#slide-16 .ntp-sentence');
+    for (var r = 0; r < rows.length; r++) {
+      var blank = rows[r].querySelector('.ntp-blank');
+      var conceptBtn = rows[r].querySelector('.ntp-concept-btn');
+
+      if (blank && !blank.classList.contains('show')) {
+        revealNTP(blank);
+        return true;
+      }
+      if (conceptBtn && conceptBtn.style.display !== 'none') {
+        revealNTPConcept(conceptBtn);
+        return true;
+      }
+    }
+    return false;
+  }
+
+  // Slide 22: reveal reasoning-pressure panel
+  if (slideId === 22) {
+    var pressureGrid = document.getElementById('reasoningPressureGrid');
+    if (pressureGrid && !pressureGrid.classList.contains('revealed')) {
+      revealReasoningPressure();
+      return true;
+    }
+    return false;
+  }
+
+  // Slide 23: reveal detective answer + explanation
+  if (slideId === 23) {
+    var dramaBlank = document.getElementById('dramaKillerBlank');
+    if (dramaBlank && !dramaBlank.classList.contains('show')) {
+      revealDramaAnswer();
+      return true;
+    }
+    return false;
+  }
+
+  // Slide 31: reveal completion activity in logical phases
+  if (slideId === 31) {
+    var dumb = document.getElementById('dumbResponseReveal');
+    if (dumb && !dumb.classList.contains('revealed')) {
+      revealDumbResponse(false);
+      return true;
+    }
+
+    var phase2 = document.getElementById('completionPhase2');
+    if (phase2 && !phase2.classList.contains('revealed')) {
+      phase2.classList.add('revealed');
+      return true;
+    }
+
+    var fixChat = document.getElementById('fixChat');
+    if (fixChat && !fixChat.classList.contains('revealed')) {
+      revealFix('chat', false);
+      return true;
+    }
+    var fixMath = document.getElementById('fixMath');
+    if (fixMath && !fixMath.classList.contains('revealed')) {
+      revealFix('math', false);
+      return true;
+    }
+    var fixCode = document.getElementById('fixCode');
+    if (fixCode && !fixCode.classList.contains('revealed')) {
+      revealFix('code', false);
+      return true;
+    }
+
+    var takeaway = document.getElementById('fixTakeaway');
+    if (takeaway && !takeaway.classList.contains('revealed')) {
+      takeaway.classList.add('revealed');
+      return true;
+    }
+
+    var bridge = document.getElementById('fixBridge');
+    if (bridge && !bridge.classList.contains('revealed')) {
+      bridge.classList.add('revealed');
+      return true;
+    }
+    return false;
+  }
+
+  return false;
+}
+
+function nextWithInteractions() {
+  var slideId = SLIDE_ORDER[current];
+  if (runSlideInteractionStep(slideId)) return;
+  goToNextSlide();
+}
+
+$('#btnNext').addEventListener('click', nextWithInteractions);
+$('#btnSkip').addEventListener('click', goToNextSlide);
 $('#btnPrev').addEventListener('click', () => goTo(current - 1));
 
 document.addEventListener('keydown', e => {
-  if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); $('#btnNext').click(); }
+  if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); nextWithInteractions(); }
   if (e.key === 'ArrowLeft') { e.preventDefault(); $('#btnPrev').click(); }
 });
 
@@ -2441,23 +2580,27 @@ function chooseDramaSuspect(choice, btn) {
 // ══════════════════════════════════════
 //  Completion wrapper activity
 // ══════════════════════════════════════
-function revealDumbResponse() {
+function revealDumbResponse(autoAdvance) {
+  if (autoAdvance === undefined) autoAdvance = true;
   const reveal = document.getElementById('dumbResponseReveal');
   if (reveal) reveal.classList.add('revealed');
-  // After a short pause, show phase 2
-  setTimeout(function() {
-    const phase2 = document.getElementById('completionPhase2');
-    if (phase2) phase2.classList.add('revealed');
-  }, 600);
+  // Optional auto-advance for manual button path.
+  if (autoAdvance) {
+    setTimeout(function() {
+      const phase2 = document.getElementById('completionPhase2');
+      if (phase2) phase2.classList.add('revealed');
+    }, 600);
+  }
 }
 
 var fixesRevealed = { chat: false, math: false, code: false };
 
-function revealFix(which) {
+function revealFix(which, autoBridge) {
+  if (autoBridge === undefined) autoBridge = true;
   var el = document.getElementById('fix' + which.charAt(0).toUpperCase() + which.slice(1));
   if (el) el.classList.add('revealed');
   fixesRevealed[which] = true;
-  if (fixesRevealed.chat && fixesRevealed.math && fixesRevealed.code) {
+  if (autoBridge && fixesRevealed.chat && fixesRevealed.math && fixesRevealed.code) {
     setTimeout(function() {
       var t = document.getElementById('fixTakeaway');
       var b = document.getElementById('fixBridge');
