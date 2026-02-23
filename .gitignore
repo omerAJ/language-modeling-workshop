@@ -8,3 +8,4 @@ wheels/
 /media
 # Virtual environments
 .venv
+*.mp4

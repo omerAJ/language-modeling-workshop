@@ -177,6 +177,50 @@ def ensure_binaries() -> None:
         raise RuntimeError(f"required binaries not found in PATH: {names}")
 
 
+def parse_clip_indices(raw: str) -> list[int]:
+    values: list[int] = []
+    for token in raw.split(","):
+        part = token.strip()
+        if not part:
+            continue
+        if "-" in part:
+            left, right = part.split("-", 1)
+            try:
+                start = int(left.strip())
+                end = int(right.strip())
+            except ValueError as error:
+                raise argparse.ArgumentTypeError(
+                    f"invalid range '{part}' in --only-clip-indices"
+                ) from error
+            if start <= 0 or end <= 0:
+                raise argparse.ArgumentTypeError(
+                    f"clip indices must be positive: '{part}'"
+                )
+            if end < start:
+                raise argparse.ArgumentTypeError(
+                    f"invalid range '{part}' (end < start)"
+                )
+            values.extend(range(start, end + 1))
+            continue
+        try:
+            index = int(part)
+        except ValueError as error:
+            raise argparse.ArgumentTypeError(
+                f"invalid clip index '{part}' in --only-clip-indices"
+            ) from error
+        if index <= 0:
+            raise argparse.ArgumentTypeError(
+                f"clip indices must be positive: '{part}'"
+            )
+        values.append(index)
+
+    if not values:
+        raise argparse.ArgumentTypeError(
+            "--only-clip-indices received no valid indices"
+        )
+    return sorted(set(values))
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description=(
@@ -223,6 +267,24 @@ def parse_args() -> argparse.Namespace:
         action="store_true",
         help="Print planned clips and ffmpeg commands without writing files",
     )
+    parser.add_argument(
+        "--only-clip-indices",
+        type=parse_clip_indices,
+        default=None,
+        help=(
+            "Only process selected clip indices (1-based). "
+            "Examples: '3,4,12,13' or ranges like '3-6,12-13'."
+        ),
+    )
+    parser.add_argument(
+        "--clean-selected",
+        action=argparse.BooleanOptionalAction,
+        default=True,
+        help=(
+            "When using --only-clip-indices, delete existing files matching those "
+            "clip index prefixes before writing new output (default: enabled)."
+        ),
+    )
     return parser.parse_args()
 
 
@@ -252,10 +314,33 @@ def main() -> int:
     if not args.dry_run:
         output_dir.mkdir(parents=True, exist_ok=True)
 
+    clip_entries = []
+    for index, (start, end) in enumerate(segments, start=1):
+        is_tail = index == len(segments) and end >= duration and args.include_tail
+        out_file = output_dir / clip_filename(index, start, end, is_tail)
+        clip_entries.append((index, start, end, is_tail, out_file))
+
+    if args.only_clip_indices:
+        max_index = len(clip_entries)
+        missing = [index for index in args.only_clip_indices if index > max_index]
+        if missing:
+            missing_text = ", ".join(str(index) for index in missing)
+            print(
+                f"Error: selected clip indices out of range (max {max_index}): {missing_text}",
+                file=sys.stderr,
+            )
+            return 1
+        selected = set(args.only_clip_indices)
+        clip_entries = [entry for entry in clip_entries if entry[0] in selected]
+
+        if args.clean_selected and not args.dry_run:
+            for index in selected:
+                pattern = f"clip_{index:02d}_*.mp4"
+                for stale_file in output_dir.glob(pattern):
+                    stale_file.unlink(missing_ok=True)
+
     if not args.dry_run and not args.overwrite:
-        for index, (start, end) in enumerate(segments, start=1):
-            is_tail = index == len(segments) and end >= duration and args.include_tail
-            out_file = output_dir / clip_filename(index, start, end, is_tail)
+        for _, _, _, _, out_file in clip_entries:
             if out_file.exists():
                 print(
                     f"Error: output file exists ({out_file}). Use --overwrite to replace existing clips.",
@@ -267,11 +352,9 @@ def main() -> int:
     print(f"Timesteps file: {timesteps_path}")
     print(f"Output folder:  {output_dir}")
     print(f"Video length:   {format_timestamp(duration)}")
-    print(f"Planned clips:  {len(segments)}")
+    print(f"Planned clips:  {len(clip_entries)}")
 
-    for index, (start, end) in enumerate(segments, start=1):
-        is_tail = index == len(segments) and end >= duration and args.include_tail
-        output_file = output_dir / clip_filename(index, start, end, is_tail)
+    for list_pos, (index, start, end, _, output_file) in enumerate(clip_entries, start=1):
         command = build_ffmpeg_command(
             input_video=video_path,
             output_video=output_file,
@@ -282,7 +365,7 @@ def main() -> int:
             preset=args.preset,
         )
 
-        print(f"[{index:02d}/{len(segments):02d}] {format_timestamp(start)} -> {format_timestamp(end)}")
+        print(f"[{list_pos:02d}/{len(clip_entries):02d}] clip {index:02d}  {format_timestamp(start)} -> {format_timestamp(end)}")
         print(f"       {output_file.name}")
 
         if args.dry_run:

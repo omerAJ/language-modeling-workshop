@@ -323,6 +323,94 @@
     background: rgba(30,34,49,0.85);
     border-color: rgba(123,154,255,0.5);
   }
+  .clip-timeline-overlay {
+    position: absolute;
+    left: 50%;
+    bottom: calc(4.9rem + env(safe-area-inset-bottom, 0px));
+    transform: translateX(-50%);
+    z-index: 3;
+    width: min(72vw, 900px);
+    min-width: 320px;
+    max-width: calc(100vw - 2rem);
+    padding: 0.625rem 0.75rem;
+    border-radius: 0.75rem;
+    background: rgba(10,13,20,0.68);
+    border: 1px solid rgba(153,160,184,0.3);
+    backdrop-filter: blur(7px);
+    box-shadow: 0 10px 28px rgba(0,0,0,0.28);
+  }
+  .clip-timeline-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.625rem;
+    margin-bottom: 0.45rem;
+    font-size: 0.72rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    font-weight: 700;
+  }
+  .clip-timeline-state {
+    color: var(--cyan);
+    font-weight: 700;
+  }
+  .clip-timeline-times {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 0.3rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--text-dim);
+  }
+  .clip-seek-slider {
+    --seek-pct: 0%;
+    width: 100%;
+    margin: 0;
+    appearance: none;
+    height: 0.65rem;
+    border-radius: 999px;
+    border: 1px solid rgba(153,160,184,0.35);
+    background:
+      linear-gradient(90deg, var(--accent), var(--purple), var(--cyan)) 0 / var(--seek-pct) 100% no-repeat,
+      rgba(153,160,184,0.2);
+    cursor: ew-resize;
+    outline: none;
+  }
+  .clip-seek-slider:hover {
+    border-color: rgba(123,154,255,0.6);
+  }
+  .clip-seek-slider:focus-visible {
+    box-shadow: 0 0 0 2px var(--accent-glow);
+  }
+  .clip-seek-slider::-webkit-slider-thumb {
+    appearance: none;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    border: 2px solid rgba(10,13,20,0.9);
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(123,154,255,0.38);
+    cursor: ew-resize;
+  }
+  .clip-seek-slider::-moz-range-thumb {
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    border: 2px solid rgba(10,13,20,0.9);
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(123,154,255,0.38);
+    cursor: ew-resize;
+  }
+  @media (max-width: 760px) {
+    .clip-timeline-overlay {
+      min-width: 0;
+      width: calc(100vw - 1rem);
+      bottom: calc(4.2rem + env(safe-area-inset-bottom, 0px));
+      padding: 0.5rem 0.6rem;
+    }
+  }
 
   /* ── Interactive reveal ── */
   .reveal-btn {
@@ -1180,7 +1268,7 @@
 <!-- ═══════ SLIDE 36 — ANIMATION CLIP 3 ═══════ -->
 <div class="slide video-slide clip-slide" id="slide-36">
   <div class="video-stage clip-video-stage"
-    data-video-relative="clips/clip_03_00-13_to_00-23.mp4">
+    data-video-relative="clips/clip_03_00-13_to_00-24.mp4">
     <div class="live-demo-placeholder"><p class="small-text">Loading animation clip 3 / 17…</p></div>
   </div>
 </div>
@@ -1188,7 +1276,7 @@
 <!-- ═══════ SLIDE 37 — ANIMATION CLIP 4 ═══════ -->
 <div class="slide video-slide clip-slide" id="slide-37">
   <div class="video-stage clip-video-stage"
-    data-video-relative="clips/clip_04_00-23_to_00-35.mp4">
+    data-video-relative="clips/clip_04_00-24_to_00-35.mp4">
     <div class="live-demo-placeholder"><p class="small-text">Loading animation clip 4 / 17…</p></div>
   </div>
 </div>
@@ -1196,7 +1284,7 @@
 <!-- ═══════ SLIDE 38 — ANIMATION CLIP 5 ═══════ -->
 <div class="slide video-slide clip-slide" id="slide-38">
   <div class="video-stage clip-video-stage"
-    data-video-relative="clips/clip_05_00-35_to_00-48.mp4">
+    data-video-relative="clips/clip_05_00-35_to_00-47.mp4">
     <div class="live-demo-placeholder"><p class="small-text">Loading animation clip 5 / 17…</p></div>
   </div>
 </div>
@@ -1204,7 +1292,7 @@
 <!-- ═══════ SLIDE 39 — ANIMATION CLIP 6 ═══════ -->
 <div class="slide video-slide clip-slide" id="slide-39">
   <div class="video-stage clip-video-stage"
-    data-video-relative="clips/clip_06_00-48_to_00-54.mp4">
+    data-video-relative="clips/clip_06_00-47_to_00-54.mp4">
     <div class="live-demo-placeholder"><p class="small-text">Loading animation clip 6 / 17…</p></div>
   </div>
 </div>
@@ -1252,7 +1340,7 @@
 <!-- ═══════ SLIDE 45 — ANIMATION CLIP 12 ═══════ -->
 <div class="slide video-slide clip-slide" id="slide-45">
   <div class="video-stage clip-video-stage"
-    data-video-relative="clips/clip_12_01-58_to_02-02.mp4">
+    data-video-relative="clips/clip_12_01-58_to_02-03.mp4">
     <div class="live-demo-placeholder"><p class="small-text">Loading animation clip 12 / 17…</p></div>
   </div>
 </div>
@@ -1260,7 +1348,7 @@
 <!-- ═══════ SLIDE 46 — ANIMATION CLIP 13 ═══════ -->
 <div class="slide video-slide clip-slide" id="slide-46">
   <div class="video-stage clip-video-stage"
-    data-video-relative="clips/clip_13_02-02_to_02-08.mp4">
+    data-video-relative="clips/clip_13_02-03_to_02-08.mp4">
     <div class="live-demo-placeholder"><p class="small-text">Loading animation clip 13 / 17…</p></div>
   </div>
 </div>
@@ -2513,6 +2601,7 @@ const SLIDE_ORDER = [0, 1, 2, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47
 const TOTAL = SLIDE_ORDER.length;
 let current = 0;
 const VIDEO_CLIP_SLIDE_IDS = [2, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50];
+const ABS_CLIP_FALLBACK_DIR = '/home/maincoder/Documents/inside-LLM/manimations/media/videos/pipeline/1080p60/LanguageModelingPipeline_snippets';
 
 const $ = s => document.querySelector(s);
 const $$ = s => document.querySelectorAll(s);
@@ -2679,7 +2768,9 @@ $('#btnPrev').addEventListener('click', () => goTo(current - 1));
 
 document.addEventListener('keydown', e => {
   var tag = e.target && e.target.tagName;
-  if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || (e.target && e.target.isContentEditable)) return;
+  var isSeekSlider = tag === 'INPUT' && e.target && e.target.classList && e.target.classList.contains('clip-seek-slider');
+  if ((tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || (e.target && e.target.isContentEditable)) && !isSeekSlider) return;
+  if (isSeekSlider && e.key !== ' ') return;
 
   if (e.key === ' ') {
     e.preventDefault();
@@ -2815,11 +2906,28 @@ function getVideoClipElement(slideId) {
   return host ? host.querySelector('video') : null;
 }
 
+function formatClipTime(seconds) {
+  if (!Number.isFinite(seconds) || seconds < 0) return '00:00';
+  const total = Math.floor(seconds);
+  const hours = Math.floor(total / 3600);
+  const minutes = Math.floor((total % 3600) / 60);
+  const secs = total % 60;
+  if (hours > 0) {
+    return String(hours).padStart(2, '0') + ':' + String(minutes).padStart(2, '0') + ':' + String(secs).padStart(2, '0');
+  }
+  return String(minutes).padStart(2, '0') + ':' + String(secs).padStart(2, '0');
+}
+
 function getVideoCandidates(host) {
   const candidates = [];
   if (!host) return candidates;
   if (host.dataset.videoRelative) {
-    candidates.push(host.dataset.videoRelative);
+    const rel = host.dataset.videoRelative;
+    candidates.push(rel);
+    const fileName = rel.split('/').filter(Boolean).pop();
+    if (fileName) {
+      candidates.push('file://' + ABS_CLIP_FALLBACK_DIR.replace(/\/+$/, '') + '/' + fileName);
+    }
   }
   if (host.dataset.videoPath && host.dataset.videoPath.startsWith('/')) {
     candidates.push('file://' + host.dataset.videoPath);
@@ -2852,12 +2960,106 @@ function tryPlayVideo(video) {
   }
 }
 
+function ensureClipTimeline(host, video) {
+  if (!host || !video) return;
+  if (host._clipTimelineReady) return;
+
+  const overlay = document.createElement('div');
+  overlay.className = 'clip-timeline-overlay';
+  overlay.innerHTML =
+    '<div class="clip-timeline-head">' +
+      '<span>Animation Playback</span>' +
+      '<span class="clip-timeline-state">Playing</span>' +
+    '</div>' +
+    '<input type="range" class="clip-seek-slider" min="0" max="1000" step="1" value="0" aria-label="Seek animation timeline">' +
+    '<div class="clip-timeline-times">' +
+      '<span class="clip-time-current">00:00</span>' +
+      '<span class="clip-time-total">--:--</span>' +
+    '</div>';
+  host.appendChild(overlay);
+
+  const slider = overlay.querySelector('.clip-seek-slider');
+  const state = overlay.querySelector('.clip-timeline-state');
+  const curTime = overlay.querySelector('.clip-time-current');
+  const totalTime = overlay.querySelector('.clip-time-total');
+  let dragging = false;
+
+  const sync = function(forceSliderVisual) {
+    const duration = Number.isFinite(video.duration) && video.duration > 0 ? video.duration : 0;
+    const current = Number.isFinite(video.currentTime) && video.currentTime > 0 ? video.currentTime : 0;
+    const ratio = duration > 0 ? Math.max(0, Math.min(1, current / duration)) : 0;
+    if (!dragging && !forceSliderVisual) {
+      slider.value = String(Math.round(ratio * 1000));
+    }
+    const sliderRatio = Math.max(0, Math.min(1, Number(slider.value || 0) / 1000));
+    const visualRatio = dragging ? sliderRatio : ratio;
+    slider.style.setProperty('--seek-pct', (visualRatio * 100).toFixed(2) + '%');
+    curTime.textContent = formatClipTime(dragging && duration > 0 ? sliderRatio * duration : current);
+    totalTime.textContent = duration > 0 ? formatClipTime(duration) : '--:--';
+    state.textContent = video.paused ? 'Paused' : 'Playing';
+  };
+
+  const seekFromSlider = function() {
+    if (!Number.isFinite(video.duration) || video.duration <= 0) return;
+    const ratio = Math.max(0, Math.min(1, Number(slider.value || 0) / 1000));
+    video.currentTime = ratio * video.duration;
+  };
+
+  slider.addEventListener('pointerdown', function() {
+    dragging = true;
+    sync(true);
+  });
+
+  slider.addEventListener('pointerup', function() {
+    seekFromSlider();
+    dragging = false;
+    sync();
+  });
+
+  slider.addEventListener('pointercancel', function() {
+    dragging = false;
+    sync();
+  });
+
+  slider.addEventListener('input', function() {
+    dragging = true;
+    seekFromSlider();
+    sync(true);
+  });
+
+  slider.addEventListener('change', function() {
+    seekFromSlider();
+    dragging = false;
+    sync();
+  });
+
+  ['loadedmetadata', 'durationchange', 'timeupdate', 'seeked', 'play', 'pause', 'ended'].forEach(function(evt) {
+    video.addEventListener(evt, function() {
+      sync();
+    });
+  });
+
+  host._clipTimelineReady = true;
+  host._clipTimelineSync = sync;
+  sync();
+}
+
+function syncClipTimeline(slideId) {
+  const host = getVideoClipHost(slideId);
+  if (host && typeof host._clipTimelineSync === 'function') {
+    host._clipTimelineSync();
+  }
+}
+
 function ensureVideoClipLoaded(slideId) {
   const host = getVideoClipHost(slideId);
   if (!host) return null;
 
   const existing = host.querySelector('video');
-  if (existing) return existing;
+  if (existing) {
+    ensureClipTimeline(host, existing);
+    return existing;
+  }
 
   const candidates = getVideoCandidates(host);
   if (!candidates.length) {
@@ -2874,10 +3076,12 @@ function ensureVideoClipLoaded(slideId) {
   video.playsInline = true;
   video.controls = false;
   video.setAttribute('playsinline', '');
+  ensureClipTimeline(host, video);
 
   video.addEventListener('loadeddata', function() {
     hideVideoPlaceholder(host);
     tryPlayVideo(video);
+    syncClipTimeline(slideId);
   });
 
   let idx = 0;
@@ -2903,6 +3107,7 @@ function playVideoClipSlide(slideId) {
     video.currentTime = 0;
   } catch (_err) {}
   tryPlayVideo(video);
+  syncClipTimeline(slideId);
 }
 
 function pauseVideoClipSlide(slideId, reset) {
@@ -2914,6 +3119,7 @@ function pauseVideoClipSlide(slideId, reset) {
       video.currentTime = 0;
     } catch (_err) {}
   }
+  syncClipTimeline(slideId);
 }
 
 function pauseAllVideoClipSlides(reset, exceptSlideId) {
@@ -2931,6 +3137,7 @@ function toggleVideoClipPlayback(slideId) {
   } else {
     video.pause();
   }
+  syncClipTimeline(slideId);
 }
 
 // ══════════════════════════════════════
