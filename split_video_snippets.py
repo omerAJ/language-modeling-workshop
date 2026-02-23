@@ -1,3 +1,6 @@
+# ffmpeg -i "INPUT.mp4" -ss START -to END -c:v libx264 -crf 18 -preset medium -c:a aac -movflags +faststart "OUTPUT.mp4"
+
+
 #!/usr/bin/env python3
 from __future__ import annotations
 
