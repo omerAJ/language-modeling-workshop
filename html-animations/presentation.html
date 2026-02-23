@@ -2191,11 +2191,25 @@ What is the capital of ...</div>
 
   <div class="spacer-sm"></div>
 
+  <div class="speaker-notes">
+    <button class="notes-toggle" onclick="this.nextElementSibling.classList.toggle('open')">speaker notes</button>
+    <div class="notes-body"><p>Sequence: (1) show prompt, ask audience to predict output, (2) reveal the dumb continuation — get laughs, then move to the next slide for "can we fix this without changing the model?" and the bridge to post-training.</p></div>
+  </div>
+</div>
+
+<!-- ═══════ SLIDE 32 — PROMPT STEERING ACTIVITY ═══════ -->
+<div class="slide" id="slide-32">
+  <span class="section-tag">Alignment</span>
+  <div class="badge activity">Interactive</div>
+  <h2>Can we fix this without changing the model?</h2>
+  <p class="small-text" style="max-width:920px;">The weights are frozen. All you can change is the <span class="hl">prompt</span>. Can formatting alone steer next-token completion into useful behavior?</p>
+  <div class="spacer-sm"></div>
+
   <!-- PHASE 2: fix it with formatting -->
   <div class="hidden-content" id="completionPhase2">
     <div class="card" style="max-width:860px;">
-      <h3 style="color:var(--green); margin-bottom:10px;">Can we fix this without changing the model?</h3>
-      <p class="small-text">The weights are frozen. All you can change is the <span class="hl">prompt</span>. How do you steer the completion toward an answer?</p>
+      <h3 style="color:var(--green); margin-bottom:10px;">Prompt shaping can steer behavior</h3>
+      <p class="small-text">Same model, same weights. Only context formatting changes what continuation becomes likely.</p>
       <div class="spacer-sm"></div>
       <div class="grid-3" style="gap:12px;">
         <div class="card" style="padding:14px;">
@@ -2254,12 +2268,12 @@ What is the capital of ...</div>
 
   <div class="speaker-notes">
     <button class="notes-toggle" onclick="this.nextElementSibling.classList.toggle('open')">speaker notes</button>
-    <div class="notes-body"><p>Sequence: (1) show prompt, ask audience to predict output, (2) reveal the dumb continuation — get laughs, (3) ask "how do we fix this without retraining?", (4) show the formatting examples, (5) emphasize this is brittle → bridge to post-training.</p></div>
+    <div class="notes-body"><p>Run this as a pure prompt-formatting experiment. Stress that no retraining is happening yet; we're only steering local continuation probabilities.</p></div>
   </div>
 </div>
 
-<!-- ═══════ SLIDE 32 — WHY POST-TRAINING EXISTS (STEPS 5-6) ═══════ -->
-<div class="slide" id="slide-32">
+<!-- ═══════ SLIDE 33 — WHY POST-TRAINING EXISTS (STEPS 5-6) ═══════ -->
+<div class="slide" id="slide-33">
   <span class="section-tag">Alignment</span>
   <div class="badge concept">Post-training</div>
   <h2>Why post-training exists: from context steering to behavior shaping</h2>
@@ -2323,7 +2337,7 @@ What is the capital of ...</div>
   <div class="progress-track">
     <div class="progress-fill" id="progressFill" style="width:0%"></div>
   </div>
-  <span class="slide-counter" id="slideCounter">1 / 23</span>
+  <span class="slide-counter" id="slideCounter">1 / 24</span>
   <button class="nav-btn primary" id="btnNext">Next →</button>
 </div>
 
@@ -2331,7 +2345,7 @@ What is the capital of ...</div>
 // ══════════════════════════════════════
 //  Slide engine
 // ══════════════════════════════════════
-const SLIDE_ORDER = [0, 1, 2, 3, 4, 5, 6, 7, 9, 10, 11, 12, 13, 14, 8, 22, 23, 24, 16, 29, 30, 31, 32];
+const SLIDE_ORDER = [0, 1, 2, 3, 4, 5, 6, 7, 9, 10, 11, 12, 13, 14, 8, 22, 23, 24, 16, 29, 30, 31, 32, 33];
 const TOTAL = SLIDE_ORDER.length;
 let current = 0;
 
@@ -2445,14 +2459,18 @@ function runSlideInteractionStep(slideId) {
     return false;
   }
 
-  // Slide 31: reveal completion activity in logical phases
+  // Slide 31: reveal the base-completion failure first
   if (slideId === 31) {
     var dumb = document.getElementById('dumbResponseReveal');
     if (dumb && !dumb.classList.contains('revealed')) {
-      revealDumbResponse(false);
+      revealDumbResponse();
       return true;
     }
+    return false;
+  }
 
+  // Slide 32: reveal prompt-fixing + bridge before advancing
+  if (slideId === 32) {
     var phase2 = document.getElementById('completionPhase2');
     if (phase2 && !phase2.classList.contains('revealed')) {
       phase2.classList.add('revealed');
@@ -2580,17 +2598,9 @@ function chooseDramaSuspect(choice, btn) {
 // ══════════════════════════════════════
 //  Completion wrapper activity
 // ══════════════════════════════════════
-function revealDumbResponse(autoAdvance) {
-  if (autoAdvance === undefined) autoAdvance = true;
+function revealDumbResponse() {
   const reveal = document.getElementById('dumbResponseReveal');
   if (reveal) reveal.classList.add('revealed');
-  // Optional auto-advance for manual button path.
-  if (autoAdvance) {
-    setTimeout(function() {
-      const phase2 = document.getElementById('completionPhase2');
-      if (phase2) phase2.classList.add('revealed');
-    }, 600);
-  }
 }
 
 var fixesRevealed = { chat: false, math: false, code: false };
@@ -2957,7 +2967,7 @@ function onSlideEnter(n) {
       result.innerHTML = '<span class="icon">?</span><span>Select a suspect. Then check whether your choice satisfies the timing + access constraints.</span>';
     }
   }
-  if (n === 31) {
+  if (n === 31 || n === 32) {
     resetCompletionActivity();
   }
 }
