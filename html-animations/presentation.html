@@ -234,39 +234,100 @@
   /* Backward flow — arrows point left for backpropagation */
   .flow.flow-backward .flow-box ~ .flow-box::before { content: '←'; }
 
-  /* ── Live demo video ── */
-  .live-demo-shell {
-    width: 100%;
-    max-width: 100%;
-    margin: 0;
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    background: var(--surface2);
+  /* ── Full-screen video slide ── */
+  .slide.video-slide {
+    padding: 0;
     overflow: hidden;
-    aspect-ratio: 16 / 9;
+    background: #000;
   }
-  .live-demo-placeholder {
+  .video-stage {
+    position: relative;
+    width: 100%;
     height: 100%;
-    min-height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    gap: 10px;
-    padding: 20px;
+    background: #000;
   }
   .live-demo-video {
+    position: absolute;
+    inset: 0;
     width: 100%;
     height: 100%;
     display: block;
     background: #000;
     object-fit: contain;
+    z-index: 1;
   }
-
-  .forward-pass-caption {
-    font-size: 0.95rem;
-    margin-top: 18px;
-    opacity: 0.9;
+  .live-demo-placeholder {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 8px;
+    padding: 20px;
+    text-align: center;
+    color: var(--text-dim);
+    background: rgba(0,0,0,0.78);
+  }
+  .live-demo-placeholder[hidden] {
+    display: none !important;
+  }
+  .video-overlay-top {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    z-index: 3;
+    padding: 10px 12px;
+    border-radius: 10px;
+    background: rgba(15,17,23,0.62);
+    border: 1px solid rgba(138,143,168,0.28);
+    backdrop-filter: blur(4px);
+  }
+  .video-overlay-top p {
+    margin-top: 6px;
+    font-size: 0.78rem;
+    color: var(--text-dim);
+    letter-spacing: 0.02em;
+  }
+  .video-pill {
+    display: inline-block;
+    font-size: 0.64rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #d8ddf6;
+    background: rgba(108,140,255,0.22);
+    border: 1px solid rgba(108,140,255,0.35);
+    border-radius: 999px;
+    padding: 4px 9px;
+  }
+  .video-overlay-controls {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    z-index: 3;
+    display: flex;
+    gap: 8px;
+  }
+  .video-overlay-controls[hidden] {
+    display: none;
+  }
+  .video-control-btn {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.74rem;
+    font-weight: 600;
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid rgba(138,143,168,0.36);
+    color: var(--text);
+    background: rgba(15,17,23,0.68);
+    cursor: pointer;
+    backdrop-filter: blur(4px);
+  }
+  .video-control-btn:hover {
+    background: rgba(35,40,54,0.82);
+    border-color: rgba(108,140,255,0.45);
   }
 
   /* ── Interactive reveal ── */
@@ -1104,32 +1165,24 @@
 </div>
 
 <!-- ═══════ SLIDE 2 — OPENING ═══════ -->
-<div class="slide" id="slide-2">
-  <span class="section-tag">Setup</span>
-  <div class="badge concept">Live Demo</div>
-  <h2>Let's watch an LLM complete a sentence</h2>
-  <div class="spacer-sm"></div>
-  <div class="spacer"></div>
-  <div class="card" style="text-align:center; max-width:100%; margin:0 auto;">
-    <p class="small-text" style="margin-bottom:14px; color:var(--text-dim);">LLM Forward Pass Animation</p>
-    <div class="live-demo-shell" id="liveDemoHost"
-      data-video-relative="LanguageModelingPipeline.mp4"
-      data-video-path="/home/maincoder/Documents/inside-LLM/manimations/media/videos/pipeline/1080p60/LanguageModelingPipeline.mp4">
-      <div class="live-demo-placeholder">
-        <button class="nav-btn primary" id="loadLiveDemoBtn" style="min-width:180px;">Load Demo Video</button>
-        <p class="tiny">Large file is lazy-loaded only when this slide is opened.</p>
-      </div>
+<div class="slide video-slide" id="slide-2">
+  <div class="video-stage" id="liveDemoHost"
+    data-video-relative="LanguageModelingPipeline.mp4"
+    data-video-path="/home/maincoder/Documents/inside-LLM/manimations/media/videos/pipeline/1080p60/LanguageModelingPipeline.mp4">
+    <div class="live-demo-placeholder" id="liveDemoPlaceholder">
+      <p class="small-text">Loading pipeline animation…</p>
+      <p class="tiny">Autoplays when this slide opens.</p>
     </div>
-    <p class="tiny forward-pass-caption">Black box → Functional stages → Computational mechanisms</p>
-  </div>
-  <div class="spacer"></div>
-  <div class="callout info">
-    <span class="icon">i</span>
-    <span><em>"Over two days, we'll reduce LLMs to a small set of operations: tokens become vectors, vectors undergo repeated structured transforms, and we end with a probability distribution over the next token. By the end you'll be able to trace a forward pass end-to-end, understand what each matrix multiplication is doing, and connect those mechanics to the model's behavior — both its strengths and its failure modes."</em></span>
-  </div>
-  <div class="speaker-notes">
-    <button class="notes-toggle" onclick="this.nextElementSibling.classList.toggle('open')">speaker notes</button>
-    <div class="notes-body"><p>Play the pipeline animation video here. Let it run fully. Then use the framing quote to set the tone for the two-day workshop.</p></div>
+
+    <div class="video-overlay-top">
+      <span class="video-pill">Opening Animation</span>
+      <p>Black box → Functional stages → Computational mechanisms</p>
+    </div>
+
+    <div class="video-overlay-controls" id="liveDemoControls" hidden>
+      <button class="video-control-btn" id="liveDemoPlayPauseBtn" type="button">Pause</button>
+      <button class="video-control-btn" id="liveDemoRestartBtn" type="button">Restart</button>
+    </div>
   </div>
 </div>
 
@@ -2379,12 +2432,8 @@ function goToNextSlide() {
 }
 
 function runSlideInteractionStep(slideId) {
-  // Slide 2: load demo video
+  // Slide 2: video autoplays on enter; Next should still advance immediately
   if (slideId === 2) {
-    if (!liveDemoLoaded) {
-      ensureLiveDemoLoaded();
-      return true;
-    }
     return false;
   }
 
@@ -2629,9 +2678,14 @@ function resetCompletionActivity() {
 }
 
 // ══════════════════════════════════════
-//  Live demo video (lazy load)
+//  Live demo video (autoplay slide)
 // ══════════════════════════════════════
 let liveDemoLoaded = false;
+
+function getLiveDemoVideo() {
+  const host = document.getElementById('liveDemoHost');
+  return host ? host.querySelector('video') : null;
+}
 
 function getLiveDemoCandidates(host) {
   const candidates = [];
@@ -2648,40 +2702,126 @@ function getLiveDemoCandidates(host) {
   return candidates;
 }
 
+function setLiveDemoPlaceholder(primary, secondary) {
+  const placeholder = document.getElementById('liveDemoPlaceholder');
+  if (!placeholder) return;
+  const extra = secondary ? `<p class="tiny">${secondary}</p>` : '';
+  placeholder.innerHTML = `<p class="small-text">${primary}</p>${extra}`;
+  placeholder.hidden = false;
+}
+
+function hideLiveDemoPlaceholder() {
+  const placeholder = document.getElementById('liveDemoPlaceholder');
+  if (placeholder) placeholder.hidden = true;
+}
+
+function tryPlayLiveDemo(video) {
+  if (!video) return;
+  const playPromise = video.play();
+  if (playPromise && typeof playPromise.catch === 'function') {
+    playPromise.catch(function() {});
+  }
+}
+
+function syncLiveDemoControls() {
+  const controls = document.getElementById('liveDemoControls');
+  const playPause = document.getElementById('liveDemoPlayPauseBtn');
+  const video = getLiveDemoVideo();
+
+  if (!controls || !playPause || !video) return;
+  controls.hidden = false;
+  playPause.textContent = video.paused ? 'Play' : 'Pause';
+}
+
 function ensureLiveDemoLoaded() {
-  if (liveDemoLoaded) return;
   const host = document.getElementById('liveDemoHost');
-  if (!host) return;
+  if (!host) return null;
+
+  if (liveDemoLoaded) {
+    return getLiveDemoVideo();
+  }
 
   const candidates = getLiveDemoCandidates(host);
-  if (!candidates.length) return;
+  if (!candidates.length) {
+    setLiveDemoPlaceholder('Video source not found.', 'Check the slide video path.');
+    return null;
+  }
 
   const video = document.createElement('video');
   video.className = 'live-demo-video';
-  video.controls = true;
-  video.preload = 'metadata';
+  video.preload = 'auto';
+  video.autoplay = true;
+  video.muted = true;
+  video.loop = true;
   video.playsInline = true;
+  video.controls = false;
+  video.setAttribute('playsinline', '');
+
+  video.addEventListener('play', syncLiveDemoControls);
+  video.addEventListener('pause', syncLiveDemoControls);
+  video.addEventListener('loadeddata', function() {
+    hideLiveDemoPlaceholder();
+    tryPlayLiveDemo(video);
+    syncLiveDemoControls();
+  });
 
   let idx = 0;
   const tryNextSource = () => {
-    if (idx >= candidates.length) return;
+    if (idx >= candidates.length) {
+      setLiveDemoPlaceholder('Unable to load the pipeline video.', 'Confirm the file path and format.');
+      syncLiveDemoControls();
+      return;
+    }
     video.src = candidates[idx++];
     video.load();
   };
   video.addEventListener('error', tryNextSource);
   tryNextSource();
 
-  host.innerHTML = '';
-  host.appendChild(video);
+  host.prepend(video);
   liveDemoLoaded = true;
+  return video;
+}
+
+function playLiveDemoFromStart() {
+  const video = ensureLiveDemoLoaded();
+  if (!video) return;
+  try {
+    video.currentTime = 0;
+  } catch (_err) {}
+  tryPlayLiveDemo(video);
+  syncLiveDemoControls();
+}
+
+function toggleLiveDemoPlayback() {
+  const video = getLiveDemoVideo();
+  if (!video) return;
+  if (video.paused) {
+    tryPlayLiveDemo(video);
+  } else {
+    video.pause();
+  }
+  syncLiveDemoControls();
+}
+
+function restartLiveDemo() {
+  const video = getLiveDemoVideo();
+  if (!video) return;
+  try {
+    video.currentTime = 0;
+  } catch (_err) {}
+  tryPlayLiveDemo(video);
+  syncLiveDemoControls();
 }
 
 function pauseLiveDemoIfNeeded() {
-  const host = document.getElementById('liveDemoHost');
-  if (!host) return;
-  const video = host.querySelector('video');
+  const video = getLiveDemoVideo();
   if (!video) return;
   video.pause();
+  try {
+    video.currentTime = 0;
+  } catch (_err) {}
+  syncLiveDemoControls();
 }
 
 // ══════════════════════════════════════
@@ -2892,9 +3032,9 @@ function afterData()     { return VOCAB.map(v => ({ word: v.word, value: v.after
 //  Slide-specific enter logic
 // ══════════════════════════════════════
 function onSlideEnter(n) {
-  // Slide 2: lazy load live demo video only when needed
+  // Slide 2: autoplay full-screen demo
   if (n === 2) {
-    ensureLiveDemoLoaded();
+    playLiveDemoFromStart();
   } else {
     pauseLiveDemoIfNeeded();
   }
@@ -2975,9 +3115,14 @@ function onSlideEnter(n) {
 // ══════════════════════════════════════
 //  Init
 // ══════════════════════════════════════
-const loadLiveDemoBtn = document.getElementById('loadLiveDemoBtn');
-if (loadLiveDemoBtn) {
-  loadLiveDemoBtn.addEventListener('click', ensureLiveDemoLoaded);
+const liveDemoPlayPauseBtn = document.getElementById('liveDemoPlayPauseBtn');
+if (liveDemoPlayPauseBtn) {
+  liveDemoPlayPauseBtn.addEventListener('click', toggleLiveDemoPlayback);
+}
+
+const liveDemoRestartBtn = document.getElementById('liveDemoRestartBtn');
+if (liveDemoRestartBtn) {
+  liveDemoRestartBtn.addEventListener('click', restartLiveDemo);
 }
 
 // settle hidden-content after reveal transition so scroll works
