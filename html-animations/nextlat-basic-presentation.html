@@ -1,0 +1,642 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Project Brief: Latent State Transition Objective for Code LLMs</title>
+  <style>
+    :root {
+      --bg-1: #f4f7ff;
+      --bg-2: #edf9f5;
+      --panel: #ffffff;
+      --text: #11203a;
+      --muted: #4f607e;
+      --line: #d6e1f2;
+      --primary: #0f62d6;
+      --primary-soft: #e7f0ff;
+      --good: #0d8a60;
+      --warn: #b36b00;
+      --shadow: 0 12px 34px rgba(13, 31, 67, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: "Space Grotesk", "Avenir Next", "Trebuchet MS", sans-serif;
+      color: var(--text);
+      background: radial-gradient(circle at 10% 10%, var(--bg-1), transparent 40%),
+                  radial-gradient(circle at 90% 90%, var(--bg-2), transparent 35%),
+                  #f8fbff;
+      padding: 24px;
+    }
+
+    .frame {
+      max-width: 1040px;
+      margin: 0 auto;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      gap: 10px;
+    }
+
+    .title-tag {
+      font-size: 0.9rem;
+      color: var(--muted);
+      border: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.75);
+      padding: 6px 10px;
+      border-radius: 999px;
+    }
+
+    .progress-wrap {
+      flex: 1;
+      height: 8px;
+      background: #e8eef9;
+      border-radius: 999px;
+      overflow: hidden;
+      margin: 0 8px;
+    }
+
+    .progress {
+      width: 0%;
+      height: 100%;
+      background: linear-gradient(90deg, #1c70e8, #26a7c5);
+      transition: width 250ms ease;
+    }
+
+    .counter {
+      color: var(--muted);
+      font-size: 0.9rem;
+      min-width: 88px;
+      text-align: right;
+    }
+
+    .slide {
+      display: none;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+      padding: 30px;
+      min-height: 70vh;
+      animation: fadeIn 260ms ease;
+    }
+
+    .slide.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(6px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    h1 {
+      font-size: clamp(1.8rem, 3.8vw, 2.7rem);
+      line-height: 1.2;
+      margin-bottom: 14px;
+      letter-spacing: -0.02em;
+    }
+
+    h2 {
+      font-size: clamp(1.4rem, 3.2vw, 2rem);
+      line-height: 1.25;
+      margin-bottom: 12px;
+      letter-spacing: -0.01em;
+    }
+
+    p {
+      font-size: 1.05rem;
+      line-height: 1.58;
+      margin-bottom: 10px;
+      max-width: 88ch;
+    }
+
+    ul, ol {
+      margin: 10px 0 0 22px;
+      font-size: 1.03rem;
+      line-height: 1.55;
+    }
+
+    li {
+      margin-bottom: 7px;
+    }
+
+    code {
+      font-family: "IBM Plex Mono", "Consolas", monospace;
+      font-size: 0.93em;
+      background: #eef4ff;
+      border: 1px solid #d3e2ff;
+      border-radius: 6px;
+      padding: 2px 6px;
+    }
+
+    .hero-sub {
+      font-size: 1.15rem;
+      color: var(--muted);
+      margin-bottom: 22px;
+    }
+
+    .callout {
+      border: 1px solid #cde2ff;
+      background: var(--primary-soft);
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin-top: 16px;
+      font-size: 1.03rem;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+      margin-top: 14px;
+    }
+
+    .card {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 14px;
+      background: #fbfdff;
+    }
+
+    .card h3 {
+      font-size: 1rem;
+      margin-bottom: 6px;
+      color: #13366f;
+    }
+
+    .example-grid {
+      display: grid;
+      grid-template-columns: 1.05fr 1fr;
+      gap: 14px;
+      margin-top: 14px;
+    }
+
+    .code-block {
+      margin-top: 8px;
+      padding: 12px;
+      border-radius: 10px;
+      border: 1px solid #d5e2ff;
+      background: #0f1f37;
+      color: #e9f1ff;
+      font-family: "IBM Plex Mono", "Consolas", monospace;
+      font-size: 0.84rem;
+      line-height: 1.45;
+      white-space: pre;
+      overflow-x: auto;
+    }
+
+    .flow {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 16px;
+      align-items: stretch;
+    }
+
+    .step {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 10px;
+      background: #f9fbff;
+      font-size: 0.95rem;
+    }
+
+    .step b {
+      display: block;
+      margin-bottom: 4px;
+      color: #12366d;
+    }
+
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+
+    .pill {
+      border: 1px solid var(--line);
+      background: #f6fbff;
+      border-radius: 999px;
+      padding: 7px 11px;
+      font-size: 0.91rem;
+      color: #1b3f7a;
+    }
+
+    .arch-svg {
+      width: 100%;
+      margin-top: 14px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: #fbfdff;
+      padding: 8px;
+    }
+
+    .status-good { color: var(--good); }
+    .status-warn { color: var(--warn); }
+
+    .nav {
+      margin-top: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .hint {
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .btn-row {
+      display: flex;
+      gap: 10px;
+    }
+
+    button {
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--text);
+      border-radius: 10px;
+      padding: 9px 14px;
+      font-size: 0.95rem;
+      cursor: pointer;
+    }
+
+    button:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    button:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    @media (max-width: 860px) {
+      body { padding: 14px; }
+      .slide { padding: 20px; min-height: 72vh; }
+      .grid-2 { grid-template-columns: 1fr; }
+      .example-grid { grid-template-columns: 1fr; }
+      .flow { grid-template-columns: 1fr 1fr; }
+      .topbar { flex-wrap: wrap; }
+      .counter { text-align: left; }
+    }
+
+    @media (max-width: 560px) {
+      .flow { grid-template-columns: 1fr; }
+      p, li { font-size: 1rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="frame">
+    <div class="topbar">
+      <div class="title-tag">Project Brief</div>
+      <div class="progress-wrap"><div class="progress" id="progress"></div></div>
+      <div class="counter" id="counter">1 / 11</div>
+    </div>
+
+    <section class="slide active">
+      <h1>Latent Execution Objective for Code LLM Training</h1>
+      <p class="hero-sub">Brief: add a world-model objective to improve execution reasoning while preserving normal code generation behavior.</p>
+      <div class="grid-2">
+        <div class="card">
+          <h3>Project objective</h3>
+          <p>Increase real code correctness (not just syntax fluency) by teaching the model what each line does to program state.</p>
+        </div>
+        <div class="card">
+          <h3>Current scope</h3>
+          <p>Start with a focused 7B LoRA pilot, then expand only if results show clear value.</p>
+        </div>
+      </div>
+      <div class="callout">Pilot-first approach: validate signal quickly, then consider full fine-tuning as a follow-up phase.</div>
+    </section>
+
+    <section class="slide">
+      <h2>Why This Project</h2>
+      <p>Standard autoregressive (AR) training is strong at token prediction, but it does not explicitly train state transition understanding.</p>
+      <div class="grid-2">
+        <div class="card">
+          <h3>Current pain</h3>
+          <ul>
+            <li>Model often writes valid-looking code that fails during execution.</li>
+            <li>Logic errors persist even when syntax is correct.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Hypothesis</h3>
+          <ul>
+            <li>If we train line-to-state transitions, logic consistency should improve.</li>
+            <li>We can do this without changing inference behavior.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <h2>Motivation from Recent Work</h2>
+      <p>This approach combines ideas from LLM-JEPA, NextLat, and CWM-style code world modelling.</p>
+      <div class="grid-2">
+        <div class="card">
+          <h3>LLM-JEPA + NextLat intuition</h3>
+          <ul>
+            <li>LLM-JEPA: predict one view of data from another view in latent space.</li>
+            <li>NextLat: treat token sequence states as evolving belief states where the final state predicts what comes next.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>From CWM to this method</h3>
+          <ul>
+            <li>CWM frames code world modelling as predicting the local variable dict and how each line changes it, typically autoregressively token-by-token.</li>
+            <li>Here we avoid token-level state generation and predict the state transition directly in latent space.</li>
+            <li>Inspired by JEPA, token-level reconstruction can include redundant details not needed for transition learning.</li>
+          </ul>
+        </div>
+      </div>
+      <p class="callout">Target objective: learn <code>delta_state_latent</code> for each action line, not autoregressive state-dict text prediction.</p>
+    </section>
+
+    <section class="slide">
+      <h2>Core Idea in One Slide</h2>
+      <p>Keep normal AR code training, but replace token-by-token state dict prediction with latent delta prediction for state changes.</p>
+      <div class="flow">
+        <div class="step"><b>Input trace step</b> <code>context_t</code>, <code>action_t</code>, <code>state_before_t</code>, <code>state_after_t</code></div>
+        <div class="step"><b>Read latents</b> gather <code>CTX_SUM</code>, <code>ACT_SUM</code>, and current <code>STATE_SUM</code> from the same transformer</div>
+        <div class="step"><b>Predict delta</b> transition head predicts latent state change caused by the action line</div>
+        <div class="step"><b>Train objective</b> compare predicted next-state latent vs detached target next-state latent</div>
+      </div>
+      <div class="pill-row">
+        <span class="pill">Inference unchanged</span>
+        <span class="pill">No token-level state generation</span>
+        <span class="pill">Locals-only in v1</span>
+      </div>
+    </section>
+
+    <section class="slide">
+      <h2>Concrete Data Example (Trace + Tokens)</h2>
+      <div class="example-grid">
+        <div class="card">
+          <h3>Function call and traced locals</h3>
+          <pre class="code-block">def add_if_positive(x, y):
+    total = x + y
+    if total &gt; 0:
+        out = total * 2
+    else:
+        out = 0
+    return out
+
+if __name__ == "__main__":
+    result = add_if_positive(2, 5)
+
+# Trace inside add_if_positive frame
+step 0 (function entry from main call):
+state_before_t0 = {}
+state_after_t0  = {"x": 2, "y": 5}
+
+step 1:
+state_before_t1 = {"x": 2, "y": 5}
+action_line_t1  = total = x + y
+state_after_t1  = {"x": 2, "y": 5, "total": 7}</pre>
+        </div>
+        <div class="card">
+          <h3>Model inputs with summary tokens</h3>
+          <pre class="code-block"># Step 1 training sample
+&lt;CODE_CTX&gt;... result = add_if_positive(2,5) ... total = x + y ...&lt;/CODE_CTX&gt; &lt;CTX_SUM&gt;
+&lt;ACTION&gt;total = x + y&lt;/ACTION&gt; &lt;ACT_SUM&gt;
+
+&lt;STATE&gt;{"x":2,"y":5}&lt;/STATE&gt; &lt;STATE_SUM&gt;
+&lt;STATE&gt;{"x":2,"y":5,"total":7}&lt;/STATE&gt; &lt;STATE_SUM&gt;</pre>
+          <p>Pass A reads <code>CTX_SUM</code>/<code>ACT_SUM</code>; Pass B/C read <code>STATE_SUM</code>. We train against latent transition targets, not token-by-token state dict output.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <h2>Simple Architecture Diagram (Latent Transition)</h2>
+      <p>Concatenate <code>CTX_SUM</code>, <code>ACT_SUM</code>, and <code>STATE_SUM_t</code>, predict a latent delta, then apply a residual update for predicted <code>STATE_SUM_t+1</code> (instead of autoregressive state text decoding).</p>
+      <svg class="arch-svg" viewBox="0 0 980 360" role="img" aria-label="Latent transition architecture with residual path">
+        <defs>
+          <marker id="arrowHead" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+            <path d="M0,0 L8,4 L0,8 Z" fill="#275aa7"></path>
+          </marker>
+        </defs>
+
+        <rect x="36" y="36" width="200" height="52" rx="8" fill="#eef4ff" stroke="#b7ccef"></rect>
+        <text x="136" y="66" text-anchor="middle" font-size="14" fill="#153e78">h_ctx (&lt;CTX_SUM&gt;)</text>
+
+        <rect x="36" y="126" width="200" height="52" rx="8" fill="#eef4ff" stroke="#b7ccef"></rect>
+        <text x="136" y="156" text-anchor="middle" font-size="14" fill="#153e78">h_act (&lt;ACT_SUM&gt;)</text>
+
+        <rect x="36" y="216" width="200" height="52" rx="8" fill="#eef4ff" stroke="#b7ccef"></rect>
+        <text x="136" y="246" text-anchor="middle" font-size="14" fill="#153e78">h_state_t (&lt;STATE_SUM&gt;)</text>
+
+        <rect x="300" y="124" width="150" height="58" rx="8" fill="#f4fbff" stroke="#b7ccef"></rect>
+        <text x="375" y="158" text-anchor="middle" font-size="15" fill="#153e78">concat</text>
+
+        <rect x="500" y="118" width="190" height="70" rx="8" fill="#f4fbff" stroke="#92b2e5"></rect>
+        <text x="595" y="147" text-anchor="middle" font-size="14" fill="#153e78">Predictor MLP</text>
+        <text x="595" y="167" text-anchor="middle" font-size="13" fill="#2a5ea8">f([h_state_t, h_ctx, h_act])</text>
+
+        <rect x="730" y="126" width="130" height="54" rx="8" fill="#eefaf4" stroke="#8ccfae"></rect>
+        <text x="795" y="157" text-anchor="middle" font-size="14" fill="#1e7047">Delta latent</text>
+
+        <circle cx="764" cy="260" r="24" fill="#f7fbff" stroke="#a7bddf"></circle>
+        <text x="764" y="266" text-anchor="middle" font-size="24" fill="#1f4f95">+</text>
+
+        <rect x="820" y="232" width="136" height="56" rx="8" fill="#eef4ff" stroke="#b7ccef"></rect>
+        <text x="888" y="256" text-anchor="middle" font-size="13" fill="#153e78">Pred STATE_SUM</text>
+        <text x="888" y="274" text-anchor="middle" font-size="13" fill="#153e78">t+1</text>
+
+        <line x1="236" y1="62" x2="300" y2="138" stroke="#275aa7" stroke-width="2" marker-end="url(#arrowHead)"></line>
+        <line x1="236" y1="152" x2="300" y2="153" stroke="#275aa7" stroke-width="2" marker-end="url(#arrowHead)"></line>
+        <line x1="236" y1="242" x2="300" y2="168" stroke="#275aa7" stroke-width="2" marker-end="url(#arrowHead)"></line>
+        <line x1="450" y1="153" x2="500" y2="153" stroke="#275aa7" stroke-width="2" marker-end="url(#arrowHead)"></line>
+        <line x1="690" y1="153" x2="730" y2="153" stroke="#275aa7" stroke-width="2" marker-end="url(#arrowHead)"></line>
+        <line x1="795" y1="180" x2="772" y2="236" stroke="#1e7047" stroke-width="2" marker-end="url(#arrowHead)"></line>
+        <line x1="788" y1="260" x2="820" y2="260" stroke="#275aa7" stroke-width="2" marker-end="url(#arrowHead)"></line>
+
+        <path d="M236 242 L236 320 L764 320 L764 284" fill="none" stroke="#7c4ec3" stroke-width="2.5" stroke-dasharray="7 5" marker-end="url(#arrowHead)"></path>
+        <text x="405" y="344" text-anchor="middle" font-size="13" fill="#6a3fb0">Residual path from STATE_SUM_t</text>
+      </svg>
+      <p class="callout"><code>pred_state_t+1 = h_state_t + f([h_state_t, h_ctx, h_act])</code></p>
+    </section>
+
+    <section class="slide">
+      <h2>Why This Is Low-Risk to Existing Capability</h2>
+      <div class="grid-2">
+        <div class="card">
+          <h3>Preserve baseline behavior</h3>
+          <ul>
+            <li>AR loss remains active on code tokens.</li>
+            <li>Summary tokens are excluded from AR loss.</li>
+            <li>No AR loss on state-only passes.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Controlled rollout knobs</h3>
+          <ul>
+            <li><code>lambda</code> controls WM strength.</li>
+            <li>Optional delayed WM start (AR warmup first).</li>
+            <li>No-op/state-change ratio is tunable.</li>
+          </ul>
+        </div>
+      </div>
+      <p class="callout">Fallback path is simple: reduce WM weight or disable WM path and keep AR training pipeline intact.</p>
+    </section>
+
+    <section class="slide">
+      <h2>Pilot Design (Built for Causal Attribution)</h2>
+      <p>All variants train/evaluate on the same dataset and protocol.</p>
+      <ol>
+        <li>Base 7B model (no new tuning)</li>
+        <li>7B LoRA AR-only (control for dataset/training exposure)</li>
+        <li>7B LoRA AR + WM (proposed method)</li>
+      </ol>
+      <div class="grid-2">
+        <div class="card">
+          <h3>What this isolates</h3>
+          <p>Improvement from extra data vs improvement from the new latent objective.</p>
+        </div>
+        <div class="card">
+          <h3>v1 training mode</h3>
+          <p>Teacher-forced WM path using ground-truth executed action lines from traces.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <h2>Data and System Work Needed</h2>
+      <div class="grid-2">
+        <div class="card">
+          <h3>Data pipeline</h3>
+          <ul>
+            <li>Extract step tuples from traced execution.</li>
+            <li>Deterministic locals serializer (types, order, truncation).</li>
+            <li>Validation checks and no-leak train/val/test splits.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Training stack changes</h3>
+          <ul>
+            <li>Add summary tokens: <code>&lt;CTX_SUM&gt;</code>, <code>&lt;ACT_SUM&gt;</code>, <code>&lt;STATE_SUM&gt;</code>.</li>
+            <li>Implement 3-pass latent readout + transition head.</li>
+            <li>Combine losses: <code>L_total = L_AR + lambda * L_WM</code>.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="slide">
+      <h2>Success Metrics and Evaluation Criteria</h2>
+      <div class="grid-2">
+        <div class="card">
+          <h3>Must hold</h3>
+          <ul>
+            <li>Coding quality does not regress vs AR-only control.</li>
+            <li>Pass@1 and execution success stay stable or improve.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Must improve</h3>
+          <ul>
+            <li>Latent transition error improves on validation traces.</li>
+            <li>Logic-error rate trends better than syntax-only gains.</li>
+          </ul>
+        </div>
+      </div>
+      <p class="callout"><span class="status-good"><strong>Positive signal:</strong></span> AR+WM improves execution-quality indicators with stable coding quality. <span class="status-warn"><strong>Weak signal:</strong></span> regression or no measurable value vs AR-only.</p>
+    </section>
+
+    <section class="slide">
+      <h2>Main Risks and Mitigations</h2>
+      <div class="grid-2">
+        <div class="card">
+          <h3>Risk: noisy traces hurt training</h3>
+          <p>Mitigation: strict dataset validation, serialization checks, malformed-sample filtering.</p>
+        </div>
+        <div class="card">
+          <h3>Risk: WM objective interferes with AR</h3>
+          <p>Mitigation: delayed WM start, conservative <code>lambda</code>, and AR-only control monitoring.</p>
+        </div>
+        <div class="card">
+          <h3>Risk: LoRA underestimates full potential</h3>
+          <p>Mitigation: treat LoRA result as signal test; escalate to full FT only if pilot is positive.</p>
+        </div>
+        <div class="card">
+          <h3>Risk: unclear attribution of gains</h3>
+          <p>Mitigation: same dataset + same eval protocol across base, AR-only, and AR+WM.</p>
+        </div>
+      </div>
+    </section>
+
+    <div class="nav">
+      <div class="hint">Keys: Left/Right, PageUp/PageDown, Home/End</div>
+      <div class="btn-row">
+        <button id="prev">Previous</button>
+        <button id="next">Next</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const slides = [...document.querySelectorAll('.slide')];
+    const prev = document.getElementById('prev');
+    const next = document.getElementById('next');
+    const counter = document.getElementById('counter');
+    const progress = document.getElementById('progress');
+
+    let index = 0;
+
+    function render() {
+      slides.forEach((s, i) => s.classList.toggle('active', i === index));
+      const n = slides.length;
+      counter.textContent = `${index + 1} / ${n}`;
+      progress.style.width = `${((index + 1) / n) * 100}%`;
+      prev.disabled = index === 0;
+      next.disabled = index === n - 1;
+    }
+
+    function go(delta) {
+      const n = slides.length;
+      index = Math.max(0, Math.min(n - 1, index + delta));
+      render();
+    }
+
+    prev.addEventListener('click', () => go(-1));
+    next.addEventListener('click', () => go(1));
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === 'PageDown') go(1);
+      if (e.key === 'ArrowLeft' || e.key === 'PageUp') go(-1);
+      if (e.key === 'Home') {
+        index = 0;
+        render();
+      }
+      if (e.key === 'End') {
+        index = slides.length - 1;
+        render();
+      }
+    });
+
+    render();
+  </script>
+</body>
+</html>
