@@ -1,0 +1,3499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 1 — Language Modeling from Scratch</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  /* ── Responsive root scaling ──
+     Single source of truth: all rem values scale with viewport.
+     At 1920×1080 ≈ 20px, at 3840×2160 → clamped 32px, at 1366×768 ≈ 15px */
+  html {
+    font-size: clamp(14px, calc(0.5vw + 0.55vh + 4px), 32px);
+  }
+
+  :root {
+    --bg: #0a0d14;
+    --surface: #161923;
+    --surface2: #1e2231;
+    --border: #2a2f42;
+    --text: #f0f1f4;
+    --text-dim: #99a0b8;
+    --accent: #7b9aff;
+    --accent-glow: rgba(123,154,255,0.28);
+    --green: #5ae88e;
+    --green-glow: rgba(90,232,142,0.22);
+    --red: #ff7b7b;
+    --orange: #ffaa55;
+    --purple: #b49dff;
+    --yellow: #ffd644;
+    --cyan: #33e0f5;
+    --pink: #ff82c4;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── Slide system ── */
+  .slide-container {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+  }
+  .slide {
+    position: absolute;
+    inset: 0;
+    display: none;
+    flex-direction: column;
+    padding: 2.25rem 5vw 4.25rem;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+    animation: fadeSlideIn 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+  .slide.active { display: flex; }
+
+  @keyframes fadeSlideIn {
+    from { opacity: 0; transform: translateY(1rem); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .slide.centered {
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+
+  /* ── Typography ── */
+  h1 {
+    font-size: 2.8rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.12;
+    background: linear-gradient(135deg, var(--accent) 0%, var(--purple) 60%, var(--pink) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  h1.large { font-size: 3.5rem; }
+  h2 {
+    font-size: 1.7rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.75rem;
+  }
+  h3 {
+    font-size: 1.15rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+  .subtitle {
+    font-size: 1.2rem;
+    color: var(--text-dim);
+    margin-top: 0.5rem;
+    line-height: 1.5;
+  }
+  .small-text {
+    font-size: 0.88rem;
+    color: var(--text-dim);
+    line-height: 1.55;
+  }
+  .tiny {
+    font-size: 0.78rem;
+    color: var(--text-dim);
+  }
+
+  /* ── Highlight spans ── */
+  .hl        { color: var(--accent); font-weight: 600; }
+  .hl-green  { color: var(--green);  font-weight: 600; }
+  .hl-red    { color: var(--red);    font-weight: 600; }
+  .hl-orange { color: var(--orange); font-weight: 600; }
+  .hl-purple { color: var(--purple); font-weight: 600; }
+  .hl-yellow { color: var(--yellow); font-weight: 600; }
+  .hl-cyan   { color: var(--cyan);   font-weight: 600; }
+  .hl-pink   { color: var(--pink);   font-weight: 600; }
+
+  /* ── Cards ── */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 0.875rem;
+    padding: 1.5rem;
+    position: relative;
+    overflow: visible;
+  }
+  .card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: radial-gradient(ellipse at top left, rgba(123,154,255,0.05), transparent 60%);
+    pointer-events: none;
+  }
+
+  /* ── Callouts ── */
+  .callout {
+    display: flex;
+    gap: 0.625rem;
+    padding: 0.875rem 1.125rem;
+    border-radius: 0.625rem;
+    font-size: 0.88rem;
+    line-height: 1.55;
+  }
+  .callout.info    { background: rgba(123,154,255,0.1);  border: 1px solid rgba(123,154,255,0.22); color: #c2d0ff; }
+  .callout.warn    { background: rgba(255,170,85,0.1);   border: 1px solid rgba(255,170,85,0.22);  color: #ffd4a8; }
+  .callout.success { background: rgba(90,232,142,0.1);   border: 1px solid rgba(90,232,142,0.22);  color: #a8f5c8; }
+  .callout.question { background: rgba(180,157,255,0.1); border: 1px solid rgba(180,157,255,0.22); color: #d4c8ff; }
+  .callout.pink    { background: rgba(255,130,196,0.1);  border: 1px solid rgba(255,130,196,0.22); color: #ffc4e2; }
+  .callout .icon { flex-shrink: 0; font-size: 1.15rem; }
+  .editor-note {
+    margin-top: 1rem;
+    max-width: 52rem;
+    background: rgba(255,123,123,0.12);
+    border: 1px solid rgba(255,123,123,0.55);
+    color: #ffc1c1;
+    border-radius: 0.625rem;
+    padding: 0.875rem 1rem;
+    font-size: 0.82rem;
+    line-height: 1.55;
+    text-align: left;
+  }
+  .editor-note strong {
+    color: #ff7b7b;
+    letter-spacing: 0.04em;
+  }
+
+  /* ── Badges / pills ── */
+  .badge {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 0.25rem 0.75rem;
+    border-radius: 1.25rem;
+    margin-bottom: 0.75rem;
+  }
+  .badge.day1 { background: rgba(123,154,255,0.18); color: var(--accent); }
+  .badge.activity { background: rgba(90,232,142,0.18); color: var(--green); }
+  .badge.concept { background: rgba(180,157,255,0.18); color: var(--purple); }
+  .badge.discussion { background: rgba(255,170,85,0.18); color: var(--orange); }
+  .badge.deepdive { background: rgba(255,214,68,0.18); color: var(--yellow); }
+
+  /* ── Grid layouts ── */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1rem; }
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.875rem; }
+  @media (max-width: 50rem) {
+    .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 48rem) {
+    .slide { padding: 1.5rem 1.25rem 4rem; }
+  }
+
+  /* ── Flow diagrams ── */
+  .flow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.625rem;
+    flex-wrap: wrap;
+    margin: 1rem 0;
+  }
+  .flow-box {
+    padding: 0.75rem 1.25rem;
+    border-radius: 0.625rem;
+    font-size: 0.88rem;
+    font-weight: 600;
+    text-align: center;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    min-width: 6.25rem;
+  }
+  .flow-arrow {
+    display: none;
+  }
+  .flow .flow-box ~ .flow-box {
+    position: relative;
+    margin-left: 1.5rem;
+  }
+  .flow .flow-box ~ .flow-box::before {
+    content: '→';
+    position: absolute;
+    right: calc(100% + 0.25rem);
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-dim);
+    font-size: 1.3rem;
+    pointer-events: none;
+  }
+  .flow-loop {
+    color: var(--text-dim);
+    font-size: 1.3rem;
+    flex-shrink: 0;
+  }
+  .flow-box.data    { border-color: rgba(51,224,245,0.45); color: var(--cyan); background: rgba(51,224,245,0.08); }
+  .flow-box.model   { border-color: rgba(123,154,255,0.45); color: var(--accent); background: rgba(123,154,255,0.08); }
+  .flow-box.blue    { border-color: rgba(123,154,255,0.45); color: var(--accent); background: rgba(123,154,255,0.08); }
+  .flow-box.loss    { border-color: rgba(255,123,123,0.45); color: var(--red); background: rgba(255,123,123,0.08); }
+  .flow-box.grad    { border-color: rgba(255,170,85,0.45); color: var(--orange); background: rgba(255,170,85,0.08); }
+  .flow-box.param   { border-color: rgba(180,157,255,0.45); color: var(--purple); background: rgba(180,157,255,0.08); }
+  .flow-box.target  { border-color: rgba(90,232,142,0.55); color: var(--green); background: rgba(90,232,142,0.1); border-style: dashed; }
+  .flow-box.green   { border-color: rgba(90,232,142,0.45); color: var(--green); background: rgba(90,232,142,0.08); }
+  .flow-box.pink    { border-color: rgba(255,130,196,0.45); color: var(--pink); background: rgba(255,130,196,0.08); }
+  .flow-box.yellow  { border-color: rgba(255,214,68,0.45); color: var(--yellow); background: rgba(255,214,68,0.08); }
+  /* Backward flow — arrows point left for backpropagation */
+  .flow.flow-backward .flow-box ~ .flow-box::before { content: '←'; }
+
+  /* ── Full-screen video slide ── */
+  .slide.video-slide {
+    padding: 0;
+    overflow: hidden;
+    background: #000;
+  }
+  .video-stage {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background: #000;
+  }
+  .live-demo-video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    background: #000;
+    object-fit: contain;
+    z-index: 1;
+  }
+  .live-demo-placeholder {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 1.25rem;
+    text-align: center;
+    color: var(--text-dim);
+    background: rgba(0,0,0,0.78);
+  }
+  .live-demo-placeholder[hidden] {
+    display: none !important;
+  }
+  .video-overlay-top {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    z-index: 3;
+    padding: 0.625rem 0.75rem;
+    border-radius: 0.625rem;
+    background: rgba(10,13,20,0.65);
+    border: 1px solid rgba(153,160,184,0.3);
+    backdrop-filter: blur(6px);
+  }
+  .video-overlay-top p {
+    margin-top: 0.375rem;
+    font-size: 0.82rem;
+    color: var(--text-dim);
+    letter-spacing: 0.02em;
+  }
+  .video-overlay-controls {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    z-index: 3;
+    display: flex;
+    gap: 0.5rem;
+  }
+  .video-overlay-controls[hidden] {
+    display: none;
+  }
+  .video-control-btn {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.5rem;
+    border: 1px solid rgba(153,160,184,0.38);
+    color: var(--text);
+    background: rgba(10,13,20,0.7);
+    cursor: pointer;
+    backdrop-filter: blur(6px);
+  }
+  .video-control-btn:hover {
+    background: rgba(30,34,49,0.85);
+    border-color: rgba(123,154,255,0.5);
+  }
+  .clip-timeline-overlay {
+    position: fixed;
+    right: calc(8.6rem + env(safe-area-inset-right, 0px));
+    bottom: calc(2.95rem + env(safe-area-inset-bottom, 0px));
+    z-index: 11;
+    width: min(13.8rem, calc(100vw - 18rem));
+    min-width: 9.5rem;
+    max-width: 16rem;
+    padding: 0.28rem 0.45rem;
+    border-radius: 0.58rem;
+    background: rgba(10,13,20,0.9);
+    border: 1px solid rgba(153,160,184,0.3);
+    backdrop-filter: blur(7px);
+    box-shadow: 0 8px 22px rgba(0,0,0,0.26);
+  }
+  .clip-timeline-times {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 0.18rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.56rem;
+    color: var(--text-dim);
+  }
+  .clip-timeline-main {
+    display: flex;
+    align-items: center;
+    gap: 0.36rem;
+  }
+  .clip-play-toggle {
+    width: 1.3rem;
+    height: 1.3rem;
+    flex-shrink: 0;
+    border-radius: 999px;
+    border: 1px solid rgba(153,160,184,0.35);
+    background: rgba(30,34,49,0.45);
+    color: var(--text-dim);
+    font-size: 0.66rem;
+    line-height: 1;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+  }
+  .clip-play-toggle:hover {
+    border-color: rgba(123,154,255,0.6);
+  }
+  .clip-play-toggle[data-state="playing"] {
+    color: var(--green);
+    border-color: rgba(90,232,142,0.45);
+    background: rgba(90,232,142,0.12);
+  }
+  .clip-play-toggle[data-state="paused"] {
+    color: var(--orange);
+    border-color: rgba(255,170,85,0.45);
+    background: rgba(255,170,85,0.12);
+  }
+  .clip-seek-slider {
+    --seek-pct: 0%;
+    width: 100%;
+    margin: 0;
+    appearance: none;
+    height: 0.42rem;
+    border-radius: 999px;
+    border: 1px solid rgba(153,160,184,0.35);
+    background:
+      linear-gradient(90deg, var(--accent), var(--purple), var(--cyan)) 0 / var(--seek-pct) 100% no-repeat,
+      rgba(153,160,184,0.2);
+    cursor: ew-resize;
+    outline: none;
+  }
+  .clip-seek-slider:hover {
+    border-color: rgba(123,154,255,0.6);
+  }
+  .clip-seek-slider:focus-visible {
+    box-shadow: 0 0 0 2px var(--accent-glow);
+  }
+  .clip-seek-slider::-webkit-slider-thumb {
+    appearance: none;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 2px solid rgba(10,13,20,0.9);
+    background: #fff;
+    box-shadow: 0 0 0 2px rgba(123,154,255,0.38);
+    cursor: ew-resize;
+  }
+  .clip-seek-slider::-moz-range-thumb {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 2px solid rgba(10,13,20,0.9);
+    background: #fff;
+    box-shadow: 0 0 0 2px rgba(123,154,255,0.38);
+    cursor: ew-resize;
+  }
+  @media (max-width: 760px) {
+    .clip-timeline-overlay {
+      right: calc(6.2rem + env(safe-area-inset-right, 0px));
+      bottom: calc(2.6rem + env(safe-area-inset-bottom, 0px));
+      width: min(10.2rem, calc(100vw - 10.2rem));
+      min-width: 7.75rem;
+      padding: 0.24rem 0.34rem;
+    }
+  }
+
+  /* ── Interactive reveal ── */
+  .reveal-btn {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.88rem;
+    font-weight: 600;
+    padding: 0.625rem 1.5rem;
+    border-radius: 0.625rem;
+    border: 1px dashed var(--purple);
+    background: rgba(180,157,255,0.1);
+    color: var(--purple);
+    cursor: pointer;
+    transition: all 0.3s;
+    margin-top: 0.5rem;
+  }
+  .reveal-btn:hover { background: rgba(180,157,255,0.18); }
+  .hidden-content {
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+    transition: max-height 0.6s ease, opacity 0.4s ease, margin 0.4s ease;
+    margin-top: 0;
+  }
+  .hidden-content.revealed {
+    max-height: 125rem;
+    opacity: 1;
+    margin-top: 1rem;
+  }
+  .hidden-content.revealed.settled {
+    max-height: none;
+    overflow: visible;
+  }
+
+  /* ── NTP game ── */
+  .ntp-sentence {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.1rem;
+    line-height: 1.7;
+    padding: 1.125rem 1.375rem;
+    background: var(--surface2);
+    border-radius: 0.625rem;
+    border: 1px solid var(--border);
+    margin: 0.625rem 0;
+  }
+  .ntp-blank {
+    display: inline-block;
+    min-width: 5rem;
+    border-bottom: 2px dashed var(--orange);
+    color: var(--orange);
+    text-align: center;
+    padding: 0 0.25rem;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+  .ntp-blank.show {
+    border-bottom-color: var(--green);
+    color: var(--green);
+    font-weight: 600;
+  }
+  .ntp-concept-btn {
+    display: inline-block;
+    margin-left: 0.5rem;
+    padding: 0.125rem 0.5rem;
+    border-radius: 0.375rem;
+    border: 1px dashed var(--purple);
+    color: var(--purple);
+    font-size: 0.72rem;
+    font-weight: 600;
+    cursor: pointer;
+    vertical-align: middle;
+    transition: all 0.2s;
+  }
+  .ntp-concept-btn:hover { background: rgba(180,157,255,0.12); }
+  .ntp-tag {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 0.125rem 0.5rem;
+    border-radius: 0.375rem;
+    margin-left: 0.5rem;
+    vertical-align: middle;
+    opacity: 0;
+    transform: translateY(0.2rem);
+    transition: opacity 0.25s ease, transform 0.25s ease;
+    pointer-events: none;
+  }
+  .ntp-tag.show { opacity: 1; transform: translateY(0); }
+  .ntp-tag.fact  { background: rgba(51,224,245,0.18); color: var(--cyan); }
+  .ntp-tag.logic { background: rgba(255,170,85,0.18); color: var(--orange); }
+  .ntp-tag.code  { background: rgba(180,157,255,0.18); color: var(--purple); }
+  .ntp-tag.lang  { background: rgba(123,154,255,0.18); color: var(--accent); }
+  .ntp-tag.math  { background: rgba(255,214,68,0.18); color: var(--yellow); }
+
+  /* ── Math formulas ── */
+  .math {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.05rem;
+    text-align: center;
+    padding: 1rem;
+    background: var(--surface2);
+    border-radius: 0.625rem;
+    margin: 0.75rem 0;
+    color: var(--yellow);
+    letter-spacing: 0.02em;
+    line-height: 1.6;
+  }
+  .math-big { font-size: 1.35rem; padding: 1.375rem; }
+  .math mjx-container {
+    margin: 0 auto !important;
+    color: inherit;
+  }
+  .math mjx-container[display="true"] {
+    margin: 0 auto !important;
+  }
+
+  /* ── Animated gradient line ── */
+  .gradient-line {
+    height: 0.15rem;
+    background: linear-gradient(90deg, var(--accent), var(--purple), var(--pink), var(--accent));
+    background-size: 200% 100%;
+    animation: shimmer 2.5s linear infinite;
+    border-radius: 0.125rem;
+    margin: 0.625rem 0;
+  }
+  @keyframes shimmer {
+    0%   { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+
+  /* ── Token display ── */
+  .token-row {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    flex-wrap: wrap;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.05rem;
+    margin: 0.75rem 0;
+  }
+  .tok {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.3rem 0.75rem;
+    border-radius: 0.44rem;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    white-space: nowrap;
+  }
+  .tok.input  { border-color: var(--accent); background: rgba(123,154,255,0.12); }
+  .tok.target { border-color: var(--green);  background: rgba(90,232,142,0.12); color: var(--green); font-weight: 600; }
+  .tok.blank  { border: 2px dashed var(--orange); color: var(--orange); min-width: 3.75rem; justify-content: center; cursor: pointer; }
+  .tok.done   { border: 1px solid var(--text-dim); color: var(--text-dim); cursor: default; opacity: 0.5; }
+
+  /* ── Pipeline boxes ── */
+  .pipeline-box {
+    padding: 1.25rem;
+    border-radius: 0.75rem;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    position: relative;
+  }
+  .pipeline-box h3 { font-size: 1.05rem; margin-bottom: 0.375rem; }
+  .pipeline-box .small-text { font-size: 0.84rem; }
+  .pipeline-box .pipe-num {
+    position: absolute;
+    top: -0.625rem; left: -0.625rem;
+    width: 1.625rem; height: 1.625rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: #fff;
+  }
+
+  /* ── Not-in-objective list ── */
+  .not-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.625rem;
+    margin: 0.75rem 0;
+  }
+  .not-item {
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    background: rgba(255,123,123,0.08);
+    border: 1px solid rgba(255,123,123,0.25);
+    color: var(--red);
+    position: relative;
+    padding-left: 2rem;
+  }
+  .not-item::before {
+    content: '✕';
+    position: absolute;
+    left: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-weight: 700;
+    font-size: 0.78rem;
+  }
+
+  /* ── Data stats ── */
+  .data-stat { text-align: center; padding: 1rem; }
+  .data-stat .big-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 2.2rem;
+    font-weight: 700;
+  }
+  .data-stat .stat-label {
+    font-size: 0.82rem;
+    color: var(--text-dim);
+    margin-top: 0.125rem;
+  }
+
+  /* ── Bar chart (for loss deep-dive slides) ── */
+  .bar-row {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    margin-bottom: 0.375rem;
+    height: 1.75rem;
+  }
+  .bar-word {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.84rem;
+    width: 5rem;
+    text-align: right;
+    color: var(--text-dim);
+    flex-shrink: 0;
+  }
+  .bar-track {
+    flex: 1;
+    height: 1.375rem;
+    background: var(--surface2);
+    border-radius: 0.375rem;
+    overflow: hidden;
+  }
+  .bar-fill {
+    height: 100%;
+    border-radius: 0.375rem;
+    transition: width 1s cubic-bezier(0.22, 1, 0.36, 1);
+    min-width: 0;
+  }
+  .bar-fill.predicted { background: linear-gradient(90deg, var(--accent), var(--purple)); }
+  .bar-fill.target-fill { background: linear-gradient(90deg, var(--green), #34d399); }
+  .bar-pct {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.76rem;
+    color: var(--text-dim);
+    width: 3rem;
+    text-align: left;
+    flex-shrink: 0;
+  }
+
+  /* dual chart layout */
+  .dual-charts {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+    margin-top: 0.625rem;
+  }
+  @media (max-width: 40rem) {
+    .dual-charts { grid-template-columns: 1fr; }
+  }
+  .chart-col {
+    background: var(--surface2);
+    border-radius: 0.625rem;
+    padding: 0.875rem;
+  }
+  .chart-title {
+    font-size: 0.78rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.5rem;
+  }
+
+  /* loss display */
+  .loss-display {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.125rem;
+    margin: 1rem 0;
+    flex-wrap: wrap;
+  }
+  .loss-box {
+    text-align: center;
+    padding: 0.875rem 1.5rem;
+    border-radius: 0.75rem;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    min-width: 8rem;
+  }
+  .loss-box .label {
+    font-size: 0.74rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-dim);
+    margin-bottom: 0.25rem;
+  }
+  .loss-box .value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.5rem;
+    font-weight: 700;
+  }
+  .loss-box .value.high { color: var(--red); }
+  .loss-box .value.low  { color: var(--green); }
+  .loss-box .formula {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.74rem;
+    color: var(--text-dim);
+    margin-top: 0.25rem;
+  }
+  .comparison-arrow {
+    font-size: 2rem;
+    color: var(--text-dim);
+    animation: pulseOpacity 1.5s ease-in-out infinite;
+  }
+  @keyframes pulseOpacity {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  /* loss meter */
+  .loss-meter {
+    width: 100%;
+    height: 0.625rem;
+    border-radius: 0.375rem;
+    background: var(--surface2);
+    margin: 0.5rem 0;
+    overflow: hidden;
+  }
+  .loss-meter-fill {
+    height: 100%;
+    border-radius: 0.375rem;
+    transition: width 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  /* before / after */
+  .before-after {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 1rem;
+    align-items: start;
+    margin-top: 0.625rem;
+  }
+  @media (max-width: 40rem) {
+    .before-after { grid-template-columns: 1fr; }
+  }
+  .ba-col {
+    background: var(--surface2);
+    border-radius: 0.625rem;
+    padding: 0.875rem;
+  }
+  .ba-col .ba-label {
+    font-size: 0.76rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+  .ba-col.before .ba-label { color: var(--red); }
+  .ba-col.after  .ba-label { color: var(--green); }
+  .ba-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    color: var(--text-dim);
+    padding-top: 2.5rem;
+  }
+
+  /* backprop arrows */
+  .backprop-arrows {
+    display: flex;
+    justify-content: center;
+    gap: 0.25rem;
+    margin: 0.5rem 0;
+    font-size: 1.3rem;
+  }
+  .backprop-arrows span {
+    color: var(--orange);
+    animation: flowLeft 1s ease-in-out infinite;
+    animation-delay: 0.45s;
+  }
+  .backprop-arrows span:nth-child(2) { animation-delay: 0.30s; }
+  .backprop-arrows span:nth-child(3) { animation-delay: 0.15s; }
+  .backprop-arrows span:nth-child(4) { animation-delay: 0.0s; }
+  @keyframes flowLeft {
+    0%, 100% { opacity: 0.2; }
+    50% { opacity: 1; }
+  }
+
+  /* flow node (for backprop) */
+  .update-flow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    margin: 0.875rem 0;
+    flex-wrap: wrap;
+  }
+  .flow-node {
+    padding: 0.625rem 1.125rem;
+    border-radius: 0.625rem;
+    font-size: 0.86rem;
+    font-weight: 600;
+    text-align: center;
+    border: 1px solid var(--border);
+  }
+  .flow-node.loss-node   { background: rgba(255,123,123,0.12); border-color: rgba(255,123,123,0.35); color: var(--red); }
+  .flow-node.grad-node   { background: rgba(255,170,85,0.12);  border-color: rgba(255,170,85,0.35);  color: var(--orange); }
+  .flow-node.param-node  { background: rgba(180,157,255,0.12); border-color: rgba(180,157,255,0.35); color: var(--purple); }
+  .flow-node.better-node { background: rgba(90,232,142,0.12);  border-color: rgba(90,232,142,0.35);  color: var(--green); }
+
+  /* ── Bottom nav ── */
+  .bottom-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 0.625rem 1.5rem;
+    background: rgba(10,13,20,0.92);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-top: 1px solid var(--border);
+    z-index: 10;
+    flex-shrink: 0;
+  }
+  .progress-track {
+    flex: 1;
+    height: 0.2rem;
+    background: var(--surface2);
+    border-radius: 0.2rem;
+    margin: 0 1.25rem;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--purple));
+    border-radius: 0.2rem;
+    transition: width 0.4s ease;
+  }
+  .nav-btn {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 600;
+    padding: 0.5rem 1.375rem;
+    border-radius: 0.5rem;
+    border: 1px solid var(--border);
+    background: var(--surface2);
+    color: var(--text);
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .nav-btn:hover { background: var(--border); }
+  .nav-btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+  .nav-btn.primary:hover { background: #6888ef; }
+  .nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+  .slide-counter {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    color: var(--text-dim);
+    min-width: 3.75rem;
+    text-align: center;
+  }
+  /* ── Speaker notes ── */
+  .speaker-notes { margin-top: auto; padding-top: 1rem; }
+  .notes-toggle {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.74rem;
+    font-weight: 500;
+    color: var(--text-dim);
+    background: none;
+    border: 1px solid var(--border);
+    padding: 0.25rem 0.75rem;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .notes-toggle:hover { background: var(--surface2); }
+  .notes-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease, opacity 0.3s ease;
+    opacity: 0;
+  }
+  .notes-body.open {
+    max-height: 25rem;
+    opacity: 1;
+    margin-top: 0.5rem;
+  }
+  .notes-body p {
+    font-size: 0.84rem;
+    color: var(--text-dim);
+    line-height: 1.55;
+    font-style: italic;
+    padding: 0.625rem 0.875rem;
+    background: var(--surface2);
+    border-radius: 0.5rem;
+    border-left: 0.2rem solid var(--accent);
+  }
+
+  /* ── Spacers ── */
+  .spacer-sm { height: 0.75rem; }
+  .spacer    { height: 1.25rem; }
+  .spacer-lg { height: 2rem; }
+
+  /* ── Objective list ── */
+  .obj-list { list-style: none; margin: 0.625rem 0; }
+  .obj-list li {
+    padding: 0.625rem 1rem 0.625rem 2.25rem;
+    border-radius: 0.5rem;
+    margin-bottom: 0.5rem;
+    font-size: 0.92rem;
+    line-height: 1.5;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    position: relative;
+  }
+  .obj-list li::before {
+    content: attr(data-num);
+    position: absolute;
+    left: 0.75rem;
+    top: 0.625rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--accent);
+  }
+
+  .loop-arrow-anim { animation: pulseGlow 1.5s ease-in-out infinite; }
+  @keyframes pulseGlow { 0%, 100% { opacity: 0.5; } 50% { opacity: 1; } }
+
+  .section-tag {
+    position: absolute;
+    top: 1.125rem; left: 1.75rem;
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--text-dim);
+    opacity: 0.5;
+  }
+
+  /* network box (for forward-pass slide) */
+  .network-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.875rem;
+    padding: 1rem 1.5rem;
+    background: linear-gradient(135deg, rgba(123,154,255,0.1), rgba(180,157,255,0.1));
+    border: 1px solid rgba(123,154,255,0.25);
+    border-radius: 0.75rem;
+    margin: 0 auto;
+    max-width: 22rem;
+    position: relative;
+  }
+  .network-box .nn-label { font-weight: 600; font-size: 0.95rem; }
+  .network-box .nn-sub   { font-size: 0.76rem; color: var(--text-dim); }
+  .network-box .param-badge {
+    position: absolute;
+    top: -0.625rem; right: -0.625rem;
+    font-size: 0.68rem;
+    font-weight: 600;
+    background: var(--purple);
+    color: #fff;
+    padding: 0.2rem 0.56rem;
+    border-radius: 0.75rem;
+  }
+  .arrow-down {
+    text-align: center;
+    color: var(--text-dim);
+    font-size: 1.4rem;
+    margin: 0.25rem 0;
+    animation: bobDown 1.2s ease-in-out infinite;
+  }
+  @keyframes bobDown { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(0.3rem); } }
+
+  /* context row (for loss slides) */
+  .context-row {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    flex-wrap: wrap;
+    margin: 0.875rem 0 0.375rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.05rem;
+  }
+  .ctx-tok {
+    padding: 0.3rem 0.75rem;
+    border-radius: 0.44rem;
+    border: 1px solid var(--accent);
+    background: rgba(123,154,255,0.12);
+  }
+  .ctx-blank {
+    padding: 0.3rem 0.75rem;
+    border-radius: 0.44rem;
+    border: 2px dashed var(--orange);
+    color: var(--orange);
+    min-width: 3.75rem;
+    text-align: center;
+    animation: pulseBorder 1.5s ease-in-out infinite;
+  }
+  @keyframes pulseBorder {
+    0%, 100% { border-color: var(--orange); }
+    50% { border-color: rgba(251,146,60,0.3); }
+  }
+
+  /* step label pill (for loss deep-dive slides) */
+  .step-label {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--yellow);
+    background: rgba(255,214,68,0.12);
+    padding: 0.2rem 0.625rem;
+    border-radius: 1.25rem;
+    margin-bottom: 0.625rem;
+  }
+
+  /* reasoning-emergence slides */
+  .pressure-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+    margin-top: 0.75rem;
+  }
+  @media (max-width: 48rem) {
+    .pressure-grid { grid-template-columns: 1fr; }
+  }
+  .pressure-card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 0.625rem;
+    padding: 0.875rem;
+    opacity: 0.28;
+    transform: translateY(0.5rem);
+    transition: opacity 0.35s ease, transform 0.35s ease, border-color 0.35s ease;
+  }
+  .pressure-grid.revealed .pressure-card {
+    opacity: 1;
+    transform: translateY(0);
+    border-color: rgba(123,154,255,0.4);
+  }
+  .pressure-card .title {
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--accent);
+    margin-bottom: 0.375rem;
+    font-weight: 600;
+  }
+  .drama-script {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.86rem;
+    line-height: 1.75;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 0.625rem;
+    padding: 0.875rem 1rem;
+  }
+  .drama-choices {
+    display: flex;
+    gap: 0.625rem;
+    flex-wrap: wrap;
+    margin-top: 0.625rem;
+  }
+  .drama-choice.correct {
+    background: rgba(90,232,142,0.18);
+    border-color: rgba(90,232,142,0.45);
+    color: var(--green);
+  }
+  .drama-choice.wrong {
+    background: rgba(255,123,123,0.15);
+    border-color: rgba(255,123,123,0.4);
+    color: var(--red);
+  }
+
+  /* dataset-mix bars (for capability profile slide) */
+  .mix-bar {
+    display: flex;
+    height: 0.75rem;
+    border-radius: 999px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    background: var(--surface2);
+    margin: 0.625rem 0 0.5rem;
+  }
+  .mix-seg.code { background: linear-gradient(90deg, rgba(180,157,255,0.95), rgba(123,154,255,0.95)); }
+  .mix-seg.lit  { background: linear-gradient(90deg, rgba(51,224,245,0.95), rgba(90,232,142,0.95)); }
+
+  .prompt-block {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    line-height: 1.65;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 0.625rem;
+    padding: 0.75rem 0.875rem;
+    white-space: pre-wrap;
+  }
+
+  /* ── Vertical pipeline ── */
+  .pipeline-v {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    position: relative;
+  }
+  .pipeline-v::before {
+    content: '';
+    position: absolute;
+    left: 1.0625rem;
+    top: 1.125rem;
+    bottom: 1.125rem;
+    width: 0.125rem;
+    background: linear-gradient(to bottom, var(--cyan), var(--accent), var(--orange), var(--green));
+    opacity: 0.4;
+  }
+  .pv-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 0.625rem 0;
+    position: relative;
+  }
+  .pv-dot {
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.78rem;
+    font-weight: 700;
+    flex-shrink: 0;
+    z-index: 1;
+    border: 2px solid;
+  }
+  .pv-dot.cyan   { border-color: var(--cyan);   color: var(--cyan);   background: rgba(51,224,245,0.12); }
+  .pv-dot.accent { border-color: var(--accent); color: var(--accent); background: rgba(123,154,255,0.12); }
+  .pv-dot.orange { border-color: var(--orange); color: var(--orange); background: rgba(255,170,85,0.12); }
+  .pv-dot.purple { border-color: var(--purple); color: var(--purple); background: rgba(180,157,255,0.12); }
+  .pv-dot.green  { border-color: var(--green);  color: var(--green);  background: rgba(90,232,142,0.12); }
+  .pv-dot.red    { border-color: var(--red);    color: var(--red);    background: rgba(255,123,123,0.12); }
+  .pv-body {
+    flex: 1;
+    min-width: 0;
+    padding-top: 0.25rem;
+  }
+  .pv-body h4 {
+    font-size: 0.95rem;
+    font-weight: 700;
+    margin-bottom: 0.125rem;
+  }
+  .pv-body .pv-detail {
+    font-size: 0.82rem;
+    color: var(--text-dim);
+    line-height: 1.5;
+  }
+  .pv-body .pv-tag {
+    display: inline-block;
+    font-size: 0.68rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 0.125rem 0.5rem;
+    border-radius: 0.25rem;
+    margin-left: 0.5rem;
+    vertical-align: middle;
+  }
+  .pv-tag.data   { background: rgba(51,224,245,0.15); color: var(--cyan); }
+  .pv-tag.train  { background: rgba(123,154,255,0.15); color: var(--accent); }
+  .pv-tag.align  { background: rgba(255,170,85,0.15); color: var(--orange); }
+  .pv-tag.eval   { background: rgba(90,232,142,0.15); color: var(--green); }
+</style>
+<script>
+  window.MathJax = {
+    tex: {
+      inlineMath: [['\\(', '\\)']],
+      displayMath: [['\\[', '\\]']]
+    },
+    options: {
+      skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    }
+  };
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+</head>
+<body>
+
+<div class="slide-container" id="slideContainer">
+
+<!-- ═══════ SLIDE 0 — TITLE ═══════ -->
+<div class="slide centered" id="slide-0">
+  <div class="badge day1">Day 1</div>
+  <h1 class="large">Language Modeling<br>from Scratch</h1>
+  <div class="spacer-sm"></div>
+  <p class="subtitle">From data to behavior: the full language-modeling pipeline</p>
+  <div class="spacer-lg"></div>
+  <div class="gradient-line" style="width:12.5rem;"></div>
+  <div class="editor-note">
+    <strong>EDITOR NOTE</strong><br>
+    Later add one slide on recent papers/positions arguing against strong reasoning-intelligence claims (including the stochastic-parrot framing), while clarifying this is still an active debate with multiple explanations and rapidly changing views across research camps. Also remove speaker notes from all slides.
+  </div>
+</div>
+
+<!-- ═══════ SLIDE 1 — OBJECTIVES ═══════ -->
+<!-- ═══════ SLIDE 1 — OBJECTIVES ═══════ -->
+<div class="slide" id="slide-1">
+  <span class="section-tag">Setup</span>
+  <div class="badge day1">Objectives</div>
+  <h2>By the end, you should understand:</h2>
+  <div class="spacer-sm"></div>
+  <ul class="obj-list">
+    <li data-num="1">What an LLM <span class="hl">computes at runtime</span> — tokens in, probability distribution out</li>
+    <li data-num="2">How a simple objective like <span class="hl-green">next-token prediction</span> can create complex capabilities</li>
+    <li data-num="3">What <span class="hl-purple">"training an LLM"</span> concretely means: <span class="hl-cyan">data</span> → <span class="hl">train</span> → <span class="hl-orange">align</span> → <span class="hl-green">eval</span></li>
+    <li data-num="4">How <span class="hl-cyan">raw text becomes the data that shapes models</span> — collection, cleaning, deduplication, filtering, and annotation</li>
+  </ul>
+  <div class="speaker-notes">
+    <button class="notes-toggle" onclick="this.nextElementSibling.classList.toggle('open')">speaker notes</button>
+    <div class="notes-body"><p>These four objectives are what we want every participant to walk away with. They don't need to implement a transformer — just hold the correct mental model.</p></div>
+  </div>
+</div>
+
+<!-- ═══════ SLIDE 2 — ANIMATION CLIP 1 ═══════ -->
+<div class="slide video-slide clip-slide" id="slide-2">
+  <div class="video-stage clip-video-stage"
+    data-video-relative="clips/clip_01_00-00_to_00-03-300.mp4">
+    <div class="live-demo-placeholder">
+      <p class="small-text">Loading animation clip 1 / 17…</p>
+      <p class="tiny">Press Space to pause/play. Press Next for next clip.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ SLIDE 35 — ANIMATION CLIP 2 ═══════ -->
+<div class="slide video-slide clip-slide" id="slide-35">
+  <div class="video-stage clip-video-stage"
+    data-video-relative="clips/clip_02_00-04_to_00-13.mp4">
+    <div class="live-demo-placeholder"><p class="small-text">Loading animation clip 2 / 17…</p></div>
+  </div>
+</div>
+
+<!-- ═══════ SLIDE 36 — ANIMATION CLIP 3 ═══════ -->
+<div class="slide video-slide clip-slide" id="slide-36">
+  <div class="video-stage clip-video-stage"
+    data-video-relative="clips/clip_03_00-13_to_00-24.mp4">
+    <div class="live-demo-placeholder"><p class="small-text">Loading animation clip 3 / 17…</p></div>
+  </div>
+</div>
+
+<!-- ═══════ SLIDE 37 — ANIMATION CLIP 4 ═══════ -->
+<div class="slide video-slide clip-slide" id="slide-37">
+  <div class="video-stage clip-video-stage"
+    data-video-relative="clips/clip_04_00-24_to_00-35.mp4">
+    <div class="live-demo-placeholder"><p class="small-text">Loading animation clip 4 / 17…</p></div>
+  </div>
+</div>
+
+<!-- ═══════ SLIDE 38 — ANIMATION CLIP 5 ═══════ -->
+<div class="slide video-slide clip-slide" id="slide-38">
+  <div class="video-stage clip-video-stage"
+    data-video-relative="clips/clip_05_00-35_to_00-47.mp4">
+    <div class="live-demo-placeholder"><p class="small-text">Loading animation clip 5 / 17…</p></div>
+  </div>
+</div>
+
+<!-- ═══════ SLIDE 39 — ANIMATION CLIP 6 ═══════ -->
+<div class="slide video-slide clip-slide" id="slide-39">
+  <div class="video-stage clip-video-stage"
+    data-video-relative="clips/clip_06_00-47_to_00-54.mp4">
+    <div class="live-demo-placeholder"><p class="small-text">Loading animation clip 6 / 17…</p></div>
+  </div>
+</div>
+
+<!-- ═══════ SLIDE 40 — ANIMATION CLIP 7 ═══════ -->
+<div class="slide video-slide clip-slide" id="slide-40">
+  <div class="video-stage clip-video-stage"
+    data-video-relative="clips/clip_07_00-54_to_01-01.mp4">
+    <div class="live-demo-placeholder"><p class="small-text">Loading animation clip 7 / 17…</p></div>
+  </div>
+</div>
+
+<!-- ═══════ SLIDE 41 — ANIMATION CLIP 8 ═══════ -->
+<div class="slide video-slide clip-slide" id="slide-41">
+  <div class="video-stage clip-video-stage"
+    data-video-relative="clips/clip_08_01-01_to_01-16.mp4">
+    <div class="live-demo-placeholder"><p class="small-text">Loading animation clip 8 / 17…</p></div>
+  </div>
+</div>
+
+<!-- ═══════ SLIDE 42 — ANIMATION CLIP 9 ═══════ -->
+<div class="slide video-slide clip-slide" id="slide-42">
+  <div class="video-stage clip-video-stage"
+    data-video-relative="clips/clip_09_01-16_to_01-28.mp4">
+    <div class="live-demo-placeholder"><p class="small-text">Loading animation clip 9 / 17…</p></div>
+  </div>
+</div>
+
+<!-- ═══════ SLIDE 43 — ANIMATION CLIP 10 ═══════ -->
+<div class="slide video-slide clip-slide" id="slide-43">
+  <div class="video-stage clip-video-stage"
+    data-video-relative="clips/clip_10_01-28_to_01-41.mp4">
+    <div class="live-demo-placeholder"><p class="small-text">Loading animation clip 10 / 17…</p></div>
+  </div>
+</div>
+
+<!-- ═══════ SLIDE 44 — ANIMATION CLIP 11 ═══════ -->
+<div class="slide video-slide clip-slide" id="slide-44">
+  <div class="video-stage clip-video-stage"
+    data-video-relative="clips/clip_11_01-41_to_01-58.mp4">
+    <div class="live-demo-placeholder"><p class="small-text">Loading animation clip 11 / 17…</p></div>
+  </div>
+</div>
+
+<!-- ═══════ SLIDE 45 — ANIMATION CLIP 12 ═══════ -->
+<div class="slide video-slide clip-slide" id="slide-45">
+  <div class="video-stage clip-video-stage"
+    data-video-relative="clips/clip_12_01-58_to_02-03.mp4">
+    <div class="live-demo-placeholder"><p class="small-text">Loading animation clip 12 / 17…</p></div>
+  </div>
+</div>
+
+<!-- ═══════ SLIDE 46 — ANIMATION CLIP 13 ═══════ -->
+<div class="slide video-slide clip-slide" id="slide-46">
+  <div class="video-stage clip-video-stage"
+    data-video-relative="clips/clip_13_02-03_to_02-08.mp4">
+    <div class="live-demo-placeholder"><p class="small-text">Loading animation clip 13 / 17…</p></div>
+  </div>
+</div>
+
+<!-- ═══════ SLIDE 47 — ANIMATION CLIP 14 ═══════ -->
+<div class="slide video-slide clip-slide" id="slide-47">
+  <div class="video-stage clip-video-stage"
+    data-video-relative="clips/clip_14_02-08_to_02-11.mp4">
+    <div class="live-demo-placeholder"><p class="small-text">Loading animation clip 14 / 17…</p></div>
+  </div>
+</div>
+
+<!-- ═══════ SLIDE 48 — ANIMATION CLIP 15 ═══════ -->
+<div class="slide video-slide clip-slide" id="slide-48">
+  <div class="video-stage clip-video-stage"
+    data-video-relative="clips/clip_15_02-11_to_02-27.mp4">
+    <div class="live-demo-placeholder"><p class="small-text">Loading animation clip 15 / 17…</p></div>
+  </div>
+</div>
+
+<!-- ═══════ SLIDE 49 — ANIMATION CLIP 16 ═══════ -->
+<div class="slide video-slide clip-slide" id="slide-49">
+  <div class="video-stage clip-video-stage"
+    data-video-relative="clips/clip_16_02-27_to_03-03.mp4">
+    <div class="live-demo-placeholder"><p class="small-text">Loading animation clip 16 / 17…</p></div>
+  </div>
+</div>
+
+<!-- ═══════ SLIDE 50 — ANIMATION CLIP 17 ═══════ -->
+<div class="slide video-slide clip-slide" id="slide-50">
+  <div class="video-stage clip-video-stage"
+    data-video-relative="clips/clip_17_03-03_to_end.mp4">
+    <div class="live-demo-placeholder"><p class="small-text">Loading animation clip 17 / 17…</p></div>
+  </div>
+</div>
+
+<!-- ═══════ SLIDE 3 — THREE INGREDIENTS ═══════ -->
+<div class="slide" id="slide-3">
+  <span class="section-tag">Setup</span>
+  <div class="badge discussion">Audience Prompt</div>
+  <h2>What makes an LLM work</h2>
+  <div class="spacer-sm"></div>
+
+  <div class="grid-3" id="ingredientsGrid">
+    <!-- INGREDIENT 1 -->
+    <div class="card" style="text-align:center;" id="ingredient1Card">
+      <div style="font-size:2.2rem; margin-bottom:0.5rem;">1</div>
+      <div id="ingredient1Hidden">
+        <h3 style="color:var(--cyan);">???</h3>
+        <p class="small-text" style="color:var(--text-dim);">Click to reveal</p>
+        <button class="reveal-btn" onclick="revealIngredient(1)" style="margin-top:0.75rem;">Reveal</button>
+      </div>
+      <div id="ingredient1Revealed" style="display:none;">
+        <h3 style="color:var(--cyan);">Data</h3>
+        <p class="small-text">
+          corpus · scale · quality
+        </p>
+      </div>
+    </div>
+
+    <!-- INGREDIENT 2 -->
+    <div class="card" style="text-align:center;" id="ingredient2Card">
+      <div style="font-size:2.2rem; margin-bottom:0.5rem;">2</div>
+      <div id="ingredient2Hidden">
+        <h3 style="color:var(--accent);">???</h3>
+        <p class="small-text" style="color:var(--text-dim);">Click to reveal</p>
+        <button class="reveal-btn" onclick="revealIngredient(2)" style="margin-top:0.75rem;">Reveal</button>
+      </div>
+      <div id="ingredient2Revealed" style="display:none;">
+        <h3 style="color:var(--accent);">Architecture</h3>
+        <p class="small-text">
+          structure · information flow · parameters
+        </p>
+      </div>
+    </div>
+
+    <!-- INGREDIENT 3 -->
+    <div class="card" style="text-align:center;" id="ingredient3Card">
+      <div style="font-size:2.2rem; margin-bottom:0.5rem;">3</div>
+      <div id="ingredient3Hidden">
+        <h3 style="color:var(--purple);">???</h3>
+        <p class="small-text" style="color:var(--text-dim);">Click to reveal</p>
+        <button class="reveal-btn" onclick="revealIngredient(3)" style="margin-top:0.75rem;">Reveal</button>
+      </div>
+      <div id="ingredient3Revealed" style="display:none;">
+        <h3 style="color:var(--purple);">Learning Dynamics</h3>
+        <p class="small-text">
+          objective · feedback · compute
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- DATA EXPLANATION -->
+  <div class="hidden-content" id="ingredientExplanation1">
+    <div class="callout info">
+      <span class="icon">i</span>
+      <span>
+        <strong>Data</strong> is three things:
+        (1) the <span class="hl-cyan">raw corpus</span> — books, web pages, code, and conversations,
+        (2) the <span class="hl-yellow">scale</span> — trillions of tokens, because statistical patterns only emerge with massive coverage, and
+        (3) the <span class="hl-orange">quality</span> — filtering, deduplication, and curation that determine what the model actually learns.
+      </span>
+    </div>
+  </div>
+
+  <!-- ARCHITECTURE EXPLANATION -->
+  <div class="hidden-content" id="ingredientExplanation2">
+    <div class="callout info">
+      <span class="icon">i</span>
+      <span>
+        <strong>Architecture</strong> is three things:
+        (1) the <span class="hl-cyan">Transformer</span> — a neural network built around self-attention,
+        (2) the <span class="hl-yellow">information flow</span> — attention mixes information across tokens, while residual connections preserve and accumulate it across layers, and
+        (3) the <span class="hl-orange">parameter space</span> — billions of tunable weights that store a compressed statistical model of language.
+      </span>
+    </div>
+  </div>
+
+  <!-- LEARNING EXPLANATION -->
+  <div class="hidden-content" id="ingredientExplanation3">
+    <div class="callout info">
+      <span class="icon">i</span>
+      <span>
+        <strong>Learning</strong> here means three things:
+        (1) the <span class="hl-yellow">training objective</span> — next-token prediction via cross-entropy loss,
+        (2) the <span class="hl-orange">optimization process</span> — the feedback loop that turns prediction error into parameter updates, and
+        (3) <span class="hl-purple">computation at scale</span> — thousands of GPUs running for weeks.
+      </span>
+    </div>
+  </div>
+
+  <div class="speaker-notes">
+    <button class="notes-toggle" onclick="this.nextElementSibling.classList.toggle('open')">speaker notes</button>
+    <div class="notes-body">
+      <p>
+        Ask: “When people say data, architecture, or learning — what do they actually mean?”
+        Reveal each ingredient, then pause on its decomposition before moving on.
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ SLIDE 4 — WORKSHOP ROADMAP ═══════ -->
+<div class="slide" id="slide-4">
+  <span class="section-tag">Setup</span>
+  <div class="badge day1">Roadmap</div>
+  <h2>Workshop roadmap</h2>
+  <div class="spacer-sm"></div>
+
+  <div class="grid-2">
+    <!-- DAY 1 -->
+    <div class="card" style="border-color: rgba(108,140,255,0.3);">
+      <div class="badge day1">Day 1 — Today</div>
+      <h3 style="color:var(--accent);">Why LLMs behave the way they do</h3>
+      <ul style="list-style:none; margin-top:0.625rem;">
+        <li class="small-text" style="padding:0.3rem 0 0.3rem 1.25rem; position:relative;">
+          <span style="position:absolute;left:0;color:var(--accent);">→</span>
+          Inference vs. training
+        </li>
+        <li class="small-text" style="padding:0.3rem 0 0.3rem 1.25rem; position:relative;">
+          <span style="position:absolute;left:0;color:var(--accent);">→</span>
+          Next-token prediction objective
+        </li>
+        <li class="small-text" style="padding:0.3rem 0 0.3rem 1.25rem; position:relative;">
+          <span style="position:absolute;left:0;color:var(--accent);">→</span>
+          Loss → gradients → parameter updates
+        </li>
+        <li class="small-text" style="padding:0.3rem 0 0.3rem 1.25rem; position:relative;">
+          <span style="position:absolute;left:0;color:var(--accent);">→</span>
+          Why next-token prediction works
+        </li>
+        <li class="small-text" style="padding:0.3rem 0 0.3rem 1.25rem; position:relative;">
+          <span style="position:absolute;left:0;color:var(--accent);">→</span>
+          From one update to a full training pipeline
+        </li>
+        <li class="small-text" style="padding:0.3rem 0 0.3rem 1.25rem; position:relative;">
+          <span style="position:absolute;left:0;color:var(--accent);">→</span>
+          Data work: collection → filtering → annotation
+        </li>
+      </ul>
+      <div class="callout info" style="margin-top:0.875rem;">
+        <span class="icon">i</span>
+        <span>Treat the model as a <strong>system being shaped.</strong></span>
+      </div>
+    </div>
+
+    <!-- DAY 2 -->
+    <div class="card" style="border-color: rgba(167,139,250,0.25); opacity:0.6;">
+      <div class="badge concept">Day 2 — Tomorrow</div>
+      <h3 style="color:var(--purple);">How a Transformer processes text and computes the next word</h3>
+      <ul style="list-style:none; margin-top:0.625rem;">
+        <li class="small-text" style="padding:0.3rem 0 0.3rem 1.25rem; position:relative;">
+          <span style="position:absolute;left:0;color:var(--purple);">→</span>
+          Tokenization & embeddings
+        </li>
+        <li class="small-text" style="padding:0.3rem 0 0.3rem 1.25rem; position:relative;">
+          <span style="position:absolute;left:0;color:var(--purple);">→</span>
+          Self-attention mechanics
+        </li>
+        <li class="small-text" style="padding:0.3rem 0 0.3rem 1.25rem; position:relative;">
+          <span style="position:absolute;left:0;color:var(--purple);">→</span>
+          Feed-forward layers
+        </li>
+        <li class="small-text" style="padding:0.3rem 0 0.3rem 1.25rem; position:relative;">
+          <span style="position:absolute;left:0;color:var(--purple);">→</span>
+          Full forward pass end-to-end
+        </li>
+        <li class="small-text" style="padding:0.3rem 0 0.3rem 1.25rem; position:relative;">
+          <span style="position:absolute;left:0;color:var(--purple);">→</span>
+          Connecting mechanics to behavior
+        </li>
+      </ul>
+      <div class="callout info" style="margin-top:0.875rem;">
+        <span class="icon">i</span>
+        <span>Treat it as a <strong>machine executing computation.</strong></span>
+      </div>
+    </div>
+  </div>
+
+  <div class="speaker-notes">
+    <button class="notes-toggle" onclick="this.nextElementSibling.classList.toggle('open')">
+      speaker notes
+    </button>
+    <div class="notes-body">
+      <p>
+        “You’ve already seen inference: context goes in, a next-token distribution comes out.
+        But that behavior only exists because of how the weights were trained.
+        Today is the causal story. Tomorrow we zoom all the way into the computation.”
+      </p>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════ SLIDE 5 — INFERENCE LOOP ═══════ -->
+<div class="slide" id="slide-5">
+  <span class="section-tag">Inference vs Training</span>
+  <div class="badge concept">Inference Loop</div>
+  <h2>The inference (use-time) loop</h2>
+
+  <p class="small-text">
+    At use time, the model runs a fixed computation.
+    The input text is tokenized once. After that, the model repeatedly predicts the next token,
+    which is decoded for display and appended to the context.
+  </p>
+
+  <div class="spacer"></div>
+
+  <div class="card" style="margin: 0 auto;">
+
+    <!-- ONE-TIME SETUP -->
+    <div class="flow" style="margin-bottom:0.625rem;">
+      <div class="flow-box data">Text<br>input</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box blue">Tokenize<br><span class="tiny">(one-time)</span></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box data">Context<br>tokens</div>
+    </div>
+
+    <!-- REPEATED LOOP -->
+    <div class="flow">
+      <div class="flow-box data">Context<br>tokens</div>
+      <div class="flow-arrow loop-arrow-anim">→</div>
+
+      <div class="flow-box model">
+        Transformer Blocks<br><span class="tiny">(fixed)</span>
+      </div>
+      <div class="flow-arrow loop-arrow-anim">→</div>
+
+      <div class="flow-box yellow">
+        Logits<br><span class="tiny">(scores for each token)</span>
+      </div>
+      <div class="flow-arrow loop-arrow-anim">→</div>
+
+      <div class="flow-box pink">Softmax</div>
+      <div class="flow-arrow loop-arrow-anim">→</div>
+
+      <div class="flow-box green">Sample<br>next token</div>
+      <div class="flow-arrow loop-arrow-anim">→</div>
+
+      <div class="flow-box purple">
+        Decode<br><span class="tiny">(token → text)</span>
+      </div>
+    </div>
+
+    <div style="text-align:center; margin-top:0.5rem;">
+      <span class="tiny" style="color:var(--orange);">
+        ↻ append token to context and repeat
+      </span>
+    </div>
+  </div>
+
+  <div class="spacer"></div>
+
+  <div class="token-row" id="inferenceDemo">
+    <span class="tok input">The</span>
+    <span class="tok input">capital</span>
+    <span class="tok input">of</span>
+    <span class="tok input">Pakistan</span>
+    <span class="tok input">is</span>
+    <span class="tok blank" id="infCurrent" onclick="animateInference()">click</span>
+  </div>
+
+  <p class="tiny" id="infHint">
+    Click the blank to simulate one inference step
+  </p>
+
+  <div class="speaker-notes">
+    <button class="notes-toggle" onclick="this.nextElementSibling.classList.toggle('open')">
+      speaker notes
+    </button>
+    <div class="notes-body">
+      <p>
+        “The model never produces words directly — it produces token IDs.
+        Decoding just turns those IDs into readable text.
+        The loop itself runs entirely at the token level.”
+      </p>
+    </div>
+  </div>
+</div>
+
+
+
+
+<!-- ═══════ SLIDE 6 — TRAINING LOOP ═══════ -->
+<div class="slide" id="slide-6">
+  <span class="section-tag">Inference vs Training</span>
+  <div class="badge concept">Training Loop</div>
+  <h2>The training (learning) loop</h2>
+
+  <p class="small-text">
+    Training uses the <strong>same forward pass</strong> as inference — but adds a teacher.
+    The error flows <em>backward</em> through the network, reshaping it one batch at a time.
+  </p>
+
+  <div class="spacer-sm"></div>
+
+  <!-- Step controls -->
+  <div style="display:flex; gap:0.375rem; justify-content:center; flex-wrap:wrap; margin-bottom:0.875rem;">
+    <button class="reveal-btn" onclick="trainStep(1)" id="trainBtn1">1 · Forward</button>
+    <button class="reveal-btn" onclick="trainStep(2)" id="trainBtn2">2 · Teacher</button>
+    <button class="reveal-btn" onclick="trainStep(3)" id="trainBtn3">3 · Loss</button>
+    <button class="reveal-btn" onclick="trainStep(4)" id="trainBtn4">4 · Backprop</button>
+    <button class="reveal-btn" onclick="trainStep(5)" id="trainBtn5">5 · Update</button>
+  </div>
+
+  <div class="card" style="margin:0 auto; overflow:visible; position:relative;">
+
+    <!-- ── PHASE 1: FORWARD PASS (same as inference) ── -->
+    <div class="flow" id="trainFwd" style="opacity:0.25; transition:opacity 0.4s;">
+      <div class="flow-box data">Context<br>tokens</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box model" id="trainTransformer">Transformer<br>Blocks<br><span class="tiny">(weights \(\theta\))</span></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box yellow">Logits<br><span class="tiny">(raw scores)</span></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box pink">Softmax</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box green">Predicted<br>next token</div>
+    </div>
+
+    <!-- ── PHASE 2: GROUND TRUTH COMPARISON ── -->
+    <div id="trainCompare" style="display:none;">
+      <div style="display:flex; align-items:center; justify-content:center; gap:1rem; margin:0.625rem 0 0.25rem;">
+        <div class="flow-box green" style="opacity:0.65; min-width:5.625rem;">Predicted<br><span class="tiny">\(P(\text{token})\)</span></div>
+        <span style="font-size:1.6rem; color:var(--red); font-weight:700;">\(\ne\)</span>
+        <div class="flow-box target" style="min-width:5.625rem;">Actual<br><span class="tiny">(from data)</span></div>
+      </div>
+      <p class="tiny" style="text-align:center; color:var(--text-dim); margin:0;">
+        teacher forcing — the correct next token is always known during training
+      </p>
+    </div>
+
+    <!-- ── PHASE 3: LOSS COMPUTATION ── -->
+    <div id="trainLoss" style="display:none; text-align:center; margin:0.5rem 0;">
+      <div style="color:var(--text-dim); font-size:1.1rem;">&#x2193;</div>
+      <div class="flow-box loss" style="display:inline-block;">
+        Cross-Entropy Loss<br>
+        <span class="tiny">\(\mathcal{L} = -\log P(\text{correct token})\)</span>
+      </div>
+      <p class="tiny" style="color:var(--red); margin:0.25rem 0 0;">
+        "How surprised was the model by the right answer?"
+      </p>
+    </div>
+
+    <!-- ── PHASE 4: BACKPROPAGATION ── -->
+    <div id="trainBackprop" style="display:none; margin-top:0.5rem;">
+      <p class="tiny" style="text-align:center; color:var(--orange); margin:0 0 0.375rem;">
+        &#x2193; error signal flows backward through every layer (chain rule)
+      </p>
+      <div class="flow flow-backward">
+        <div class="flow-box param">\(\frac{\partial \mathcal{L}}{\partial \theta}\)<br><span class="tiny">gradient for<br>every weight</span></div>
+        <div class="flow-arrow">&larr;</div>
+        <div class="flow-box grad">Backpropagate<br><span class="tiny">layer \(N \to N-1 \to \dots \to 1\)</span></div>
+        <div class="flow-arrow">&larr;</div>
+        <div class="flow-box loss">\(\mathcal{L}\)<br><span class="tiny">error at<br>output</span></div>
+      </div>
+    </div>
+
+    <!-- ── PHASE 5: WEIGHT UPDATE + FEEDBACK LOOP ── -->
+    <div id="trainUpdate" style="display:none; text-align:center; margin-top:0.5rem;">
+      <div style="color:var(--text-dim); font-size:1.1rem;">&#x2193;</div>
+      <div class="flow-box param" style="display:inline-block; border-width:2px;">
+        \(\theta \leftarrow \theta - \eta \cdot \nabla \mathcal{L}\)<br>
+        <span class="tiny">nudge every weight to reduce the loss</span>
+      </div>
+      <div style="margin-top:0.75rem;">
+        <span style="color:var(--orange); font-size:1rem;">
+          &#x21BB; updated weights feed back into the Transformer — repeat with next batch
+        </span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Step explanation callout -->
+  <div id="trainExplain" class="callout info" style="margin:0.625rem auto 0; display:none;">
+    <span class="icon">i</span>
+    <span id="trainExplainText"></span>
+  </div>
+
+  <div class="speaker-notes">
+    <button class="notes-toggle" onclick="this.nextElementSibling.classList.toggle('open')">
+      speaker notes
+    </button>
+    <div class="notes-body">
+      <p>
+        Walk through each step. Emphasize: "The forward pass is identical to inference.
+        Training only adds the teacher signal and backward pass.
+        Backpropagation is just the chain rule applied mechanically —
+        for each weight, how much did it contribute to the error?
+        Then nudge it to contribute less."
+      </p>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════ SLIDE 7 — TRAINING OBJECTIVE ═══════ -->
+<div class="slide" id="slide-7">
+  <span class="section-tag">Training Objective</span>
+  <div class="badge concept">Objective</div>
+  <h2>The training objective</h2>
+
+  <p class="small-text">
+    Objective: make the model assign high probability to the training text.
+    With a causal language model, this factorizes into next-token prediction at every position.
+  </p>
+
+  <div class="spacer-sm"></div>
+
+  <div class="card">
+    <p class="small-text" style="margin-bottom:0.625rem;">
+      Given a token sequence <span class="hl">\(x_1, x_2, \ldots, x_T\)</span>, training uses <span class="hl-yellow">teacher forcing</span>:
+    </p>
+
+    <div class="grid-2" style="gap:0.875rem;">
+      <div>
+        <p class="tiny" style="margin:0 0 0.375rem 0; color:var(--text-dim);">Inputs (prefixes)</p>
+        <div class="token-row" style="font-size:0.95rem;">
+          <span class="tok input">\(x_1\)</span>
+          <span class="tok input">\(x_2\)</span>
+          <span class="tok input" style="color:var(--text-dim);">\(\ldots\)</span>
+          <span class="tok input">\(x_{T-1}\)</span>
+        </div>
+      </div>
+
+      <div>
+        <p class="tiny" style="margin:0 0 0.375rem 0; color:var(--text-dim);">Targets (next tokens)</p>
+        <div class="token-row" style="font-size:0.95rem;">
+          <span class="tok target">\(x_2\)</span>
+          <span class="tok target">\(x_3\)</span>
+          <span class="tok target" style="color:var(--text-dim);">\(\ldots\)</span>
+          <span class="tok target">\(x_T\)</span>
+        </div>
+      </div>
+    </div>
+
+    <p class="tiny" style="margin-top:0.625rem;">
+      At each position \(t\), the model outputs a distribution \(P_{\theta}(\,\cdot \mid x_{\le t})\) and is scored on the true next token \(x_{t+1}\).
+    </p>
+  </div>
+
+  <div class="spacer-sm"></div>
+
+  <div class="callout info">
+    <span class="icon">→</span>
+    <span>
+      <strong>Objective (maximize likelihood):</strong>
+      maximize the average log-probability the model assigns to the true next token.
+    </span>
+  </div>
+
+  <div class="math math-big">
+    \[
+      \max_{\theta}\;\; \frac{1}{T-1}\sum_{t=1}^{T-1}\log P_{\theta}(x_{t+1}\mid x_{\le t})
+    \]
+  </div>
+
+  <div class="callout warn">
+    <span class="icon">!</span>
+    <span>
+      <strong>Equivalent form (minimize loss):</strong>
+      minimizing negative log-likelihood is the same objective, written as a loss function (cross-entropy).
+    </span>
+  </div>
+
+  <div class="math math-big">
+    \[
+      \mathcal{L}(\theta)
+      = -\frac{1}{T-1}\sum_{t=1}^{T-1}\log P_{\theta}(x_{t+1}\mid x_{\le t})
+    \]
+  </div>
+
+  <p class="tiny" style="text-align:center;">
+    Lower loss means the model assigns higher probability to the tokens that actually occurred in the dataset
+  </p>
+
+  <div class="spacer"></div>
+
+  <div class="callout warn">
+    <span class="icon">!</span>
+    <span>
+      <strong>Key insight:</strong> this is <span class="hl-orange">distribution matching</span>, not decision-making:
+      it reshapes probabilities to fit observed text, without any explicit notion of truth or goals.
+    </span>
+  </div>
+
+  <div class="spacer-sm"></div>
+
+  <div class="callout info">
+    <span class="icon">→</span>
+    <span>
+      <strong>Next:</strong> one training iteration end-to-end: forward → loss → backward → update.
+    </span>
+  </div>
+
+  <div class="speaker-notes">
+    <button class="notes-toggle" onclick="this.nextElementSibling.classList.toggle('open')">speaker notes</button>
+    <div class="notes-body">
+      <p>
+        “State the objective first: maximize likelihood of the training text under the model. Then show the equivalent loss: negative log-likelihood (cross-entropy).
+        Emphasize the shift: inputs are prefixes, targets are the next tokens.”
+      </p>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════ SLIDE 8 — WHAT'S NOT IN THE LOSS ═══════ -->
+<div class="slide" id="slide-8">
+  <span class="section-tag">Pretraining Objective</span>
+  <div class="badge concept">Key Insight</div>
+  <h2>What the loss does <em>not</em> contain</h2>
+  <p class="small-text">After tracing one full iteration, notice what supervision signal the model actually receives. Training has no explicit term for any of these; if they emerge, they must be <em>instrumentally useful for predicting text</em>.</p>
+  <div class="spacer"></div>
+  <div class="not-list">
+    <div class="not-item">Truth</div>
+    <div class="not-item">Reasoning</div>
+    <div class="not-item">Helpfulness</div>
+    <div class="not-item">Safety</div>
+    <div class="not-item">Intelligence</div>
+    <div class="not-item">Goals</div>
+    <div class="not-item">World model</div>
+    <div class="not-item">Consistency</div>
+  </div>
+  <div class="spacer-sm"></div>
+  <div class="math">
+    \[\mathcal{L} = -\log P_{\theta}(x_{t+1} \mid x_{\le t})\] <span style="color:var(--text-dim); font-size:0.82rem;"> that's the ENTIRE signal</span>
+  </div>
+  <div class="spacer-sm"></div>
+  <div class="callout success">
+    <span class="icon">i</span>
+    <span><strong>The narrow bottleneck:</strong> Everything the model learns has to pass through this single constraint — lowering next-token prediction error. This explains both <span class="hl-green">emergence</span> and <span class="hl-red">brittleness</span>.</span>
+  </div>
+  <div class="spacer-sm"></div>
+  <div class="callout question">
+    <span class="icon">?</span>
+    <span><strong>Think about it:</strong> Why would a model learn facts, reasoning, or code from only this signal? Next we'll zoom back out from one step to the full repeated training loop.</span>
+  </div>
+  <div class="speaker-notes">
+    <button class="notes-toggle" onclick="this.nextElementSibling.classList.toggle('open')">speaker notes</button>
+    <div class="notes-body"><p>"There are no terms here for truth, reasoning, helpfulness, safety, goals, or intelligence. Everything the model learns has to pass through this very narrow bottleneck — lowering next-token prediction error."</p></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════ -->
+<!--  SLIDES 9–14 : NEXT-TOKEN LOSS DEEP DIVE          -->
+<!--  (embedded from next-token-loss.html)              -->
+<!-- ═══════════════════════════════════════════════════ -->
+
+<!-- ═══════ SLIDE 9 — THE TASK ═══════ -->
+<div class="slide" id="slide-9">
+  <span class="section-tag">Deep Dive: One Update</span>
+  <div class="badge deepdive">Step 1 — The Task</div>
+  <h2>Predict the next token</h2>
+  <p class="small-text">Let's jump in and take a deeper dive into one training iteration. We'll trace one concrete example from input context to parameter update.</p>
+  <div class="spacer-sm"></div>
+  <div class="card">
+    <div class="context-row">
+      <span class="ctx-tok">"The</span>
+      <span class="ctx-tok">capital</span>
+      <span class="ctx-tok">of</span>
+      <span class="ctx-tok">Pakistan</span>
+      <span class="ctx-tok">is</span>
+      <span class="ctx-blank">???</span>
+    </div>
+    <div class="spacer-sm"></div>
+    <div class="callout info" style="margin:0;">
+      <span class="icon">i</span>
+      <span>The model receives <span class="hl">input context tokens</span> and must produce a probability for <em>every word in its vocabulary</em> as the next token. The training data already contains the answer — we just hide it and ask the model to guess.</span>
+    </div>
+  </div>
+  <div class="speaker-notes">
+    <button class="notes-toggle" onclick="this.nextElementSibling.classList.toggle('open')">speaker notes</button>
+    <div class="notes-body"><p>Set up the concrete example. This is one single training step — we'll trace it all the way through loss computation to parameter update.</p></div>
+  </div>
+</div>
+
+<!-- ═══════ SLIDE 10 — FORWARD PASS ═══════ -->
+<div class="slide" id="slide-10">
+  <span class="section-tag">Deep Dive: One Update</span>
+  <div class="badge deepdive">Step 2 — Forward Pass</div>
+  <h2>The model outputs a probability distribution</h2>
+  <p class="small-text">The input tokens flow through billions of parameters — attention layers, feed-forward networks — and out comes a <span class="hl">probability distribution over the entire vocabulary</span>.</p>
+
+  <div class="spacer-sm"></div>
+  <div>
+    <div class="context-row" style="justify-content:center;">
+      <span class="ctx-tok">"The</span>
+      <span class="ctx-tok">capital</span>
+      <span class="ctx-tok">of</span>
+      <span class="ctx-tok">Pakistan</span>
+      <span class="ctx-tok">is</span>
+    </div>
+    <div class="arrow-down">↓</div>
+    <div class="network-box">
+      <div>
+        <div class="nn-label">Transformer</div>
+        <div class="nn-sub">attention + FFN layers</div>
+      </div>
+      <span class="param-badge">\(\sim 7 \times 10^9\) params</span>
+    </div>
+    <div class="arrow-down">↓</div>
+    <div class="chart-title" style="color:var(--text-dim); margin-top:0.5rem;">Model's predicted distribution (softmax output)</div>
+    <div id="predictedChart"></div>
+  </div>
+  <div class="spacer-sm"></div>
+  <div class="callout info">
+    <span class="icon">i</span>
+    <span>The final layer outputs a <span class="hl">logit</span> for each vocabulary token, then <span class="hl">softmax</span> converts these to probabilities satisfying \(\sum_i p_i = 1\). An untrained model spreads probability almost evenly — basically guessing randomly.</span>
+  </div>
+</div>
+
+<!-- ═══════ SLIDE 11 — TARGET DISTRIBUTION ═══════ -->
+<div class="slide" id="slide-11">
+  <span class="section-tag">Deep Dive: One Update</span>
+  <div class="badge deepdive">Step 3 — The Target</div>
+  <h2>What the model <em>should</em> have predicted</h2>
+  <p class="small-text">We know the correct next token from the training data. The <span class="hl-green">target distribution</span> puts \(100\%\) probability on the correct answer.</p>
+  <div class="spacer-sm"></div>
+  <div class="dual-charts">
+    <div class="chart-col">
+      <div class="chart-title" style="color:var(--accent);">Model's prediction</div>
+      <div id="dualPredicted"></div>
+    </div>
+    <div class="chart-col">
+      <div class="chart-title" style="color:var(--green);">Target (ground truth)</div>
+      <div id="dualTarget"></div>
+    </div>
+  </div>
+  <div class="spacer-sm"></div>
+  <div class="callout warn">
+    <span class="icon">!</span>
+    <span>The model only gave <span class="hl" id="correctPctText">\(8\%\)</span> to <span class="hl-green">"Islamabad"</span>, but the target says it should be <span class="hl-green">\(100\%\)</span>. That gap is what the <span class="hl-red">loss function</span> measures.</span>
+  </div>
+</div>
+
+<!-- ═══════ SLIDE 12 — LOSS COMPUTATION ═══════ -->
+<div class="slide" id="slide-12">
+  <span class="section-tag">Deep Dive: One Update</span>
+  <div class="badge deepdive">Step 4 — Compute the Loss</div>
+  <h2>Cross-entropy loss: how wrong is the model?</h2>
+  <p class="small-text">The loss measures the gap between prediction and target. For next-token prediction, we use <span class="hl-yellow">cross-entropy loss</span>.</p>
+  <div class="spacer-sm"></div>
+  <div class="math math-big" style="max-width:38rem;" id="lossFormula">
+    \[\mathcal{L} = -\log(P_{\text{model}}(\text{Islamabad})) = -\log(0.08) = 2.53\]
+  </div>
+  <div class="loss-display">
+    <div class="loss-box">
+      <div class="label">\(P(\text{Islamabad})\)</div>
+      <div class="value high" id="lossProbDisplay">\(0.08\)</div>
+    </div>
+    <div class="comparison-arrow">→</div>
+    <div class="loss-box">
+      <div class="label">\(\mathcal{L}\)</div>
+      <div class="value high" id="lossValueDisplay">\(2.53\)</div>
+      <div class="formula">\(\mathcal{L} = -\log(p)\)</div>
+    </div>
+  </div>
+  <div style="max-width:28rem; margin:0 auto;">
+    <div style="display:flex; justify-content:space-between; gap: 1.5rem; font-size:0.72rem; color:var(--text-dim); margin-bottom:0.125rem;">
+      <span class="hl-green">low loss (good)</span>
+      <span class="hl-red">high loss (bad)</span>
+    </div>
+    <div class="loss-meter">
+      <div class="loss-meter-fill" id="lossMeter" style="width:0%; background: linear-gradient(90deg, var(--green), var(--yellow), var(--red));"></div>
+    </div>
+  </div>
+  <div class="spacer-sm"></div>
+  <div class="callout info">
+    <span class="icon">i</span>
+    <span><span class="hl-yellow">Intuition:</span> if the model gave \(100\%\) to "Islamabad", \(\mathcal{L} = -\log(1) =\) <span class="hl-green">\(0\)</span> (perfect). If only \(1\%\), \(\mathcal{L} = -\log(0.01) \approx\) <span class="hl-red">\(4.6\)</span> (terrible). The loss captures "how surprised the model is by the right answer."</span>
+  </div>
+</div>
+
+<!-- ═══════ SLIDE 13 — BACKPROPAGATION ═══════ -->
+<div class="slide" id="slide-13">
+  <span class="section-tag">Deep Dive: One Update</span>
+  <div class="badge deepdive">Step 5 — Backpropagation</div>
+  <h2>Compute gradients and update parameters</h2>
+  <p class="small-text">The loss signal flows <em>backwards</em> through the network. For each parameter, we compute: "how much would changing this parameter reduce the loss?" Then we nudge every parameter in that direction.</p>
+  <div class="spacer-sm"></div>
+  <div class="update-flow">
+    <div class="flow-node loss-node">\(\mathcal{L} = 2.53\)</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-node grad-node">\(\frac{\partial \mathcal{L}}{\partial \theta}\)<br><small>compute gradients</small></div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-node param-node">\(\theta \leftarrow \theta - \eta \nabla \mathcal{L}\)<br><small>update params</small></div>
+  </div>
+  <div class="backprop-arrows">
+    <span>◂</span><span>◂</span><span>◂</span><span>◂</span>
+    <span style="font-size:0.8rem; color:var(--text-dim); animation:none; margin-left:0.25rem;">gradients flow backward</span>
+  </div>
+  <div class="math" style="max-width:38rem; margin:0.625rem auto;">
+    \[\theta_{\text{new}} = \theta_{\text{old}} - \eta \frac{\partial \mathcal{L}}{\partial \theta}\]
+  </div>
+  <div class="callout info">
+    <span class="icon">i</span>
+    <span><span class="hl-purple">\(\eta\) (eta)</span> is the <strong>learning rate</strong> — a small number (e.g., \(10^{-4}\)) that controls step size. The <span class="hl-orange">gradient \(\frac{\partial \mathcal{L}}{\partial \theta}\)</span> tells us the direction and magnitude of adjustment needed for each of the billions of parameters.</span>
+  </div>
+  <div class="speaker-notes">
+    <button class="notes-toggle" onclick="this.nextElementSibling.classList.toggle('open')">speaker notes</button>
+    <div class="notes-body"><p>"This is the part that actually makes learning happen. The gradient is a vector pointing in the direction of steepest increase of the loss — so we go the opposite direction to decrease it."</p></div>
+  </div>
+</div>
+
+<!-- ═══════ SLIDE 14 — AFTER UPDATE ═══════ -->
+<div class="slide" id="slide-14">
+  <span class="section-tag">Deep Dive: One Update</span>
+  <div class="badge deepdive">Step 6 — After Update</div>
+  <h2>The model improves!</h2>
+  <p class="small-text">That completes one training iteration: after the update, the model assigns <em>more</em> probability to the correct token. Repeating this loop at scale is how the model learns language.</p>
+  <div class="spacer-sm"></div>
+  <div class="before-after">
+    <div class="ba-col before">
+      <div class="ba-label">Before update</div>
+      <div id="beforeBars"></div>
+    </div>
+    <div class="ba-arrow">→</div>
+    <div class="ba-col after">
+      <div class="ba-label">After update</div>
+      <div id="afterBars"></div>
+    </div>
+  </div>
+  <div class="loss-display">
+    <div class="loss-box">
+      <div class="label">Loss before</div>
+      <div class="value high">\(2.53\)</div>
+    </div>
+    <div class="comparison-arrow">→</div>
+    <div class="loss-box">
+      <div class="label">Loss after</div>
+      <div class="value low" id="lossAfterVal">\(1.27\)</div>
+    </div>
+  </div>
+  <div class="callout success">
+    <span class="icon">✓</span>
+    <span>The model now assigns <span class="hl-green" id="afterCorrectPct">\(28\%\)</span> to "Islamabad" (up from <span class="hl-red">\(8\%\)</span>). The loss dropped from <span class="hl-red">\(2.53\)</span> to <span class="hl-green" id="afterLossText">\(1.27\)</span>. After many more steps, the model will learn to confidently predict "Islamabad" — and generalize to countless other facts.</span>
+  </div>
+</div>
+
+<!-- ═══════ SLIDE 22 — LOCAL OBJECTIVE, GLOBAL PRESSURE ═══════ -->
+<div class="slide" id="slide-22">
+  <span class="section-tag">Reasoning Emergence</span>
+  <div class="badge concept">Key Idea</div>
+  <h2>Why next-token prediction can produce reasoning-like behavior</h2>
+  <p class="small-text"><strong>Local objective, global pressure:</strong> the training signal is local (predict one token), but minimizing that error often requires building global structure over the context.</p>
+  <div class="spacer-sm"></div>
+  <div class="card">
+    <div class="math" style="margin:0;">
+      \[\text{Objective: } \max_{\theta} \; P_{\theta}(x_{t+1} \mid x_{\le t}) \text{ for each token position}\]
+    </div>
+    <div class="spacer-sm"></div>
+    <button class="reveal-btn" onclick="revealReasoningPressure()">Reveal what the model often must infer</button>
+    <div class="pressure-grid" id="reasoningPressureGrid">
+      <div class="pressure-card">
+        <div class="title">Entities</div>
+        <p class="small-text">Who or what is being discussed, and how references resolve across sentences.</p>
+      </div>
+      <div class="pressure-card">
+        <div class="title">Causal Cues</div>
+        <p class="small-text">What caused what, and which events enable or block later outcomes.</p>
+      </div>
+      <div class="pressure-card">
+        <div class="title">Constraints</div>
+        <p class="small-text">What is consistent or impossible given timing, access, and prior facts.</p>
+      </div>
+      <div class="pressure-card">
+        <div class="title">Multi-step Structure</div>
+        <p class="small-text">What comes next in a plan, argument, proof, or narrative arc.</p>
+      </div>
+    </div>
+  </div>
+  <div class="hidden-content" id="reasoningEmergenceQuote">
+    <div class="callout success">
+      <span class="icon">i</span>
+      <span><strong>So "reasoning" can emerge as an instrumentally useful strategy for reducing prediction error,</strong> even when it is never explicitly specified as a training target.</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ SLIDE 23 — PAKISTANI DRAMA EXAMPLE ═══════ -->
+<div class="slide" id="slide-23">
+  <span class="section-tag">Reasoning Emergence</span>
+  <div class="badge discussion">Interactive Example</div>
+  <h2>Next-token prediction in a Pakistani drama</h2>
+  <p class="small-text">Nothing explicitly states the answer. To predict the next words, the model must integrate distributed constraints.</p>
+  <div class="spacer-sm"></div>
+  <div class="drama-script">
+    Karachi mein aik shaam...<br>
+    10:30 baje Shahbaz Ahmed apne office mein be-harkat mila...<br>
+    thori dair baad pata chala ke maut ki wajah zehr tha...<br>
+    Us waqt office mein sirf teen log thay...<br>
+    Farah, jo us ki secretary thi...<br>
+    Salman, jo us ka business partner tha...<br>
+    aur Rukhsana, jo safai karti thi...<br>
+    Farah 9:50 baje office se nikal chuki thi...<br>
+    Salman 10:00 baje meeting ke liye bahar gaya...<br>
+    10:20 baje Rukhsana ne Shahbaz ke liye chai banayi...<br>
+    Forensic report ke mutabiq zehr 10:20 aur 10:30 ke darmiyan liya gaya...<br>
+    CCTV se yeh bhi clear hua ke 10:00 ke baad sirf aik shakhs pantry mein gaya...<br>
+    ...<br>
+    Investigation ke baad shahbaz ki family ne police walon se pucha keh qatil kon tha.<br>
+    Police ne btaya keh tamaam subuton ke mutabik qatil <span class="ntp-blank" id="dramaKillerBlank" data-answer="Rukhsana thi">___</span>
+  </div>
+  <div class="drama-choices" id="dramaChoices">
+    <button class="nav-btn drama-choice" onclick="chooseDramaSuspect('Farah', this)">Farah</button>
+    <button class="nav-btn drama-choice" onclick="chooseDramaSuspect('Salman', this)">Salman</button>
+    <button class="nav-btn drama-choice" onclick="chooseDramaSuspect('Rukhsana', this)">Rukhsana</button>
+    <button class="nav-btn" onclick="revealDramaAnswer()">Reveal token</button>
+  </div>
+  <div class="spacer-sm"></div>
+  <div class="callout warn" id="dramaResult">
+    <span class="icon">?</span>
+    <span>Select a suspect. Then check whether your choice satisfies the timing + access constraints.</span>
+  </div>
+  <div class="hidden-content" id="dramaWhy">
+    <div class="callout info">
+      <span class="icon">i</span>
+      <span><strong>Notice:</strong> no line explicitly says "Rukhsana qatil hai." The required information is distributed across the text. Correct next-token prediction requires integrating entity tracking, timing, access, and consistency constraints introduced earlier.</span>
+    </div>
+    <div class="callout success" style="margin-top:0.625rem;">
+      <span class="icon">→</span>
+      <span><strong>That pressure is exactly what next-token prediction creates during training.</strong></span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ SLIDE 24 — LOCAL OBJECTIVE TO GLOBAL STRUCTURE ═══════ -->
+<div class="slide" id="slide-24">
+  <span class="section-tag">Reasoning Emergence</span>
+  <div class="badge concept">Takeaway</div>
+  <h2>In the drama, the next token depends on the whole story</h2>
+  <p class="small-text">Nothing explicitly says who the killer is. The correct continuation is implied by timing + access constraints distributed across many lines.</p>
+  <div class="spacer-sm"></div>
+  <div class="grid-2">
+    <div class="card">
+      <h3 style="color:var(--accent);">What the model does</h3>
+      <div class="math" style="margin:0.5rem 0 0;">
+        \[\hat{x}_{t+1} \sim P_{\theta}(x_{t+1} \mid x_{\le t})\]
+      </div>
+      <p class="tiny" style="margin-top:0.5rem;">Given a prefix, output a distribution over the next token (then sample/choose one). During training, we simply reward higher probability on the true continuation.</p>
+    </div>
+    <div class="card">
+      <h3 style="color:var(--green);">To predict the blank, it must track</h3>
+      <ul class="obj-list" style="margin-top:0.5rem;">
+        <li data-num="1"><strong>Time window:</strong> when the poison could have been taken (10:20–10:30)</li>
+        <li data-num="2"><strong>Access:</strong> who could have reached the pantry during that window (departures + CCTV)</li>
+        <li data-num="3"><strong>Consistency:</strong> reconcile all lines into one coherent timeline</li>
+      </ul>
+    </div>
+  </div>
+  <div class="spacer-sm"></div>
+  <div class="callout success">
+    <span class="icon">✓</span>
+    <span><strong>Key point:</strong> the supervision is still just the next token — but getting it right rewards internal “case-file” representations (suspects, timing, constraints).</span>
+  </div>
+  <div class="callout info">
+    <span class="icon">i</span>
+    <span>When we call it "reasoning," we’re often pointing at this: a model that maintains a coherent latent state so its next-token distribution respects the story’s global constraints.</span>
+  </div>
+  <div class="speaker-notes">
+    <button class="notes-toggle" onclick="this.nextElementSibling.classList.toggle('open')">speaker notes</button>
+    <div class="notes-body"><p>Immediately after the drama slide: emphasize that the model is only ever asked to continue text, but the blank forces it to track a coherent timeline + access constraints. The “reasoning” is the internal state that makes the correct continuation likely, not an explicit training label.</p></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!--  BACK TO MAIN PRESENTATION FLOW               -->
+<!-- ═══════════════════════════════════════════════ -->
+
+<!-- ═══════ SLIDE 16 — YOU ARE THE LANGUAGE MODEL ═══════ -->
+<div class="slide" id="slide-16">
+  <span class="section-tag">Activity</span>
+  <div class="badge activity">Interactive</div>
+  <h2>You Are the Language Model</h2>
+  <p class="small-text">Now you run the same objective yourself: predict the next token. Notice what <em>kind of knowledge</em> each example requires. This is why next-token training yields more than memorization.</p>
+  <div class="spacer-sm"></div>
+  <div style="display:flex; flex-direction:column; gap:0.625rem;" id="ntpGame">
+    <div class="ntp-sentence">
+      The Eiffel Tower is located in <span class="ntp-blank" onclick="revealNTP(this)" data-answer="Paris">???</span>
+      <span class="ntp-concept-btn" onclick="revealNTPConcept(this)">concept?</span>
+      <span class="ntp-tag fact">world knowledge</span>
+    </div>
+    <div class="ntp-sentence">
+      After the rain stopped, the children ran outside to <span class="ntp-blank" onclick="revealNTP(this)" data-answer="play">???</span>
+      <span class="ntp-concept-btn" onclick="revealNTPConcept(this)">concept?</span>
+      <span class="ntp-tag lang">language / common sense</span>
+    </div>
+    <div class="ntp-sentence">
+      def fibonacci(n):<br>&nbsp;&nbsp;if n <= 1: return n<br>&nbsp;&nbsp;return fibonacci(n-1) + <span class="ntp-blank" onclick="revealNTP(this)" data-answer="fibonacci(n-2)">???</span>
+      <span class="ntp-concept-btn" onclick="revealNTPConcept(this)">concept?</span>
+      <span class="ntp-tag code">code understanding</span>
+    </div>
+    <div class="ntp-sentence">
+      If all roses are flowers, and all flowers need water, then all roses need <span class="ntp-blank" onclick="revealNTP(this)" data-answer="water">???</span>
+      <span class="ntp-concept-btn" onclick="revealNTPConcept(this)">concept?</span>
+      <span class="ntp-tag logic">logical reasoning</span>
+    </div>
+    <div class="ntp-sentence">
+      The sum of \(127\) and \(385\) is <span class="ntp-blank" onclick="revealNTP(this)" data-answer="512">???</span>
+      <span class="ntp-concept-btn" onclick="revealNTPConcept(this)">concept?</span>
+      <span class="ntp-tag math">arithmetic</span>
+    </div>
+    <div class="ntp-sentence">
+      She said "I'm not angry," but the tone of her voice suggested she was actually quite <span class="ntp-blank" onclick="revealNTP(this)" data-answer="upset">???</span>
+      <span class="ntp-concept-btn" onclick="revealNTPConcept(this)">concept?</span>
+      <span class="ntp-tag lang">pragmatics / subtext</span>
+    </div>
+  </div>
+  <div class="spacer-sm"></div>
+  <button class="reveal-btn" onclick="revealAllNTP()">Reveal all answers</button>
+  <div class="speaker-notes">
+    <button class="notes-toggle" onclick="this.nextElementSibling.classList.toggle('open')">speaker notes</button>
+    <div class="notes-body"><p>Let participants think about each one before clicking. The point: "just predicting the next word" requires world knowledge, code understanding, logic, arithmetic, pragmatics. To predict well, you must understand deeply.</p></div>
+  </div>
+</div>
+
+<!-- ═══════ SLIDE 29 — PRETRAINING AT SCALE (STEP 4) ═══════ -->
+<div class="slide" id="slide-29">
+  <span class="section-tag">Scale &amp; Data</span>
+  <div class="badge concept">Scale</div>
+  <h2>Pretraining at scale: next-token prediction repeated billions of times</h2>
+  <p class="small-text">One objective, huge exposure: the model repeatedly predicts the next token across a massive distribution. This is where the model first learns language itself: structure, syntax, grammar, and broad semantic regularities.</p>
+  <div class="spacer-sm"></div>
+  <div class="card">
+    <div class="math" style="margin:0;">
+      \[\min_{\theta}\;-\log P_{\theta}(x_{t+1} \mid x_{\le t})\]
+    </div>
+    <div class="spacer-sm"></div>
+    <div class="flow" style="justify-content:flex-start; margin:0;">
+      <div class="flow-box data">Context tokens</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box model">Predict next token</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box loss">Compute loss</div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-box grad">Update weights</div>
+      <div class="flow-loop loop-arrow-anim">↺</div>
+    </div>
+  </div>
+  <div class="spacer-sm"></div>
+  <div class="grid-3">
+    <div class="card data-stat">
+      <div class="big-num" style="color:var(--cyan);">2T-5T</div>
+      <div class="stat-label">usable training tokens</div>
+    </div>
+    <div class="card data-stat">
+      <div class="big-num" style="color:var(--accent);">1k+</div>
+      <div class="stat-label">GPUs in parallel</div>
+    </div>
+    <div class="card data-stat">
+      <div class="big-num" style="color:var(--orange);">weeks</div>
+      <div class="stat-label">continuous optimization</div>
+    </div>
+  </div>
+  <div class="spacer-sm"></div>
+  <div class="callout success">
+    <span class="icon">✓</span>
+    <span><strong>What emerges first:</strong> fluent language modeling (syntax, grammar, coherence) plus broad world/statistical knowledge needed for sensible continuation.</span>
+  </div>
+  <div class="callout info">
+    <span class="icon">i</span>
+    <span><strong>Then specialization:</strong> once this base is solid, teams often run a lighter <strong>mid-training</strong> phase on targeted corpora (for example code, math, legal, or scientific text) to tilt capability toward specific domains.</span>
+  </div>
+  <div class="callout info">
+    <span class="icon">→</span>
+    <span><strong>Key intuition:</strong> capability is not magic; it is the expected result of broad exposure under a scalable objective.</span>
+  </div>
+  <div class="speaker-notes">
+    <button class="notes-toggle" onclick="this.nextElementSibling.classList.toggle('open')">speaker notes</button>
+    <div class="notes-body"><p>Emphasize sequence: pretraining builds general language competence first. Mid-training then shifts emphasis toward target domains without changing the core objective.</p></div>
+  </div>
+</div>
+
+<!-- ═══════ SLIDE 30 — DATA DISTRIBUTION DRIVES CAPABILITIES ═══════ -->
+<div class="slide" id="slide-30">
+  <span class="section-tag">Scale &amp; Data</span>
+  <div class="badge concept">Data Mixture</div>
+  <h2>Data drives capabilities: the training distribution is the lever</h2>
+  <p class="small-text">After the model has base language competence, the next question is: <em>what data mix do we continue training on?</em> Capability profile follows that distributional mixture (often in mid-training).</p>
+  <div class="spacer-sm"></div>
+  <div class="grid-2">
+    <div class="card">
+      <h3 style="color:var(--purple);">Code-heavy mixture</h3>
+      <div class="mix-bar">
+        <span class="mix-seg code" style="width:80%;"></span>
+        <span class="mix-seg lit" style="width:20%;"></span>
+      </div>
+      <p class="tiny">Example: 80% code + technical text, 20% generic data</p>
+      <ul class="obj-list" style="margin-top:0.625rem;">
+        <li data-num="1"><strong>Strength:</strong> stronger symbolic precision, structured problem decomposition, and code-oriented pattern completion.</li>
+        <li data-num="2"><strong>Weakness:</strong> weaker stylistic nuance in narrative or poetic generation.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3 style="color:var(--cyan);">Literary-heavy mixture</h3>
+      <div class="mix-bar">
+        <span class="mix-seg lit" style="width:80%;"></span>
+        <span class="mix-seg code" style="width:20%;"></span>
+      </div>
+      <p class="tiny">Example: 80% literary/prose text, 20% generic data</p>
+      <ul class="obj-list" style="margin-top:0.625rem;">
+        <li data-num="1"><strong>Strength:</strong> richer tone control, narrative fluency, and stylistic variation.</li>
+        <li data-num="2"><strong>Weakness:</strong> lower reliability on formal symbolic tasks such as coding or math-heavy problem solving.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="spacer-sm"></div>
+  <div class="callout warn">
+    <span class="icon">!</span>
+    <span>Neither pretraining nor mid-training learns from "intent." Both learn from token statistics in the training distribution.</span>
+  </div>
+  <div class="callout success">
+    <span class="icon">✓</span>
+    <span><strong>Takeaway:</strong> keep pretraining for language foundations, then use mid-training mixture to steer specialization.</span>
+  </div>
+  <div class="speaker-notes">
+    <button class="notes-toggle" onclick="this.nextElementSibling.classList.toggle('open')">speaker notes</button>
+    <div class="notes-body"><p>This answers "what is pretraining learning from?" and introduces mid-training as the specialization dial. Foundation first, then targeted distribution shift.</p></div>
+  </div>
+</div>
+
+<!-- ═══════ SLIDE 31 — COMPLETION TO CHAT WRAPPER (ACTIVITY) ═══════ -->
+<div class="slide" id="slide-31">
+  <span class="section-tag">Alignment</span>
+  <div class="badge activity">Interactive</div>
+  <h2>It's still just a text completer</h2>
+  <p class="small-text">We've pretrained a powerful model — but it was only ever trained to <span class="hl">predict the next token</span>. What happens when we actually try to use it?</p>
+  <div class="spacer-sm"></div>
+
+  <!-- PHASE 1: the dumb response -->
+  <div class="card" id="completionPhase1">
+    <h3 style="color:var(--accent); margin-bottom:0.625rem;">What does the base model do with this prompt?</h3>
+    <div class="prompt-block">What is the capital of France?</div>
+    <div class="spacer-sm"></div>
+    <button class="reveal-btn" onclick="revealDumbResponse()">Reveal the actual output</button>
+    <div class="hidden-content" id="dumbResponseReveal">
+      <div class="prompt-block" style="margin-top:0.625rem; border-color:rgba(248,113,113,0.4);"><span style="color:var(--text-dim);">What is the capital of France?</span>
+What is the capital of Germany?
+What is the capital of Italy?
+What is the capital of Spain?
+What is the capital of ...</div>
+      <div class="callout warn" style="margin-top:0.625rem;">
+        <span class="icon">!</span>
+        <span><strong>It continued the pattern, not answered the question.</strong> The model learned to predict text — and quiz lists are common on the internet. It has no concept of "being helpful."</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="spacer-sm"></div>
+
+  <div class="speaker-notes">
+    <button class="notes-toggle" onclick="this.nextElementSibling.classList.toggle('open')">speaker notes</button>
+    <div class="notes-body"><p>Sequence: (1) show prompt, ask audience to predict output, (2) reveal the dumb continuation — get laughs, then move to the next slide for "can we fix this without changing the model?" and the bridge to post-training.</p></div>
+  </div>
+</div>
+
+<!-- ═══════ SLIDE 32 — PROMPT STEERING ACTIVITY ═══════ -->
+<div class="slide" id="slide-32">
+  <span class="section-tag">Alignment</span>
+  <div class="badge activity">Interactive</div>
+  <h2>Can we fix this without changing the model?</h2>
+  <p class="small-text">The weights are frozen. All you can change is the <span class="hl">prompt</span>. Can formatting alone steer next-token completion into useful behavior?</p>
+  <div class="spacer-sm"></div>
+
+  <!-- PHASE 2: fix it with formatting -->
+  <div class="hidden-content" id="completionPhase2">
+    <div class="card">
+      <h3 style="color:var(--green); margin-bottom:0.625rem;">Prompt shaping can steer behavior</h3>
+      <p class="small-text">Same model, same weights. Only context formatting changes what continuation becomes likely.</p>
+      <div class="spacer-sm"></div>
+      <div class="grid-3" style="gap:0.75rem;">
+        <div class="card" style="padding:0.875rem;">
+          <p class="tiny" style="color:var(--text-dim); margin-bottom:0.375rem;">Chat — get a helpful reply</p>
+          <div class="prompt-block" style="font-size:0.72rem;">What is the capital of France?</div>
+          <button class="reveal-btn" style="margin-top:0.5rem; font-size:0.75rem; padding:0.375rem 0.875rem;" onclick="revealFix('chat')">Show fix</button>
+          <div class="hidden-content" id="fixChat">
+            <div class="prompt-block" style="font-size:0.72rem; border-color:rgba(74,222,128,0.4);">User: What is the capital of France?
+<strong style="color:var(--green);">Assistant:</strong></div>
+            <p class="tiny" style="margin-top:0.375rem; color:var(--green);">→ "The capital of France is Paris."</p>
+          </div>
+        </div>
+        <div class="card" style="padding:0.875rem;">
+          <p class="tiny" style="color:var(--text-dim); margin-bottom:0.375rem;">Math — get the answer</p>
+          <div class="prompt-block" style="font-size:0.72rem;">347 + 128</div>
+          <button class="reveal-btn" style="margin-top:0.5rem; font-size:0.75rem; padding:0.375rem 0.875rem;" onclick="revealFix('math')">Show fix</button>
+          <div class="hidden-content" id="fixMath">
+            <div class="prompt-block" style="font-size:0.72rem; border-color:rgba(74,222,128,0.4);">347 + 128 <strong style="color:var(--green);">=</strong></div>
+            <p class="tiny" style="margin-top:0.375rem; color:var(--green);">→ "475"</p>
+          </div>
+        </div>
+        <div class="card" style="padding:0.875rem;">
+          <p class="tiny" style="color:var(--text-dim); margin-bottom:0.375rem;">Code — get the implementation</p>
+          <div class="prompt-block" style="font-size:0.72rem;">fibonacci function</div>
+          <button class="reveal-btn" style="margin-top:0.5rem; font-size:0.75rem; padding:0.375rem 0.875rem;" onclick="revealFix('code')">Show fix</button>
+          <div class="hidden-content" id="fixCode">
+            <div class="prompt-block" style="font-size:0.72rem; border-color:rgba(74,222,128,0.4);"><strong style="color:var(--green);">def fibonacci(n):</strong>
+    """Return the nth Fibonacci number."""</div>
+            <p class="tiny" style="margin-top:0.375rem; color:var(--green);">→ completes the function body</p>
+          </div>
+        </div>
+      </div>
+      <div class="hidden-content" id="fixTakeaway">
+        <div class="spacer-sm"></div>
+        <div class="callout success" style="margin:0;">
+          <span class="icon">✓</span>
+          <span><strong>You're not changing the model.</strong> You're changing the distribution of likely continuations by shaping the context into a pattern where the "next token" is naturally the reply. <code>Assistant:</code> makes a reply likely. <code>=</code> makes an answer likely. A function signature makes code likely.</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="hidden-content" id="fixBridge">
+      <div class="spacer-sm"></div>
+
+      <!-- PHASE 3: why this isn't enough -->
+      <div class="callout warn">
+        <span class="icon">!</span>
+        <span><strong>But this is brittle.</strong> Change the wording slightly and the model drifts. It may roleplay the user, ignore instructions, or produce unsafe output. Formatting tricks steer — they don't <em>align</em>.</span>
+      </div>
+      <div class="callout info" style="margin-top:0.5rem;">
+        <span class="icon">→</span>
+        <span><strong>This is exactly why post-training exists.</strong> Instead of hoping the right context steers behavior, we update the weights so assistant-style responses become the default. That's next.</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="speaker-notes">
+    <button class="notes-toggle" onclick="this.nextElementSibling.classList.toggle('open')">speaker notes</button>
+    <div class="notes-body"><p>Run this as a pure prompt-formatting experiment. Stress that no retraining is happening yet; we're only steering local continuation probabilities.</p></div>
+  </div>
+</div>
+
+<!-- ═══════ SLIDE 33 — WHY POST-TRAINING EXISTS (STEPS 5-6) ═══════ -->
+<div class="slide" id="slide-33">
+  <span class="section-tag">Alignment</span>
+  <div class="badge concept">Post-training</div>
+  <h2>Why post-training exists: from context steering to behavior shaping</h2>
+  <p class="small-text">Templates steer behavior at inference time by changing context. Post-training changes behavior at training time by updating parameters so assistant-style responses are more consistent, robust, and policy-constrained.</p>
+  <div class="spacer-sm"></div>
+  <div class="callout warn" style="margin:0;">
+    <span class="icon">!</span>
+    <span><strong>Before alignment:</strong> "Assistant:" can steer continuation, but outcomes still drift with phrasing, context, and prompt hacks.</span>
+  </div>
+  <div class="callout info" style="margin-top:0.625rem;">
+    <span class="icon">i</span>
+    <span><strong>Inference-time trick:</strong> shape context. <strong>Post-training:</strong> shape parameters.</span>
+  </div>
+  <div class="spacer-sm"></div>
+  <div class="grid-2">
+    <div class="card" style="border-color: rgba(251,146,60,0.3);">
+      <div class="badge discussion" style="margin-bottom:0.5rem;">Step 5</div>
+      <h3 style="color:var(--orange);">Supervised fine-tuning (SFT)</h3>
+      <ul class="obj-list" style="margin-top:0.5rem;">
+        <li data-num="1">Train on chat demonstrations: user turns -> assistant replies.</li>
+        <li data-num="2">Teach stable instruction-following and response structure.</li>
+        <li data-num="3">Make assistant-style continuation the default, not a formatting coincidence.</li>
+      </ul>
+    </div>
+    <div class="card" style="border-color: rgba(251,146,60,0.3);">
+      <div class="badge discussion" style="margin-bottom:0.5rem;">Step 6</div>
+      <h3 style="color:var(--orange);">Preference training + RLHF</h3>
+      <ul class="obj-list" style="margin-top:0.5rem;">
+        <li data-num="1">Use human rankings to distinguish better vs worse candidate replies.</li>
+        <li data-num="2">Push behavior toward helpfulness, policy compliance, and safer refusals.</li>
+        <li data-num="3">Improve robustness beyond specific templates or token tricks.</li>
+      </ul>
+    </div>
+  </div>
+  <div class="spacer-sm"></div>
+  <div class="flow" style="justify-content:flex-start;">
+    <div class="flow-box model">Base completer + chat template</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box loss">SFT</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box grad">Preferences / RLHF</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-box green">Aligned assistant</div>
+  </div>
+  <div class="callout info">
+    <span class="icon">i</span>
+    <span><strong>The model is still autoregressive next-token generation.</strong> Alignment changes the distribution it learns to generate from.</span>
+  </div>
+  <div class="speaker-notes">
+    <button class="notes-toggle" onclick="this.nextElementSibling.classList.toggle('open')">speaker notes</button>
+    <div class="notes-body"><p>Bridge directly from the activity: "We can coerce a reply with suffixes, but that is fragile. SFT and preference training make assistant behavior consistent and constrained." Keep repeating: still autoregressive, now better conditioned by training.</p></div>
+  </div>
+</div>
+
+</div><!-- /slide-container -->
+
+<!-- ── Bottom navigation bar ── -->
+<div class="bottom-bar">
+  <button class="nav-btn" id="btnPrev" disabled>← Back</button>
+  <button class="nav-btn" id="btnSkip">Skip Slide →</button>
+  <div class="progress-track">
+    <div class="progress-fill" id="progressFill" style="width:0%"></div>
+  </div>
+  <span class="slide-counter" id="slideCounter">1 / 40</span>
+  <button class="nav-btn primary" id="btnNext">Next →</button>
+</div>
+
+<script>
+// ══════════════════════════════════════
+//  Slide engine
+// ══════════════════════════════════════
+const SLIDE_ORDER = [0, 1, 2, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 3, 4, 5, 6, 7, 9, 10, 11, 12, 13, 14, 8, 22, 23, 24, 16, 29, 30, 31, 32, 33];
+const TOTAL = SLIDE_ORDER.length;
+let current = 0;
+const VIDEO_CLIP_SLIDE_IDS = [2, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50];
+const ABS_CLIP_FALLBACK_DIR = '/home/maincoder/Documents/inside-LLM/manimations/media/videos/pipeline/1080p60/LanguageModelingPipeline_snippets';
+
+const $ = s => document.querySelector(s);
+const $$ = s => document.querySelectorAll(s);
+function typesetMath(root = document) {
+  if (!window.MathJax || !window.MathJax.typesetPromise) return;
+  window.MathJax.typesetPromise([root]).catch(() => {});
+}
+
+function goTo(n) {
+  if (n < 0 || n >= TOTAL) return;
+  $$('.slide').forEach(s => s.classList.remove('active'));
+  const slideId = SLIDE_ORDER[n];
+  document.getElementById(`slide-${slideId}`).classList.add('active');
+  current = n;
+  $('#btnPrev').disabled = n === 0;
+  $('#btnNext').textContent = n === TOTAL - 1 ? 'Restart ↺' : 'Next →';
+  $('#btnSkip').textContent = n === TOTAL - 1 ? 'Restart ↺' : 'Skip Slide →';
+  $('#slideCounter').textContent = `${n + 1} / ${TOTAL}`;
+  $('#progressFill').style.width = `${(n / (TOTAL - 1)) * 100}%`;
+
+  // trigger animations for specific slides
+  onSlideEnter(slideId);
+  typesetMath(document.getElementById(`slide-${slideId}`));
+}
+
+function goToNextSlide() {
+  if (current === TOTAL - 1) goTo(0);
+  else goTo(current + 1);
+}
+
+function runSlideInteractionStep(slideId) {
+  // Slide 2: video autoplays on enter; Next should still advance immediately
+  // Slide 3: reveal 3 core components in order
+  if (slideId === 3) {
+    for (var i = 1; i <= 3; i++) {
+      var hidden = document.getElementById('ingredient' + i + 'Hidden');
+      if (hidden && hidden.style.display !== 'none') {
+        revealIngredient(i);
+        return true;
+      }
+    }
+    return false;
+  }
+
+  // Slide 5: run 3-step inference demo before advancing
+  if (slideId === 5) {
+    if (infStep < INF_TOKENS.length) {
+      if (document.getElementById('infCurrent')) {
+        animateInference();
+      }
+      return true;
+    }
+    return false;
+  }
+
+  // Slide 6: training loop phases 1..5
+  if (slideId === 6) {
+    if (trainPhase < 5) {
+      trainStep(trainPhase + 1);
+      return true;
+    }
+    return false;
+  }
+
+  // Slide 16: reveal one blank, then its concept, sentence-by-sentence
+  if (slideId === 16) {
+    var rows = document.querySelectorAll('#slide-16 .ntp-sentence');
+    for (var r = 0; r < rows.length; r++) {
+      var blank = rows[r].querySelector('.ntp-blank');
+      var conceptBtn = rows[r].querySelector('.ntp-concept-btn');
+
+      if (blank && !blank.classList.contains('show')) {
+        revealNTP(blank);
+        return true;
+      }
+      if (conceptBtn && conceptBtn.style.display !== 'none') {
+        revealNTPConcept(conceptBtn);
+        return true;
+      }
+    }
+    return false;
+  }
+
+  // Slide 22: reveal reasoning-pressure panel
+  if (slideId === 22) {
+    var pressureGrid = document.getElementById('reasoningPressureGrid');
+    if (pressureGrid && !pressureGrid.classList.contains('revealed')) {
+      revealReasoningPressure();
+      return true;
+    }
+    return false;
+  }
+
+  // Slide 23: reveal detective answer + explanation
+  if (slideId === 23) {
+    var dramaBlank = document.getElementById('dramaKillerBlank');
+    if (dramaBlank && !dramaBlank.classList.contains('show')) {
+      revealDramaAnswer();
+      return true;
+    }
+    return false;
+  }
+
+  // Slide 31: reveal the base-completion failure first
+  if (slideId === 31) {
+    var dumb = document.getElementById('dumbResponseReveal');
+    if (dumb && !dumb.classList.contains('revealed')) {
+      revealDumbResponse();
+      return true;
+    }
+    return false;
+  }
+
+  // Slide 32: reveal prompt-fixing + bridge before advancing
+  if (slideId === 32) {
+    var phase2 = document.getElementById('completionPhase2');
+    if (phase2 && !phase2.classList.contains('revealed')) {
+      phase2.classList.add('revealed');
+      return true;
+    }
+
+    var fixChat = document.getElementById('fixChat');
+    if (fixChat && !fixChat.classList.contains('revealed')) {
+      revealFix('chat', false);
+      return true;
+    }
+    var fixMath = document.getElementById('fixMath');
+    if (fixMath && !fixMath.classList.contains('revealed')) {
+      revealFix('math', false);
+      return true;
+    }
+    var fixCode = document.getElementById('fixCode');
+    if (fixCode && !fixCode.classList.contains('revealed')) {
+      revealFix('code', false);
+      return true;
+    }
+
+    var takeaway = document.getElementById('fixTakeaway');
+    if (takeaway && !takeaway.classList.contains('revealed')) {
+      takeaway.classList.add('revealed');
+      return true;
+    }
+
+    var bridge = document.getElementById('fixBridge');
+    if (bridge && !bridge.classList.contains('revealed')) {
+      bridge.classList.add('revealed');
+      return true;
+    }
+    return false;
+  }
+
+  return false;
+}
+
+function nextWithInteractions() {
+  var slideId = SLIDE_ORDER[current];
+  if (runSlideInteractionStep(slideId)) return;
+  goToNextSlide();
+}
+
+$('#btnNext').addEventListener('click', nextWithInteractions);
+$('#btnSkip').addEventListener('click', goToNextSlide);
+$('#btnPrev').addEventListener('click', () => goTo(current - 1));
+
+document.addEventListener('keydown', e => {
+  var tag = e.target && e.target.tagName;
+  var isSeekSlider = tag === 'INPUT' && e.target && e.target.classList && e.target.classList.contains('clip-seek-slider');
+  if ((tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || (e.target && e.target.isContentEditable)) && !isSeekSlider) return;
+  if (isSeekSlider && e.key !== ' ') return;
+
+  if (e.key === ' ') {
+    e.preventDefault();
+    var slideId = SLIDE_ORDER[current];
+    if (isVideoClipSlide(slideId)) {
+      toggleVideoClipPlayback(slideId);
+    } else {
+      nextWithInteractions();
+    }
+    return;
+  }
+
+  if (e.key === 'ArrowRight') { e.preventDefault(); nextWithInteractions(); }
+  if (e.key === 'ArrowLeft') { e.preventDefault(); $('#btnPrev').click(); }
+});
+
+// ══════════════════════════════════════
+//  Ingredient reveal (all three)
+// ══════════════════════════════════════
+var ingredientColors = {
+  1: 'rgba(0,255,255,0.35)',
+  2: 'rgba(108,140,255,0.35)',
+  3: 'rgba(167,139,250,0.4)'
+};
+
+function revealIngredient(n) {
+  document.getElementById('ingredient' + n + 'Hidden').style.display = 'none';
+  document.getElementById('ingredient' + n + 'Revealed').style.display = 'block';
+  document.getElementById('ingredient' + n + 'Card').style.borderColor = ingredientColors[n];
+  document.getElementById('ingredientExplanation' + n).classList.add('revealed');
+}
+
+function resetIngredients() {
+  for (var i = 1; i <= 3; i++) {
+    document.getElementById('ingredient' + i + 'Hidden').style.display = '';
+    document.getElementById('ingredient' + i + 'Revealed').style.display = 'none';
+    document.getElementById('ingredient' + i + 'Card').style.borderColor = '';
+    var exp = document.getElementById('ingredientExplanation' + i);
+    exp.classList.remove('revealed', 'settled');
+  }
+}
+
+function revealReasoningPressure() {
+  const grid = document.getElementById('reasoningPressureGrid');
+  const quote = document.getElementById('reasoningEmergenceQuote');
+  if (grid) grid.classList.add('revealed');
+  if (quote) quote.classList.add('revealed');
+}
+
+function revealDramaAnswer() {
+  const blank = document.getElementById('dramaKillerBlank');
+  const why = document.getElementById('dramaWhy');
+  const result = document.getElementById('dramaResult');
+  if (blank && !blank.classList.contains('show')) {
+    blank.textContent = blank.dataset.answer;
+    blank.classList.add('show');
+  }
+  if (why) why.classList.add('revealed');
+  if (result) {
+    result.className = 'callout success';
+    result.style.maxWidth = '';
+    result.innerHTML = '<span class="icon">✓</span><span>Best next-token continuation: <strong>Rukhsana thi</strong>, based on timing + access constraints.</span>';
+  }
+}
+
+function chooseDramaSuspect(choice, btn) {
+  const buttons = document.querySelectorAll('#dramaChoices .drama-choice');
+  buttons.forEach(b => b.classList.remove('correct', 'wrong'));
+  if (choice === 'Rukhsana') btn.classList.add('correct');
+  else btn.classList.add('wrong');
+
+  const result = document.getElementById('dramaResult');
+  if (result) {
+    const isCorrect = choice === 'Rukhsana';
+    result.className = isCorrect ? 'callout success' : 'callout warn';
+    result.style.maxWidth = '';
+    result.innerHTML = isCorrect
+      ? '<span class="icon">✓</span><span>Consistent choice. Timing and pantry-access constraints point to <strong>Rukhsana</strong>.</span>'
+      : '<span class="icon">!</span><span>This choice conflicts with the timeline/access clues. Re-check who could act between 10:20 and 10:30.</span>';
+  }
+
+  if (choice === 'Rukhsana') {
+    revealDramaAnswer();
+  }
+}
+
+// ══════════════════════════════════════
+//  Completion wrapper activity
+// ══════════════════════════════════════
+function revealDumbResponse() {
+  const reveal = document.getElementById('dumbResponseReveal');
+  if (reveal) reveal.classList.add('revealed');
+}
+
+var fixesRevealed = { chat: false, math: false, code: false };
+
+function revealFix(which, autoBridge) {
+  if (autoBridge === undefined) autoBridge = true;
+  var el = document.getElementById('fix' + which.charAt(0).toUpperCase() + which.slice(1));
+  if (el) el.classList.add('revealed');
+  fixesRevealed[which] = true;
+  if (autoBridge && fixesRevealed.chat && fixesRevealed.math && fixesRevealed.code) {
+    setTimeout(function() {
+      var t = document.getElementById('fixTakeaway');
+      var b = document.getElementById('fixBridge');
+      if (t) t.classList.add('revealed');
+      if (b) b.classList.add('revealed');
+    }, 400);
+  }
+}
+
+function resetCompletionActivity() {
+  fixesRevealed = { chat: false, math: false, code: false };
+  ['dumbResponseReveal', 'completionPhase2', 'fixChat', 'fixMath', 'fixCode', 'fixTakeaway', 'fixBridge'].forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el) el.classList.remove('revealed', 'settled');
+  });
+}
+
+// ══════════════════════════════════════
+//  Clip video slides
+// ══════════════════════════════════════
+function isVideoClipSlide(slideId) {
+  return VIDEO_CLIP_SLIDE_IDS.includes(slideId);
+}
+
+function getVideoClipHost(slideId) {
+  return document.querySelector('#slide-' + slideId + ' .clip-video-stage');
+}
+
+function getVideoClipElement(slideId) {
+  const host = getVideoClipHost(slideId);
+  return host ? host.querySelector('video') : null;
+}
+
+function formatClipTime(seconds) {
+  if (!Number.isFinite(seconds) || seconds < 0) return '00:00';
+  const total = Math.floor(seconds);
+  const hours = Math.floor(total / 3600);
+  const minutes = Math.floor((total % 3600) / 60);
+  const secs = total % 60;
+  if (hours > 0) {
+    return String(hours).padStart(2, '0') + ':' + String(minutes).padStart(2, '0') + ':' + String(secs).padStart(2, '0');
+  }
+  return String(minutes).padStart(2, '0') + ':' + String(secs).padStart(2, '0');
+}
+
+function getVideoCandidates(host) {
+  const candidates = [];
+  if (!host) return candidates;
+  if (host.dataset.videoRelative) {
+    const rel = host.dataset.videoRelative;
+    candidates.push(rel);
+    const fileName = rel.split('/').filter(Boolean).pop();
+    if (fileName) {
+      candidates.push('file://' + ABS_CLIP_FALLBACK_DIR.replace(/\/+$/, '') + '/' + fileName);
+    }
+  }
+  if (host.dataset.videoPath && host.dataset.videoPath.startsWith('/')) {
+    candidates.push('file://' + host.dataset.videoPath);
+  } else if (host.dataset.videoPath) {
+    candidates.push(host.dataset.videoPath);
+  }
+  return candidates;
+}
+
+function setVideoPlaceholder(host, primary, secondary) {
+  if (!host) return;
+  const placeholder = host.querySelector('.live-demo-placeholder');
+  if (!placeholder) return;
+  const extra = secondary ? '<p class="tiny">' + secondary + '</p>' : '';
+  placeholder.innerHTML = '<p class="small-text">' + primary + '</p>' + extra;
+  placeholder.hidden = false;
+}
+
+function hideVideoPlaceholder(host) {
+  if (!host) return;
+  const placeholder = host.querySelector('.live-demo-placeholder');
+  if (placeholder) placeholder.hidden = true;
+}
+
+function tryPlayVideo(video) {
+  if (!video) return;
+  const playPromise = video.play();
+  if (playPromise && typeof playPromise.catch === 'function') {
+    playPromise.catch(function() {});
+  }
+}
+
+function ensureClipTimeline(host, video) {
+  if (!host || !video) return;
+  if (host._clipTimelineReady) return;
+
+  const overlay = document.createElement('div');
+  overlay.className = 'clip-timeline-overlay';
+  overlay.innerHTML =
+    '<div class="clip-timeline-main">' +
+      '<button class="clip-play-toggle" type="button" aria-label="Pause animation" title="Pause animation">❚❚</button>' +
+      '<input type="range" class="clip-seek-slider" min="0" max="1000" step="1" value="0" aria-label="Seek animation timeline">' +
+    '</div>' +
+    '<div class="clip-timeline-times">' +
+      '<span class="clip-time-current">00:00</span>' +
+      '<span class="clip-time-total">--:--</span>' +
+    '</div>';
+  host.appendChild(overlay);
+
+  const playToggle = overlay.querySelector('.clip-play-toggle');
+  const slider = overlay.querySelector('.clip-seek-slider');
+  const curTime = overlay.querySelector('.clip-time-current');
+  const totalTime = overlay.querySelector('.clip-time-total');
+  let dragging = false;
+
+  const sync = function(forceSliderVisual) {
+    const duration = Number.isFinite(video.duration) && video.duration > 0 ? video.duration : 0;
+    const current = Number.isFinite(video.currentTime) && video.currentTime > 0 ? video.currentTime : 0;
+    const ratio = duration > 0 ? Math.max(0, Math.min(1, current / duration)) : 0;
+    if (!dragging && !forceSliderVisual) {
+      slider.value = String(Math.round(ratio * 1000));
+    }
+    const sliderRatio = Math.max(0, Math.min(1, Number(slider.value || 0) / 1000));
+    const visualRatio = dragging ? sliderRatio : ratio;
+    slider.style.setProperty('--seek-pct', (visualRatio * 100).toFixed(2) + '%');
+    curTime.textContent = formatClipTime(dragging && duration > 0 ? sliderRatio * duration : current);
+    totalTime.textContent = duration > 0 ? formatClipTime(duration) : '--:--';
+    const paused = video.paused || video.ended;
+    playToggle.dataset.state = paused ? 'paused' : 'playing';
+    playToggle.textContent = paused ? '▶' : '❚❚';
+    playToggle.setAttribute('aria-label', paused ? 'Play animation' : 'Pause animation');
+    playToggle.title = paused ? 'Play animation' : 'Pause animation';
+  };
+
+  const seekFromSlider = function() {
+    if (!Number.isFinite(video.duration) || video.duration <= 0) return;
+    const ratio = Math.max(0, Math.min(1, Number(slider.value || 0) / 1000));
+    video.currentTime = ratio * video.duration;
+  };
+
+  slider.addEventListener('pointerdown', function() {
+    dragging = true;
+    sync(true);
+  });
+
+  slider.addEventListener('pointerup', function() {
+    seekFromSlider();
+    dragging = false;
+    sync();
+  });
+
+  slider.addEventListener('pointercancel', function() {
+    dragging = false;
+    sync();
+  });
+
+  slider.addEventListener('input', function() {
+    dragging = true;
+    seekFromSlider();
+    sync(true);
+  });
+
+  slider.addEventListener('change', function() {
+    seekFromSlider();
+    dragging = false;
+    sync();
+  });
+
+  playToggle.addEventListener('click', function() {
+    if (video.paused || video.ended) {
+      tryPlayVideo(video);
+    } else {
+      video.pause();
+    }
+    sync();
+  });
+
+  ['loadedmetadata', 'durationchange', 'timeupdate', 'seeked', 'play', 'pause', 'ended'].forEach(function(evt) {
+    video.addEventListener(evt, function() {
+      sync();
+    });
+  });
+
+  host._clipTimelineReady = true;
+  host._clipTimelineSync = sync;
+  sync();
+}
+
+function syncClipTimeline(slideId) {
+  const host = getVideoClipHost(slideId);
+  if (host && typeof host._clipTimelineSync === 'function') {
+    host._clipTimelineSync();
+  }
+}
+
+function ensureVideoClipLoaded(slideId) {
+  const host = getVideoClipHost(slideId);
+  if (!host) return null;
+
+  const existing = host.querySelector('video');
+  if (existing) {
+    ensureClipTimeline(host, existing);
+    return existing;
+  }
+
+  const candidates = getVideoCandidates(host);
+  if (!candidates.length) {
+    setVideoPlaceholder(host, 'Video source not found.', 'Check clip path in this slide.');
+    return null;
+  }
+
+  const video = document.createElement('video');
+  video.className = 'live-demo-video';
+  video.preload = 'auto';
+  video.autoplay = true;
+  video.muted = true;
+  video.loop = false;
+  video.playsInline = true;
+  video.controls = false;
+  video.setAttribute('playsinline', '');
+  ensureClipTimeline(host, video);
+
+  video.addEventListener('loadeddata', function() {
+    hideVideoPlaceholder(host);
+    tryPlayVideo(video);
+    syncClipTimeline(slideId);
+  });
+
+  let idx = 0;
+  const tryNextSource = () => {
+    if (idx >= candidates.length) {
+      setVideoPlaceholder(host, 'Unable to load clip.', 'Confirm clip file exists and is readable.');
+      return;
+    }
+    video.src = candidates[idx++];
+    video.load();
+  };
+
+  video.addEventListener('error', tryNextSource);
+  tryNextSource();
+  host.prepend(video);
+  return video;
+}
+
+function playVideoClipSlide(slideId) {
+  const video = ensureVideoClipLoaded(slideId);
+  if (!video) return;
+  try {
+    video.currentTime = 0;
+  } catch (_err) {}
+  tryPlayVideo(video);
+  syncClipTimeline(slideId);
+}
+
+function pauseVideoClipSlide(slideId, reset) {
+  const video = getVideoClipElement(slideId);
+  if (!video) return;
+  video.pause();
+  if (reset) {
+    try {
+      video.currentTime = 0;
+    } catch (_err) {}
+  }
+  syncClipTimeline(slideId);
+}
+
+function pauseAllVideoClipSlides(reset, exceptSlideId) {
+  VIDEO_CLIP_SLIDE_IDS.forEach(function(id) {
+    if (id === exceptSlideId) return;
+    pauseVideoClipSlide(id, reset);
+  });
+}
+
+function toggleVideoClipPlayback(slideId) {
+  const video = ensureVideoClipLoaded(slideId);
+  if (!video) return;
+  if (video.paused) {
+    tryPlayVideo(video);
+  } else {
+    video.pause();
+  }
+  syncClipTimeline(slideId);
+}
+
+// ══════════════════════════════════════
+//  Inference demo (fixed: 3 steps only)
+// ══════════════════════════════════════
+const INF_TOKENS = ['Islamabad', '.', '⟨EOS⟩'];
+let infStep = 0;
+
+function animateInference() {
+  if (infStep >= INF_TOKENS.length) return;
+
+  const row = document.getElementById('inferenceDemo');
+  const cur = document.getElementById('infCurrent');
+
+  // convert current blank → filled token
+  cur.removeAttribute('id');
+  cur.classList.remove('blank');
+  cur.style.cursor = 'default';
+  cur.onclick = null;
+
+  const tok = INF_TOKENS[infStep];
+  cur.textContent = tok;
+
+  if (tok === '⟨EOS⟩') {
+    // end-of-sentence styling
+    cur.classList.add('done');
+  } else {
+    cur.classList.add('target');
+    cur.style.borderStyle = 'solid';
+  }
+
+  infStep++;
+
+  // add next blank if not finished
+  if (infStep < INF_TOKENS.length) {
+    setTimeout(() => {
+      const newBlank = document.createElement('span');
+      newBlank.className = 'tok blank';
+      newBlank.id = 'infCurrent';
+      newBlank.textContent = 'click';
+      newBlank.onclick = animateInference;
+      row.appendChild(newBlank);
+    }, 350);
+  } else {
+    // all done — update hint text
+    document.getElementById('infHint').textContent = 'Generation complete — the model produced 3 tokens.';
+    document.getElementById('infHint').style.color = 'var(--green)';
+  }
+}
+
+// ══════════════════════════════════════
+//  Training loop (slide 6) — 5-phase interactive reveal
+// ══════════════════════════════════════
+var trainPhase = 0;
+var trainExplanations = {
+  1: '<strong>Forward pass</strong> — identical to inference. Tokens go in, the Transformer processes them through all its layers, and a probability distribution over possible next tokens comes out. Nothing is different yet.',
+  2: '<strong>The teacher signal</strong> — during training, we already know the correct next token. It\'s simply the next word in the training data. This ground truth is what makes learning possible — the model doesn\'t have to figure out what\'s right on its own.',
+  3: '<strong>Cross-entropy loss</strong> — measures how much probability the model gave to the correct token. High confidence in the right answer \u2192 low loss. Surprised by it \u2192 high loss. Formally: \\(\\mathcal{L} = -\\log P(\\text{correct token})\\).',
+  4: '<strong>Backpropagation</strong> — the chain rule traces the loss backward through every layer. For each of the billions of weights, it answers: \"how much did <em>you</em> contribute to the error?\" This produces a gradient \\(\\frac{\\partial \\mathcal{L}}{\\partial \\theta}\\) for every single parameter.',
+  5: '<strong>Weight update</strong> — each weight is nudged in the direction that reduces the loss. The learning rate \\(\\eta\\) controls step size: \\(\\theta \\leftarrow \\theta - \\eta \\cdot \\nabla \\mathcal{L}\\). After updating, the next batch runs through a slightly better model. Repeat billions of times.'
+};
+
+function trainStep(phase) {
+  trainPhase = phase;
+
+  // Highlight active button, dim future ones
+  for (var i = 1; i <= 5; i++) {
+    var btn = document.getElementById('trainBtn' + i);
+    btn.style.opacity = i <= phase ? '1' : '0.45';
+    btn.style.borderColor = i === phase ? 'var(--cyan)' : '';
+  }
+
+  // Phase 1: forward pass lights up
+  document.getElementById('trainFwd').style.opacity = phase >= 1 ? '1' : '0.25';
+
+  // Phase 2: comparison
+  document.getElementById('trainCompare').style.display = phase >= 2 ? '' : 'none';
+
+  // Phase 3: loss
+  document.getElementById('trainLoss').style.display = phase >= 3 ? '' : 'none';
+
+  // Phase 4: backpropagation
+  document.getElementById('trainBackprop').style.display = phase >= 4 ? '' : 'none';
+
+  // Phase 5: update + loop-back
+  document.getElementById('trainUpdate').style.display = phase >= 5 ? '' : 'none';
+
+  // Highlight transformer box during backprop & update
+  var tfBox = document.getElementById('trainTransformer');
+  if (phase === 4) {
+    tfBox.style.borderColor = 'rgba(251,146,60,0.6)';
+    tfBox.style.boxShadow = '0 0 8px rgba(251,146,60,0.2)';
+  } else if (phase === 5) {
+    tfBox.style.borderColor = 'var(--orange)';
+    tfBox.style.boxShadow = '0 0 14px rgba(251,146,60,0.35)';
+  } else {
+    tfBox.style.borderColor = '';
+    tfBox.style.boxShadow = '';
+  }
+
+  // Explanation callout
+  var explainDiv = document.getElementById('trainExplain');
+  var explainText = document.getElementById('trainExplainText');
+  explainDiv.style.display = '';
+  explainText.innerHTML = trainExplanations[phase];
+  typesetMath(explainDiv);
+}
+
+function resetTrainLoop() {
+  trainPhase = 0;
+  document.getElementById('trainFwd').style.opacity = '0.25';
+  document.getElementById('trainCompare').style.display = 'none';
+  document.getElementById('trainLoss').style.display = 'none';
+  document.getElementById('trainBackprop').style.display = 'none';
+  document.getElementById('trainUpdate').style.display = 'none';
+  document.getElementById('trainExplain').style.display = 'none';
+  var tfBox = document.getElementById('trainTransformer');
+  tfBox.style.borderColor = '';
+  tfBox.style.boxShadow = '';
+  for (var i = 1; i <= 5; i++) {
+    var btn = document.getElementById('trainBtn' + i);
+    btn.style.opacity = '';
+    btn.style.borderColor = '';
+  }
+}
+
+// ══════════════════════════════════════
+//  NTP game
+// ══════════════════════════════════════
+function revealNTP(el) {
+  if (el.classList.contains('show')) return;
+  el.textContent = el.dataset.answer;
+  el.classList.add('show');
+}
+function revealNTPConcept(btn) {
+  const sentence = btn.closest('.ntp-sentence');
+  const tag = sentence ? sentence.querySelector('.ntp-tag') : null;
+  if (tag) tag.classList.add('show');
+  btn.style.display = 'none';
+}
+function revealAllNTP() {
+  $$('.ntp-blank').forEach(el => {
+    el.textContent = el.dataset.answer;
+    el.classList.add('show');
+  });
+  $$('.ntp-concept-btn').forEach(btn => { btn.style.display = 'none'; });
+  $$('.ntp-tag').forEach(tag => tag.classList.add('show'));
+}
+
+// ══════════════════════════════════════
+//  Bar chart builder (for loss deep-dive)
+// ══════════════════════════════════════
+const VOCAB = [
+  { word: 'Islamabad', predicted: 0.08, target: 1.00, after: 0.28 },
+  { word: 'Karachi',   predicted: 0.11, target: 0.00, after: 0.06 },
+  { word: 'the',       predicted: 0.14, target: 0.00, after: 0.09 },
+  { word: 'Lahore',    predicted: 0.06, target: 0.00, after: 0.03 },
+  { word: 'a',         predicted: 0.10, target: 0.00, after: 0.07 },
+  { word: 'Peshawar',  predicted: 0.04, target: 0.00, after: 0.03 },
+  { word: 'Delhi',     predicted: 0.05, target: 0.00, after: 0.02 },
+  { word: 'not',       predicted: 0.07, target: 0.00, after: 0.05 },
+  { word: '...',       predicted: 0.35, target: 0.00, after: 0.37 },
+];
+
+function buildBars(container, data, type) {
+  const el = typeof container === 'string' ? $(container) : container;
+  if (!el) return;
+  el.innerHTML = '';
+  data.forEach((d, i) => {
+    const row = document.createElement('div');
+    row.className = 'bar-row';
+
+    const wordEl = document.createElement('div');
+    wordEl.className = 'bar-word';
+    wordEl.textContent = d.word;
+    if (d.word === 'Islamabad') wordEl.style.color = 'var(--green)';
+
+    const track = document.createElement('div');
+    track.className = 'bar-track';
+
+    const fill = document.createElement('div');
+    fill.className = 'bar-fill ' + type;
+    const pctWidth = d.value > 0 ? Math.max(d.value * 100, 1.5) : 0;
+    fill.style.width = '0%';
+    setTimeout(() => { fill.style.width = pctWidth + '%'; }, 80 + i * 50);
+
+    track.appendChild(fill);
+
+    const pctEl = document.createElement('div');
+    pctEl.className = 'bar-pct';
+    pctEl.textContent = `\\(${(d.value * 100).toFixed(1)}\\%\\)`;
+
+    row.appendChild(wordEl);
+    row.appendChild(track);
+    row.appendChild(pctEl);
+    el.appendChild(row);
+  });
+  // Bars can be inserted after slide-enter (e.g., delayed "after update" chart),
+  // so explicitly typeset newly injected LaTeX labels here.
+  typesetMath(el);
+}
+
+function predictedData() { return VOCAB.map(v => ({ word: v.word, value: v.predicted })); }
+function targetData()    { return VOCAB.map(v => ({ word: v.word, value: v.target })); }
+function afterData()     { return VOCAB.map(v => ({ word: v.word, value: v.after })); }
+
+// ══════════════════════════════════════
+//  Slide-specific enter logic
+// ══════════════════════════════════════
+function onSlideEnter(n) {
+  // Clip slides: autoplay current clip, stop others
+  if (isVideoClipSlide(n)) {
+    pauseAllVideoClipSlides(true, n);
+    playVideoClipSlide(n);
+  } else {
+    pauseAllVideoClipSlides(true);
+  }
+
+  // Slide 3: reset ingredients
+  if (n === 3) {
+    resetIngredients();
+  }
+
+  // Slide 6: reset training loop
+  if (n === 6) {
+    resetTrainLoop();
+  }
+
+  // Slide 10: forward pass — build predicted chart
+  if (n === 10) {
+    buildBars('#predictedChart', predictedData(), 'predicted');
+  }
+  // Slide 11: target comparison — dual charts
+  if (n === 11) {
+    buildBars('#dualPredicted', predictedData(), 'predicted');
+    buildBars('#dualTarget', targetData(), 'target-fill');
+    const pct = VOCAB[0].predicted;
+    $('#correctPctText').textContent = `\\(${(pct * 100).toFixed(0)}\\%\\)`;
+  }
+  // Slide 12: loss computation
+  if (n === 12) {
+    const p = VOCAB[0].predicted;
+    const loss = -Math.log(p);
+    const pText = p.toFixed(2);
+    const lossText = loss.toFixed(2);
+    $('#lossFormula').textContent = `\\[\\mathcal{L} = -\\log(P_{\\text{model}}(\\text{Islamabad})) = -\\log(${pText}) = ${lossText}\\]`;
+    $('#lossProbDisplay').textContent = `\\(${pText}\\)`;
+    $('#lossValueDisplay').textContent = `\\(${lossText}\\)`;
+    const meter = $('#lossMeter');
+    meter.style.width = '0%';
+    setTimeout(() => { meter.style.width = Math.min(loss / 5 * 100, 100) + '%'; }, 200);
+  }
+  // Slide 14: before/after
+  if (n === 14) {
+    buildBars('#beforeBars', predictedData(), 'predicted');
+    setTimeout(() => {
+      buildBars('#afterBars', afterData(), 'target-fill');
+    }, 300);
+    const afterLoss = -Math.log(VOCAB[0].after);
+    $('#lossAfterVal').textContent = `\\(${afterLoss.toFixed(2)}\\)`;
+    $('#afterCorrectPct').textContent = `\\(${(VOCAB[0].after * 100).toFixed(0)}\\%\\)`;
+    $('#afterLossText').textContent = `\\(${afterLoss.toFixed(2)}\\)`;
+  }
+  if (n === 22) {
+    const grid = document.getElementById('reasoningPressureGrid');
+    const quote = document.getElementById('reasoningEmergenceQuote');
+    if (grid) grid.classList.remove('revealed', 'settled');
+    if (quote) quote.classList.remove('revealed', 'settled');
+  }
+  if (n === 23) {
+    const blank = document.getElementById('dramaKillerBlank');
+    const why = document.getElementById('dramaWhy');
+    const result = document.getElementById('dramaResult');
+    const buttons = document.querySelectorAll('#dramaChoices .drama-choice');
+    if (blank) {
+      blank.textContent = '___';
+      blank.classList.remove('show');
+    }
+    if (why) why.classList.remove('revealed', 'settled');
+    buttons.forEach(b => b.classList.remove('correct', 'wrong'));
+    if (result) {
+      result.className = 'callout warn';
+      result.style.maxWidth = '';
+      result.innerHTML = '<span class="icon">?</span><span>Select a suspect. Then check whether your choice satisfies the timing + access constraints.</span>';
+    }
+  }
+  if (n === 31 || n === 32) {
+    resetCompletionActivity();
+  }
+}
+
+// ══════════════════════════════════════
+//  Init
+// ══════════════════════════════════════
+// settle hidden-content after reveal transition so scroll works
+// After reveal transition, remove max-height constraint so slide can scroll
+document.addEventListener('transitionend', function(e) {
+  var el = e.target;
+  if (!el.classList.contains('hidden-content') || e.propertyName !== 'max-height') return;
+  if (el.classList.contains('revealed')) {
+    el.classList.add('settled');
+  } else {
+    el.classList.remove('settled');
+  }
+});
+
+goTo(0);
+</script>
+</body>
+</html>
