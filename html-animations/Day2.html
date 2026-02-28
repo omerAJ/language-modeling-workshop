@@ -725,6 +725,184 @@
     color: rgba(153,160,184,0.5);
     transform: rotate(180deg);
   }
+
+  /* ── Tokenization visuals ── */
+  .token-anchor {
+    font-size: 1.18rem;
+    line-height: 1.5;
+    color: #d7def7;
+  }
+  .token-anchor strong {
+    color: var(--accent);
+    font-weight: 700;
+  }
+  .token-interface {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.7rem;
+    flex-wrap: wrap;
+    margin: 0.95rem 0 0.6rem;
+  }
+  .flow-box.raw      { border-color: rgba(255,170,85,0.45); color: var(--orange); background: rgba(255,170,85,0.08); }
+  .flow-box.tokzr    { border-color: rgba(180,157,255,0.45); color: var(--purple); background: rgba(180,157,255,0.08); }
+  .flow-box.ids      { border-color: rgba(123,154,255,0.5);  color: var(--accent); background: rgba(123,154,255,0.1); }
+  .flow-box.embed    { border-color: rgba(90,232,142,0.45);  color: var(--green);  background: rgba(90,232,142,0.08); }
+
+  .tradeoff-card {
+    border-width: 1.25px;
+  }
+  .tradeoff-card h3 {
+    margin-bottom: 0.35rem;
+  }
+  .pc-title {
+    font-size: 0.74rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-dim);
+    margin-top: 0.55rem;
+    margin-bottom: 0.2rem;
+  }
+  .pc-list {
+    list-style: none;
+    margin: 0;
+  }
+  .pc-list li {
+    position: relative;
+    padding-left: 1.05rem;
+    margin: 0.3rem 0;
+    font-size: 0.82rem;
+    line-height: 1.45;
+    color: #cfd4e8;
+  }
+  .pc-list.good li::before,
+  .pc-list.bad li::before {
+    position: absolute;
+    left: 0;
+    top: 0;
+    font-weight: 700;
+  }
+  .pc-list.good li::before { content: '+'; color: var(--green); }
+  .pc-list.bad li::before  { content: '-'; color: var(--red); }
+
+  .token-count-strip {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+    margin-top: 0.85rem;
+  }
+  .token-count-box {
+    flex: 1;
+    min-width: 13rem;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 0.625rem;
+    padding: 0.7rem 0.8rem;
+  }
+  .token-count-label {
+    font-size: 0.73rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 0.35rem;
+  }
+  .token-count-number {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.82rem;
+    color: #dfe4ff;
+  }
+
+  .corpus-card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 0.68rem;
+    padding: 0.82rem 0.95rem;
+  }
+  .corpus-title {
+    font-size: 0.72rem;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 0.35rem;
+  }
+  .corpus-body {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    line-height: 1.58;
+    color: #dee3f8;
+    white-space: pre-line;
+  }
+  .pair-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+  }
+  .pair-chip {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.77rem;
+    border: 1px solid var(--border);
+    border-radius: 0.5rem;
+    padding: 0.45rem 0.55rem;
+    background: rgba(123,154,255,0.08);
+    color: #d2dbff;
+  }
+  .pair-chip strong {
+    color: var(--accent);
+  }
+  .merge-line {
+    margin-top: 0.55rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    color: var(--green);
+  }
+
+  .token-example {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.38rem;
+    align-items: center;
+  }
+  .token-pill {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.76rem;
+    border: 1px solid var(--border);
+    border-radius: 0.45rem;
+    padding: 0.3rem 0.5rem;
+    background: var(--surface2);
+    color: #dbe1f6;
+  }
+  .token-pill.main { border-color: rgba(123,154,255,0.55); color: #d8e0ff; background: rgba(123,154,255,0.12); }
+  .token-pill.reuse { border-color: rgba(90,232,142,0.5); color: #baf5cf; background: rgba(90,232,142,0.12); }
+  .token-pill.flex { border-color: rgba(255,170,85,0.5); color: #ffd8b5; background: rgba(255,170,85,0.12); }
+  .example-sentence {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+    line-height: 1.6;
+    color: #e0e6fb;
+    padding: 0.65rem 0.75rem;
+    border-radius: 0.55rem;
+    border: 1px solid var(--border);
+    background: rgba(123,154,255,0.08);
+  }
+  .id-seq {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.78rem;
+    line-height: 1.55;
+    color: #d5deff;
+    padding: 0.6rem 0.7rem;
+    border-radius: 0.5rem;
+    border: 1px solid var(--border);
+    background: var(--surface2);
+  }
+
+  @media (max-width: 56rem) {
+    .pair-grid {
+      grid-template-columns: 1fr;
+    }
+    .token-count-strip {
+      flex-direction: column;
+    }
+  }
 </style>
 <script>
   window.MathJax = {
@@ -947,6 +1125,459 @@
     </div>
   </div>
 
+  <!-- ═══════ SLIDE 4 — TOKENIZATION MESSAGE ═══════ -->
+  <div class="slide" id="slide-4">
+    <span class="section-tag">Tokenization</span>
+    <div class="badge concept">Tokenization</div>
+    <h2>What tokenization actually does</h2>
+    <div class="spacer-sm"></div>
+
+    <p class="token-anchor">Text is messy and open-ended; the model needs a <strong>fixed interface</strong>.</p>
+
+    <div class="card" style="margin-top:0.75rem;">
+      <div class="token-count-label">Running sentence (we will reuse this across tokenization types)</div>
+      <div class="example-sentence">"Our startup launched slowerify today."</div>
+    </div>
+
+    <div class="flow token-interface" style="margin-top:0.85rem;">
+      <div class="flow-box raw">Raw text</div>
+      <div class="flow-box tokzr">Tokenizer</div>
+      <div class="flow-box ids">Token IDs</div>
+      <div class="flow-box embed">Embeddings</div>
+    </div>
+
+    <div class="grid-2" style="margin-top:0.75rem;">
+      <div class="card">
+        <h3>Three concrete steps</h3>
+        <ul class="pc-list good">
+          <li>Define a vocabulary of discrete symbols.</li>
+          <li>Split text into token pieces from that vocabulary.</li>
+          <li>Map each token piece to an integer ID.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Same sentence, now as model input</h3>
+        <div class="token-example" style="margin-top:0.6rem;">
+          <span class="token-pill main">[Our]</span>
+          <span class="token-pill main">[startup]</span>
+          <span class="token-pill main">[launched]</span>
+          <span class="token-pill flex">[slower]</span>
+          <span class="token-pill flex">[ify]</span>
+          <span class="token-pill main">[today]</span>
+          <span class="token-pill">[.]</span>
+        </div>
+        <div class="id-seq" style="margin-top:0.55rem;">[412, 9621, 7710, 28904, 771, 1908, 13]</div>
+        <p class="tiny" style="margin-top:0.45rem;">IDs are illustrative; exact values depend on the tokenizer vocabulary.</p>
+      </div>
+    </div>
+
+    <div class="spacer-sm"></div>
+    <div class="callout info">
+      <span class="icon">i</span>
+      <span><strong>Tokenization chooses the units of computation.</strong> Next we compare word-level, character-level, and subword-level on this exact sentence.</span>
+    </div>
+  </div>
+
+  <!-- ═══════ SLIDE 5 — WORD-LEVEL LIMITS ═══════ -->
+  <div class="slide" id="slide-5">
+    <span class="section-tag">Tokenization</span>
+    <div class="badge discussion">Word-Level Baseline</div>
+    <h2>Word-level on the same sentence: simple, but brittle</h2>
+    <div class="spacer-sm"></div>
+
+    <div class="card">
+      <h3>Running sentence under word-level tokenization</h3>
+      <div class="token-example" style="margin-top:0.55rem;">
+        <span class="token-pill main">[Our]</span>
+        <span class="token-pill main">[startup]</span>
+        <span class="token-pill main">[launched]</span>
+        <span class="token-pill main">[slowerify]</span>
+        <span class="token-pill main">[today]</span>
+        <span class="token-pill">[.]</span>
+      </div>
+      <div class="small-text" style="margin-top:0.5rem;">If <span class="hl-orange">slowerify</span> is unseen in the fixed word vocabulary, it may collapse to an unknown token:</div>
+      <div class="token-example" style="margin-top:0.35rem;">
+        <span class="token-pill">[Our]</span>
+        <span class="token-pill">[startup]</span>
+        <span class="token-pill">[launched]</span>
+        <span class="token-pill flex">[UNK]</span>
+        <span class="token-pill">[today]</span>
+        <span class="token-pill">[.]</span>
+      </div>
+    </div>
+
+    <div class="grid-2" style="margin-top:0.8rem;">
+      <div class="card tradeoff-card" style="border-color: rgba(90,232,142,0.28);">
+        <h3 style="color:var(--green);">What is attractive</h3>
+        <ul class="pc-list good">
+          <li>Easy mental model: one word = one token.</li>
+          <li>Short sequence for this sentence (~6 tokens).</li>
+          <li>Feels natural to human readers.</li>
+        </ul>
+      </div>
+
+      <div class="card tradeoff-card" style="border-color: rgba(255,123,123,0.3);">
+        <h3 style="color:var(--red);">Why it breaks</h3>
+        <ul class="pc-list bad">
+          <li>Language is open-vocabulary: new names, typos, and jargon keep appearing.</li>
+          <li>A fixed vocabulary becomes huge, or drops rare words as unknowns.</li>
+          <li>The model cannot reuse sub-parts like stems or suffixes for unseen words.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="spacer-sm"></div>
+    <div class="callout warn">
+      <span class="icon">!</span>
+      <span><strong>Word-level tokenization is efficient for familiar words, but brittle whenever language invents something new.</strong></span>
+    </div>
+  </div>
+
+  <!-- ═══════ SLIDE 6 — CHARACTER-LEVEL LIMITS ═══════ -->
+  <div class="slide" id="slide-6">
+    <span class="section-tag">Tokenization</span>
+    <div class="badge discussion">Character-Level Baseline</div>
+    <h2>Character-level on the same sentence: flexible, but long</h2>
+    <div class="spacer-sm"></div>
+
+    <div class="card">
+      <h3>Running sentence under character-level tokenization</h3>
+      <div class="token-example" style="margin-top:0.55rem;">
+        <span class="token-pill">[O]</span>
+        <span class="token-pill">[u]</span>
+        <span class="token-pill">[r]</span>
+        <span class="token-pill">[ ]</span>
+        <span class="token-pill">[s]</span>
+        <span class="token-pill">[t]</span>
+        <span class="token-pill">[a]</span>
+        <span class="token-pill">...</span>
+      </div>
+      <div class="token-count-strip">
+        <div class="token-count-box">
+          <div class="token-count-label">Word-level (same sentence)</div>
+          <div class="token-count-number">~6 tokens</div>
+        </div>
+        <div class="token-count-box">
+          <div class="token-count-label">Character-level (same sentence)</div>
+          <div class="token-count-number">~37 tokens (includes spaces/punctuation)</div>
+        </div>
+      </div>
+      <p class="tiny" style="margin-top:0.45rem;">Exact counts vary by tokenizer conventions, but the sequence-length gap is the key point.</p>
+    </div>
+
+    <div class="grid-2" style="margin-top:0.8rem;">
+      <div class="card tradeoff-card" style="border-color: rgba(90,232,142,0.28);">
+        <h3 style="color:var(--green);">What is attractive</h3>
+        <ul class="pc-list good">
+          <li>No unknown words at all.</li>
+          <li>Handles arbitrary spelling and novel strings.</li>
+          <li>Natural for character-sensitive tasks.</li>
+        </ul>
+      </div>
+      <div class="card tradeoff-card" style="border-color: rgba(255,123,123,0.3);">
+        <h3 style="color:var(--red);">Why it is not default</h3>
+        <ul class="pc-list bad">
+          <li>Sequences become much longer.</li>
+          <li>Transformer cost grows with sequence length.</li>
+          <li>The model spends compute rebuilding words from tiny pieces.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="spacer-sm"></div>
+    <div class="callout warn">
+      <span class="icon">!</span>
+      <span><strong>Character-level is flexible, but it makes the model do too much work on very small pieces.</strong></span>
+    </div>
+  </div>
+
+  <!-- ═══════ SLIDE 7 — SUBWORD COMPROMISE ═══════ -->
+  <div class="slide" id="slide-7">
+    <span class="section-tag">Tokenization</span>
+    <div class="badge concept">Subword Strategy</div>
+    <h2>Subword on the same sentence: practical middle ground</h2>
+    <div class="spacer-sm"></div>
+
+    <div class="card">
+      <h3>Running sentence under subword tokenization</h3>
+      <div class="token-example" style="margin-top:0.55rem;">
+        <span class="token-pill main">[Our]</span>
+        <span class="token-pill main">[startup]</span>
+        <span class="token-pill main">[launched]</span>
+        <span class="token-pill reuse">[slower]</span>
+        <span class="token-pill flex">[ify]</span>
+        <span class="token-pill main">[today]</span>
+        <span class="token-pill">[.]</span>
+      </div>
+      <p class="small-text" style="margin-top:0.5rem;">Frequent chunks become single tokens, and rare words can still be composed from smaller reusable pieces.</p>
+    </div>
+
+    <div class="grid-3" style="margin-top:0.8rem;">
+      <div class="card tradeoff-card" style="border-color: rgba(255,123,123,0.22);">
+        <h3 style="color:var(--red);">Word-level</h3>
+        <p class="small-text">Short sequence, but brittle on unseen words.</p>
+      </div>
+      <div class="card tradeoff-card" style="border-color: rgba(255,170,85,0.24);">
+        <h3 style="color:var(--orange);">Character-level</h3>
+        <p class="small-text">Always flexible, but very long sequence.</p>
+      </div>
+      <div class="card tradeoff-card" style="border-color: rgba(90,232,142,0.28);">
+        <h3 style="color:var(--green);">Subword-level</h3>
+        <p class="small-text">Near-word efficiency with far better flexibility.</p>
+      </div>
+    </div>
+
+    <div class="spacer-sm"></div>
+    <div class="callout success">
+      <span class="icon">+</span>
+      <span><strong>Subword tokenization memorizes common chunks and composes uncommon ones.</strong></span>
+    </div>
+    <p class="tiny" style="margin-top:0.55rem;">This is why subword tokenization became the practical default in modern LLMs.</p>
+  </div>
+
+  <!-- ═══════ SLIDE 8 — WHAT BPE IS ═══════ -->
+  <div class="slide" id="slide-8">
+    <span class="section-tag">Tokenization</span>
+    <div class="badge concept">BPE</div>
+    <h2>Byte Pair Encoding (BPE): the canonical subword algorithm</h2>
+    <div class="spacer-sm"></div>
+
+    <div class="flow token-interface">
+      <div class="flow-box">Start from small units</div>
+      <div class="flow-box">Count adjacent pairs</div>
+      <div class="flow-box">Merge most frequent pair</div>
+      <div class="flow-box">Repeat</div>
+    </div>
+
+    <div class="grid-2" style="margin-top:0.75rem;">
+      <div class="card">
+        <h3>Core rule</h3>
+        <p class="small-text">BPE repeatedly merges the most frequent adjacent pair into a new token. Over many merges, common fragments become reusable subword units.</p>
+      </div>
+      <div class="card">
+        <h3>Important framing</h3>
+        <p class="small-text">BPE is driven by frequency, not meaning. It may discover meaningful-looking pieces, but only because those strings appear often.</p>
+      </div>
+    </div>
+
+    <div class="spacer-sm"></div>
+    <div class="callout info">
+      <span class="icon">i</span>
+      <span><strong>BPE is a frequency-based compression scheme turned into a text interface.</strong></span>
+    </div>
+  </div>
+
+  <!-- ═══════ SLIDE 9 — BPE EXAMPLE STEP 1 ═══════ -->
+  <div class="slide" id="slide-9">
+    <span class="section-tag">Tokenization</span>
+    <div class="badge activity">BPE Walkthrough</div>
+    <h2>Toy corpus and first merge (illustrative run)</h2>
+    <div class="spacer-sm"></div>
+
+    <div class="grid-2">
+      <div class="corpus-card">
+        <div class="corpus-title">Toy corpus (character start + end marker)</div>
+        <div class="corpus-body">l o w &lt;/w&gt;
+l o w e r &lt;/w&gt;
+l o w e s t &lt;/w&gt;
+s l o w e r &lt;/w&gt;</div>
+        <p class="tiny" style="margin-top:0.45rem;">Merge order can change with frequency ties and tie-breaking. This run is illustrative.</p>
+      </div>
+
+      <div class="card">
+        <h3>Step 1: count adjacent pairs</h3>
+        <div class="pair-grid" style="margin-top:0.55rem;">
+          <div class="pair-chip"><strong>l o</strong> -> 4</div>
+          <div class="pair-chip"><strong>o w</strong> -> 4</div>
+          <div class="pair-chip"><strong>w e</strong> -> 3</div>
+          <div class="pair-chip"><strong>e r</strong> -> 2</div>
+        </div>
+        <p class="small-text" style="margin-top:0.5rem;">Suppose we merge <span class="hl">l o</span> -> <span class="hl">lo</span> first.</p>
+      </div>
+    </div>
+
+    <div class="hidden-content autostep">
+      <div class="corpus-card" style="margin-top:0.8rem;">
+        <div class="corpus-title">After merge: l o -> lo</div>
+        <div class="corpus-body">lo w &lt;/w&gt;
+lo w e r &lt;/w&gt;
+lo w e s t &lt;/w&gt;
+s lo w e r &lt;/w&gt;</div>
+        <div class="merge-line">Teaching point: the tokenizer learned that <strong>lo</strong> is a reusable chunk.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════ SLIDE 10 — BPE EXAMPLE STEP 2-3 ═══════ -->
+  <div class="slide" id="slide-10">
+    <span class="section-tag">Tokenization</span>
+    <div class="badge activity">BPE Walkthrough</div>
+    <h2>Keep merging common continuations</h2>
+    <div class="spacer-sm"></div>
+
+    <div class="corpus-card">
+      <div class="corpus-title">Current state</div>
+      <div class="corpus-body">lo w &lt;/w&gt;
+lo w e r &lt;/w&gt;
+lo w e s t &lt;/w&gt;
+s lo w e r &lt;/w&gt;</div>
+    </div>
+
+    <div class="hidden-content autostep">
+      <div class="card" style="margin-top:0.8rem;">
+        <h3>Step 2</h3>
+        <p class="small-text">Frequent pair: <span class="hl">lo w</span> -> 4, so merge <span class="hl">lo w -> low</span>.</p>
+        <div class="corpus-card" style="margin-top:0.55rem;">
+          <div class="corpus-body">low &lt;/w&gt;
+low e r &lt;/w&gt;
+low e s t &lt;/w&gt;
+s low e r &lt;/w&gt;</div>
+        </div>
+        <div class="merge-line">Teaching point: now <strong>low</strong> is a bigger reusable unit.</div>
+      </div>
+    </div>
+
+    <div class="hidden-content autostep">
+      <div class="card" style="margin-top:0.8rem;">
+        <h3>Step 3 (one plausible continuation)</h3>
+        <p class="small-text">Merge <span class="hl">low e -> lowe</span>, then merge <span class="hl">lowe r -> lower</span>.</p>
+        <div class="corpus-card" style="margin-top:0.55rem;">
+          <div class="corpus-body">low &lt;/w&gt;
+lower &lt;/w&gt;
+lowe s t &lt;/w&gt;
+s lower &lt;/w&gt;</div>
+        </div>
+        <div class="merge-line">Teaching point: <strong>lower</strong> becomes a full token because it appears often enough.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════ SLIDE 11 — BPE TAKEAWAY ═══════ -->
+  <div class="slide" id="slide-11">
+    <span class="section-tag">Tokenization</span>
+    <div class="badge concept">BPE Takeaway</div>
+    <h2>Common chunks are memorized; uncommon words are composed</h2>
+    <div class="spacer-sm"></div>
+
+    <div class="grid-2">
+      <div class="card">
+        <h3>Learned pieces (example)</h3>
+        <div class="token-example" style="margin-top:0.55rem;">
+          <span class="token-pill main">low</span>
+          <span class="token-pill reuse">lower</span>
+          <span class="token-pill flex">lowe</span>
+        </div>
+        <p class="small-text" style="margin-top:0.55rem;">Exact pieces vary by corpus and merge schedule, but the pattern is stable.</p>
+      </div>
+      <div class="card">
+        <h3>Possible tokenizations</h3>
+        <div class="small-text" style="margin-top:0.5rem;">low -> <span class="hl">[low]</span></div>
+        <div class="small-text">lower -> <span class="hl-green">[lower]</span></div>
+        <div class="small-text">lowest -> <span class="hl-orange">[lowe] [s] [t]</span> (or another learned split)</div>
+        <div class="small-text">slower -> <span class="hl-purple">[s] [lower]</span></div>
+      </div>
+    </div>
+
+    <div class="spacer-sm"></div>
+    <div class="callout success">
+      <span class="icon">+</span>
+      <span>The tokenizer can reuse a chunk like <strong>lower</strong> inside larger words like <strong>slower</strong>. This is the core subword advantage.</span>
+    </div>
+    <div class="spacer-sm"></div>
+    <div class="callout info">
+      <span class="icon">i</span>
+      <span><strong>BPE starts with characters, repeatedly merges the most common adjacent pair, and gradually builds a vocabulary of reusable subword chunks.</strong></span>
+    </div>
+  </div>
+
+  <!-- ═══════ SLIDE 12 — WHY THIS MATTERS ═══════ -->
+  <div class="slide" id="slide-12">
+    <span class="section-tag">Tokenization</span>
+    <div class="badge discussion">Why It Matters</div>
+    <h2>Why tokenization influences letter-level behavior</h2>
+    <div class="spacer-sm"></div>
+
+    <div class="card">
+      <h3>Concrete mechanism (not random)</h3>
+      <div class="small-text" style="margin-top:0.45rem;">Character-level question: <span class="hl">"How many r letters are in slowerify?"</span></div>
+      <div class="small-text" style="margin-top:0.3rem;">Tokenizer interface first: <span class="hl-purple">[slower] [ify]</span> (or another subword split)</div>
+      <p class="small-text" style="margin-top:0.5rem;">Attention/FFN computations run on token vectors. For letter-level tasks, the model often has to reconstruct character structure indirectly from token pieces.</p>
+    </div>
+
+    <div class="grid-3" style="margin-top:0.8rem;">
+      <div class="card">
+        <h3>1. Input interface</h3>
+        <p class="small-text">Prompt arrives as token IDs, not raw character arrays.</p>
+      </div>
+      <div class="card">
+        <h3>2. Core computation</h3>
+        <p class="small-text">Transformer layers operate on token embeddings and token states.</p>
+      </div>
+      <div class="card">
+        <h3>3. Extra reconstruction</h3>
+        <p class="small-text">Letter-level answers may require rebuilding characters across token chunks.</p>
+      </div>
+    </div>
+
+    <div class="grid-2" style="margin-top:0.8rem;">
+      <div class="card">
+        <h3>Tasks where this intuition helps</h3>
+        <ul class="pc-list bad">
+          <li>Counting letters in a word.</li>
+          <li>Reversing a word exactly.</li>
+          <li>Extracting the nth character.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>Important nuance</h3>
+        <p class="small-text">Tokenization is a contributor, not the only cause. Training data, optimization, and decoding strategy also affect these outcomes.</p>
+      </div>
+    </div>
+
+    <div class="spacer-sm"></div>
+    <div class="callout warn">
+      <span class="icon">!</span>
+      <span><strong>The model is fluent in token pieces first, and only indirectly aware of letters.</strong></span>
+    </div>
+  </div>
+
+  <!-- ═══════ SLIDE 13 — BRIDGE TO EMBEDDINGS ═══════ -->
+  <div class="slide" id="slide-13">
+    <span class="section-tag">Transition</span>
+    <div class="badge day2">Bridge</div>
+    <h2>We now have token IDs, but IDs alone are not enough</h2>
+    <div class="spacer-sm"></div>
+
+    <div class="flow token-interface">
+      <div class="flow-box raw">Token pieces</div>
+      <div class="flow-box ids">Integer IDs</div>
+      <div class="flow-box" style="border-color: rgba(255,123,123,0.45); color: var(--red); background: rgba(255,123,123,0.08);">Need computable vectors</div>
+      <div class="flow-box embed">Embedding layer</div>
+    </div>
+
+    <div class="grid-2" style="margin-top:0.85rem;">
+      <div class="card">
+        <h3>What tokenization gave us</h3>
+        <div class="id-seq" style="margin-top:0.55rem;">[412, 9621, 7710, 28904, 771, 1908, 13]</div>
+        <p class="small-text" style="margin-top:0.5rem;">These integers are discrete labels or addresses in a vocabulary table.</p>
+      </div>
+      <div class="card">
+        <h3>Why this is not enough</h3>
+        <ul class="pc-list bad">
+          <li>ID numbers by themselves do not encode semantic similarity.</li>
+          <li>Arithmetic on raw IDs is meaningless for language computation.</li>
+          <li>The model needs dense vectors it can compare, mix, and transform.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="spacer-sm"></div>
+    <div class="callout info">
+      <span class="icon">→</span>
+      <span><strong>Now we have token IDs. The next question is: how does the model turn those discrete IDs into something it can compute with? That is the embedding layer.</strong></span>
+    </div>
+  </div>
+
 </div>
 
 <div class="bottom-bar">
@@ -955,7 +1586,7 @@
   <div class="progress-track">
     <div class="progress-fill" id="progressFill" style="width:0%"></div>
   </div>
-  <span class="slide-counter" id="slideCounter">1 / 4</span>
+  <span class="slide-counter" id="slideCounter">1 / 14</span>
   <button class="nav-btn primary" id="btnNext">Next &rarr;</button>
 </div>
 
