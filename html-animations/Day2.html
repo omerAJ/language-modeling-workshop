@@ -895,12 +895,291 @@
     background: var(--surface2);
   }
 
+  .embed-table {
+    display: grid;
+    gap: 0.6rem;
+    margin-top: 0.65rem;
+  }
+  .embed-row {
+    display: grid;
+    grid-template-columns: 6.2rem 1fr;
+    gap: 0.6rem;
+    align-items: center;
+  }
+  .embed-key {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    color: #d8e0ff;
+    border: 1px solid rgba(123,154,255,0.42);
+    background: rgba(123,154,255,0.12);
+    border-radius: 0.45rem;
+    padding: 0.32rem 0.45rem;
+    text-align: center;
+  }
+  .vec-chip-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+  }
+  .vec-chip {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.73rem;
+    color: #d9ffe7;
+    border: 1px solid rgba(90,232,142,0.45);
+    background: rgba(90,232,142,0.12);
+    border-radius: 0.4rem;
+    padding: 0.24rem 0.38rem;
+  }
+  .toy-map {
+    position: relative;
+    border: 1px solid rgba(123,154,255,0.3);
+    border-radius: 0.72rem;
+    height: 15rem;
+    margin-top: 0.6rem;
+    background:
+      linear-gradient(0deg, rgba(123,154,255,0.08) 1px, transparent 1px) 0 0 / 1.8rem 1.8rem,
+      linear-gradient(90deg, rgba(123,154,255,0.08) 1px, transparent 1px) 0 0 / 1.8rem 1.8rem,
+      radial-gradient(circle at 20% 15%, rgba(90,232,142,0.12), transparent 45%),
+      radial-gradient(circle at 80% 80%, rgba(255,170,85,0.1), transparent 42%),
+      var(--surface2);
+    overflow: hidden;
+  }
+  .toy-map::before,
+  .toy-map::after {
+    content: '';
+    position: absolute;
+    background: rgba(153,160,184,0.35);
+  }
+  .toy-map::before {
+    height: 1px;
+    left: 0.8rem;
+    right: 0.8rem;
+    top: 50%;
+  }
+  .toy-map::after {
+    width: 1px;
+    top: 0.8rem;
+    bottom: 0.8rem;
+    left: 50%;
+  }
+  .map-point {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.71rem;
+    padding: 0.24rem 0.34rem;
+    border-radius: 0.35rem;
+    border: 1px solid var(--border);
+    background: rgba(22,25,35,0.92);
+    color: #edf0ff;
+    white-space: nowrap;
+  }
+  .map-point.animal {
+    border-color: rgba(90,232,142,0.52);
+    color: #caffdb;
+    background: rgba(90,232,142,0.14);
+  }
+  .map-point.vehicle {
+    border-color: rgba(255,170,85,0.52);
+    color: #ffd8b7;
+    background: rgba(255,170,85,0.14);
+  }
+  .map-axis {
+    position: absolute;
+    font-size: 0.66rem;
+    color: var(--text-dim);
+    letter-spacing: 0.04em;
+  }
+  .map-axis.x { right: 0.65rem; bottom: 0.45rem; }
+  .map-axis.y {
+    left: 0.5rem;
+    top: 0.65rem;
+    transform: rotate(-90deg);
+    transform-origin: left top;
+  }
+  .projection-card {
+    border-color: rgba(123,154,255,0.34);
+    background:
+      radial-gradient(circle at 15% 12%, rgba(123,154,255,0.1), transparent 40%),
+      radial-gradient(circle at 85% 85%, rgba(180,157,255,0.08), transparent 45%),
+      var(--surface);
+  }
+  .projection-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.35rem;
+  }
+  .lens-btn {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    border: 1px solid var(--border);
+    border-radius: 0.5rem;
+    padding: 0.4rem 0.68rem;
+    background: var(--surface2);
+    color: #dbe3ff;
+    cursor: pointer;
+    transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease;
+  }
+  .lens-btn:hover {
+    border-color: rgba(123,154,255,0.6);
+    background: rgba(123,154,255,0.14);
+    transform: translateY(-1px);
+  }
+  .lens-btn.active {
+    border-color: rgba(90,232,142,0.6);
+    background: rgba(90,232,142,0.18);
+    color: #d7ffe8;
+  }
+  .projection-stage {
+    margin-top: 0.7rem;
+    border: 1px solid rgba(123,154,255,0.3);
+    border-radius: 0.75rem;
+    background:
+      linear-gradient(0deg, rgba(123,154,255,0.06) 1px, transparent 1px) 0 0 / 1.65rem 1.65rem,
+      linear-gradient(90deg, rgba(123,154,255,0.06) 1px, transparent 1px) 0 0 / 1.65rem 1.65rem,
+      rgba(13,18,30,0.9);
+    min-height: 15rem;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    position: relative;
+  }
+  .projection-canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+  .projection-readout {
+    margin-top: 0.7rem;
+    padding: 0.65rem 0.72rem;
+    border-radius: 0.58rem;
+    border: 1px solid rgba(123,154,255,0.28);
+    background: rgba(123,154,255,0.1);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+  .projection-readout.updating {
+    opacity: 0.68;
+    transform: translateY(2px);
+  }
+  .projection-neighbors {
+    display: flex;
+    gap: 0.42rem;
+    flex-wrap: wrap;
+    margin-top: 0.5rem;
+  }
+  .neighbor-chip {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    border: 1px solid rgba(90,232,142,0.45);
+    border-radius: 0.42rem;
+    padding: 0.23rem 0.42rem;
+    color: #d7ffe8;
+    background: rgba(90,232,142,0.12);
+  }
+  .projection-note {
+    margin-top: 0.6rem;
+    font-size: 0.84rem;
+    color: #d1d8f4;
+    line-height: 1.5;
+  }
+  .quiz-choices {
+    display: grid;
+    gap: 0.55rem;
+    margin-top: 0.75rem;
+  }
+  .quiz-choice {
+    text-align: left;
+    border: 1px solid var(--border);
+    border-radius: 0.55rem;
+    padding: 0.62rem 0.74rem;
+    background: var(--surface2);
+    color: #e6ebff;
+    font-size: 0.84rem;
+    line-height: 1.45;
+    cursor: pointer;
+    transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+  }
+  .quiz-choice:hover {
+    border-color: rgba(123,154,255,0.55);
+    background: rgba(123,154,255,0.12);
+    transform: translateY(-1px);
+  }
+  .quiz-choice.locked {
+    cursor: default;
+    opacity: 0.9;
+    transform: none;
+  }
+  .quiz-choice.correct {
+    border-color: rgba(90,232,142,0.55);
+    background: rgba(90,232,142,0.17);
+    color: #d5ffe5;
+  }
+  .quiz-choice.wrong {
+    border-color: rgba(255,123,123,0.56);
+    background: rgba(255,123,123,0.17);
+    color: #ffd6d6;
+  }
+  .quiz-feedback {
+    margin-top: 0.7rem;
+    color: #d5dfff;
+    font-size: 0.83rem;
+    line-height: 1.5;
+  }
+  .quiz-feedback.hidden-content {
+    border: none;
+    padding: 0;
+    background: transparent;
+  }
+  .quiz-feedback.hidden-content.revealed {
+    border: 1px solid rgba(123,154,255,0.32);
+    border-radius: 0.6rem;
+    padding: 0.72rem 0.86rem;
+    background: rgba(123,154,255,0.1);
+  }
+  .math-note {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.76rem;
+    color: #d7deff;
+    padding: 0.48rem 0.56rem;
+    border-radius: 0.5rem;
+    border: 1px solid rgba(123,154,255,0.34);
+    background: rgba(123,154,255,0.1);
+    margin-top: 0.55rem;
+  }
+
   @media (max-width: 56rem) {
     .pair-grid {
       grid-template-columns: 1fr;
     }
     .token-count-strip {
       flex-direction: column;
+    }
+    .embed-row {
+      grid-template-columns: 1fr;
+      gap: 0.35rem;
+    }
+    .toy-map {
+      height: 12.5rem;
+    }
+    .projection-toolbar {
+      gap: 0.42rem;
+    }
+    .lens-btn {
+      font-size: 0.72rem;
+      padding: 0.34rem 0.54rem;
+    }
+    .projection-stage {
+      min-height: 12rem;
+      aspect-ratio: 16 / 10;
+    }
+    .projection-neighbors {
+      gap: 0.34rem;
+    }
+    .neighbor-chip {
+      font-size: 0.67rem;
+      padding: 0.18rem 0.34rem;
     }
   }
 </style>
@@ -1125,21 +1404,53 @@
     </div>
   </div>
 
-  <!-- ═══════ SLIDE 4 — TOKENIZATION MESSAGE ═══════ -->
+  <!-- ═══════ SLIDE 4 — TOKENIZATION HOOK ═══════ -->
   <div class="slide" id="slide-4">
     <span class="section-tag">Tokenization</span>
     <div class="badge concept">Tokenization</div>
-    <h2>What tokenization actually does</h2>
+    <h2>How many r's in strawberry?</h2>
     <div class="spacer-sm"></div>
 
-    <p class="token-anchor">Text is messy and open-ended; the model needs a <strong>fixed interface</strong>.</p>
-
-    <div class="card" style="margin-top:0.75rem;">
-      <div class="token-count-label">Running sentence (we will reuse this across tokenization types)</div>
-      <div class="example-sentence">"Our startup launched slowerify today."</div>
+    <div class="grid-2">
+      <div class="card" style="display:flex; flex-direction:column; align-items:center; justify-content:center; gap:0.65rem; text-align:center;">
+        <div style="font-size:2.2rem; font-weight:700; font-family:'JetBrains Mono',monospace; letter-spacing:0.04em;">
+          st<span class="hl-red">r</span>awbe<span class="hl-red">rr</span>y
+        </div>
+        <div style="font-size:0.82rem; color:var(--text-dim);">You count: <strong style="color:var(--green);">3 r's</strong></div>
+        <div style="font-size:0.82rem;">GPT-4 answers: <strong style="color:var(--red);">2 r's</strong></div>
+        <p class="tiny" style="color:var(--text-dim); margin-top:0.1rem;">Cosma et al., EMNLP 2025 — documented this class of failures systematically.</p>
+      </div>
+      <div class="card">
+        <h3>What the model actually sees</h3>
+        <div class="token-count-label" style="margin-top:0.5rem;">You write</div>
+        <div style="font-family:'JetBrains Mono',monospace; letter-spacing:0.18em; margin-top:0.25rem; font-size:0.9rem;">s t r a w b e r r y</div>
+        <div class="token-count-label" style="margin-top:0.7rem;">Model receives</div>
+        <div class="token-example" style="margin-top:0.3rem;">
+          <span class="token-pill main">[straw]</span>
+          <span class="token-pill reuse">[berry]</span>
+        </div>
+        <p class="small-text" style="margin-top:0.55rem; color:var(--text-dim);">2 token vectors. No individual letter vectors. To count r's, the model must reconstruct character-level structure from subword representations — something it is not built to do directly.</p>
+      </div>
     </div>
 
-    <div class="flow token-interface" style="margin-top:0.85rem;">
+    <div class="spacer-sm"></div>
+    <div class="callout info">
+      <span class="icon">i</span>
+      <span>This is not a bug — it is an architectural property. The next slides explain exactly how it arises and what it means for building reliable models.</span>
+    </div>
+    <div class="template-note" style="margin-top:0.75rem;">
+      here we can show the gpt3.5 live demo and it failing on such tasks
+    </div>
+  </div>
+
+  <!-- ═══════ SLIDE 5 — TOKENIZATION CONCEPT ═══════ -->
+  <div class="slide" id="slide-5">
+    <span class="section-tag">Tokenization</span>
+    <div class="badge concept">Tokenization</div>
+    <h2>Step 0: before the model reads, it tokenizes</h2>
+    <div class="spacer-sm"></div>
+
+    <div class="flow token-interface" style="margin-top:0.75rem;">
       <div class="flow-box raw">Raw text</div>
       <div class="flow-box tokzr">Tokenizer</div>
       <div class="flow-box ids">Token IDs</div>
@@ -1150,78 +1461,77 @@
       <div class="card">
         <h3>Three concrete steps</h3>
         <ul class="pc-list good">
-          <li>Define a vocabulary of discrete symbols.</li>
-          <li>Split text into token pieces from that vocabulary.</li>
-          <li>Map each token piece to an integer ID.</li>
+          <li>Define a fixed vocabulary of discrete symbols.</li>
+          <li>Split input text into pieces from that vocabulary.</li>
+          <li>Map each piece to an integer ID.</li>
         </ul>
+        <div class="callout info" style="margin-top:0.7rem;">
+          <span class="icon">i</span>
+          <span>The vocabulary is learned once and <strong>frozen</strong> — it never changes during fine-tuning or inference. GPT-2: 50,257 tokens. GPT-4 (cl100k): ~100,000 tokens.</span>
+        </div>
       </div>
       <div class="card">
-        <h3>Same sentence, now as model input</h3>
-        <div class="token-example" style="margin-top:0.6rem;">
-          <span class="token-pill main">[Our]</span>
-          <span class="token-pill main">[startup]</span>
-          <span class="token-pill main">[launched]</span>
-          <span class="token-pill flex">[slower]</span>
-          <span class="token-pill flex">[ify]</span>
-          <span class="token-pill main">[today]</span>
-          <span class="token-pill">[.]</span>
+        <h3>Running example — used across all three approaches</h3>
+        <div class="token-count-label" style="margin-top:0.5rem;">Sentence</div>
+        <div class="example-sentence" style="font-size:0.85rem;">"researchers fine-tune large-scale models"</div>
+        <div class="token-count-label" style="margin-top:0.65rem;">Under subword tokenization</div>
+        <div class="token-example" style="margin-top:0.4rem; flex-wrap:wrap;">
+          <span class="token-pill main">[research]</span>
+          <span class="token-pill reuse">[ers]</span>
+          <span class="token-pill main">[fine]</span>
+          <span class="token-pill">[-]</span>
+          <span class="token-pill main">[tune]</span>
+          <span class="token-pill main">[large]</span>
+          <span class="token-pill">[-]</span>
+          <span class="token-pill main">[scale]</span>
+          <span class="token-pill main">[model]</span>
+          <span class="token-pill reuse">[s]</span>
         </div>
-        <div class="id-seq" style="margin-top:0.55rem;">[412, 9621, 7710, 28904, 771, 1908, 13]</div>
-        <p class="tiny" style="margin-top:0.45rem;">IDs are illustrative; exact values depend on the tokenizer vocabulary.</p>
+        <div class="id-seq" style="margin-top:0.5rem;">[3245, 891, 4680, 12, 10812, 3267, 12, 5649, 219, 82]</div>
+        <p class="tiny" style="margin-top:0.4rem;">IDs are illustrative; exact values depend on the tokenizer vocabulary.</p>
       </div>
-    </div>
-
-    <div class="spacer-sm"></div>
-    <div class="callout info">
-      <span class="icon">i</span>
-      <span><strong>Tokenization chooses the units of computation.</strong> Next we compare word-level, character-level, and subword-level on this exact sentence.</span>
     </div>
   </div>
 
-  <!-- ═══════ SLIDE 5 — WORD-LEVEL LIMITS ═══════ -->
-  <div class="slide" id="slide-5">
+  <!-- ═══════ SLIDE 6 — WORD-LEVEL ═══════ -->
+  <div class="slide" id="slide-6">
     <span class="section-tag">Tokenization</span>
-    <div class="badge discussion">Word-Level Baseline</div>
-    <h2>Word-level on the same sentence: simple, but brittle</h2>
+    <div class="badge discussion">Word-Level</div>
+    <h2>Approach 1: one word = one token — simple, but brittle</h2>
     <div class="spacer-sm"></div>
 
     <div class="card">
       <h3>Running sentence under word-level tokenization</h3>
-      <div class="token-example" style="margin-top:0.55rem;">
-        <span class="token-pill main">[Our]</span>
-        <span class="token-pill main">[startup]</span>
-        <span class="token-pill main">[launched]</span>
-        <span class="token-pill main">[slowerify]</span>
-        <span class="token-pill main">[today]</span>
-        <span class="token-pill">[.]</span>
-      </div>
-      <div class="small-text" style="margin-top:0.5rem;">If <span class="hl-orange">slowerify</span> is unseen in the fixed word vocabulary, it may collapse to an unknown token:</div>
+      <div class="small-text" style="margin-top:0.4rem;">If all words are in the vocabulary:</div>
       <div class="token-example" style="margin-top:0.35rem;">
-        <span class="token-pill">[Our]</span>
-        <span class="token-pill">[startup]</span>
-        <span class="token-pill">[launched]</span>
+        <span class="token-pill main">[researchers]</span>
+        <span class="token-pill main">[fine-tune]</span>
+        <span class="token-pill main">[large-scale]</span>
+        <span class="token-pill main">[models]</span>
+      </div>
+      <div class="small-text" style="margin-top:0.6rem;">Hyphenated compounds like <span class="hl-orange">fine-tune</span> and <span class="hl-orange">large-scale</span> are typically absent from fixed word vocabularies. They collapse to unknown tokens:</div>
+      <div class="token-example" style="margin-top:0.35rem;">
+        <span class="token-pill">[researchers]</span>
         <span class="token-pill flex">[UNK]</span>
-        <span class="token-pill">[today]</span>
-        <span class="token-pill">[.]</span>
+        <span class="token-pill flex">[UNK]</span>
+        <span class="token-pill">[models]</span>
       </div>
     </div>
 
     <div class="grid-2" style="margin-top:0.8rem;">
       <div class="card tradeoff-card" style="border-color: rgba(90,232,142,0.28);">
-        <h3 style="color:var(--green);">What is attractive</h3>
+        <h3 style="color:var(--green);">What works</h3>
         <ul class="pc-list good">
-          <li>Easy mental model: one word = one token.</li>
-          <li>Short sequence for this sentence (~6 tokens).</li>
-          <li>Feels natural to human readers.</li>
+          <li>One word = one token. Short sequences for common text.</li>
+          <li>Well-studied words carry full semantic weight as a single unit.</li>
         </ul>
       </div>
-
       <div class="card tradeoff-card" style="border-color: rgba(255,123,123,0.3);">
         <h3 style="color:var(--red);">Why it breaks</h3>
         <ul class="pc-list bad">
-          <li>Language is open-vocabulary: new names, typos, and jargon keep appearing.</li>
-          <li>A fixed vocabulary becomes huge, or drops rare words as unknowns.</li>
-          <li>The model cannot reuse sub-parts like stems or suffixes for unseen words.</li>
+          <li>Language is open-vocabulary. English Wikipedia alone has ~1.5M unique word forms.</li>
+          <li>New terminology — "GPT-4", "LoRA", "RLHF" — constantly creates unknowns.</li>
+          <li>No reuse of shared pieces: "run", "running", "runner" are all separate vocabulary entries.</li>
         </ul>
       </div>
     </div>
@@ -1229,57 +1539,58 @@
     <div class="spacer-sm"></div>
     <div class="callout warn">
       <span class="icon">!</span>
-      <span><strong>Word-level tokenization is efficient for familiar words, but brittle whenever language invents something new.</strong></span>
+      <span><strong>Word-level is efficient for familiar words, but brittle.</strong> Any new terminology, hyphenated compound, or non-English text becomes an unknown token.</span>
     </div>
   </div>
 
-  <!-- ═══════ SLIDE 6 — CHARACTER-LEVEL LIMITS ═══════ -->
-  <div class="slide" id="slide-6">
+  <!-- ═══════ SLIDE 7 — CHARACTER-LEVEL ═══════ -->
+  <div class="slide" id="slide-7">
     <span class="section-tag">Tokenization</span>
-    <div class="badge discussion">Character-Level Baseline</div>
-    <h2>Character-level on the same sentence: flexible, but long</h2>
+    <div class="badge discussion">Character-Level</div>
+    <h2>Approach 2: one character = one token — flexible, but expensive</h2>
     <div class="spacer-sm"></div>
 
     <div class="card">
       <h3>Running sentence under character-level tokenization</h3>
-      <div class="token-example" style="margin-top:0.55rem;">
-        <span class="token-pill">[O]</span>
-        <span class="token-pill">[u]</span>
-        <span class="token-pill">[r]</span>
-        <span class="token-pill">[ ]</span>
-        <span class="token-pill">[s]</span>
-        <span class="token-pill">[t]</span>
-        <span class="token-pill">[a]</span>
-        <span class="token-pill">...</span>
+      <div class="token-example" style="margin-top:0.5rem; flex-wrap:wrap; gap:0.28rem;">
+        <span class="token-pill">[r]</span><span class="token-pill">[e]</span><span class="token-pill">[s]</span><span class="token-pill">[e]</span><span class="token-pill">[a]</span><span class="token-pill">[r]</span><span class="token-pill">[c]</span><span class="token-pill">[h]</span><span class="token-pill">[e]</span><span class="token-pill">[r]</span><span class="token-pill">[s]</span>
+        <span class="token-pill" style="opacity:0.45;">[ ]</span>
+        <span class="token-pill">[f]</span><span class="token-pill">[i]</span><span class="token-pill">[n]</span><span class="token-pill">[e]</span><span class="token-pill">[-]</span><span class="token-pill">[t]</span><span class="token-pill">[u]</span><span class="token-pill">[n]</span><span class="token-pill">[e]</span>
+        <span class="token-pill" style="opacity:0.45;">[ ]</span>
+        <span class="token-pill">[l]</span><span class="token-pill">[a]</span><span class="token-pill">[r]</span><span class="token-pill">[g]</span><span class="token-pill">[e]</span><span class="token-pill">[-]</span><span class="token-pill">[s]</span><span class="token-pill">[c]</span><span class="token-pill">[a]</span><span class="token-pill">[l]</span><span class="token-pill">[e]</span>
+        <span class="token-pill" style="opacity:0.45;">[ ]</span>
+        <span class="token-pill">[m]</span><span class="token-pill">[o]</span><span class="token-pill">[d]</span><span class="token-pill">[e]</span><span class="token-pill">[l]</span><span class="token-pill">[s]</span>
       </div>
-      <div class="token-count-strip">
+      <div class="token-count-strip" style="margin-top:0.75rem;">
         <div class="token-count-box">
-          <div class="token-count-label">Word-level (same sentence)</div>
-          <div class="token-count-number">~6 tokens</div>
+          <div class="token-count-label">Word-level (best case)</div>
+          <div class="token-count-number">4 tokens</div>
         </div>
         <div class="token-count-box">
           <div class="token-count-label">Character-level (same sentence)</div>
-          <div class="token-count-number">~37 tokens (includes spaces/punctuation)</div>
+          <div class="token-count-number">~40 tokens</div>
+        </div>
+        <div class="token-count-box">
+          <div class="token-count-label">Scaling: 500-token passage</div>
+          <div class="token-count-number">~2,500 character tokens</div>
         </div>
       </div>
-      <p class="tiny" style="margin-top:0.45rem;">Exact counts vary by tokenizer conventions, but the sequence-length gap is the key point.</p>
     </div>
 
-    <div class="grid-2" style="margin-top:0.8rem;">
+    <div class="grid-2" style="margin-top:0.75rem;">
       <div class="card tradeoff-card" style="border-color: rgba(90,232,142,0.28);">
-        <h3 style="color:var(--green);">What is attractive</h3>
+        <h3 style="color:var(--green);">What works</h3>
         <ul class="pc-list good">
-          <li>No unknown words at all.</li>
-          <li>Handles arbitrary spelling and novel strings.</li>
-          <li>Natural for character-sensitive tasks.</li>
+          <li>No unknown tokens — ever.</li>
+          <li>Handles new words, typos, code, any language.</li>
         </ul>
       </div>
       <div class="card tradeoff-card" style="border-color: rgba(255,123,123,0.3);">
-        <h3 style="color:var(--red);">Why it is not default</h3>
+        <h3 style="color:var(--red);">Why it is not the default</h3>
         <ul class="pc-list bad">
-          <li>Sequences become much longer.</li>
-          <li>Transformer cost grows with sequence length.</li>
-          <li>The model spends compute rebuilding words from tiny pieces.</li>
+          <li>Sequences become 5–10× longer.</li>
+          <li>Transformer self-attention is O(n²) in sequence length — 5× longer = 25× more compute.</li>
+          <li>The model spends capacity reassembling words from letters on every forward pass.</li>
         </ul>
       </div>
     </div>
@@ -1287,168 +1598,466 @@
     <div class="spacer-sm"></div>
     <div class="callout warn">
       <span class="icon">!</span>
-      <span><strong>Character-level is flexible, but it makes the model do too much work on very small pieces.</strong></span>
+      <span><strong>Character-level coverage is perfect, but the compute cost is prohibitive.</strong> Quadratic attention scaling makes this impractical at real sequence lengths.</span>
     </div>
   </div>
 
-  <!-- ═══════ SLIDE 7 — SUBWORD COMPROMISE ═══════ -->
-  <div class="slide" id="slide-7">
+  <!-- ═══════ SLIDE 8 — SUBWORD STRATEGY ═══════ -->
+  <div class="slide" id="slide-8">
     <span class="section-tag">Tokenization</span>
     <div class="badge concept">Subword Strategy</div>
-    <h2>Subword on the same sentence: practical middle ground</h2>
+    <h2>Approach 3: subword tokens — the practical default</h2>
     <div class="spacer-sm"></div>
 
     <div class="card">
       <h3>Running sentence under subword tokenization</h3>
-      <div class="token-example" style="margin-top:0.55rem;">
-        <span class="token-pill main">[Our]</span>
-        <span class="token-pill main">[startup]</span>
-        <span class="token-pill main">[launched]</span>
-        <span class="token-pill reuse">[slower]</span>
-        <span class="token-pill flex">[ify]</span>
-        <span class="token-pill main">[today]</span>
-        <span class="token-pill">[.]</span>
+      <div class="token-example" style="margin-top:0.5rem; flex-wrap:wrap;">
+        <span class="token-pill main">[research]</span>
+        <span class="token-pill reuse">[ers]</span>
+        <span class="token-pill main">[fine]</span>
+        <span class="token-pill">[-]</span>
+        <span class="token-pill main">[tune]</span>
+        <span class="token-pill main">[large]</span>
+        <span class="token-pill">[-]</span>
+        <span class="token-pill main">[scale]</span>
+        <span class="token-pill main">[model]</span>
+        <span class="token-pill reuse">[s]</span>
       </div>
-      <p class="small-text" style="margin-top:0.5rem;">Frequent chunks become single tokens, and rare words can still be composed from smaller reusable pieces.</p>
+      <p class="small-text" style="margin-top:0.5rem;">Frequent stems become single tokens. Hyphens, prefixes, and suffixes are their own reusable pieces — no word is ever fully unknown.</p>
     </div>
 
-    <div class="grid-3" style="margin-top:0.8rem;">
+    <div class="grid-3" style="margin-top:0.75rem;">
       <div class="card tradeoff-card" style="border-color: rgba(255,123,123,0.22);">
         <h3 style="color:var(--red);">Word-level</h3>
-        <p class="small-text">Short sequence, but brittle on unseen words.</p>
+        <div class="token-count-number" style="margin:0.4rem 0; font-family:'JetBrains Mono',monospace; font-size:0.9rem;">4 tokens</div>
+        <p class="small-text">Short, but brittle. Breaks on hyphens, new jargon, multilingual text.</p>
       </div>
       <div class="card tradeoff-card" style="border-color: rgba(255,170,85,0.24);">
         <h3 style="color:var(--orange);">Character-level</h3>
-        <p class="small-text">Always flexible, but very long sequence.</p>
+        <div class="token-count-number" style="margin:0.4rem 0; font-family:'JetBrains Mono',monospace; font-size:0.9rem;">~40 tokens</div>
+        <p class="small-text">Thorough, but very long. Quadratic attention cost makes it impractical at scale.</p>
       </div>
       <div class="card tradeoff-card" style="border-color: rgba(90,232,142,0.28);">
-        <h3 style="color:var(--green);">Subword-level</h3>
-        <p class="small-text">Near-word efficiency with far better flexibility.</p>
+        <h3 style="color:var(--green);">Subword</h3>
+        <div class="token-count-number" style="margin:0.4rem 0; font-family:'JetBrains Mono',monospace; font-size:0.9rem;">~10 tokens</div>
+        <p class="small-text">Near-word efficiency with no unknown tokens. GPT-4 averages ~0.75 words per token for English prose.</p>
       </div>
     </div>
 
     <div class="spacer-sm"></div>
     <div class="callout success">
       <span class="icon">+</span>
-      <span><strong>Subword tokenization memorizes common chunks and composes uncommon ones.</strong></span>
+      <span><strong>Subword gives near-word efficiency for common text and full coverage for rare strings.</strong> This is why it became the universal default in every modern LLM.</span>
     </div>
-    <p class="tiny" style="margin-top:0.55rem;">This is why subword tokenization became the practical default in modern LLMs.</p>
+    <div class="hidden-content autostep">
+      <div class="callout info" style="margin-top:0.7rem;">
+        <span class="icon">i</span>
+        <span>There is one tradeoff: characters that end up inside the same token chunk are no longer individually visible to the model. We will see exactly when this matters at the end of this section.</span>
+      </div>
+    </div>
   </div>
 
-  <!-- ═══════ SLIDE 8 — WHAT BPE IS ═══════ -->
-  <div class="slide" id="slide-8">
+  <!-- ═══════ SLIDE 9 — BPE INTRO ═══════ -->
+  <div class="slide" id="slide-9">
     <span class="section-tag">Tokenization</span>
     <div class="badge concept">BPE</div>
-    <h2>Byte Pair Encoding (BPE): the canonical subword algorithm</h2>
+    <h2>How does the tokenizer learn these splits?</h2>
     <div class="spacer-sm"></div>
 
-    <div class="flow token-interface">
-      <div class="flow-box">Start from small units</div>
+    <p class="token-anchor">Subword splits don't come from rules or dictionaries. They are <strong>learned from data</strong> using Byte Pair Encoding (BPE).</p>
+
+    <div class="flow token-interface" style="margin-top:0.85rem;">
+      <div class="flow-box">Start: characters</div>
       <div class="flow-box">Count adjacent pairs</div>
-      <div class="flow-box">Merge most frequent pair</div>
-      <div class="flow-box">Repeat</div>
+      <div class="flow-box">Merge most frequent</div>
+      <div class="flow-box">Repeat N times</div>
     </div>
 
     <div class="grid-2" style="margin-top:0.75rem;">
       <div class="card">
-        <h3>Core rule</h3>
-        <p class="small-text">BPE repeatedly merges the most frequent adjacent pair into a new token. Over many merges, common fragments become reusable subword units.</p>
+        <h3>The core rule</h3>
+        <p class="small-text">BPE starts with every word split into individual characters. It repeatedly finds the most frequent adjacent pair in the corpus and merges it into a single new token. After N merges, you have a vocabulary of N reusable subword pieces.</p>
       </div>
       <div class="card">
-        <h3>Important framing</h3>
-        <p class="small-text">BPE is driven by frequency, not meaning. It may discover meaningful-looking pieces, but only because those strings appear often.</p>
+        <h3>Why it works</h3>
+        <p class="small-text">BPE is driven by frequency, not grammar. It discovers meaningful-looking pieces — stems, prefixes, suffixes — not because it understands linguistics, but because those strings appear together often. Compression and language structure happen to align.</p>
       </div>
     </div>
 
     <div class="spacer-sm"></div>
     <div class="callout info">
       <span class="icon">i</span>
-      <span><strong>BPE is a frequency-based compression scheme turned into a text interface.</strong></span>
+      <span><strong>BPE is a frequency-based compression algorithm.</strong> It builds the vocabulary the training data demands, not the one a linguist would design.</span>
+    </div>
+    <div class="callout question" style="margin-top:0.6rem;">
+      <span class="icon">?</span>
+      <span>To see exactly how this works, let's run BPE on a corpus you'll recognise.</span>
     </div>
   </div>
 
-  <!-- ═══════ SLIDE 9 — BPE EXAMPLE STEP 1 ═══════ -->
-  <div class="slide" id="slide-9">
-    <span class="section-tag">Tokenization</span>
-    <div class="badge activity">BPE Walkthrough</div>
-    <h2>Toy corpus and first merge (illustrative run)</h2>
-    <div class="spacer-sm"></div>
+  <style>
+    /* BPE walkthrough: hide previous overlay state when the next one is revealed */
+    .bpe-initial { transition: opacity 0.35s ease; }
+    .bpe-initial:has(~ .bpe-overlay.revealed) { opacity: 0; pointer-events: none; }
+    .bpe-overlay.hidden-content.revealed:has(~ .bpe-overlay.hidden-content.revealed) { opacity: 0 !important; pointer-events: none; }
 
-    <div class="grid-2">
-      <div class="corpus-card">
-        <div class="corpus-title">Toy corpus (character start + end marker)</div>
-        <div class="corpus-body">l o w &lt;/w&gt;
-l o w e r &lt;/w&gt;
-l o w e s t &lt;/w&gt;
-s l o w e r &lt;/w&gt;</div>
-        <p class="tiny" style="margin-top:0.45rem;">Merge order can change with frequency ties and tie-breaking. This run is illustrative.</p>
-      </div>
+    @keyframes bpeDiscoveryPulse {
+      0%, 100% { box-shadow: 0 0 0 rgba(90,232,142,0); }
+      50% { box-shadow: 0 0 1.1rem rgba(90,232,142,0.4); }
+    }
 
-      <div class="card">
-        <h3>Step 1: count adjacent pairs</h3>
-        <div class="pair-grid" style="margin-top:0.55rem;">
-          <div class="pair-chip"><strong>l o</strong> -> 4</div>
-          <div class="pair-chip"><strong>o w</strong> -> 4</div>
-          <div class="pair-chip"><strong>w e</strong> -> 3</div>
-          <div class="pair-chip"><strong>e r</strong> -> 2</div>
-        </div>
-        <p class="small-text" style="margin-top:0.5rem;">Suppose we merge <span class="hl">l o</span> -> <span class="hl">lo</span> first.</p>
-      </div>
-    </div>
+    .token-pill.discovery {
+      border-color: rgba(90,232,142,0.75);
+      background: rgba(90,232,142,0.2);
+      color: #d6ffea;
+      font-weight: 700;
+      animation: bpeDiscoveryPulse 1.25s ease-in-out infinite;
+    }
 
-    <div class="hidden-content autostep">
-      <div class="corpus-card" style="margin-top:0.8rem;">
-        <div class="corpus-title">After merge: l o -> lo</div>
-        <div class="corpus-body">lo w &lt;/w&gt;
-lo w e r &lt;/w&gt;
-lo w e s t &lt;/w&gt;
-s lo w e r &lt;/w&gt;</div>
-        <div class="merge-line">Teaching point: the tokenizer learned that <strong>lo</strong> is a reusable chunk.</div>
-      </div>
-    </div>
-  </div>
+    .corpus-discovery {
+      color: #d6ffea;
+      font-weight: 700;
+      background: rgba(90,232,142,0.18);
+      border: 1px solid rgba(90,232,142,0.45);
+      border-radius: 0.35rem;
+      padding: 0.02rem 0.25rem;
+      text-shadow: 0 0 0.6rem rgba(90,232,142,0.4);
+    }
 
-  <!-- ═══════ SLIDE 10 — BPE EXAMPLE STEP 2-3 ═══════ -->
+    .discovery-callout {
+      background: linear-gradient(135deg, rgba(90,232,142,0.16), rgba(123,154,255,0.12));
+      border: 1px solid rgba(90,232,142,0.45);
+      color: #d8ffe9;
+      box-shadow: 0 0 1rem rgba(90,232,142,0.18);
+    }
+    .discovery-callout .icon {
+      color: #0d1a12;
+      background: rgba(90,232,142,0.9);
+    }
+  </style>
+
+  <!-- ═══════ SLIDE 10 — BPE FULL WALKTHROUGH ═══════ -->
   <div class="slide" id="slide-10">
     <span class="section-tag">Tokenization</span>
     <div class="badge activity">BPE Walkthrough</div>
-    <h2>Keep merging common continuations</h2>
+    <h2>BPE on a dummy corpus</h2>
     <div class="spacer-sm"></div>
 
-    <div class="corpus-card">
-      <div class="corpus-title">Current state</div>
-      <div class="corpus-body">lo w &lt;/w&gt;
-lo w e r &lt;/w&gt;
-lo w e s t &lt;/w&gt;
-s lo w e r &lt;/w&gt;</div>
+    <div class="grid-2" style="font-size:0.72rem; font-weight:600; letter-spacing:0.06em; color:var(--text-dim); text-transform:uppercase; margin-bottom:0.4rem;">
+      <span>Corpus state</span>
+      <span>Vocabulary built so far</span>
     </div>
 
-    <div class="hidden-content autostep">
-      <div class="card" style="margin-top:0.8rem;">
-        <h3>Step 2</h3>
-        <p class="small-text">Frequent pair: <span class="hl">lo w</span> -> 4, so merge <span class="hl">lo w -> low</span>.</p>
-        <div class="corpus-card" style="margin-top:0.55rem;">
-          <div class="corpus-body">low &lt;/w&gt;
-low e r &lt;/w&gt;
-low e s t &lt;/w&gt;
-s low e r &lt;/w&gt;</div>
-        </div>
-        <div class="merge-line">Teaching point: now <strong>low</strong> is a bigger reusable unit.</div>
-      </div>
-    </div>
+    <div style="position:relative; min-height:22.5rem;">
 
-    <div class="hidden-content autostep">
-      <div class="card" style="margin-top:0.8rem;">
-        <h3>Step 3 (one plausible continuation)</h3>
-        <p class="small-text">Merge <span class="hl">low e -> lowe</span>, then merge <span class="hl">lowe r -> lower</span>.</p>
-        <div class="corpus-card" style="margin-top:0.55rem;">
-          <div class="corpus-body">low &lt;/w&gt;
-lower &lt;/w&gt;
-lowe s t &lt;/w&gt;
-s lower &lt;/w&gt;</div>
+      <!-- State 0: character-level corpus -->
+      <div class="grid-2 bpe-initial" style="position:absolute; top:0; left:0; right:0;">
+        <div class="corpus-card">
+          <div class="corpus-title">Starting state — every character separate (&lt;/w&gt; = word end)</div>
+          <div class="corpus-body">h u g &lt;/w&gt;
+h u g s &lt;/w&gt;
+h u g g e d &lt;/w&gt;
+h u g g i n g &lt;/w&gt;
+h u g g i n g f a c e &lt;/w&gt;
+t r a i n i n g &lt;/w&gt;
+l e a r n i n g &lt;/w&gt;</div>
+          <p class="tiny" style="margin-top:0.45rem;">BPE repeatedly merges the most frequent adjacent pair in the corpus.</p>
         </div>
-        <div class="merge-line">Teaching point: <strong>lower</strong> becomes a full token because it appears often enough.</div>
+        <div class="card">
+          <div class="token-example" style="flex-wrap:wrap; gap:0.3rem;">
+            <span class="token-pill">h</span><span class="token-pill">u</span><span class="token-pill">g</span><span class="token-pill">s</span><span class="token-pill">e</span><span class="token-pill">d</span><span class="token-pill">i</span><span class="token-pill">n</span><span class="token-pill">f</span><span class="token-pill">a</span><span class="token-pill">c</span><span class="token-pill">t</span><span class="token-pill">r</span><span class="token-pill">l</span>
+          </div>
+          <div class="pair-grid" style="margin-top:0.65rem;">
+            <div class="pair-chip"><strong>h u</strong> → 5</div>
+            <div class="pair-chip"><strong>u g</strong> → 5</div>
+            <div class="pair-chip"><strong>i n</strong> → 5</div>
+            <div class="pair-chip"><strong>n g</strong> → 4</div>
+          </div>
+          <p class="small-text" style="margin-top:0.5rem;">We begin by merging <span class="hl">h + u</span>.</p>
+        </div>
       </div>
+
+      <!-- State 1: merge 1 -->
+      <div class="hidden-content autostep bpe-overlay" style="position:absolute; top:0; left:0; right:0; margin-top:0; background:var(--bg);">
+        <div class="grid-2">
+          <div class="corpus-card" style="border-color:rgba(123,154,255,0.45);">
+            <div class="corpus-title">Merge 1: <span class="hl">h + u → hu</span> &nbsp;(freq: 5)</div>
+            <div class="corpus-body">hu g &lt;/w&gt;
+hu g s &lt;/w&gt;
+hu g g e d &lt;/w&gt;
+hu g g i n g &lt;/w&gt;
+hu g g i n g f a c e &lt;/w&gt;
+t r a i n i n g &lt;/w&gt;
+l e a r n i n g &lt;/w&gt;</div>
+          </div>
+          <div class="card">
+            <div class="token-example" style="flex-wrap:wrap; gap:0.3rem;">
+              <span class="token-pill">h</span><span class="token-pill">u</span><span class="token-pill">g</span><span class="token-pill">s</span><span class="token-pill">e</span><span class="token-pill">d</span><span class="token-pill">i</span><span class="token-pill">n</span><span class="token-pill">f</span><span class="token-pill">a</span><span class="token-pill">c</span><span class="token-pill">t</span><span class="token-pill">r</span><span class="token-pill">l</span>
+              <span class="token-pill main">hu</span>
+            </div>
+            <div class="pair-grid" style="margin-top:0.65rem;">
+              <div class="pair-chip"><strong>hu g</strong> → 5</div>
+              <div class="pair-chip"><strong>i n</strong> → 5</div>
+              <div class="pair-chip"><strong>n g</strong> → 4</div>
+              <div class="pair-chip"><strong>g g</strong> → 3</div>
+            </div>
+            <p class="small-text" style="margin-top:0.5rem;">Next, we merge <span class="hl">hu + g</span> to form <span class="hl">hug</span>.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- State 2: merge 2 -->
+      <div class="hidden-content autostep bpe-overlay" style="position:absolute; top:0; left:0; right:0; margin-top:0; background:var(--bg);">
+        <div class="grid-2">
+          <div class="corpus-card" style="border-color:rgba(123,154,255,0.45);">
+            <div class="corpus-title">Merge 2: <span class="hl">hu + g → hug</span> &nbsp;(freq: 5)</div>
+            <div class="corpus-body">hug &lt;/w&gt;
+hug s &lt;/w&gt;
+hug g e d &lt;/w&gt;
+hug g i n g &lt;/w&gt;
+hug g i n g f a c e &lt;/w&gt;
+t r a i n i n g &lt;/w&gt;
+l e a r n i n g &lt;/w&gt;</div>
+          </div>
+          <div class="card">
+            <div class="token-example" style="flex-wrap:wrap; gap:0.3rem;">
+              <span class="token-pill">h</span><span class="token-pill">u</span><span class="token-pill">g</span><span class="token-pill">s</span><span class="token-pill">e</span><span class="token-pill">d</span><span class="token-pill">i</span><span class="token-pill">n</span><span class="token-pill">f</span><span class="token-pill">a</span><span class="token-pill">c</span><span class="token-pill">t</span><span class="token-pill">r</span><span class="token-pill">l</span>
+              <span class="token-pill main">hu</span>
+              <span class="token-pill main">hug</span>
+            </div>
+            <div class="pair-grid" style="margin-top:0.65rem;">
+              <div class="pair-chip"><strong>i n</strong> → 5</div>
+              <div class="pair-chip"><strong>n g</strong> → 4</div>
+              <div class="pair-chip"><strong>hug g</strong> → 3</div>
+              <div class="pair-chip"><strong>g i</strong> → 2</div>
+            </div>
+            <p class="small-text" style="margin-top:0.5rem;">At this stage, <span class="hl">i + n</span> is the most frequent pair.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- State 3: merge 3 -->
+      <div class="hidden-content autostep bpe-overlay" style="position:absolute; top:0; left:0; right:0; margin-top:0; background:var(--bg);">
+        <div class="grid-2">
+          <div class="corpus-card" style="border-color:rgba(123,154,255,0.45);">
+            <div class="corpus-title">Merge 3: <span class="hl">i + n → in</span> &nbsp;(freq: 5)</div>
+            <div class="corpus-body">hug &lt;/w&gt;
+hug s &lt;/w&gt;
+hug g e d &lt;/w&gt;
+hug g in g &lt;/w&gt;
+hug g in g f a c e &lt;/w&gt;
+t r a in in g &lt;/w&gt;
+l e a r n in g &lt;/w&gt;</div>
+          </div>
+          <div class="card">
+            <div class="token-example" style="flex-wrap:wrap; gap:0.3rem;">
+              <span class="token-pill">h</span><span class="token-pill">u</span><span class="token-pill">g</span><span class="token-pill">s</span><span class="token-pill">e</span><span class="token-pill">d</span><span class="token-pill">i</span><span class="token-pill">n</span><span class="token-pill">f</span><span class="token-pill">a</span><span class="token-pill">c</span><span class="token-pill">t</span><span class="token-pill">r</span><span class="token-pill">l</span>
+              <span class="token-pill main">hu</span>
+              <span class="token-pill main">hug</span>
+              <span class="token-pill reuse">in</span>
+            </div>
+            <div class="pair-grid" style="margin-top:0.65rem;">
+              <div class="pair-chip"><strong>in g</strong> → 4</div>
+              <div class="pair-chip"><strong>hug g</strong> → 3</div>
+              <div class="pair-chip"><strong>g in</strong> → 2</div>
+              <div class="pair-chip"><strong>a c</strong> → 1</div>
+            </div>
+            <p class="small-text" style="margin-top:0.5rem;">Next merge: <span class="hl">in + g</span>.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- State 4: merge 4 (ing discovery) -->
+      <div class="hidden-content autostep bpe-overlay" style="position:absolute; top:0; left:0; right:0; margin-top:0; background:var(--bg);">
+        <div class="grid-2">
+          <div class="corpus-card" style="border-color:rgba(90,232,142,0.5);">
+            <div class="corpus-title">Merge 4: <span class="hl">in + g → ing</span> &nbsp;(freq: 4)</div>
+            <div class="corpus-body">hug &lt;/w&gt;
+hug s &lt;/w&gt;
+hug g e d &lt;/w&gt;
+hug g <span class="corpus-discovery">ing</span> &lt;/w&gt;
+hug g <span class="corpus-discovery">ing</span> f a c e &lt;/w&gt;
+t r a in <span class="corpus-discovery">ing</span> &lt;/w&gt;
+l e a r n <span class="corpus-discovery">ing</span> &lt;/w&gt;</div>
+          </div>
+          <div class="card">
+            <div class="token-example" style="flex-wrap:wrap; gap:0.3rem;">
+              <span class="token-pill">h</span><span class="token-pill">u</span><span class="token-pill">g</span><span class="token-pill">s</span><span class="token-pill">e</span><span class="token-pill">d</span><span class="token-pill">i</span><span class="token-pill">n</span><span class="token-pill">f</span><span class="token-pill">a</span><span class="token-pill">c</span><span class="token-pill">t</span><span class="token-pill">r</span><span class="token-pill">l</span>
+              <span class="token-pill main">hu</span>
+              <span class="token-pill main">hug</span>
+              <span class="token-pill reuse">in</span>
+              <span class="token-pill discovery">ing</span>
+            </div>
+            <div class="callout discovery-callout" style="margin-top:0.55rem;">
+              <span class="icon">!</span>
+              <span>“In a real corpus, -ing occurs across thousands of verbs; BPE reliably discovers it.”</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- State 5: merge 5 -->
+      <div class="hidden-content autostep bpe-overlay" style="position:absolute; top:0; left:0; right:0; margin-top:0; background:var(--bg);">
+        <div class="grid-2">
+          <div class="corpus-card" style="border-color:rgba(123,154,255,0.45);">
+            <div class="corpus-title">Merge 5: <span class="hl">hug + g → hugg</span> &nbsp;(freq: 3)</div>
+            <div class="corpus-body">hug &lt;/w&gt;
+hug s &lt;/w&gt;
+hugg e d &lt;/w&gt;
+hugg ing &lt;/w&gt;
+hugg ing f a c e &lt;/w&gt;
+t r a in ing &lt;/w&gt;
+l e a r n ing &lt;/w&gt;</div>
+          </div>
+          <div class="card">
+            <div class="token-example" style="flex-wrap:wrap; gap:0.3rem;">
+              <span class="token-pill">h</span><span class="token-pill">u</span><span class="token-pill">g</span><span class="token-pill">s</span><span class="token-pill">e</span><span class="token-pill">d</span><span class="token-pill">i</span><span class="token-pill">n</span><span class="token-pill">f</span><span class="token-pill">a</span><span class="token-pill">c</span><span class="token-pill">t</span><span class="token-pill">r</span><span class="token-pill">l</span>
+              <span class="token-pill main">hu</span>
+              <span class="token-pill main">hug</span>
+              <span class="token-pill reuse">in</span>
+              <span class="token-pill reuse">ing</span>
+              <span class="token-pill main">hugg</span>
+            </div>
+            <div class="pair-grid" style="margin-top:0.65rem;">
+              <div class="pair-chip"><strong>hugg ing</strong> → 2</div>
+              <div class="pair-chip"><strong>f a</strong> → 1</div>
+              <div class="pair-chip"><strong>a c</strong> → 1</div>
+              <div class="pair-chip"><strong>hugg e</strong> → 1</div>
+            </div>
+            <p class="small-text" style="margin-top:0.5rem;">Next merge: <span class="hl">hugg + ing</span>.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- State 6: merge 6 -->
+      <div class="hidden-content autostep bpe-overlay" style="position:absolute; top:0; left:0; right:0; margin-top:0; background:var(--bg);">
+        <div class="grid-2">
+          <div class="corpus-card" style="border-color:rgba(123,154,255,0.45);">
+            <div class="corpus-title">Merge 6: <span class="hl">hugg + ing → hugging</span> &nbsp;(freq: 2)</div>
+            <div class="corpus-body">hug &lt;/w&gt;
+hug s &lt;/w&gt;
+hugg e d &lt;/w&gt;
+hugging &lt;/w&gt;
+hugging f a c e &lt;/w&gt;
+t r a in ing &lt;/w&gt;
+l e a r n ing &lt;/w&gt;</div>
+          </div>
+          <div class="card">
+            <div class="token-example" style="flex-wrap:wrap; gap:0.3rem;">
+              <span class="token-pill">h</span><span class="token-pill">u</span><span class="token-pill">g</span><span class="token-pill">s</span><span class="token-pill">e</span><span class="token-pill">d</span><span class="token-pill">i</span><span class="token-pill">n</span><span class="token-pill">f</span><span class="token-pill">a</span><span class="token-pill">c</span><span class="token-pill">t</span><span class="token-pill">r</span><span class="token-pill">l</span>
+              <span class="token-pill main">hu</span>
+              <span class="token-pill main">hug</span>
+              <span class="token-pill reuse">in</span>
+              <span class="token-pill reuse">ing</span>
+              <span class="token-pill main">hugg</span>
+              <span class="token-pill flex">hugging</span>
+            </div>
+            <div class="pair-grid" style="margin-top:0.65rem;">
+              <div class="pair-chip"><strong>f a</strong> → 1</div>
+              <div class="pair-chip"><strong>a c</strong> → 1</div>
+              <div class="pair-chip"><strong>c e</strong> → 1</div>
+              <div class="pair-chip"><strong>a in</strong> → 1</div>
+            </div>
+            <p class="small-text" style="margin-top:0.5rem;">From here, low-frequency merges compose <span class="hl">face</span>.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- State 7: merge 7 -->
+      <div class="hidden-content autostep bpe-overlay" style="position:absolute; top:0; left:0; right:0; margin-top:0; background:var(--bg);">
+        <div class="grid-2">
+          <div class="corpus-card" style="border-color:rgba(255,170,85,0.4);">
+            <div class="corpus-title">Merge 7: <span class="hl">f + a → fa</span> &nbsp;(freq: 1)</div>
+            <div class="corpus-body">hug &lt;/w&gt;
+hug s &lt;/w&gt;
+hugg e d &lt;/w&gt;
+hugging &lt;/w&gt;
+hugging fa c e &lt;/w&gt;
+t r a in ing &lt;/w&gt;
+l e a r n ing &lt;/w&gt;</div>
+          </div>
+          <div class="card">
+            <div class="token-example" style="flex-wrap:wrap; gap:0.3rem;">
+              <span class="token-pill">h</span><span class="token-pill">u</span><span class="token-pill">g</span><span class="token-pill">s</span><span class="token-pill">e</span><span class="token-pill">d</span><span class="token-pill">i</span><span class="token-pill">n</span><span class="token-pill">f</span><span class="token-pill">a</span><span class="token-pill">c</span><span class="token-pill">t</span><span class="token-pill">r</span><span class="token-pill">l</span>
+              <span class="token-pill main">hu</span><span class="token-pill main">hug</span><span class="token-pill reuse">in</span><span class="token-pill reuse">ing</span><span class="token-pill main">hugg</span><span class="token-pill flex">hugging</span><span class="token-pill main">fa</span>
+            </div>
+            <p class="small-text" style="margin-top:0.5rem;">Next: <span class="hl">fa + c → fac</span>.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- State 8: merge 8 -->
+      <div class="hidden-content autostep bpe-overlay" style="position:absolute; top:0; left:0; right:0; margin-top:0; background:var(--bg);">
+        <div class="grid-2">
+          <div class="corpus-card" style="border-color:rgba(255,170,85,0.4);">
+            <div class="corpus-title">Merge 8: <span class="hl">fa + c → fac</span> &nbsp;(freq: 1)</div>
+            <div class="corpus-body">hug &lt;/w&gt;
+hug s &lt;/w&gt;
+hugg e d &lt;/w&gt;
+hugging &lt;/w&gt;
+hugging fac e &lt;/w&gt;
+t r a in ing &lt;/w&gt;
+l e a r n ing &lt;/w&gt;</div>
+          </div>
+          <div class="card">
+            <div class="token-example" style="flex-wrap:wrap; gap:0.3rem;">
+              <span class="token-pill">h</span><span class="token-pill">u</span><span class="token-pill">g</span><span class="token-pill">s</span><span class="token-pill">e</span><span class="token-pill">d</span><span class="token-pill">i</span><span class="token-pill">n</span><span class="token-pill">f</span><span class="token-pill">a</span><span class="token-pill">c</span><span class="token-pill">t</span><span class="token-pill">r</span><span class="token-pill">l</span>
+              <span class="token-pill main">hu</span><span class="token-pill main">hug</span><span class="token-pill reuse">in</span><span class="token-pill reuse">ing</span><span class="token-pill main">hugg</span><span class="token-pill flex">hugging</span><span class="token-pill main">fa</span><span class="token-pill main">fac</span>
+            </div>
+            <p class="small-text" style="margin-top:0.5rem;">Next: <span class="hl">fac + e → face</span>.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- State 9: merge 9 -->
+      <div class="hidden-content autostep bpe-overlay" style="position:absolute; top:0; left:0; right:0; margin-top:0; background:var(--bg);">
+        <div class="grid-2">
+          <div class="corpus-card" style="border-color:rgba(255,170,85,0.4);">
+            <div class="corpus-title">Merge 9: <span class="hl">fac + e → face</span> &nbsp;(freq: 1)</div>
+            <div class="corpus-body">hug &lt;/w&gt;
+hug s &lt;/w&gt;
+hugg e d &lt;/w&gt;
+hugging &lt;/w&gt;
+hugging face &lt;/w&gt;
+t r a in ing &lt;/w&gt;
+l e a r n ing &lt;/w&gt;</div>
+          </div>
+          <div class="card">
+            <div class="token-example" style="flex-wrap:wrap; gap:0.3rem;">
+              <span class="token-pill">h</span><span class="token-pill">u</span><span class="token-pill">g</span><span class="token-pill">s</span><span class="token-pill">e</span><span class="token-pill">d</span><span class="token-pill">i</span><span class="token-pill">n</span><span class="token-pill">f</span><span class="token-pill">a</span><span class="token-pill">c</span><span class="token-pill">t</span><span class="token-pill">r</span><span class="token-pill">l</span>
+              <span class="token-pill main">hu</span><span class="token-pill main">hug</span><span class="token-pill reuse">in</span><span class="token-pill reuse">ing</span><span class="token-pill main">hugg</span><span class="token-pill flex">hugging</span><span class="token-pill main">fa</span><span class="token-pill main">fac</span><span class="token-pill main">face</span>
+            </div>
+            <p class="small-text" style="margin-top:0.5rem;">Final merge in this walkthrough: <span class="hl">hugging + face</span>.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- State 10: merge 10 -->
+      <div class="hidden-content autostep bpe-overlay" style="position:absolute; top:0; left:0; right:0; margin-top:0; background:var(--bg);">
+        <div class="grid-2">
+          <div class="corpus-card" style="border-color:rgba(255,170,85,0.4);">
+            <div class="corpus-title">Merge 10: <span class="hl">hugging + face → huggingface</span> &nbsp;(freq: 1)</div>
+            <div class="corpus-body">hug &lt;/w&gt;
+hug s &lt;/w&gt;
+hugg e d &lt;/w&gt;
+hugging &lt;/w&gt;
+huggingface &lt;/w&gt;
+t r a in ing &lt;/w&gt;
+l e a r n ing &lt;/w&gt;</div>
+          </div>
+          <div class="card">
+            <div class="token-example" style="flex-wrap:wrap; gap:0.3rem;">
+              <span class="token-pill">h</span><span class="token-pill">u</span><span class="token-pill">g</span><span class="token-pill">s</span><span class="token-pill">e</span><span class="token-pill">d</span><span class="token-pill">i</span><span class="token-pill">n</span><span class="token-pill">f</span><span class="token-pill">a</span><span class="token-pill">c</span><span class="token-pill">t</span><span class="token-pill">r</span><span class="token-pill">l</span>
+              <span class="token-pill main">hu</span><span class="token-pill main">hug</span><span class="token-pill reuse">in</span><span class="token-pill reuse">ing</span><span class="token-pill main">hugg</span><span class="token-pill flex">hugging</span><span class="token-pill main">fa</span><span class="token-pill main">fac</span><span class="token-pill main">face</span><span class="token-pill flex">huggingface</span>
+            </div>
+            <div class="callout info" style="margin-top:0.55rem;">
+              <span class="icon">i</span>
+              <span>From raw characters to reusable subwords to full words: all discovered by counting adjacent pairs.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 
@@ -1456,125 +2065,416 @@ s lower &lt;/w&gt;</div>
   <div class="slide" id="slide-11">
     <span class="section-tag">Tokenization</span>
     <div class="badge concept">BPE Takeaway</div>
-    <h2>Common chunks are memorized; uncommon words are composed</h2>
+    <h2>What BPE gives you: a vocabulary of reusable chunks</h2>
     <div class="spacer-sm"></div>
 
     <div class="grid-2">
       <div class="card">
-        <h3>Learned pieces (example)</h3>
-        <div class="token-example" style="margin-top:0.55rem;">
-          <span class="token-pill main">low</span>
-          <span class="token-pill reuse">lower</span>
-          <span class="token-pill flex">lowe</span>
+        <h3>Learned vocabulary (after our merges)</h3>
+        <div class="token-example" style="margin-top:0.55rem; flex-wrap:wrap; gap:0.38rem;">
+          <span class="token-pill">h</span>
+          <span class="token-pill">u</span>
+          <span class="token-pill">g</span>
+          <span class="token-pill">s</span>
+          <span class="token-pill">e</span>
+          <span class="token-pill">d</span>
+          <span class="token-pill">i</span>
+          <span class="token-pill">n</span>
+          <span class="token-pill">f</span>
+          <span class="token-pill">a</span>
+          <span class="token-pill">c</span>
+          <span class="token-pill">t</span>
+          <span class="token-pill">r</span>
+          <span class="token-pill">l</span>
+          <span class="token-pill main">hu</span>
+          <span class="token-pill main">hug</span>
+          <span class="token-pill main">hugg</span>
+          <span class="token-pill reuse">in</span>
+          <span class="token-pill reuse">ing</span>
+          <span class="token-pill flex">hugging</span>
+          <span class="token-pill main">fa</span>
+          <span class="token-pill main">fac</span>
+          <span class="token-pill main">face</span>
+          <span class="token-pill flex">huggingface</span>
         </div>
-        <p class="small-text" style="margin-top:0.55rem;">Exact pieces vary by corpus and merge schedule, but the pattern is stable.</p>
+        <p class="tiny" style="margin-top:0.5rem;">Gray = base characters &nbsp;·&nbsp; Blue = primary merges &nbsp;·&nbsp; Green = suffix merges &nbsp;·&nbsp; Orange = full-word tokens</p>
       </div>
       <div class="card">
-        <h3>Possible tokenizations</h3>
-        <div class="small-text" style="margin-top:0.5rem;">low -> <span class="hl">[low]</span></div>
-        <div class="small-text">lower -> <span class="hl-green">[lower]</span></div>
-        <div class="small-text">lowest -> <span class="hl-orange">[lowe] [s] [t]</span> (or another learned split)</div>
-        <div class="small-text">slower -> <span class="hl-purple">[s] [lower]</span></div>
+        <h3>How the vocabulary applies to any input</h3>
+        <div style="margin-top:0.5rem; display:flex; flex-direction:column; gap:0.5rem;">
+          <div class="small-text" style="display:flex; align-items:center; gap:0.45rem; flex-wrap:wrap;">
+            <span class="hl" style="min-width:5.5rem;">hug</span>
+            <span>→</span>
+            <span class="token-pill main" style="display:inline-block;">hug</span>
+          </div>
+          <div class="small-text" style="display:flex; align-items:center; gap:0.45rem; flex-wrap:wrap;">
+            <span class="hl" style="min-width:5.5rem;">hugs</span>
+            <span>→</span>
+            <span class="token-pill main" style="display:inline-block;">hug</span>
+            <span class="token-pill" style="display:inline-block;">s</span>
+          </div>
+          <div class="small-text" style="display:flex; align-items:center; gap:0.45rem; flex-wrap:wrap;">
+            <span class="hl-orange" style="min-width:5.5rem;">hugged</span>
+            <span>→</span>
+            <span class="token-pill main" style="display:inline-block;">hugg</span>
+            <span class="token-pill" style="display:inline-block;">e</span>
+            <span class="token-pill" style="display:inline-block;">d</span>
+          </div>
+          <div class="small-text" style="display:flex; align-items:center; gap:0.45rem; flex-wrap:wrap;">
+            <span class="hl-green" style="min-width:5.5rem;">hugging</span>
+            <span>→</span>
+            <span class="token-pill flex" style="display:inline-block;">hugging</span>
+          </div>
+          <div class="small-text" style="display:flex; align-items:center; gap:0.45rem; flex-wrap:wrap;">
+            <span class="hl-purple" style="min-width:5.5rem;">HuggingFace</span>
+            <span>→</span>
+            <span class="token-pill flex" style="display:inline-block;">huggingface</span>
+          </div>
+        </div>
       </div>
     </div>
 
-    <div class="spacer-sm"></div>
-    <div class="callout success">
-      <span class="icon">+</span>
-      <span>The tokenizer can reuse a chunk like <strong>lower</strong> inside larger words like <strong>slower</strong>. This is the core subword advantage.</span>
-    </div>
     <div class="spacer-sm"></div>
     <div class="callout info">
       <span class="icon">i</span>
-      <span><strong>BPE starts with characters, repeatedly merges the most common adjacent pair, and gradually builds a vocabulary of reusable subword chunks.</strong></span>
+      <span>The tokenizer composes words it has never seen from pieces it has seen. <span class="hl-orange">"hugged"</span> was never explicitly in the training corpus, but it tokenizes cleanly from learned pieces.</span>
+    </div>
+    <div class="callout success" style="margin-top:0.6rem;">
+      <span class="icon">+</span>
+      <span><strong>BPE: start from characters, repeatedly merge the most frequent pair, build a vocabulary of reusable subword chunks.</strong> This is the mechanism behind GPT-2, GPT-3, GPT-4, and most modern LLMs.</span>
     </div>
   </div>
 
-  <!-- ═══════ SLIDE 12 — WHY THIS MATTERS ═══════ -->
+  <!-- ═══════ SLIDE 12 — WHY TOKENIZATION MATTERS ═══════ -->
   <div class="slide" id="slide-12">
     <span class="section-tag">Tokenization</span>
     <div class="badge discussion">Why It Matters</div>
-    <h2>Why tokenization influences letter-level behavior</h2>
+    <h2>Why tokenization shapes what the model can and cannot reason about</h2>
     <div class="spacer-sm"></div>
 
-    <div class="card">
-      <h3>Concrete mechanism (not random)</h3>
-      <div class="small-text" style="margin-top:0.45rem;">Character-level question: <span class="hl">"How many r letters are in slowerify?"</span></div>
-      <div class="small-text" style="margin-top:0.3rem;">Tokenizer interface first: <span class="hl-purple">[slower] [ify]</span> (or another subword split)</div>
-      <p class="small-text" style="margin-top:0.5rem;">Attention/FFN computations run on token vectors. For letter-level tasks, the model often has to reconstruct character structure indirectly from token pieces.</p>
-    </div>
-
-    <div class="grid-3" style="margin-top:0.8rem;">
-      <div class="card">
-        <h3>1. Input interface</h3>
-        <p class="small-text">Prompt arrives as token IDs, not raw character arrays.</p>
+    <div class="card" style="border-color: rgba(123,154,255,0.35);">
+      <h3>The mechanism</h3>
+      <p class="small-text">The model's computations run on token vectors — one vector per token piece. There is no separate vector for an individual character. Character-level reasoning requires the model to reconstruct structure from subword representations — something it is not architecturally designed to do.</p>
+      <div style="margin-top:0.7rem; display:flex; align-items:center; gap:0.6rem; flex-wrap:wrap;">
+        <span class="hl">"strawberry"</span>
+        <span class="small-text">→</span>
+        <span class="token-pill main" style="display:inline-block;">[straw]</span>
+        <span class="token-pill reuse" style="display:inline-block;">[berry]</span>
+        <span class="small-text" style="color:var(--text-dim);">2 token vectors. No individual letter vectors.</span>
       </div>
-      <div class="card">
-        <h3>2. Core computation</h3>
-        <p class="small-text">Transformer layers operate on token embeddings and token states.</p>
-      </div>
-      <div class="card">
-        <h3>3. Extra reconstruction</h3>
-        <p class="small-text">Letter-level answers may require rebuilding characters across token chunks.</p>
-      </div>
+      <p class="tiny" style="margin-top:0.55rem;">Cosma et al., <em>"The Strawberry Problem: Emergence of Character-level Understanding in Tokenized Language Models"</em>, EMNLP 2025.</p>
     </div>
 
     <div class="grid-2" style="margin-top:0.8rem;">
       <div class="card">
-        <h3>Tasks where this intuition helps</h3>
+        <h3>Tasks where this creates difficulty</h3>
         <ul class="pc-list bad">
-          <li>Counting letters in a word.</li>
-          <li>Reversing a word exactly.</li>
-          <li>Extracting the nth character.</li>
+          <li>Counting specific letters in a word.</li>
+          <li>Extracting the nth character from a string.</li>
+          <li>Detecting repeated characters.</li>
+          <li>Reversing a string exactly.</li>
         </ul>
       </div>
       <div class="card">
         <h3>Important nuance</h3>
-        <p class="small-text">Tokenization is a contributor, not the only cause. Training data, optimization, and decoding strategy also affect these outcomes.</p>
+        <p class="small-text">Tokenization is a structural contributor, not the only cause. Cosma et al. showed that character-level capabilities <em>can</em> emerge late in training, and a lightweight architectural modification significantly improves them. Tokenization creates a structural disadvantage, not an absolute ceiling.</p>
       </div>
     </div>
 
     <div class="spacer-sm"></div>
     <div class="callout warn">
       <span class="icon">!</span>
-      <span><strong>The model is fluent in token pieces first, and only indirectly aware of letters.</strong></span>
+      <span><strong>The model is fluent in token pieces. It is only indirectly aware of individual letters.</strong> Keep this in mind when designing prompts, tasks, and evaluations.</span>
+    </div>
+    <div class="callout success" style="margin-top:0.6rem;">
+      <span class="icon">+</span>
+      <span>Tokenization is the first design decision in any language model. It defines the vocabulary, shapes the sequence length, and sets the perceptual granularity of every computation that follows.</span>
     </div>
   </div>
 
-  <!-- ═══════ SLIDE 13 — BRIDGE TO EMBEDDINGS ═══════ -->
+  <!-- ═══════ SLIDE 13 — EMBEDDING INTERFACE ═══════ -->
   <div class="slide" id="slide-13">
-    <span class="section-tag">Transition</span>
-    <div class="badge day2">Bridge</div>
-    <h2>We now have token IDs, but IDs alone are not enough</h2>
+    <span class="section-tag">Embeddings</span>
+    <div class="badge concept">Mechanism</div>
+    <h2>From token indices to model state</h2>
     <div class="spacer-sm"></div>
 
-    <div class="flow token-interface">
-      <div class="flow-box raw">Token pieces</div>
-      <div class="flow-box ids">Integer IDs</div>
-      <div class="flow-box" style="border-color: rgba(255,123,123,0.45); color: var(--red); background: rgba(255,123,123,0.08);">Need computable vectors</div>
-      <div class="flow-box embed">Embedding layer</div>
-    </div>
+    <p class="small-text">Tokenization outputs categorical indices. The first neural operation maps those indices into the residual stream space.</p>
+    <div class="math">\[
+      T=(t_1,\dots,t_n),\quad t_j\in\{1,\dots,|V|\}
+    \]
+    \[
+      E\in\mathbb{R}^{|V|\times d_{\text{model}}},\quad X^{(0)}=E[T]\in\mathbb{R}^{n\times d_{\text{model}}}
+    \]</div>
 
-    <div class="grid-2" style="margin-top:0.85rem;">
+    <div class="grid-2" style="margin-top:0.8rem;">
       <div class="card">
-        <h3>What tokenization gave us</h3>
-        <div class="id-seq" style="margin-top:0.55rem;">[412, 9621, 7710, 28904, 771, 1908, 13]</div>
-        <p class="small-text" style="margin-top:0.5rem;">These integers are discrete labels or addresses in a vocabulary table.</p>
+        <h3>Interface contract</h3>
+        <ul class="pc-list good" style="margin-top:0.5rem;">
+          <li>Tokenizer output is discrete index data, not numeric features.</li>
+          <li>Embedding lookup is the boundary where symbolic input becomes differentiable state.</li>
+          <li>All later transformer computation consumes rows of \(X^{(0)}\), not token IDs.</li>
+        </ul>
       </div>
       <div class="card">
-        <h3>Why this is not enough</h3>
-        <ul class="pc-list bad">
-          <li>ID numbers by themselves do not encode semantic similarity.</li>
-          <li>Arithmetic on raw IDs is meaningless for language computation.</li>
-          <li>The model needs dense vectors it can compare, mix, and transform.</li>
+        <h3>Why this matters</h3>
+        <ul class="pc-list good" style="margin-top:0.5rem;">
+          <li>Embedding table is often a major parameter block: \(|V|\times d_{\text{model}}\).</li>
+          <li>Representation width is fixed before attention/MLP begins.</li>
+          <li>This is a state initialization step, not contextual interpretation yet.</li>
         </ul>
       </div>
     </div>
 
     <div class="spacer-sm"></div>
     <div class="callout info">
+      <span class="icon">i</span>
+      <span>Context enters after this point through inter-token computation in transformer layers.</span>
+    </div>
+  </div>
+
+  <!-- ═══════ SLIDE 14 — EMBEDDING DYNAMICS ═══════ -->
+  <div class="slide" id="slide-14">
+    <span class="section-tag">Embeddings</span>
+    <div class="badge discussion">Optimization View</div>
+    <h2>Embedding lookup is a gather; learning is row-wise</h2>
+    <div class="spacer-sm"></div>
+
+    <div class="math">\[
+      x_j=E[t_j,:]
+    \]
+    \[
+      x_j=s_jE,\quad s_j\in\{0,1\}^{1\times|V|}\ \text{(one-hot selector)}
+    \]
+    \[
+      X^{(0)}=SE,\quad S\in\{0,1\}^{n\times|V|}
+    \]
+    \[
+      \frac{\partial\mathcal{L}}{\partial E[i,:]}=\sum_{j:\,t_j=i}\frac{\partial\mathcal{L}}{\partial X^{(0)}[j,:]}
+    \]</div>
+
+    <div class="grid-2" style="margin-top:0.8rem;">
+      <div class="card">
+        <h3>Forward pass view</h3>
+        <ul class="pc-list good" style="margin-top:0.5rem;">
+          <li>Operationally this is gather/indexing, not arithmetic on ID values.</li>
+          <li>One-hot form is algebraically equivalent and useful for derivations.</li>
+        </ul>
+        <div class="id-seq" style="margin-top:0.62rem;">Batch tokens: [dog, dog, bank, river]</div>
+      </div>
+      <div class="card">
+        <h3>Training-time consequence</h3>
+        <ul class="pc-list good" style="margin-top:0.5rem;">
+          <li>Only rows touched by batch tokens receive direct gradient updates each step.</li>
+          <li>Frequent tokens are updated often; rare-token rows are data-limited and noisier.</li>
+          <li>Embedding quality reflects corpus frequency and context diversity.</li>
+        </ul>
+        <div class="id-seq" style="margin-top:0.62rem;">Rows directly updated: \(E[\text{dog},:]\), \(E[\text{bank},:]\), \(E[\text{river},:]\)</div>
+      </div>
+    </div>
+
+    <div class="math-note">Some transformer implementations scale input embeddings by \(\sqrt{d_{\text{model}}}\) before adding positional terms; others do not. Treat as architecture-specific.</div>
+    <div class="math-note" style="margin-top:0.42rem;">Some models tie input embeddings with output projection (\(W_U=E^\top\)); keep full treatment for the output-head section.</div>
+
+    <div class="spacer-sm"></div>
+    <div class="callout success">
+      <span class="icon">+</span>
+      <span>Input embeddings are context-independent token-type priors; contextual meaning is formed in subsequent layers.</span>
+    </div>
+  </div>
+
+  <!-- ═══════ SLIDE 16 — HIGH-DIMENSIONAL INTUITION ═══════ -->
+  <div class="slide" id="slide-16">
+    <span class="section-tag">Embeddings</span>
+    <div class="badge discussion">Geometry</div>
+    <h2>Same embeddings. Different semantic lenses.</h2>
+    <div class="spacer-sm"></div>
+
+    <p class="small-text">A lens emphasizes one relationship and downplays others.</p>
+
+    <div class="card projection-card" style="margin-top:0.8rem;">
+      <h3>Semantic lens (same space, different view)</h3>
+      <div class="projection-toolbar" id="projectionToolbar16">
+        <button class="lens-btn active" data-lens="pet" aria-pressed="true">Pet / companionship</button>
+        <button class="lens-btn" data-lens="feline" aria-pressed="false">Feline family</button>
+        <button class="lens-btn" data-lens="care" aria-pressed="false">Care context</button>
+      </div>
+
+      <div class="projection-stage">
+        <canvas class="projection-canvas" id="projectionCanvas16" width="1200" height="700" aria-label="Interactive embedding semantic lens plot"></canvas>
+      </div>
+
+      <div class="projection-readout" id="projectionReadout16">
+        <div class="small-text">Semantic lens: <span class="hl" id="projectionLensLabel16">Pet / companionship</span></div>
+        <div class="small-text" style="margin-top:0.28rem;">Emphasized meaning: <strong id="projectionMeaning16">cat as a pet</strong></div>
+        <div class="small-text" style="margin-top:0.28rem;">Nearest to <strong>cat</strong> under this lens:</div>
+        <div class="projection-neighbors" id="projectionNeighbors16">
+          <span class="neighbor-chip">dog</span>
+          <span class="neighbor-chip">hamster</span>
+          <span class="neighbor-chip">vet</span>
+        </div>
+      </div>
+
+      <p class="projection-note">Each lens is a different 2D projection of the same high-dimensional space.</p>
+      <p class="projection-note" style="margin-top:0.32rem;">The points do not "move" in the embedding - only our 2D view changes.</p>
+    </div>
+
+    <div class="spacer-sm"></div>
+    <div class="callout info">
       <span class="icon">→</span>
-      <span><strong>Now we have token IDs. The next question is: how does the model turn those discrete IDs into something it can compute with? That is the embedding layer.</strong></span>
+      <span>Same space, different view: each lens can emphasize different neighbors for the same token.</span>
+    </div>
+  </div>
+
+  <!-- ═══════ SLIDE 17 — WHAT EMBEDDINGS REPRESENT ═══════ -->
+  <div class="slide" id="slide-17">
+    <span class="section-tag">Embeddings</span>
+    <div class="badge concept">Interpretation</div>
+    <h2>What embeddings can represent, and what they cannot</h2>
+    <div class="spacer-sm"></div>
+
+    <div class="grid-2">
+      <div class="card">
+        <h3>What can emerge in embedding space</h3>
+        <ul class="pc-list good">
+          <li><strong>Semantic tendencies:</strong> related concepts often become geometrically proximate.</li>
+          <li><strong>Syntactic tendencies:</strong> tokens with similar grammatical roles can form neighborhoods.</li>
+          <li><strong>Usage tendencies:</strong> frequent co-occurrence patterns influence geometry.</li>
+        </ul>
+        <div class="callout info" style="margin-top:0.7rem;">
+          <span class="icon">i</span>
+          <span>Embeddings compress corpus statistics into a reusable numeric prior.</span>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Misconceptions to avoid</h3>
+        <ul class="pc-list bad">
+          <li>Embedding coordinates are not human-readable feature slots.</li>
+          <li>Input embeddings are not the model's final understanding.</li>
+          <li>Raw embedding analogies do not fully explain transformer behavior.</li>
+        </ul>
+        <div class="callout warn" style="margin-top:0.7rem;">
+          <span class="icon">!</span>
+          <span><strong>Analogy caveat:</strong> "king - man + woman ≈ queen" is an intuition hook from static word embeddings. In transformers, representations are contextualized after multiple layers.</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="hidden-content autostep">
+      <div class="callout success" style="margin-top:0.7rem;">
+        <span class="icon">+</span>
+        <span>Think of embedding vectors as an initialization for computation, not as a completed linguistic theory.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════ SLIDE 18 — INTERACTIVE: STATIC VS CONTEXTUAL ═══════ -->
+  <div class="slide" id="slide-18">
+    <span class="section-tag">Embeddings</span>
+    <div class="badge activity">Interactive</div>
+    <h2>Quick checkpoint: static embedding vs contextual meaning</h2>
+    <div class="spacer-sm"></div>
+
+    <div class="card">
+      <h3>Prompt</h3>
+      <p class="small-text">Token <strong>"bank"</strong> starts from the same embedding row in two sentences. What resolves sense in <strong>"river bank"</strong> vs <strong>"bank loan"</strong>?</p>
+      <div class="quiz-choices">
+        <button class="quiz-choice" data-quiz-group="contextual-disambiguation" data-correct="false" data-feedback-id="contextualDisambiguationFeedback" onclick="handleQuizChoice(this)">Token ID magnitude determines which sense is active.</button>
+        <button class="quiz-choice" data-quiz-group="contextual-disambiguation" data-correct="false" data-feedback-id="contextualDisambiguationFeedback" onclick="handleQuizChoice(this)">The input embedding row alone contains the final disambiguated meaning.</button>
+        <button class="quiz-choice" data-quiz-group="contextual-disambiguation" data-correct="true" data-feedback-id="contextualDisambiguationFeedback" onclick="handleQuizChoice(this)">Contextual updates via attention/MLP across layers resolve the sense.</button>
+      </div>
+      <div class="quiz-feedback hidden-content" id="contextualDisambiguationFeedback">
+        Correct view: embedding row is static initialization; layerwise contextual states disambiguate sense.
+      </div>
+    </div>
+
+    <div class="hidden-content autostep">
+      <div class="callout info" style="margin-top:0.7rem;">
+        <span class="icon">→</span>
+        <span>Input embeddings provide token-type priors; contextual interpretation is built by transformer computation.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════ SLIDE 19 — INTERACTIVE: NEAREST NEIGHBOR ═══════ -->
+  <div class="slide" id="slide-19">
+    <span class="section-tag">Embeddings</span>
+    <div class="badge activity">Interactive</div>
+    <h2>Nearest-neighbor game: predict local geometry</h2>
+    <div class="spacer-sm"></div>
+
+    <div class="grid-2">
+      <div class="card">
+        <h3>Prompt</h3>
+        <p class="small-text">Anchor token: <strong>lion</strong>. In a reasonable embedding space, which token should be nearest?</p>
+        <div class="quiz-choices">
+          <button class="quiz-choice" data-quiz-group="nn-game" data-correct="true" data-feedback-id="nnFeedback" onclick="handleQuizChoice(this)">dog</button>
+          <button class="quiz-choice" data-quiz-group="nn-game" data-correct="false" data-feedback-id="nnFeedback" onclick="handleQuizChoice(this)">truck</button>
+          <button class="quiz-choice" data-quiz-group="nn-game" data-correct="false" data-feedback-id="nnFeedback" onclick="handleQuizChoice(this)">semicolon</button>
+        </div>
+        <div class="quiz-feedback hidden-content" id="nnFeedback">
+          Expected answer: <strong>dog</strong>. Embeddings often cluster by usage and semantic neighborhood, but the exact geometry is learned and task-dependent.
+        </div>
+      </div>
+      <div class="card">
+        <h3>Toy map reference</h3>
+        <div class="toy-map" style="height:13.2rem;">
+          <span class="map-axis x">usage axis</span>
+          <span class="map-axis y">concept axis</span>
+          <span class="map-point animal" style="left:29%; top:45%;">cat</span>
+          <span class="map-point animal" style="left:37%; top:39%;">dog</span>
+          <span class="map-point animal" style="left:45%; top:34%;">lion</span>
+          <span class="map-point vehicle" style="left:72%; top:73%;">truck</span>
+          <span class="map-point" style="left:68%; top:25%;">;</span>
+        </div>
+        <p class="tiny" style="margin-top:0.5rem;">The game is about local neighborhood intuition, not exact coordinates.</p>
+      </div>
+    </div>
+
+    <div class="hidden-content autostep">
+      <div class="callout question" style="margin-top:0.7rem;">
+        <span class="icon">?</span>
+        <span>If neighborhoods are meaningful, what is still missing? <strong>Order.</strong> The embedding table does not encode position in sequence.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════ SLIDE 20 — BRIDGE TO POSITION ═══════ -->
+  <div class="slide" id="slide-20">
+    <span class="section-tag">Transition</span>
+    <div class="badge day2">Bridge</div>
+    <h2>Embeddings give meaning priors, not sequence order</h2>
+    <div class="spacer-sm"></div>
+
+    <div class="grid-2">
+      <div class="card">
+        <h3>Same token set</h3>
+        <div class="token-example" style="margin-top:0.5rem;">
+          <span class="token-pill main">dog</span>
+          <span class="token-pill main">bites</span>
+          <span class="token-pill main">man</span>
+        </div>
+        <p class="small-text" style="margin-top:0.55rem;">"dog bites man"</p>
+      </div>
+      <div class="card">
+        <h3>Different order, different meaning</h3>
+        <div class="token-example" style="margin-top:0.5rem;">
+          <span class="token-pill main">man</span>
+          <span class="token-pill main">bites</span>
+          <span class="token-pill main">dog</span>
+        </div>
+        <p class="small-text" style="margin-top:0.55rem;">"man bites dog"</p>
+      </div>
+    </div>
+
+    <div class="spacer-sm"></div>
+    <div class="callout warn">
+      <span class="icon">!</span>
+      <span>The same embeddings can participate in radically different meanings when order changes.</span>
+    </div>
+    <div class="callout info" style="margin-top:0.6rem;">
+      <span class="icon">→</span>
+      <span><strong>Embedding is the moment a token stops being a symbol in a vocabulary and becomes a point in computation space.</strong> Next: positional information, so the model can distinguish where each token occurs.</span>
     </div>
   </div>
 
@@ -1586,7 +2486,7 @@ s lower &lt;/w&gt;</div>
   <div class="progress-track">
     <div class="progress-fill" id="progressFill" style="width:0%"></div>
   </div>
-  <span class="slide-counter" id="slideCounter">1 / 14</span>
+  <span class="slide-counter" id="slideCounter">1 / 20</span>
   <button class="nav-btn primary" id="btnNext">Next &rarr;</button>
 </div>
 
@@ -1598,6 +2498,107 @@ let slides = [];
 let total = 0;
 let current = 0;
 
+const LENS_LABELS = {
+  pet: 'Pet / companionship',
+  feline: 'Feline family',
+  care: 'Care context'
+};
+
+const DEFAULT_PROJECTION_LENS = 'pet';
+
+const LENS_MEANINGS = {
+  pet: 'cat as a pet',
+  feline: 'cat as a feline',
+  care: 'cat care / ownership'
+};
+
+const LENS_STATES = {
+  pet: {
+    cat:[0.30,0.55],
+    dog:[0.22,0.60],
+    hamster:[0.20,0.45],
+    vet:[0.35,0.70],
+    litter:[0.48,0.30],
+    kibble:[0.50,0.45],
+    tiger:[0.80,0.60],
+    lion:[0.82,0.45],
+    leopard:[0.75,0.50]
+  },
+  feline: {
+    cat:[0.55,0.55],
+    tiger:[0.70,0.65],
+    lion:[0.72,0.45],
+    leopard:[0.68,0.55],
+    dog:[0.20,0.65],
+    hamster:[0.18,0.40],
+    vet:[0.40,0.30],
+    litter:[0.48,0.12],
+    kibble:[0.55,0.20]
+  },
+  care: {
+    cat:[0.45,0.55],
+    litter:[0.35,0.45],
+    kibble:[0.52,0.45],
+    vet:[0.48,0.70],
+    dog:[0.30,0.65],
+    hamster:[0.32,0.30],
+    tiger:[0.80,0.70],
+    lion:[0.82,0.45],
+    leopard:[0.75,0.55]
+  }
+};
+
+const LENS_NEIGHBORS = {
+  pet: ['dog', 'hamster', 'vet'],
+  feline: ['leopard', 'tiger', 'lion'],
+  care: ['litter', 'kibble', 'vet']
+};
+
+const LENS_EMPHASIS = {
+  pet: ['cat', 'dog', 'hamster', 'vet'],
+  feline: ['cat', 'tiger', 'lion', 'leopard'],
+  care: ['cat', 'litter', 'kibble', 'vet']
+};
+
+const TOKEN_GROUPS = {
+  cat: 'anchor',
+  dog: 'pets',
+  hamster: 'pets',
+  tiger: 'bigcats',
+  lion: 'bigcats',
+  leopard: 'bigcats',
+  litter: 'care',
+  kibble: 'care',
+  vet: 'care'
+};
+
+const TOKEN_LABEL_OFFSETS = {
+  dog: [9, -12],
+  hamster: [9, 12],
+  tiger: [9, -12],
+  lion: [9, 12],
+  leopard: [9, -14],
+  litter: [9, 12],
+  kibble: [9, 12],
+  vet: [9, -12]
+};
+
+const PROJECTION_TOKENS = Object.keys(LENS_STATES[DEFAULT_PROJECTION_LENS]);
+
+let projectionState = {
+  initialized: false,
+  activeLens: DEFAULT_PROJECTION_LENS,
+  currentPositions: null,
+  rafId: null,
+  animStart: 0,
+  animFrom: null,
+  animTo: null,
+  canvas: null,
+  ctx: null,
+  resizeBound: false,
+  readoutTimer: null
+};
+
 function typesetMath(root = document) {
   if (!window.MathJax || !window.MathJax.typesetPromise) return;
   window.MathJax.typesetPromise([root]).catch(() => {});
@@ -1608,10 +2609,22 @@ function refreshSlides() {
   total = slides.length;
 }
 
+function resetSlideInteractions(slideEl) {
+  slideEl.querySelectorAll('.quiz-choice').forEach((btn) => {
+    btn.classList.remove('correct', 'wrong', 'locked');
+    btn.disabled = false;
+  });
+  slideEl.querySelectorAll('.quiz-feedback').forEach((el) => {
+    el.classList.remove('revealed', 'settled');
+  });
+  if (slideEl.id === 'slide-16') resetProjectionSlide();
+}
+
 function resetHiddenContent(slideEl) {
   slideEl.querySelectorAll('.hidden-content').forEach((el) => {
     el.classList.remove('revealed', 'settled');
   });
+  resetSlideInteractions(slideEl);
 }
 
 function goTo(index) {
@@ -1633,6 +2646,10 @@ function goTo(index) {
   $('#progressFill').style.width = ((current / Math.max(total - 1, 1)) * 100) + '%';
 
   typesetMath(slides[index]);
+  if (slides[index].id === 'slide-16') {
+    initProjectionSlide();
+    drawProjection();
+  }
 }
 
 function runAutoStep(slideEl) {
@@ -1642,9 +2659,31 @@ function runAutoStep(slideEl) {
   return true;
 }
 
+function runProjectionLensStep(slideEl) {
+  if (!slideEl || slideEl.id !== 'slide-16' || !projectionState.initialized) return false;
+
+  const toolbar = document.getElementById('projectionToolbar16');
+  if (!toolbar) return false;
+  const lensOrder = Array.from(toolbar.querySelectorAll('.lens-btn'))
+    .map((btn) => btn.dataset.lens)
+    .filter((lens, idx, arr) => lens && LENS_STATES[lens] && arr.indexOf(lens) === idx);
+  if (lensOrder.length === 0) return false;
+
+  const currentIdx = lensOrder.indexOf(projectionState.activeLens);
+  if (currentIdx === -1) {
+    setProjectionLens(lensOrder[0]);
+    return true;
+  }
+  if (currentIdx >= lensOrder.length - 1) return false;
+
+  setProjectionLens(lensOrder[currentIdx + 1]);
+  return true;
+}
+
 function nextWithInteractions() {
   if (total === 0) return;
   const active = slides[current];
+  if (runProjectionLensStep(active)) return;
   if (runAutoStep(active)) return;
 
   if (current === total - 1) goTo(0);
@@ -1655,6 +2694,322 @@ function toggleReveal(id) {
   const el = document.getElementById(id);
   if (!el) return;
   el.classList.toggle('revealed');
+}
+
+function cloneLensState(lensKey) {
+  const source = LENS_STATES[lensKey];
+  const out = {};
+  Object.keys(source).forEach((token) => {
+    out[token] = [source[token][0], source[token][1]];
+  });
+  return out;
+}
+
+function easeInOutCubic(t) {
+  return t < 0.5
+    ? 4 * t * t * t
+    : 1 - Math.pow(-2 * t + 2, 3) / 2;
+}
+
+function syncProjectionButtons(lensKey) {
+  const toolbar = document.getElementById('projectionToolbar16');
+  if (!toolbar) return;
+  toolbar.querySelectorAll('.lens-btn').forEach((btn) => {
+    const active = btn.dataset.lens === lensKey;
+    btn.classList.toggle('active', active);
+    btn.setAttribute('aria-pressed', active ? 'true' : 'false');
+  });
+}
+
+function updateProjectionReadout(lensKey) {
+  const lensLabel = document.getElementById('projectionLensLabel16');
+  const meaningLabel = document.getElementById('projectionMeaning16');
+  const neighborsWrap = document.getElementById('projectionNeighbors16');
+  const readout = document.getElementById('projectionReadout16');
+  if (!lensLabel || !meaningLabel || !neighborsWrap || !readout) return;
+
+  lensLabel.textContent = LENS_LABELS[lensKey] || lensKey;
+  meaningLabel.textContent = LENS_MEANINGS[lensKey] || '';
+  neighborsWrap.innerHTML = '';
+  (LENS_NEIGHBORS[lensKey] || []).forEach((token) => {
+    const chip = document.createElement('span');
+    chip.className = 'neighbor-chip';
+    chip.textContent = token;
+    neighborsWrap.appendChild(chip);
+  });
+
+  readout.classList.add('updating');
+  if (projectionState.readoutTimer) clearTimeout(projectionState.readoutTimer);
+  projectionState.readoutTimer = setTimeout(() => {
+    readout.classList.remove('updating');
+    projectionState.readoutTimer = null;
+  }, 200);
+}
+
+function resizeProjectionCanvas() {
+  if (!projectionState.canvas || !projectionState.ctx) return;
+  const canvas = projectionState.canvas;
+  const rect = canvas.getBoundingClientRect();
+  const cssWidth = Math.max(1, Math.floor(rect.width));
+  const cssHeight = Math.max(1, Math.floor(rect.height));
+  const dpr = window.devicePixelRatio || 1;
+  canvas.width = Math.floor(cssWidth * dpr);
+  canvas.height = Math.floor(cssHeight * dpr);
+  projectionState.ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+}
+
+function drawProjection() {
+  if (!projectionState.initialized || !projectionState.ctx || !projectionState.canvas || !projectionState.currentPositions) return;
+  const canvas = projectionState.canvas;
+  const ctx = projectionState.ctx;
+  const dpr = window.devicePixelRatio || 1;
+  const width = canvas.width / dpr;
+  const height = canvas.height / dpr;
+
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.clearRect(0, 0, width, height);
+
+  const pad = 48;
+  const plotW = Math.max(1, width - pad * 2);
+  const plotH = Math.max(1, height - pad * 2);
+  const centerX = pad + plotW * 0.5;
+  const centerY = pad + plotH * 0.5;
+  const neighbors = new Set(LENS_NEIGHBORS[projectionState.activeLens] || []);
+  const emphasized = new Set(LENS_EMPHASIS[projectionState.activeLens] || []);
+
+  const GROUP_POINT_STYLES = {
+    pets: { fill: [123, 154, 255], stroke: [186, 218, 255] },
+    bigcats: { fill: [255, 170, 85], stroke: [255, 214, 180] },
+    care: { fill: [180, 157, 255], stroke: [220, 205, 255] }
+  };
+  const toRgba = (rgb, alpha) => `rgba(${rgb[0]},${rgb[1]},${rgb[2]},${alpha})`;
+
+  const toXY = (coords) => [pad + coords[0] * plotW, pad + coords[1] * plotH];
+
+  ctx.lineWidth = 1;
+  ctx.strokeStyle = 'rgba(123,154,255,0.12)';
+  for (let i = 0; i <= 10; i += 1) {
+    const x = pad + (plotW * i) / 10;
+    const y = pad + (plotH * i) / 10;
+    ctx.beginPath();
+    ctx.moveTo(x, pad);
+    ctx.lineTo(x, pad + plotH);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(pad, y);
+    ctx.lineTo(pad + plotW, y);
+    ctx.stroke();
+  }
+
+  ctx.setLineDash([5, 5]);
+  ctx.strokeStyle = 'rgba(180,157,255,0.3)';
+  ctx.beginPath();
+  ctx.moveTo(centerX, pad);
+  ctx.lineTo(centerX, pad + plotH);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(pad, centerY);
+  ctx.lineTo(pad + plotW, centerY);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  PROJECTION_TOKENS.forEach((token) => {
+    if (token === 'cat') return;
+    const coords = projectionState.currentPositions[token];
+    if (!coords) return;
+    const [x, y] = toXY(coords);
+    const group = TOKEN_GROUPS[token];
+    const style = GROUP_POINT_STYLES[group] || GROUP_POINT_STYLES.pets;
+    const isNeighbor = neighbors.has(token);
+    const isEmphasized = emphasized.has(token);
+    const alpha = isEmphasized ? 0.95 : 0.32;
+    const labelOffset = TOKEN_LABEL_OFFSETS[token] || [9, -10];
+
+    if (isNeighbor) {
+      ctx.beginPath();
+      ctx.arc(x, y, 11, 0, Math.PI * 2);
+      ctx.fillStyle = isEmphasized ? 'rgba(255,214,68,0.2)' : 'rgba(255,214,68,0.1)';
+      ctx.fill();
+    }
+
+    ctx.beginPath();
+    ctx.arc(x, y, 6.2, 0, Math.PI * 2);
+    ctx.fillStyle = toRgba(style.fill, alpha);
+    ctx.fill();
+    ctx.lineWidth = 1.4;
+    ctx.strokeStyle = toRgba(style.stroke, isEmphasized ? 0.75 : 0.34);
+    ctx.stroke();
+
+    ctx.font = '600 13px Inter, sans-serif';
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'middle';
+    ctx.fillStyle = isEmphasized ? 'rgba(233,239,255,0.96)' : 'rgba(233,239,255,0.46)';
+    ctx.fillText(token, x + labelOffset[0], y + labelOffset[1]);
+  });
+
+  const catCoords = projectionState.currentPositions.cat || [0.5, 0.5];
+  const [catX, catY] = toXY(catCoords);
+  ctx.beginPath();
+  ctx.arc(catX, catY, 16, 0, Math.PI * 2);
+  ctx.fillStyle = 'rgba(90,232,142,0.18)';
+  ctx.fill();
+  ctx.beginPath();
+  ctx.arc(catX, catY, 8.5, 0, Math.PI * 2);
+  ctx.fillStyle = 'rgba(90,232,142,0.95)';
+  ctx.fill();
+  ctx.lineWidth = 1.8;
+  ctx.strokeStyle = 'rgba(218,255,232,0.85)';
+  ctx.stroke();
+
+  ctx.font = '700 13px Inter, sans-serif';
+  ctx.fillStyle = '#d8ffe9';
+  ctx.textAlign = 'left';
+  ctx.fillText('cat (anchor)', catX + 12, catY + 1);
+}
+
+function animateProjectionFrame(ts) {
+  if (!projectionState.animFrom || !projectionState.animTo) {
+    projectionState.rafId = null;
+    return;
+  }
+  const duration = 760;
+  const raw = Math.min(1, (ts - projectionState.animStart) / duration);
+  const eased = easeInOutCubic(raw);
+
+  PROJECTION_TOKENS.forEach((token) => {
+    const from = projectionState.animFrom[token];
+    const to = projectionState.animTo[token];
+    if (!from || !to) return;
+    projectionState.currentPositions[token][0] = from[0] + (to[0] - from[0]) * eased;
+    projectionState.currentPositions[token][1] = from[1] + (to[1] - from[1]) * eased;
+  });
+
+  drawProjection();
+
+  if (raw < 1) {
+    projectionState.rafId = requestAnimationFrame(animateProjectionFrame);
+    return;
+  }
+
+  projectionState.currentPositions = cloneLensState(projectionState.activeLens);
+  projectionState.rafId = null;
+  projectionState.animFrom = null;
+  projectionState.animTo = null;
+  drawProjection();
+}
+
+function setProjectionLens(lensKey) {
+  if (!LENS_STATES[lensKey] || !projectionState.initialized) return;
+  if (projectionState.activeLens === lensKey && !projectionState.rafId) return;
+
+  if (!projectionState.currentPositions) {
+    projectionState.activeLens = lensKey;
+    projectionState.currentPositions = cloneLensState(lensKey);
+    syncProjectionButtons(lensKey);
+    updateProjectionReadout(lensKey);
+    drawProjection();
+    return;
+  }
+
+  const from = {};
+  PROJECTION_TOKENS.forEach((token) => {
+    from[token] = [
+      projectionState.currentPositions[token][0],
+      projectionState.currentPositions[token][1]
+    ];
+  });
+
+  projectionState.animFrom = from;
+  projectionState.animTo = cloneLensState(lensKey);
+  projectionState.animStart = performance.now();
+  projectionState.activeLens = lensKey;
+  syncProjectionButtons(lensKey);
+  updateProjectionReadout(lensKey);
+
+  if (projectionState.rafId) cancelAnimationFrame(projectionState.rafId);
+  projectionState.rafId = requestAnimationFrame(animateProjectionFrame);
+}
+
+function initProjectionSlide() {
+  const slide = document.getElementById('slide-16');
+  const canvas = document.getElementById('projectionCanvas16');
+  const toolbar = document.getElementById('projectionToolbar16');
+  if (!slide || !canvas || !toolbar) return;
+
+  if (!projectionState.initialized) {
+    projectionState.canvas = canvas;
+    projectionState.ctx = canvas.getContext('2d');
+    projectionState.currentPositions = cloneLensState(DEFAULT_PROJECTION_LENS);
+    projectionState.activeLens = DEFAULT_PROJECTION_LENS;
+
+    toolbar.querySelectorAll('.lens-btn').forEach((btn) => {
+      btn.addEventListener('click', () => setProjectionLens(btn.dataset.lens));
+    });
+
+    if (!projectionState.resizeBound) {
+      window.addEventListener('resize', () => {
+        if (!projectionState.initialized) return;
+        resizeProjectionCanvas();
+        drawProjection();
+      });
+      projectionState.resizeBound = true;
+    }
+
+    projectionState.initialized = true;
+  }
+
+  syncProjectionButtons(projectionState.activeLens);
+  updateProjectionReadout(projectionState.activeLens);
+  resizeProjectionCanvas();
+  drawProjection();
+}
+
+function resetProjectionSlide() {
+  if (!projectionState.initialized) return;
+  if (projectionState.rafId) {
+    cancelAnimationFrame(projectionState.rafId);
+    projectionState.rafId = null;
+  }
+  if (projectionState.readoutTimer) {
+    clearTimeout(projectionState.readoutTimer);
+    projectionState.readoutTimer = null;
+  }
+  projectionState.activeLens = DEFAULT_PROJECTION_LENS;
+  projectionState.currentPositions = cloneLensState(DEFAULT_PROJECTION_LENS);
+  projectionState.animFrom = null;
+  projectionState.animTo = null;
+  syncProjectionButtons(DEFAULT_PROJECTION_LENS);
+  updateProjectionReadout(DEFAULT_PROJECTION_LENS);
+  resizeProjectionCanvas();
+  drawProjection();
+}
+
+function handleQuizChoice(buttonEl) {
+  if (!buttonEl) return;
+  const group = buttonEl.dataset.quizGroup;
+  if (!group) return;
+  const slideEl = buttonEl.closest('.slide');
+  if (!slideEl) return;
+
+  const selector = '.quiz-choice[data-quiz-group="' + group + '"]';
+  const choices = Array.from(slideEl.querySelectorAll(selector));
+  if (choices.some((btn) => btn.classList.contains('locked'))) return;
+
+  choices.forEach((btn) => {
+    btn.classList.add('locked');
+    btn.disabled = true;
+    if (btn.dataset.correct === 'true') btn.classList.add('correct');
+  });
+
+  if (buttonEl.dataset.correct !== 'true') {
+    buttonEl.classList.add('wrong');
+  }
+
+  const feedbackId = buttonEl.dataset.feedbackId;
+  if (feedbackId) {
+    const feedback = slideEl.querySelector('#' + feedbackId);
+    if (feedback) feedback.classList.add('revealed');
+  }
 }
 
 $('#btnNext').addEventListener('click', nextWithInteractions);
