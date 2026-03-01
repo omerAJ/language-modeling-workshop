@@ -930,73 +930,6 @@
     border-radius: 0.4rem;
     padding: 0.24rem 0.38rem;
   }
-  .toy-map {
-    position: relative;
-    border: 1px solid rgba(123,154,255,0.3);
-    border-radius: 0.72rem;
-    height: 15rem;
-    margin-top: 0.6rem;
-    background:
-      linear-gradient(0deg, rgba(123,154,255,0.08) 1px, transparent 1px) 0 0 / 1.8rem 1.8rem,
-      linear-gradient(90deg, rgba(123,154,255,0.08) 1px, transparent 1px) 0 0 / 1.8rem 1.8rem,
-      radial-gradient(circle at 20% 15%, rgba(90,232,142,0.12), transparent 45%),
-      radial-gradient(circle at 80% 80%, rgba(255,170,85,0.1), transparent 42%),
-      var(--surface2);
-    overflow: hidden;
-  }
-  .toy-map::before,
-  .toy-map::after {
-    content: '';
-    position: absolute;
-    background: rgba(153,160,184,0.35);
-  }
-  .toy-map::before {
-    height: 1px;
-    left: 0.8rem;
-    right: 0.8rem;
-    top: 50%;
-  }
-  .toy-map::after {
-    width: 1px;
-    top: 0.8rem;
-    bottom: 0.8rem;
-    left: 50%;
-  }
-  .map-point {
-    position: absolute;
-    transform: translate(-50%, -50%);
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.71rem;
-    padding: 0.24rem 0.34rem;
-    border-radius: 0.35rem;
-    border: 1px solid var(--border);
-    background: rgba(22,25,35,0.92);
-    color: #edf0ff;
-    white-space: nowrap;
-  }
-  .map-point.animal {
-    border-color: rgba(90,232,142,0.52);
-    color: #caffdb;
-    background: rgba(90,232,142,0.14);
-  }
-  .map-point.vehicle {
-    border-color: rgba(255,170,85,0.52);
-    color: #ffd8b7;
-    background: rgba(255,170,85,0.14);
-  }
-  .map-axis {
-    position: absolute;
-    font-size: 0.66rem;
-    color: var(--text-dim);
-    letter-spacing: 0.04em;
-  }
-  .map-axis.x { right: 0.65rem; bottom: 0.45rem; }
-  .map-axis.y {
-    left: 0.5rem;
-    top: 0.65rem;
-    transform: rotate(-90deg);
-    transform-origin: left top;
-  }
   .projection-card {
     border-color: rgba(123,154,255,0.34);
     background:
@@ -1084,60 +1017,6 @@
     color: #d1d8f4;
     line-height: 1.5;
   }
-  .quiz-choices {
-    display: grid;
-    gap: 0.55rem;
-    margin-top: 0.75rem;
-  }
-  .quiz-choice {
-    text-align: left;
-    border: 1px solid var(--border);
-    border-radius: 0.55rem;
-    padding: 0.62rem 0.74rem;
-    background: var(--surface2);
-    color: #e6ebff;
-    font-size: 0.84rem;
-    line-height: 1.45;
-    cursor: pointer;
-    transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
-  }
-  .quiz-choice:hover {
-    border-color: rgba(123,154,255,0.55);
-    background: rgba(123,154,255,0.12);
-    transform: translateY(-1px);
-  }
-  .quiz-choice.locked {
-    cursor: default;
-    opacity: 0.9;
-    transform: none;
-  }
-  .quiz-choice.correct {
-    border-color: rgba(90,232,142,0.55);
-    background: rgba(90,232,142,0.17);
-    color: #d5ffe5;
-  }
-  .quiz-choice.wrong {
-    border-color: rgba(255,123,123,0.56);
-    background: rgba(255,123,123,0.17);
-    color: #ffd6d6;
-  }
-  .quiz-feedback {
-    margin-top: 0.7rem;
-    color: #d5dfff;
-    font-size: 0.83rem;
-    line-height: 1.5;
-  }
-  .quiz-feedback.hidden-content {
-    border: none;
-    padding: 0;
-    background: transparent;
-  }
-  .quiz-feedback.hidden-content.revealed {
-    border: 1px solid rgba(123,154,255,0.32);
-    border-radius: 0.6rem;
-    padding: 0.72rem 0.86rem;
-    background: rgba(123,154,255,0.1);
-  }
   .math-note {
     font-family: 'JetBrains Mono', monospace;
     font-size: 0.76rem;
@@ -1159,9 +1038,6 @@
     .embed-row {
       grid-template-columns: 1fr;
       gap: 0.35rem;
-    }
-    .toy-map {
-      height: 12.5rem;
     }
     .projection-toolbar {
       gap: 0.42rem;
@@ -2196,68 +2072,77 @@ l e a r n ing &lt;/w&gt;</div>
   <div class="slide" id="slide-13">
     <span class="section-tag">Embeddings</span>
     <div class="badge concept">Mechanism</div>
-    <h2>From token IDs to initial model state</h2>
+    <h2>From token IDs to vectors</h2>
     <div class="spacer-sm"></div>
 
-    <p class="small-text">The embedding table is a learned array; token IDs index rows to produce per-token vectors.</p>
+    <p class="small-text">Token IDs index rows of a learned embedding table.</p>
     <div class="math">\[
       T\in\{1,\dots,|V|\}^{n},\quad X^{(0)}=E[T]\in\mathbb{R}^{n\times d_{\text{model}}}
     \]</div>
 
-    <div class="grid-2" style="margin-top:0.8rem;">
-      <div class="card">
-        <h3>Code mental model</h3>
-        <div class="id-seq" style="margin-top:0.55rem; white-space:pre;">token_ids = [812, 1452, 5021]
-x0 = E[token_ids]      # shape: [n, d_model]</div>
-        <p class="small-text" style="margin-top:0.5rem;">Equivalent to <code>one_hot(token_ids) @ E</code> (linear map), implemented as row-gather for efficiency.</p>
-      </div>
-      <div class="card">
-        <h3>What this gives the transformer</h3>
-        <ul class="pc-list good" style="margin-top:0.5rem;">
-          <li>Every token now has a dense vector in the same model-width space.</li>
-          <li>This is the state consumed by the first transformer block.</li>
-          <li>At this point vectors are token-type priors, not context-specific meanings.</li>
-        </ul>
-      </div>
+    <div class="flow token-interface" style="margin-top:0.8rem;">
+      <div class="flow-box ids">Token IDs: [812, 1452, 5021]</div>
+      <div class="flow-box embed">Row lookup in \(E\)</div>
+      <div class="flow-box" style="border-color: rgba(90,232,142,0.45); color: var(--green); background: rgba(90,232,142,0.1);">Output: \(x_1,x_2,x_3 \in \mathbb{R}^{d_{\text{model}}}\)</div>
     </div>
 
-    <div class="spacer-sm"></div>
-    <div class="callout info">
-      <span class="icon">→</span>
-      <span>Next: how training sculpts these vectors into usable geometry.</span>
+    <div class="grid-2" style="margin-top:0.8rem;">
+      <div class="card">
+        <h3>Embedding matrix view</h3>
+        <div class="embed-table">
+          <div class="embed-row">
+            <span class="embed-key">E[812, :]</span>
+            <div class="vec-chip-group">
+              <span class="vec-chip">+0.14</span><span class="vec-chip">-0.77</span><span class="vec-chip">+0.32</span><span class="vec-chip">...</span>
+            </div>
+          </div>
+          <div class="embed-row">
+            <span class="embed-key">E[1452, :]</span>
+            <div class="vec-chip-group">
+              <span class="vec-chip">+0.11</span><span class="vec-chip">-0.70</span><span class="vec-chip">+0.28</span><span class="vec-chip">...</span>
+            </div>
+          </div>
+          <div class="embed-row">
+            <span class="embed-key">E[5021, :]</span>
+            <div class="vec-chip-group">
+              <span class="vec-chip">-0.62</span><span class="vec-chip">+0.04</span><span class="vec-chip">+0.80</span><span class="vec-chip">...</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Implementation note</h3>
+        <div class="id-seq" style="margin-top:0.55rem; white-space:pre;">token_ids = [812, 1452, 5021]
+x0 = E[token_ids]      # shape: [n, d_model]</div>
+        <p class="small-text" style="margin-top:0.5rem;">Equivalent to <code>one_hot(T) @ E</code>, implemented as row gather for efficiency.</p>
+      </div>
     </div>
   </div>
 
-  <!-- ═══════ SLIDE 14 — EMBEDDING DYNAMICS ═══════ -->
+  <!-- ═══════ SLIDE 14 — KEY PROPERTIES ═══════ -->
   <div class="slide" id="slide-14">
     <span class="section-tag">Embeddings</span>
-    <div class="badge discussion">Learning Dynamics</div>
-    <h2>How embedding space gets shaped during training</h2>
+    <div class="badge concept">Key Properties</div>
+    <h2>First learnable state, still non-contextual</h2>
     <div class="spacer-sm"></div>
 
-    <div class="flow token-interface">
-      <div class="flow-box ids">Batch token IDs</div>
-      <div class="flow-box embed">Row lookup in \(E\)</div>
-      <div class="flow-box" style="border-color: rgba(255,170,85,0.5); color: var(--orange); background: rgba(255,170,85,0.1);">Loss from next-token prediction</div>
-      <div class="flow-box" style="border-color: rgba(180,157,255,0.5); color: var(--purple); background: rgba(180,157,255,0.1);">Backprop updates touched rows</div>
-    </div>
-
-    <div class="grid-2" style="margin-top:0.8rem;">
+    <div class="grid-2">
       <div class="card">
-        <h3>Update mechanics (practical view)</h3>
+        <h3>What they are</h3>
         <ul class="pc-list good" style="margin-top:0.5rem;">
-          <li>Only rows for tokens present in a batch get direct updates that step.</li>
-          <li>Frequent tokens receive many updates; rare tokens get sparse signal.</li>
-          <li>Co-occurrence/context patterns gradually move rows into useful neighborhoods.</li>
+          <li>A learned lookup table \(E \in \mathbb{R}^{|V|\times d_{\text{model}}}\): each token type maps to one trainable row.</li>
+          <li>Typically one of the largest parameter blocks in the model, scaling as \(|V| \times d_{\text{model}}\).</li>
+          <li>The output \(X^{(0)}\) is already in model width, so attention/MLP layers can consume it directly.</li>
+          <li>High-dimensional geometry (neighbors, directions, clusters) is learned from corpus statistics and objective pressure.</li>
         </ul>
-        <div class="id-seq" style="margin-top:0.62rem;">Batch [dog, dog, bank, river] -> direct updates on rows dog/bank/river</div>
       </div>
       <div class="card">
-        <h3>What geometry means before contextualization</h3>
-        <ul class="pc-list good" style="margin-top:0.5rem;">
-          <li>Nearby tokens often share usage patterns.</li>
-          <li>A token's input row is still static across contexts.</li>
-          <li>Context-specific sense is resolved later by attention + MLP layers.</li>
+        <h3>What they are not</h3>
+        <ul class="pc-list bad" style="margin-top:0.5rem;">
+          <li>Not contextualized: at layer 0, a token starts from the same row in every sentence.</li>
+          <li>Not order-aware by themselves: embedding rows encode token identity, not sequence interactions.</li>
+          <li>Not a final meaning representation: polysemy and role are resolved by downstream layer updates.</li>
+          <li>Not guaranteed to be human-interpretable per coordinate; dimensions are distributed features.</li>
         </ul>
       </div>
     </div>
@@ -2265,7 +2150,7 @@ x0 = E[token_ids]      # shape: [n, d_model]</div>
     <div class="spacer-sm"></div>
     <div class="callout info">
       <span class="icon">→</span>
-      <span>After training, \(E\) is a high-dimensional geometry. Slide 16 visualizes different 2D lenses of that same space.</span>
+      <span>Next, we inspect this geometry, then explain how attention creates context-dependent meaning.</span>
     </div>
   </div>
 
@@ -2276,7 +2161,7 @@ x0 = E[token_ids]      # shape: [n, d_model]</div>
     <h2>Same embeddings. Different semantic lenses.</h2>
     <div class="spacer-sm"></div>
 
-    <p class="small-text">These points are learned rows from the embedding table; each lens shows a different 2D projection of the same high-dimensional geometry.</p>
+    <p class="small-text">These are learned rows of \(E\) shown through different 2D projections of one high-dimensional space.</p>
 
     <div class="card projection-card" style="margin-top:0.8rem;">
       <h3>Semantic lens (same space, different view)</h3>
@@ -2302,165 +2187,67 @@ x0 = E[token_ids]      # shape: [n, d_model]</div>
       </div>
 
       <p class="projection-note">Each lens is a different 2D projection of the same high-dimensional space.</p>
-      <p class="projection-note" style="margin-top:0.32rem;">The points do not "move" in the embedding - only our 2D view changes.</p>
+      <p class="projection-note" style="margin-top:0.32rem;">The points do not move in high-D space; only our 2D view changes.</p>
+    </div>
+  </div>
+
+  <!-- ═══════ SLIDE 17 — BRIDGE TO ATTENTION ═══════ -->
+  <div class="slide" id="slide-17">
+    <span class="section-tag">Transition</span>
+    <div class="badge day2">Bridge</div>
+    <h2>Why embeddings are not enough: we need cross-token interaction</h2>
+    <div class="spacer-sm"></div>
+
+    <div class="flow token-interface">
+      <div class="flow-box embed">Static input rows \(h_{1:n}^{(0)}\)</div>
+      <div class="flow-box" style="border-color: rgba(255,123,123,0.45); color: var(--red); background: rgba(255,123,123,0.08);">No token-to-token interaction yet</div>
+      <div class="flow-box" style="border-color: rgba(123,154,255,0.5); color: var(--accent); background: rgba(123,154,255,0.1);">Attention mixes information across positions</div>
+      <div class="flow-box" style="border-color: rgba(90,232,142,0.45); color: var(--green); background: rgba(90,232,142,0.1);">Contextual states \(h_{1:n}^{(\ell)}\)</div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <h3>Layer-0 limitation</h3>
+        <ul class="pc-list bad" style="margin-top:0.5rem;">
+          <li>Each position starts from \(h_j^{(0)} = E[t_j]\), which depends only on token identity.</li>
+          <li>No context routing has happened yet, so local row values cannot disambiguate meaning.</li>
+          <li>Dependency structure and role assignment require token-token communication.</li>
+        </ul>
+        <h3 style="margin-top:0.75rem;">Same row, different intended sense</h3>
+        <div class="token-example" style="margin-top:0.55rem; flex-wrap:wrap;">
+          <span class="token-pill main">river</span>
+          <span class="token-pill reuse">bank</span>
+        </div>
+        <div class="token-example" style="margin-top:0.45rem; flex-wrap:wrap;">
+          <span class="token-pill main">bank</span>
+          <span class="token-pill reuse">loan</span>
+        </div>
+        <p class="small-text" style="margin-top:0.55rem;">At input, <strong>bank</strong> starts from the same row in both sentences.</p>
+      </div>
+      <div class="card">
+        <h3>Where attention enters</h3>
+        <div class="math">\[
+          h_j^{(0)} = E[t_j]
+        \]</div>
+        <div class="math">\[
+          \tilde{h}_j = \sum_{i=1}^{n} \alpha_{ji} V_i,\quad
+          \alpha_{ji}=\mathrm{softmax}_i\!\left(\frac{Q_j K_i^\top}{\sqrt{d_k}}\right)
+        \]</div>
+        <div class="math">\[
+          h_j^{(\ell+1)} = \text{TransformerLayer}_{\ell}\!\left(h_{1:n}^{(\ell)}\right)_j
+        \]</div>
+        <ul class="pc-list good" style="margin-top:0.55rem;">
+          <li>Each token builds a weighted read from other tokens in the sequence.</li>
+          <li>Weights are context-dependent and change with input and layer depth.</li>
+          <li>This is the mechanism that turns static priors into contextual meaning.</li>
+        </ul>
+      </div>
     </div>
 
     <div class="spacer-sm"></div>
     <div class="callout info">
       <span class="icon">→</span>
-      <span>Same space, different view: each lens can emphasize different neighbors for the same token.</span>
-    </div>
-  </div>
-
-  <!-- ═══════ SLIDE 17 — WHAT EMBEDDINGS REPRESENT ═══════ -->
-  <div class="slide" id="slide-17">
-    <span class="section-tag">Embeddings</span>
-    <div class="badge concept">Interpretation</div>
-    <h2>What embeddings can represent, and what they cannot</h2>
-    <div class="spacer-sm"></div>
-
-    <div class="grid-2">
-      <div class="card">
-        <h3>What can emerge in embedding space</h3>
-        <ul class="pc-list good">
-          <li><strong>Semantic tendencies:</strong> related concepts often become geometrically proximate.</li>
-          <li><strong>Syntactic tendencies:</strong> tokens with similar grammatical roles can form neighborhoods.</li>
-          <li><strong>Usage tendencies:</strong> frequent co-occurrence patterns influence geometry.</li>
-        </ul>
-        <div class="callout info" style="margin-top:0.7rem;">
-          <span class="icon">i</span>
-          <span>Embeddings compress corpus statistics into a reusable numeric prior.</span>
-        </div>
-      </div>
-      <div class="card">
-        <h3>Misconceptions to avoid</h3>
-        <ul class="pc-list bad">
-          <li>Embedding coordinates are not human-readable feature slots.</li>
-          <li>Input embeddings are not the model's final understanding.</li>
-          <li>Raw embedding analogies do not fully explain transformer behavior.</li>
-        </ul>
-        <div class="callout warn" style="margin-top:0.7rem;">
-          <span class="icon">!</span>
-          <span><strong>Analogy caveat:</strong> "king - man + woman ≈ queen" is an intuition hook from static word embeddings. In transformers, representations are contextualized after multiple layers.</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="hidden-content autostep">
-      <div class="callout success" style="margin-top:0.7rem;">
-        <span class="icon">+</span>
-        <span>Think of embedding vectors as an initialization for computation, not as a completed linguistic theory.</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- ═══════ SLIDE 18 — INTERACTIVE: STATIC VS CONTEXTUAL ═══════ -->
-  <div class="slide" id="slide-18">
-    <span class="section-tag">Embeddings</span>
-    <div class="badge activity">Interactive</div>
-    <h2>Quick checkpoint: static embedding vs contextual meaning</h2>
-    <div class="spacer-sm"></div>
-
-    <div class="card">
-      <h3>Prompt</h3>
-      <p class="small-text">Token <strong>"bank"</strong> starts from the same embedding row in two sentences. What resolves sense in <strong>"river bank"</strong> vs <strong>"bank loan"</strong>?</p>
-      <div class="quiz-choices">
-        <button class="quiz-choice" data-quiz-group="contextual-disambiguation" data-correct="false" data-feedback-id="contextualDisambiguationFeedback" onclick="handleQuizChoice(this)">Token ID magnitude determines which sense is active.</button>
-        <button class="quiz-choice" data-quiz-group="contextual-disambiguation" data-correct="false" data-feedback-id="contextualDisambiguationFeedback" onclick="handleQuizChoice(this)">The input embedding row alone contains the final disambiguated meaning.</button>
-        <button class="quiz-choice" data-quiz-group="contextual-disambiguation" data-correct="true" data-feedback-id="contextualDisambiguationFeedback" onclick="handleQuizChoice(this)">Contextual updates via attention/MLP across layers resolve the sense.</button>
-      </div>
-      <div class="quiz-feedback hidden-content" id="contextualDisambiguationFeedback">
-        Correct view: embedding row is static initialization; layerwise contextual states disambiguate sense.
-      </div>
-    </div>
-
-    <div class="hidden-content autostep">
-      <div class="callout info" style="margin-top:0.7rem;">
-        <span class="icon">→</span>
-        <span>Input embeddings provide token-type priors; contextual interpretation is built by transformer computation.</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- ═══════ SLIDE 19 — INTERACTIVE: NEAREST NEIGHBOR ═══════ -->
-  <div class="slide" id="slide-19">
-    <span class="section-tag">Embeddings</span>
-    <div class="badge activity">Interactive</div>
-    <h2>Nearest-neighbor game: predict local geometry</h2>
-    <div class="spacer-sm"></div>
-
-    <div class="grid-2">
-      <div class="card">
-        <h3>Prompt</h3>
-        <p class="small-text">Anchor token: <strong>lion</strong>. In a reasonable embedding space, which token should be nearest?</p>
-        <div class="quiz-choices">
-          <button class="quiz-choice" data-quiz-group="nn-game" data-correct="true" data-feedback-id="nnFeedback" onclick="handleQuizChoice(this)">dog</button>
-          <button class="quiz-choice" data-quiz-group="nn-game" data-correct="false" data-feedback-id="nnFeedback" onclick="handleQuizChoice(this)">truck</button>
-          <button class="quiz-choice" data-quiz-group="nn-game" data-correct="false" data-feedback-id="nnFeedback" onclick="handleQuizChoice(this)">semicolon</button>
-        </div>
-        <div class="quiz-feedback hidden-content" id="nnFeedback">
-          Expected answer: <strong>dog</strong>. Embeddings often cluster by usage and semantic neighborhood, but the exact geometry is learned and task-dependent.
-        </div>
-      </div>
-      <div class="card">
-        <h3>Toy map reference</h3>
-        <div class="toy-map" style="height:13.2rem;">
-          <span class="map-axis x">usage axis</span>
-          <span class="map-axis y">concept axis</span>
-          <span class="map-point animal" style="left:29%; top:45%;">cat</span>
-          <span class="map-point animal" style="left:37%; top:39%;">dog</span>
-          <span class="map-point animal" style="left:45%; top:34%;">lion</span>
-          <span class="map-point vehicle" style="left:72%; top:73%;">truck</span>
-          <span class="map-point" style="left:68%; top:25%;">;</span>
-        </div>
-        <p class="tiny" style="margin-top:0.5rem;">The game is about local neighborhood intuition, not exact coordinates.</p>
-      </div>
-    </div>
-
-    <div class="hidden-content autostep">
-      <div class="callout question" style="margin-top:0.7rem;">
-        <span class="icon">?</span>
-        <span>If neighborhoods are meaningful, what is still missing? <strong>Order.</strong> The embedding table does not encode position in sequence.</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- ═══════ SLIDE 20 — BRIDGE TO POSITION ═══════ -->
-  <div class="slide" id="slide-20">
-    <span class="section-tag">Transition</span>
-    <div class="badge day2">Bridge</div>
-    <h2>Embeddings give meaning priors, not sequence order</h2>
-    <div class="spacer-sm"></div>
-
-    <div class="grid-2">
-      <div class="card">
-        <h3>Same token set</h3>
-        <div class="token-example" style="margin-top:0.5rem;">
-          <span class="token-pill main">dog</span>
-          <span class="token-pill main">bites</span>
-          <span class="token-pill main">man</span>
-        </div>
-        <p class="small-text" style="margin-top:0.55rem;">"dog bites man"</p>
-      </div>
-      <div class="card">
-        <h3>Different order, different meaning</h3>
-        <div class="token-example" style="margin-top:0.5rem;">
-          <span class="token-pill main">man</span>
-          <span class="token-pill main">bites</span>
-          <span class="token-pill main">dog</span>
-        </div>
-        <p class="small-text" style="margin-top:0.55rem;">"man bites dog"</p>
-      </div>
-    </div>
-
-    <div class="spacer-sm"></div>
-    <div class="callout warn">
-      <span class="icon">!</span>
-      <span>The same embeddings can participate in radically different meanings when order changes.</span>
-    </div>
-    <div class="callout info" style="margin-top:0.6rem;">
-      <span class="icon">→</span>
-      <span><strong>Embedding is the moment a token stops being a symbol in a vocabulary and becomes a point in computation space.</strong> Next: positional information, so the model can distinguish where each token occurs.</span>
+      <span>Embeddings initialize token identity; attention performs cross-token interaction. Next is the most comprehensive section of this workshop: attention mechanics in LLMs.</span>
     </div>
   </div>
 
@@ -2472,7 +2259,7 @@ x0 = E[token_ids]      # shape: [n, d_model]</div>
   <div class="progress-track">
     <div class="progress-fill" id="progressFill" style="width:0%"></div>
   </div>
-  <span class="slide-counter" id="slideCounter">1 / 20</span>
+  <span class="slide-counter" id="slideCounter">1 / 17</span>
   <button class="nav-btn primary" id="btnNext">Next &rarr;</button>
 </div>
 
@@ -2596,13 +2383,6 @@ function refreshSlides() {
 }
 
 function resetSlideInteractions(slideEl) {
-  slideEl.querySelectorAll('.quiz-choice').forEach((btn) => {
-    btn.classList.remove('correct', 'wrong', 'locked');
-    btn.disabled = false;
-  });
-  slideEl.querySelectorAll('.quiz-feedback').forEach((el) => {
-    el.classList.remove('revealed', 'settled');
-  });
   if (slideEl.id === 'slide-16') resetProjectionSlide();
 }
 
@@ -2968,34 +2748,6 @@ function resetProjectionSlide() {
   updateProjectionReadout(DEFAULT_PROJECTION_LENS);
   resizeProjectionCanvas();
   drawProjection();
-}
-
-function handleQuizChoice(buttonEl) {
-  if (!buttonEl) return;
-  const group = buttonEl.dataset.quizGroup;
-  if (!group) return;
-  const slideEl = buttonEl.closest('.slide');
-  if (!slideEl) return;
-
-  const selector = '.quiz-choice[data-quiz-group="' + group + '"]';
-  const choices = Array.from(slideEl.querySelectorAll(selector));
-  if (choices.some((btn) => btn.classList.contains('locked'))) return;
-
-  choices.forEach((btn) => {
-    btn.classList.add('locked');
-    btn.disabled = true;
-    if (btn.dataset.correct === 'true') btn.classList.add('correct');
-  });
-
-  if (buttonEl.dataset.correct !== 'true') {
-    buttonEl.classList.add('wrong');
-  }
-
-  const feedbackId = buttonEl.dataset.feedbackId;
-  if (feedbackId) {
-    const feedback = slideEl.querySelector('#' + feedbackId);
-    if (feedback) feedback.classList.add('revealed');
-  }
 }
 
 $('#btnNext').addEventListener('click', nextWithInteractions);
