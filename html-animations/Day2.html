@@ -2196,90 +2196,76 @@ l e a r n ing &lt;/w&gt;</div>
   <div class="slide" id="slide-13">
     <span class="section-tag">Embeddings</span>
     <div class="badge concept">Mechanism</div>
-    <h2>From token indices to model state</h2>
+    <h2>From token IDs to initial model state</h2>
     <div class="spacer-sm"></div>
 
-    <p class="small-text">Tokenization outputs categorical indices. The first neural operation maps those indices into the residual stream space.</p>
+    <p class="small-text">The embedding table is a learned array; token IDs index rows to produce per-token vectors.</p>
     <div class="math">\[
-      T=(t_1,\dots,t_n),\quad t_j\in\{1,\dots,|V|\}
-    \]
-    \[
-      E\in\mathbb{R}^{|V|\times d_{\text{model}}},\quad X^{(0)}=E[T]\in\mathbb{R}^{n\times d_{\text{model}}}
+      T\in\{1,\dots,|V|\}^{n},\quad X^{(0)}=E[T]\in\mathbb{R}^{n\times d_{\text{model}}}
     \]</div>
 
     <div class="grid-2" style="margin-top:0.8rem;">
       <div class="card">
-        <h3>Interface contract</h3>
-        <ul class="pc-list good" style="margin-top:0.5rem;">
-          <li>Tokenizer output is discrete index data, not numeric features.</li>
-          <li>Embedding lookup is the boundary where symbolic input becomes differentiable state.</li>
-          <li>All later transformer computation consumes rows of \(X^{(0)}\), not token IDs.</li>
-        </ul>
+        <h3>Code mental model</h3>
+        <div class="id-seq" style="margin-top:0.55rem; white-space:pre;">token_ids = [812, 1452, 5021]
+x0 = E[token_ids]      # shape: [n, d_model]</div>
+        <p class="small-text" style="margin-top:0.5rem;">Equivalent to <code>one_hot(token_ids) @ E</code> (linear map), implemented as row-gather for efficiency.</p>
       </div>
       <div class="card">
-        <h3>Why this matters</h3>
+        <h3>What this gives the transformer</h3>
         <ul class="pc-list good" style="margin-top:0.5rem;">
-          <li>Embedding table is often a major parameter block: \(|V|\times d_{\text{model}}\).</li>
-          <li>Representation width is fixed before attention/MLP begins.</li>
-          <li>This is a state initialization step, not contextual interpretation yet.</li>
+          <li>Every token now has a dense vector in the same model-width space.</li>
+          <li>This is the state consumed by the first transformer block.</li>
+          <li>At this point vectors are token-type priors, not context-specific meanings.</li>
         </ul>
       </div>
     </div>
 
     <div class="spacer-sm"></div>
     <div class="callout info">
-      <span class="icon">i</span>
-      <span>Context enters after this point through inter-token computation in transformer layers.</span>
+      <span class="icon">→</span>
+      <span>Next: how training sculpts these vectors into usable geometry.</span>
     </div>
   </div>
 
   <!-- ═══════ SLIDE 14 — EMBEDDING DYNAMICS ═══════ -->
   <div class="slide" id="slide-14">
     <span class="section-tag">Embeddings</span>
-    <div class="badge discussion">Optimization View</div>
-    <h2>Embedding lookup is a gather; learning is row-wise</h2>
+    <div class="badge discussion">Learning Dynamics</div>
+    <h2>How embedding space gets shaped during training</h2>
     <div class="spacer-sm"></div>
 
-    <div class="math">\[
-      x_j=E[t_j,:]
-    \]
-    \[
-      x_j=s_jE,\quad s_j\in\{0,1\}^{1\times|V|}\ \text{(one-hot selector)}
-    \]
-    \[
-      X^{(0)}=SE,\quad S\in\{0,1\}^{n\times|V|}
-    \]
-    \[
-      \frac{\partial\mathcal{L}}{\partial E[i,:]}=\sum_{j:\,t_j=i}\frac{\partial\mathcal{L}}{\partial X^{(0)}[j,:]}
-    \]</div>
+    <div class="flow token-interface">
+      <div class="flow-box ids">Batch token IDs</div>
+      <div class="flow-box embed">Row lookup in \(E\)</div>
+      <div class="flow-box" style="border-color: rgba(255,170,85,0.5); color: var(--orange); background: rgba(255,170,85,0.1);">Loss from next-token prediction</div>
+      <div class="flow-box" style="border-color: rgba(180,157,255,0.5); color: var(--purple); background: rgba(180,157,255,0.1);">Backprop updates touched rows</div>
+    </div>
 
     <div class="grid-2" style="margin-top:0.8rem;">
       <div class="card">
-        <h3>Forward pass view</h3>
+        <h3>Update mechanics (practical view)</h3>
         <ul class="pc-list good" style="margin-top:0.5rem;">
-          <li>Operationally this is gather/indexing, not arithmetic on ID values.</li>
-          <li>One-hot form is algebraically equivalent and useful for derivations.</li>
+          <li>Only rows for tokens present in a batch get direct updates that step.</li>
+          <li>Frequent tokens receive many updates; rare tokens get sparse signal.</li>
+          <li>Co-occurrence/context patterns gradually move rows into useful neighborhoods.</li>
         </ul>
-        <div class="id-seq" style="margin-top:0.62rem;">Batch tokens: [dog, dog, bank, river]</div>
+        <div class="id-seq" style="margin-top:0.62rem;">Batch [dog, dog, bank, river] -> direct updates on rows dog/bank/river</div>
       </div>
       <div class="card">
-        <h3>Training-time consequence</h3>
+        <h3>What geometry means before contextualization</h3>
         <ul class="pc-list good" style="margin-top:0.5rem;">
-          <li>Only rows touched by batch tokens receive direct gradient updates each step.</li>
-          <li>Frequent tokens are updated often; rare-token rows are data-limited and noisier.</li>
-          <li>Embedding quality reflects corpus frequency and context diversity.</li>
+          <li>Nearby tokens often share usage patterns.</li>
+          <li>A token's input row is still static across contexts.</li>
+          <li>Context-specific sense is resolved later by attention + MLP layers.</li>
         </ul>
-        <div class="id-seq" style="margin-top:0.62rem;">Rows directly updated: \(E[\text{dog},:]\), \(E[\text{bank},:]\), \(E[\text{river},:]\)</div>
       </div>
     </div>
 
-    <div class="math-note">Some transformer implementations scale input embeddings by \(\sqrt{d_{\text{model}}}\) before adding positional terms; others do not. Treat as architecture-specific.</div>
-    <div class="math-note" style="margin-top:0.42rem;">Some models tie input embeddings with output projection (\(W_U=E^\top\)); keep full treatment for the output-head section.</div>
-
     <div class="spacer-sm"></div>
-    <div class="callout success">
-      <span class="icon">+</span>
-      <span>Input embeddings are context-independent token-type priors; contextual meaning is formed in subsequent layers.</span>
+    <div class="callout info">
+      <span class="icon">→</span>
+      <span>After training, \(E\) is a high-dimensional geometry. Slide 16 visualizes different 2D lenses of that same space.</span>
     </div>
   </div>
 
@@ -2290,7 +2276,7 @@ l e a r n ing &lt;/w&gt;</div>
     <h2>Same embeddings. Different semantic lenses.</h2>
     <div class="spacer-sm"></div>
 
-    <p class="small-text">A lens emphasizes one relationship and downplays others.</p>
+    <p class="small-text">These points are learned rows from the embedding table; each lens shows a different 2D projection of the same high-dimensional geometry.</p>
 
     <div class="card projection-card" style="margin-top:0.8rem;">
       <h3>Semantic lens (same space, different view)</h3>
