@@ -884,6 +884,25 @@
     border: 1px solid var(--border);
     background: rgba(123,154,255,0.08);
   }
+  .sense-sentence {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.85rem;
+    line-height: 1.62;
+    color: #e8ecff;
+    padding: 0.62rem 0.74rem;
+    border-radius: 0.55rem;
+    border: 1px solid rgba(123,154,255,0.32);
+    background: rgba(123,154,255,0.12);
+  }
+  .sense-focus {
+    display: inline-block;
+    padding: 0.08rem 0.26rem;
+    border-radius: 0.32rem;
+    border: 1px solid rgba(255,214,68,0.48);
+    background: rgba(255,214,68,0.16);
+    color: #ffe89a;
+    font-weight: 700;
+  }
   .id-seq {
     font-family: 'JetBrains Mono', monospace;
     font-size: 0.78rem;
@@ -900,11 +919,27 @@
     gap: 0.6rem;
     margin-top: 0.65rem;
   }
+  .matrix-shape-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    color: #d5dcf7;
+    margin-top: 0.55rem;
+    margin-bottom: 0.05rem;
+  }
   .embed-row {
     display: grid;
-    grid-template-columns: 6.2rem 1fr;
+    grid-template-columns: 8.2rem 1fr;
     gap: 0.6rem;
     align-items: center;
+  }
+  .embed-row.selected-row {
+    padding: 0.3rem 0.35rem;
+    border-radius: 0.52rem;
+    border: 1px solid rgba(123,154,255,0.34);
+    background: rgba(123,154,255,0.08);
+  }
+  .embed-row.matrix-ellipsis-row {
+    opacity: 0.58;
   }
   .embed-key {
     font-family: 'JetBrains Mono', monospace;
@@ -915,6 +950,11 @@
     border-radius: 0.45rem;
     padding: 0.32rem 0.45rem;
     text-align: center;
+  }
+  .embed-key.dim {
+    color: #afbadf;
+    border-color: rgba(123,154,255,0.26);
+    background: rgba(123,154,255,0.06);
   }
   .vec-chip-group {
     display: flex;
@@ -929,6 +969,16 @@
     background: rgba(90,232,142,0.12);
     border-radius: 0.4rem;
     padding: 0.24rem 0.38rem;
+  }
+  .vec-chip.dim {
+    color: #b7c3e8;
+    border-color: rgba(123,154,255,0.24);
+    background: rgba(123,154,255,0.08);
+  }
+  .vec-chip.token-label {
+    color: #fff1b9;
+    border-color: rgba(255,214,68,0.48);
+    background: rgba(255,214,68,0.18);
   }
   .projection-card {
     border-color: rgba(123,154,255,0.34);
@@ -2089,32 +2139,64 @@ l e a r n ing &lt;/w&gt;</div>
     <div class="grid-2" style="margin-top:0.8rem;">
       <div class="card">
         <h3>Embedding matrix view</h3>
+        <div class="matrix-shape-label">Full table: \(E \in \mathbb{R}^{|V| \times d_{\text{model}}}\)</div>
         <div class="embed-table">
-          <div class="embed-row">
+          <div class="embed-row matrix-ellipsis-row">
+            <span class="embed-key dim">E[0, :]</span>
+            <div class="vec-chip-group">
+              <span class="vec-chip dim">+0.03</span><span class="vec-chip dim">-0.11</span><span class="vec-chip dim">+0.07</span><span class="vec-chip dim">...</span>
+            </div>
+          </div>
+          <div class="embed-row matrix-ellipsis-row">
+            <span class="embed-key dim">⋮</span>
+            <div class="vec-chip-group">
+              <span class="vec-chip dim">⋯</span>
+            </div>
+          </div>
+          <div class="embed-row selected-row">
             <span class="embed-key">E[812, :]</span>
             <div class="vec-chip-group">
-              <span class="vec-chip">+0.14</span><span class="vec-chip">-0.77</span><span class="vec-chip">+0.32</span><span class="vec-chip">...</span>
+              <span class="vec-chip token-label">"river"</span><span class="vec-chip">+0.14</span><span class="vec-chip">-0.77</span><span class="vec-chip">+0.32</span><span class="vec-chip">...</span>
             </div>
           </div>
-          <div class="embed-row">
+          <div class="embed-row selected-row">
             <span class="embed-key">E[1452, :]</span>
             <div class="vec-chip-group">
-              <span class="vec-chip">+0.11</span><span class="vec-chip">-0.70</span><span class="vec-chip">+0.28</span><span class="vec-chip">...</span>
+              <span class="vec-chip token-label">"bank"</span><span class="vec-chip">+0.11</span><span class="vec-chip">-0.70</span><span class="vec-chip">+0.28</span><span class="vec-chip">...</span>
             </div>
           </div>
-          <div class="embed-row">
+          <div class="embed-row selected-row">
             <span class="embed-key">E[5021, :]</span>
             <div class="vec-chip-group">
-              <span class="vec-chip">-0.62</span><span class="vec-chip">+0.04</span><span class="vec-chip">+0.80</span><span class="vec-chip">...</span>
+              <span class="vec-chip token-label">"loan"</span><span class="vec-chip">-0.62</span><span class="vec-chip">+0.04</span><span class="vec-chip">+0.80</span><span class="vec-chip">...</span>
+            </div>
+          </div>
+          <div class="embed-row matrix-ellipsis-row">
+            <span class="embed-key dim">⋮</span>
+            <div class="vec-chip-group">
+              <span class="vec-chip dim">⋯</span>
+            </div>
+          </div>
+          <div class="embed-row matrix-ellipsis-row">
+            <span class="embed-key dim">E[|V|-1, :]</span>
+            <div class="vec-chip-group">
+              <span class="vec-chip dim">-0.09</span><span class="vec-chip dim">+0.41</span><span class="vec-chip dim">-0.28</span><span class="vec-chip dim">...</span>
             </div>
           </div>
         </div>
       </div>
       <div class="card">
-        <h3>Implementation note</h3>
-        <div class="id-seq" style="margin-top:0.55rem; white-space:pre;">token_ids = [812, 1452, 5021]
-x0 = E[token_ids]      # shape: [n, d_model]</div>
-        <p class="small-text" style="margin-top:0.5rem;">Equivalent to <code>one_hot(T) @ E</code>, implemented as row gather for efficiency.</p>
+        <h3>Embedding table at full scale</h3>
+        <div class="math">\[
+          E \in \mathbb{R}^{|V|\times d_{\text{model}}}
+        \]</div>
+        <div class="id-seq" style="margin-top:0.55rem; white-space:pre-wrap; word-break:break-word;">Example (GPT-2 small):
+|V| = 50,257,  d_model = 768
+params in E = 50,257 × 768 = 38,597,376</div>
+        <div class="id-seq" style="margin-top:0.5rem; white-space:pre-wrap; word-break:break-word;">Selected sequence:
+["river", "bank", "loan"] → [812, 1452, 5021]
+→ [E[812,:], E[1452,:], E[5021,:]]</div>
+        <p class="tiny" style="margin-top:0.5rem;">Token IDs shown here are illustrative; exact values depend on the tokenizer vocabulary.</p>
       </div>
     </div>
   </div>
@@ -2123,26 +2205,26 @@ x0 = E[token_ids]      # shape: [n, d_model]</div>
   <div class="slide" id="slide-14">
     <span class="section-tag">Embeddings</span>
     <div class="badge concept">Key Properties</div>
-    <h2>First learnable state, still non-contextual</h2>
+    <h2>Embeddings establish the layer-0 input state</h2>
     <div class="spacer-sm"></div>
 
     <div class="grid-2">
       <div class="card">
-        <h3>What they are</h3>
+        <h3>What this establishes</h3>
         <ul class="pc-list good" style="margin-top:0.5rem;">
-          <li>A learned lookup table \(E \in \mathbb{R}^{|V|\times d_{\text{model}}}\): each token type maps to one trainable row.</li>
-          <li>Typically one of the largest parameter blocks in the model, scaling as \(|V| \times d_{\text{model}}\).</li>
-          <li>The output \(X^{(0)}\) is already in model width, so attention/MLP layers can consume it directly.</li>
-          <li>High-dimensional geometry (neighbors, directions, clusters) is learned from corpus statistics and objective pressure.</li>
+          <li>A learned table \(E \in \mathbb{R}^{|V| \times d_{\text{model}}}\), where each token type has one trainable row.</li>
+          <li>Often one of the largest parameter blocks, scaling directly with \(|V| \times d_{\text{model}}\).</li>
+          <li>Lookup outputs \(X^{(0)}\) already match model width, so later blocks can consume them directly.</li>
+          <li>Geometry is distributed: useful structure appears as directions, neighborhoods, and relative offsets.</li>
         </ul>
       </div>
       <div class="card">
-        <h3>What they are not</h3>
+        <h3>What still needs later layers</h3>
         <ul class="pc-list bad" style="margin-top:0.5rem;">
-          <li>Not contextualized: at layer 0, a token starts from the same row in every sentence.</li>
-          <li>Not order-aware by themselves: embedding rows encode token identity, not sequence interactions.</li>
-          <li>Not a final meaning representation: polysemy and role are resolved by downstream layer updates.</li>
-          <li>Not guaranteed to be human-interpretable per coordinate; dimensions are distributed features.</li>
+          <li>Sense is unresolved at input: one token row can support multiple intended meanings.</li>
+          <li>No token-token interaction has happened yet, so rows cannot use neighboring words.</li>
+          <li>Row identity alone does not specify sentence role, dependency structure, or discourse function.</li>
+          <li>Later layers must refine these initial vectors into context-dependent states.</li>
         </ul>
       </div>
     </div>
@@ -2150,7 +2232,7 @@ x0 = E[token_ids]      # shape: [n, d_model]</div>
     <div class="spacer-sm"></div>
     <div class="callout info">
       <span class="icon">→</span>
-      <span>Next, we inspect this geometry, then explain how attention creates context-dependent meaning.</span>
+      <span>Next: same vectors, different projections. Then we show why sentence context is needed to pick intended meaning.</span>
     </div>
   </div>
 
@@ -2158,13 +2240,13 @@ x0 = E[token_ids]      # shape: [n, d_model]</div>
   <div class="slide" id="slide-16">
     <span class="section-tag">Embeddings</span>
     <div class="badge discussion">Geometry</div>
-    <h2>Same embeddings. Different semantic lenses.</h2>
+    <h2>One embedding space, multiple semantic projections</h2>
     <div class="spacer-sm"></div>
 
-    <p class="small-text">These are learned rows of \(E\) shown through different 2D projections of one high-dimensional space.</p>
+    <p class="small-text">Each token has a \(d_{\text{model}}\)-dimensional vector. This plot shows only 2D projections of that same vector space.</p>
 
     <div class="card projection-card" style="margin-top:0.8rem;">
-      <h3>Semantic lens (same space, different view)</h3>
+      <h3>Projection controls (same space, different view)</h3>
       <div class="projection-toolbar" id="projectionToolbar16">
         <button class="lens-btn active" data-lens="pet" aria-pressed="true">Pet / companionship</button>
         <button class="lens-btn" data-lens="feline" aria-pressed="false">Feline family</button>
@@ -2176,18 +2258,21 @@ x0 = E[token_ids]      # shape: [n, d_model]</div>
       </div>
 
       <div class="projection-readout" id="projectionReadout16">
-        <div class="small-text">Semantic lens: <span class="hl" id="projectionLensLabel16">Pet / companionship</span></div>
-        <div class="small-text" style="margin-top:0.28rem;">Emphasized meaning: <strong id="projectionMeaning16">cat as a pet</strong></div>
+        <div class="small-text">Projection lens: <span class="hl" id="projectionLensLabel16">Pet / companionship</span></div>
+        <div class="small-text" style="margin-top:0.28rem;">Dimension pair emphasizes: <strong id="projectionMeaning16">pet and companionship features</strong></div>
         <div class="small-text" style="margin-top:0.28rem;">Nearest to <strong>cat</strong> under this lens:</div>
         <div class="projection-neighbors" id="projectionNeighbors16">
           <span class="neighbor-chip">dog</span>
           <span class="neighbor-chip">hamster</span>
           <span class="neighbor-chip">vet</span>
         </div>
+        <div class="math-note" style="margin-top:0.55rem;">\(z^{(\mathrm{lens})} = P_{\mathrm{lens}}x,\; P_{\mathrm{lens}}\in\mathbb{R}^{2\times d_{\text{model}}}\)</div>
+        <p class="tiny" style="margin-top:0.38rem;">Changing \(P_{\mathrm{lens}}\) changes the view, not the embedding vector.</p>
       </div>
 
       <p class="projection-note">Each lens is a different 2D projection of the same high-dimensional space.</p>
       <p class="projection-note" style="margin-top:0.32rem;">The points do not move in high-D space; only our 2D view changes.</p>
+      <p class="projection-note" style="margin-top:0.32rem;">This is why one token row can support multiple potential meanings before context resolves it.</p>
     </div>
   </div>
 
@@ -2198,56 +2283,25 @@ x0 = E[token_ids]      # shape: [n, d_model]</div>
     <h2>Why embeddings are not enough: we need cross-token interaction</h2>
     <div class="spacer-sm"></div>
 
-    <div class="flow token-interface">
-      <div class="flow-box embed">Static input rows \(h_{1:n}^{(0)}\)</div>
-      <div class="flow-box" style="border-color: rgba(255,123,123,0.45); color: var(--red); background: rgba(255,123,123,0.08);">No token-to-token interaction yet</div>
-      <div class="flow-box" style="border-color: rgba(123,154,255,0.5); color: var(--accent); background: rgba(123,154,255,0.1);">Attention mixes information across positions</div>
-      <div class="flow-box" style="border-color: rgba(90,232,142,0.45); color: var(--green); background: rgba(90,232,142,0.1);">Contextual states \(h_{1:n}^{(\ell)}\)</div>
-    </div>
-
-    <div class="grid-2">
-      <div class="card">
-        <h3>Layer-0 limitation</h3>
-        <ul class="pc-list bad" style="margin-top:0.5rem;">
-          <li>Each position starts from \(h_j^{(0)} = E[t_j]\), which depends only on token identity.</li>
-          <li>No context routing has happened yet, so local row values cannot disambiguate meaning.</li>
-          <li>Dependency structure and role assignment require token-token communication.</li>
-        </ul>
-        <h3 style="margin-top:0.75rem;">Same row, different intended sense</h3>
-        <div class="token-example" style="margin-top:0.55rem; flex-wrap:wrap;">
-          <span class="token-pill main">river</span>
-          <span class="token-pill reuse">bank</span>
-        </div>
-        <div class="token-example" style="margin-top:0.45rem; flex-wrap:wrap;">
-          <span class="token-pill main">bank</span>
-          <span class="token-pill reuse">loan</span>
-        </div>
-        <p class="small-text" style="margin-top:0.55rem;">At input, <strong>bank</strong> starts from the same row in both sentences.</p>
-      </div>
-      <div class="card">
-        <h3>Where attention enters</h3>
-        <div class="math">\[
-          h_j^{(0)} = E[t_j]
-        \]</div>
-        <div class="math">\[
-          \tilde{h}_j = \sum_{i=1}^{n} \alpha_{ji} V_i,\quad
-          \alpha_{ji}=\mathrm{softmax}_i\!\left(\frac{Q_j K_i^\top}{\sqrt{d_k}}\right)
-        \]</div>
-        <div class="math">\[
-          h_j^{(\ell+1)} = \text{TransformerLayer}_{\ell}\!\left(h_{1:n}^{(\ell)}\right)_j
-        \]</div>
-        <ul class="pc-list good" style="margin-top:0.55rem;">
-          <li>Each token builds a weighted read from other tokens in the sequence.</li>
-          <li>Weights are context-dependent and change with input and layer depth.</li>
-          <li>This is the mechanism that turns static priors into contextual meaning.</li>
-        </ul>
-      </div>
+    <div class="card" style="border-color: rgba(123,154,255,0.36);">
+      <h3>Same row, different intended sense</h3>
+      <div class="sense-sentence" style="margin-top:0.55rem;">The fisherman sat on the <span class="sense-focus">bank</span> of the river.</div>
+      <div class="sense-sentence" style="margin-top:0.5rem;">She applied for a loan at the <span class="sense-focus">bank</span>.</div>
+      <div class="math" style="margin-top:0.68rem;">\[
+        h_{\text{bank}}^{(0)} = E[\text{bank}]
+      \]</div>
+      <p class="small-text" style="margin-top:0.2rem;">At input, both occurrences start from the same embedding row.</p>
+      <ul class="pc-list good" style="margin-top:0.65rem;">
+        <li>Embeddings provide token identity priors.</li>
+        <li>Sentence neighbors determine intended sense.</li>
+        <li>Next section explains the routing mechanism.</li>
+      </ul>
     </div>
 
     <div class="spacer-sm"></div>
     <div class="callout info">
       <span class="icon">→</span>
-      <span>Embeddings initialize token identity; attention performs cross-token interaction. Next is the most comprehensive section of this workshop: attention mechanics in LLMs.</span>
+      <span>Next: attention shows how tokens read from each other to resolve meaning.</span>
     </div>
   </div>
 
@@ -2280,9 +2334,9 @@ const LENS_LABELS = {
 const DEFAULT_PROJECTION_LENS = 'pet';
 
 const LENS_MEANINGS = {
-  pet: 'cat as a pet',
-  feline: 'cat as a feline',
-  care: 'cat care / ownership'
+  pet: 'pet and companionship features',
+  feline: 'feline-family features',
+  care: 'care and ownership features'
 };
 
 const LENS_STATES = {
