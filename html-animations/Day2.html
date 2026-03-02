@@ -1,4 +1,10 @@
 <!DOCTYPE html>
+<!--
+Refactor Notes (Zero-Regression):
+- Removed stale code: ~1 unused JS function, ~7 unused CSS selector groups.
+- Module map: CSS tokens/layout -> static slide markup -> slide registry/navigation runtime -> slide-specific engines (projection/attn18/attn19).
+- Dev toggle: set `const DEV = false` in the main runtime script; `true` enables invariant checks and state snapshots.
+-->
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -168,7 +174,6 @@
   .hl-red    { color: var(--red);    font-weight: 600; }
   .hl-orange { color: var(--orange); font-weight: 600; }
   .hl-purple { color: var(--purple); font-weight: 600; }
-  .hl-yellow { color: var(--yellow); font-weight: 600; }
   .hl-cyan   { color: var(--cyan);   font-weight: 600; }
 
   .card {
@@ -191,10 +196,8 @@
 
   .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
   .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
-  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.875rem; }
-
   @media (max-width: 50rem) {
-    .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+    .grid-2, .grid-3 { grid-template-columns: 1fr; }
   }
 
   .obj-list {
@@ -275,22 +278,6 @@
     pointer-events: none;
   }
 
-  .token-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.4rem;
-    justify-content: center;
-  }
-
-  .tok {
-    border: 1px solid var(--border);
-    border-radius: 0.45rem;
-    padding: 0.35rem 0.55rem;
-    background: var(--surface2);
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.76rem;
-  }
-
   .hidden-content {
     max-height: 0;
     overflow: hidden;
@@ -320,7 +307,6 @@
     background: rgba(123,154,255,0.07);
   }
 
-  .reveal-btn,
   .nav-btn {
     font-family: 'Inter', sans-serif;
     font-size: 0.82rem;
@@ -335,7 +321,6 @@
     white-space: nowrap;
   }
 
-  .reveal-btn:hover,
   .nav-btn:hover { background: var(--border); }
 
   .nav-btn.primary {
@@ -755,14 +740,6 @@
   .tradeoff-card h3 {
     margin-bottom: 0.35rem;
   }
-  .pc-title {
-    font-size: 0.74rem;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--text-dim);
-    margin-top: 0.55rem;
-    margin-bottom: 0.2rem;
-  }
   .pc-list {
     list-style: none;
     margin: 0;
@@ -849,13 +826,6 @@
   .pair-chip strong {
     color: var(--accent);
   }
-  .merge-line {
-    margin-top: 0.55rem;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.78rem;
-    color: var(--green);
-  }
-
   .token-example {
     display: flex;
     flex-wrap: wrap;
@@ -1707,6 +1677,53 @@
     transform: scaleY(1);
   }
 
+  /* BPE walkthrough: hide previous overlay state when the next one is revealed */
+  .bpe-initial { transition: opacity 0.35s ease; }
+  .bpe-initial:has(~ .bpe-overlay.revealed) { opacity: 0; pointer-events: none; }
+  .bpe-overlay.hidden-content.revealed:has(~ .bpe-overlay.hidden-content.revealed) { opacity: 0 !important; pointer-events: none; }
+  .bpe-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    margin-top: 0;
+    background: var(--bg);
+  }
+
+  @keyframes bpeDiscoveryPulse {
+    0%, 100% { box-shadow: 0 0 0 rgba(90,232,142,0); }
+    50% { box-shadow: 0 0 1.1rem rgba(90,232,142,0.4); }
+  }
+
+  .token-pill.discovery {
+    border-color: rgba(90,232,142,0.75);
+    background: rgba(90,232,142,0.2);
+    color: #d6ffea;
+    font-weight: 700;
+    animation: bpeDiscoveryPulse 1.25s ease-in-out infinite;
+  }
+
+  .corpus-discovery {
+    color: #d6ffea;
+    font-weight: 700;
+    background: rgba(90,232,142,0.18);
+    border: 1px solid rgba(90,232,142,0.45);
+    border-radius: 0.35rem;
+    padding: 0.02rem 0.25rem;
+    text-shadow: 0 0 0.6rem rgba(90,232,142,0.4);
+  }
+
+  .discovery-callout {
+    background: linear-gradient(135deg, rgba(90,232,142,0.16), rgba(123,154,255,0.12));
+    border: 1px solid rgba(90,232,142,0.45);
+    color: #d8ffe9;
+    box-shadow: 0 0 1rem rgba(90,232,142,0.18);
+  }
+  .discovery-callout .icon {
+    color: #0d1a12;
+    background: rgba(90,232,142,0.9);
+  }
+
   @media (max-width: 56rem) {
     .pair-grid {
       grid-template-columns: 1fr;
@@ -2353,47 +2370,6 @@
     </div>
   </div>
 
-  <style>
-    /* BPE walkthrough: hide previous overlay state when the next one is revealed */
-    .bpe-initial { transition: opacity 0.35s ease; }
-    .bpe-initial:has(~ .bpe-overlay.revealed) { opacity: 0; pointer-events: none; }
-    .bpe-overlay.hidden-content.revealed:has(~ .bpe-overlay.hidden-content.revealed) { opacity: 0 !important; pointer-events: none; }
-
-    @keyframes bpeDiscoveryPulse {
-      0%, 100% { box-shadow: 0 0 0 rgba(90,232,142,0); }
-      50% { box-shadow: 0 0 1.1rem rgba(90,232,142,0.4); }
-    }
-
-    .token-pill.discovery {
-      border-color: rgba(90,232,142,0.75);
-      background: rgba(90,232,142,0.2);
-      color: #d6ffea;
-      font-weight: 700;
-      animation: bpeDiscoveryPulse 1.25s ease-in-out infinite;
-    }
-
-    .corpus-discovery {
-      color: #d6ffea;
-      font-weight: 700;
-      background: rgba(90,232,142,0.18);
-      border: 1px solid rgba(90,232,142,0.45);
-      border-radius: 0.35rem;
-      padding: 0.02rem 0.25rem;
-      text-shadow: 0 0 0.6rem rgba(90,232,142,0.4);
-    }
-
-    .discovery-callout {
-      background: linear-gradient(135deg, rgba(90,232,142,0.16), rgba(123,154,255,0.12));
-      border: 1px solid rgba(90,232,142,0.45);
-      color: #d8ffe9;
-      box-shadow: 0 0 1rem rgba(90,232,142,0.18);
-    }
-    .discovery-callout .icon {
-      color: #0d1a12;
-      background: rgba(90,232,142,0.9);
-    }
-  </style>
-
   <!-- ═══════ SLIDE 10 — BPE FULL WALKTHROUGH ═══════ -->
   <div class="slide" id="slide-10">
     <span class="section-tag">Tokenization</span>
@@ -2436,7 +2412,7 @@ l e a r n i n g &lt;/w&gt;</div>
       </div>
 
       <!-- State 1: merge 1 -->
-      <div class="hidden-content autostep bpe-overlay" style="position:absolute; top:0; left:0; right:0; margin-top:0; background:var(--bg);">
+      <div class="hidden-content autostep bpe-overlay">
         <div class="grid-2">
           <div class="corpus-card" style="border-color:rgba(123,154,255,0.45);">
             <div class="corpus-title">Merge 1: <span class="hl">h + u → hu</span> &nbsp;(freq: 5)</div>
@@ -2465,7 +2441,7 @@ l e a r n i n g &lt;/w&gt;</div>
       </div>
 
       <!-- State 2: merge 2 -->
-      <div class="hidden-content autostep bpe-overlay" style="position:absolute; top:0; left:0; right:0; margin-top:0; background:var(--bg);">
+      <div class="hidden-content autostep bpe-overlay">
         <div class="grid-2">
           <div class="corpus-card" style="border-color:rgba(123,154,255,0.45);">
             <div class="corpus-title">Merge 2: <span class="hl">hu + g → hug</span> &nbsp;(freq: 5)</div>
@@ -2495,7 +2471,7 @@ l e a r n i n g &lt;/w&gt;</div>
       </div>
 
       <!-- State 3: merge 3 -->
-      <div class="hidden-content autostep bpe-overlay" style="position:absolute; top:0; left:0; right:0; margin-top:0; background:var(--bg);">
+      <div class="hidden-content autostep bpe-overlay">
         <div class="grid-2">
           <div class="corpus-card" style="border-color:rgba(123,154,255,0.45);">
             <div class="corpus-title">Merge 3: <span class="hl">i + n → in</span> &nbsp;(freq: 5)</div>
@@ -2526,7 +2502,7 @@ l e a r n in g &lt;/w&gt;</div>
       </div>
 
       <!-- State 4: merge 4 (ing discovery) -->
-      <div class="hidden-content autostep bpe-overlay" style="position:absolute; top:0; left:0; right:0; margin-top:0; background:var(--bg);">
+      <div class="hidden-content autostep bpe-overlay">
         <div class="grid-2">
           <div class="corpus-card" style="border-color:rgba(90,232,142,0.5);">
             <div class="corpus-title">Merge 4: <span class="hl">in + g → ing</span> &nbsp;(freq: 4)</div>
@@ -2555,7 +2531,7 @@ l e a r n <span class="corpus-discovery">ing</span> &lt;/w&gt;</div>
       </div>
 
       <!-- State 5: merge 5 -->
-      <div class="hidden-content autostep bpe-overlay" style="position:absolute; top:0; left:0; right:0; margin-top:0; background:var(--bg);">
+      <div class="hidden-content autostep bpe-overlay">
         <div class="grid-2">
           <div class="corpus-card" style="border-color:rgba(123,154,255,0.45);">
             <div class="corpus-title">Merge 5: <span class="hl">hug + g → hugg</span> &nbsp;(freq: 3)</div>
@@ -2588,7 +2564,7 @@ l e a r n ing &lt;/w&gt;</div>
       </div>
 
       <!-- State 6: merge 6 -->
-      <div class="hidden-content autostep bpe-overlay" style="position:absolute; top:0; left:0; right:0; margin-top:0; background:var(--bg);">
+      <div class="hidden-content autostep bpe-overlay">
         <div class="grid-2">
           <div class="corpus-card" style="border-color:rgba(123,154,255,0.45);">
             <div class="corpus-title">Merge 6: <span class="hl">hugg + ing → hugging</span> &nbsp;(freq: 2)</div>
@@ -2622,7 +2598,7 @@ l e a r n ing &lt;/w&gt;</div>
       </div>
 
       <!-- State 7: merge 7 -->
-      <div class="hidden-content autostep bpe-overlay" style="position:absolute; top:0; left:0; right:0; margin-top:0; background:var(--bg);">
+      <div class="hidden-content autostep bpe-overlay">
         <div class="grid-2">
           <div class="corpus-card" style="border-color:rgba(255,170,85,0.4);">
             <div class="corpus-title">Merge 7: <span class="hl">f + a → fa</span> &nbsp;(freq: 1)</div>
@@ -2645,7 +2621,7 @@ l e a r n ing &lt;/w&gt;</div>
       </div>
 
       <!-- State 8: merge 8 -->
-      <div class="hidden-content autostep bpe-overlay" style="position:absolute; top:0; left:0; right:0; margin-top:0; background:var(--bg);">
+      <div class="hidden-content autostep bpe-overlay">
         <div class="grid-2">
           <div class="corpus-card" style="border-color:rgba(255,170,85,0.4);">
             <div class="corpus-title">Merge 8: <span class="hl">fa + c → fac</span> &nbsp;(freq: 1)</div>
@@ -2668,7 +2644,7 @@ l e a r n ing &lt;/w&gt;</div>
       </div>
 
       <!-- State 9: merge 9 -->
-      <div class="hidden-content autostep bpe-overlay" style="position:absolute; top:0; left:0; right:0; margin-top:0; background:var(--bg);">
+      <div class="hidden-content autostep bpe-overlay">
         <div class="grid-2">
           <div class="corpus-card" style="border-color:rgba(255,170,85,0.4);">
             <div class="corpus-title">Merge 9: <span class="hl">fac + e → face</span> &nbsp;(freq: 1)</div>
@@ -2691,7 +2667,7 @@ l e a r n ing &lt;/w&gt;</div>
       </div>
 
       <!-- State 10: merge 10 -->
-      <div class="hidden-content autostep bpe-overlay" style="position:absolute; top:0; left:0; right:0; margin-top:0; background:var(--bg);">
+      <div class="hidden-content autostep bpe-overlay">
         <div class="grid-2">
           <div class="corpus-card" style="border-color:rgba(255,170,85,0.4);">
             <div class="corpus-title">Merge 10: <span class="hl">hugging + face → huggingface</span> &nbsp;(freq: 1)</div>
@@ -3164,9 +3140,7 @@ params in E = 50,257 × 768 = 38,597,376</div>
 const $ = (s) => document.querySelector(s);
 const $$ = (s) => document.querySelectorAll(s);
 
-let slides = [];
-let total = 0;
-let current = 0;
+const DEV = false;
 
 const LENS_LABELS = {
   pet: 'Pet / companionship',
@@ -3298,35 +3272,343 @@ const ATTN_QKV_COMPARE_STAGGER_MS = 190;
 const ATTN_QKV_SCORE_REVEAL_DELAY_MS = 140;
 const ATTN_QKV_MAX_STEP = 4;
 
-let projectionState = {
-  initialized: false,
-  activeLens: DEFAULT_PROJECTION_LENS,
-  currentPositions: null,
-  rafId: null,
-  animStart: 0,
-  animFrom: null,
-  animTo: null,
-  canvas: null,
-  ctx: null,
-  resizeBound: false,
-  readoutTimer: null
+const state = {
+  nav: {
+    slides: [],
+    total: 0,
+    current: 0
+  },
+  ui: {
+    btnPrev: null,
+    btnNext: null,
+    btnSkip: null,
+    slideCounter: null,
+    progressFill: null
+  },
+  projection: {
+    initialized: false,
+    activeLens: DEFAULT_PROJECTION_LENS,
+    currentPositions: null,
+    rafId: null,
+    animStart: 0,
+    animFrom: null,
+    animTo: null,
+    canvas: null,
+    ctx: null,
+    resizeBound: false,
+    readoutTimer: null
+  },
+  attentionIntro: {
+    initialized: false,
+    step: 0,
+    resizeBound: false,
+    overlayTimer: null,
+    flowTimers: []
+  },
+  attentionQkv: {
+    initialized: false,
+    step: 0,
+    resizeBound: false,
+    overlayTimer: null,
+    compareTimers: [],
+    compareDone: false,
+    compareVisibleCount: 0
+  },
+  registry: {
+    order: [],
+    byId: {}
+  },
+  dev: {
+    listenerCounts: {},
+    listenerKeys: new Set(),
+    snapshots: []
+  }
 };
-let attentionIntroState = {
-  initialized: false,
-  step: 0,
-  resizeBound: false,
-  overlayTimer: null,
-  flowTimers: []
-};
-let attentionQkvState = {
-  initialized: false,
-  step: 0,
-  resizeBound: false,
-  overlayTimer: null,
-  compareTimers: [],
-  compareDone: false,
-  compareVisibleCount: 0
-};
+
+const projectionState = state.projection;
+const attentionIntroState = state.attentionIntro;
+const attentionQkvState = state.attentionQkv;
+
+function devLog() {
+  if (!DEV) return;
+  console.log.apply(console, ['[DEV]'].concat(Array.from(arguments)));
+}
+
+function devAssert(condition, message, context) {
+  if (!DEV || condition) return;
+  if (typeof context === 'undefined') {
+    console.warn('[DEV][ASSERT]', message);
+    return;
+  }
+  console.warn('[DEV][ASSERT]', message, context);
+}
+
+function addTrackedListener(target, type, handler, options) {
+  target.addEventListener(type, handler, options);
+  if (!DEV) return;
+  const targetLabel = target === window
+    ? 'window'
+    : target === document
+      ? 'document'
+      : (target.id ? '#' + target.id : (target.tagName || 'unknown'));
+  const key = targetLabel + '::' + type;
+  const singleRegistrationType = type === 'keydown' || type === 'transitionend';
+  if (singleRegistrationType && state.dev.listenerKeys.has(key)) {
+    console.warn('[DEV][listener duplicate]', key);
+  }
+  if (singleRegistrationType) state.dev.listenerKeys.add(key);
+  state.dev.listenerCounts[type] = (state.dev.listenerCounts[type] || 0) + 1;
+}
+
+function setAttrs(el, attrs) {
+  if (!attrs) return el;
+  Object.keys(attrs).forEach((key) => {
+    const value = attrs[key];
+    if (value === null || typeof value === 'undefined') return;
+    if (key === 'className') {
+      el.className = value;
+      return;
+    }
+    if (key === 'text') {
+      el.textContent = value;
+      return;
+    }
+    if (key === 'html') {
+      el.innerHTML = value;
+      return;
+    }
+    if (key === 'dataset' && value && typeof value === 'object') {
+      Object.keys(value).forEach((name) => {
+        el.dataset[name] = value[name];
+      });
+      return;
+    }
+    if (key === 'style' && value && typeof value === 'object') {
+      Object.keys(value).forEach((name) => {
+        el.style[name] = value[name];
+      });
+      return;
+    }
+    if (key in el) {
+      el[key] = value;
+      return;
+    }
+    el.setAttribute(key, value);
+  });
+  return el;
+}
+
+function appendChildren(el, children) {
+  if (children === null || typeof children === 'undefined') return el;
+  const nodes = Array.isArray(children) ? children : [children];
+  nodes.forEach((child) => {
+    if (child === null || typeof child === 'undefined') return;
+    if (typeof child === 'string' || typeof child === 'number') {
+      el.appendChild(document.createTextNode(String(child)));
+      return;
+    }
+    el.appendChild(child);
+  });
+  return el;
+}
+
+function createEl(tag, attrs, children) {
+  const el = document.createElement(tag);
+  setAttrs(el, attrs);
+  appendChildren(el, children);
+  return el;
+}
+
+function svgEl(tag, attrs, children) {
+  const el = document.createElementNS('http://www.w3.org/2000/svg', tag);
+  setAttrs(el, attrs);
+  appendChildren(el, children);
+  return el;
+}
+
+function createVectorRect(config) {
+  const vector = createEl('div', {
+    className: config.baseClass,
+    id: config.id
+  });
+  for (let i = 1; i <= 3; i += 1) {
+    vector.appendChild(createEl('span', {
+      className: config.dividerClass,
+      style: {
+        left: (i * 25) + '%'
+      }
+    }));
+  }
+  return vector;
+}
+
+function getPathLength(path) {
+  if (!path || typeof path.getTotalLength !== 'function') return 0;
+  try {
+    return path.getTotalLength();
+  } catch (err) {
+    return 0;
+  }
+}
+
+function hideArrowElements(config) {
+  const path = config.path;
+  if (!path) return;
+  const length = getPathLength(path);
+  const dash = length > 0 ? length.toFixed(2) : '0';
+  path.style.transition = 'none';
+  path.style.strokeDasharray = dash;
+  path.style.strokeDashoffset = dash;
+  if (config.head) {
+    config.head.style.transition = 'none';
+    config.head.style.opacity = '0';
+  }
+  if (config.dot) {
+    config.dot.style.transition = 'none';
+    config.dot.style.opacity = '0';
+  }
+}
+
+function showArrowElements(config) {
+  const path = config.path;
+  if (!path) return;
+  const length = getPathLength(path);
+  const dash = length > 0 ? length.toFixed(2) : '0';
+  path.style.transition = 'none';
+  path.style.strokeDasharray = dash;
+  path.style.strokeDashoffset = '0';
+  if (config.head) {
+    config.head.style.transition = 'none';
+    config.head.style.opacity = '1';
+  }
+  if (config.dot) {
+    config.dot.style.transition = 'none';
+    config.dot.style.opacity = '1';
+  }
+}
+
+function cacheUiReferences() {
+  state.ui.btnPrev = $('#btnPrev');
+  state.ui.btnNext = $('#btnNext');
+  state.ui.btnSkip = $('#btnSkip');
+  state.ui.slideCounter = $('#slideCounter');
+  state.ui.progressFill = $('#progressFill');
+}
+
+function createSlideDescriptor(id, overrides) {
+  const base = {
+    id,
+    build: () => {},
+    init: () => {},
+    step: () => false,
+    reset: () => {}
+  };
+  return Object.assign(base, overrides || {});
+}
+
+function defineSlides() {
+  const descriptors = [];
+  const interactive = {
+    'slide-16': createSlideDescriptor('slide-16', {
+      init: () => {
+        initProjectionSlide();
+        drawProjection();
+      },
+      step: (slideEl) => runProjectionLensStep(slideEl),
+      reset: () => resetProjectionSlide()
+    }),
+    'slide-18': createSlideDescriptor('slide-18', {
+      init: () => {
+        initAttentionIntroSlide();
+        setAttentionIntroStep(0);
+      },
+      step: (slideEl) => runAttentionIntroStep(slideEl),
+      reset: () => resetAttentionIntroSlide()
+    }),
+    'slide-19': createSlideDescriptor('slide-19', {
+      init: () => {
+        initAttentionQkvSlide();
+        setAttentionQkvStep(0);
+      },
+      step: (slideEl) => runAttentionQkvStep(slideEl),
+      reset: () => resetAttentionQkvSlide()
+    })
+  };
+
+  state.nav.slides.forEach((slideEl) => {
+    const id = slideEl.id;
+    descriptors.push(interactive[id] || createSlideDescriptor(id));
+  });
+  return descriptors;
+}
+
+function registerSlides() {
+  state.registry.order = defineSlides();
+  state.registry.byId = {};
+  state.registry.order.forEach((descriptor) => {
+    state.registry.byId[descriptor.id] = descriptor;
+  });
+}
+
+function getSlideDescriptorById(id) {
+  return state.registry.byId[id] || createSlideDescriptor(id);
+}
+
+function captureSnapshot(label) {
+  if (!DEV) return;
+  const activeSlide = state.nav.slides[state.nav.current];
+  const attn18 = document.getElementById('slide-18');
+  const attn19 = document.getElementById('slide-19');
+  const snapshot = {
+    label,
+    currentIndex: state.nav.current,
+    currentSlideId: activeSlide ? activeSlide.id : null,
+    revealedCountOnActive: activeSlide ? activeSlide.querySelectorAll('.hidden-content.revealed').length : 0,
+    projectionLens: projectionState.activeLens,
+    attentionIntroStep: attentionIntroState.step,
+    attentionIntroClasses: attn18
+      ? ['attn18-show-vectors', 'attn18-show-focus', 'attn18-show-flow', 'attn18-show-update'].filter((c) => attn18.classList.contains(c))
+      : [],
+    attentionQkvStep: attentionQkvState.step,
+    attentionQkvCompareDone: attentionQkvState.compareDone,
+    attentionQkvClasses: attn19
+      ? ['attn19-show-k', 'attn19-show-v', 'attn19-show-q', 'attn19-show-compare', 'attn19-compare-done'].filter((c) => attn19.classList.contains(c))
+      : []
+  };
+  state.dev.snapshots.push(snapshot);
+  devLog('snapshot', snapshot);
+}
+
+function runDevStartupChecks() {
+  if (!DEV) return;
+  const expectedOrder = [
+    'slide-0', 'slide-1', 'slide-2', 'slide-3', 'slide-4',
+    'slide-5', 'slide-6', 'slide-7', 'slide-8', 'slide-9',
+    'slide-10', 'slide-11', 'slide-12', 'slide-13', 'slide-14',
+    'slide-16', 'slide-17', 'slide-18', 'slide-19'
+  ];
+  const foundOrder = state.nav.slides.map((el) => el.id);
+  devAssert(state.nav.total === 19, 'Slide count mismatch', { expected: 19, actual: state.nav.total });
+  devAssert(
+    expectedOrder.join('|') === foundOrder.join('|'),
+    'Slide order mismatch',
+    { expected: expectedOrder, actual: foundOrder }
+  );
+  devAssert(document.querySelectorAll('.hidden-content').length === 11, 'hidden-content count mismatch', {
+    expected: 11,
+    actual: document.querySelectorAll('.hidden-content').length
+  });
+  devAssert(document.querySelectorAll('.hidden-content.autostep').length === 11, 'autostep count mismatch', {
+    expected: 11,
+    actual: document.querySelectorAll('.hidden-content.autostep').length
+  });
+  devAssert(Boolean(state.ui.btnPrev), 'Missing #btnPrev');
+  devAssert(Boolean(state.ui.btnNext), 'Missing #btnNext');
+  devAssert(Boolean(state.ui.btnSkip), 'Missing #btnSkip');
+  devAssert(Boolean(state.ui.progressFill), 'Missing #progressFill');
+  devAssert(Boolean(state.ui.slideCounter), 'Missing #slideCounter');
+  devLog('listener counts', state.dev.listenerCounts);
+}
 
 function typesetMath(root = document) {
   if (!window.MathJax || !window.MathJax.typesetPromise) return;
@@ -3334,54 +3616,91 @@ function typesetMath(root = document) {
 }
 
 function refreshSlides() {
-  slides = Array.from($$('.slide'));
-  total = slides.length;
+  state.nav.slides = Array.from($$('.slide'));
+  state.nav.total = state.nav.slides.length;
+  registerSlides();
+  state.registry.order.forEach((descriptor) => {
+    const root = document.getElementById(descriptor.id);
+    descriptor.build(root, state);
+  });
 }
 
 function resetSlideInteractions(slideEl) {
-  if (slideEl.id === 'slide-16') resetProjectionSlide();
-  if (slideEl.id === 'slide-18') resetAttentionIntroSlide();
-  if (slideEl.id === 'slide-19') resetAttentionQkvSlide();
+  if (!slideEl) return;
+  const descriptor = getSlideDescriptorById(slideEl.id);
+  descriptor.reset(state, slideEl);
+  captureSnapshot('reset:' + slideEl.id);
 }
 
 function resetHiddenContent(slideEl) {
+  if (!slideEl) return;
   slideEl.querySelectorAll('.hidden-content').forEach((el) => {
     el.classList.remove('revealed', 'settled');
   });
   resetSlideInteractions(slideEl);
 }
 
-function goTo(index) {
-  if (total === 0) return;
-  if (index < 0 || index >= total) return;
+function goToSlide(index) {
+  if (state.nav.total === 0) return;
+  if (index < 0 || index >= state.nav.total) return;
 
-  slides.forEach((slide, i) => {
+  state.nav.slides.forEach((slide, i) => {
     slide.classList.remove('active');
     if (i !== index) resetHiddenContent(slide);
   });
 
-  slides[index].classList.add('active');
-  current = index;
+  const activeSlide = state.nav.slides[index];
+  activeSlide.classList.add('active');
+  state.nav.current = index;
 
-  $('#btnPrev').disabled = current === 0;
-  $('#btnNext').textContent = current === total - 1 ? 'Restart ↺' : 'Next →';
-  $('#btnSkip').textContent = current === total - 1 ? 'Restart ↺' : 'Skip Slide →';
-  $('#slideCounter').textContent = (current + 1) + ' / ' + total;
-  $('#progressFill').style.width = ((current / Math.max(total - 1, 1)) * 100) + '%';
+  state.ui.btnPrev.disabled = state.nav.current === 0;
+  state.ui.btnNext.textContent = state.nav.current === state.nav.total - 1 ? 'Restart ↺' : 'Next →';
+  state.ui.btnSkip.textContent = state.nav.current === state.nav.total - 1 ? 'Restart ↺' : 'Skip Slide →';
+  state.ui.slideCounter.textContent = (state.nav.current + 1) + ' / ' + state.nav.total;
+  state.ui.progressFill.style.width = ((state.nav.current / Math.max(state.nav.total - 1, 1)) * 100) + '%';
 
-  typesetMath(slides[index]);
-  if (slides[index].id === 'slide-16') {
-    initProjectionSlide();
-    drawProjection();
+  typesetMath(activeSlide);
+  const descriptor = getSlideDescriptorById(activeSlide.id);
+  descriptor.init(state, activeSlide);
+  captureSnapshot('goToSlide:' + activeSlide.id);
+}
+
+function goTo(index) {
+  goToSlide(index);
+}
+
+function nextSlide() {
+  if (state.nav.total === 0) return;
+  if (state.nav.current === state.nav.total - 1) {
+    goToSlide(0);
+    return;
   }
-  if (slides[index].id === 'slide-18') {
-    initAttentionIntroSlide();
-    setAttentionIntroStep(0);
+  goToSlide(state.nav.current + 1);
+}
+
+function prevSlide() {
+  goToSlide(state.nav.current - 1);
+}
+
+function nextStep() {
+  if (state.nav.total === 0) return false;
+  const active = state.nav.slides[state.nav.current];
+  if (!active) return false;
+  const descriptor = getSlideDescriptorById(active.id);
+  if (descriptor.step(active, state)) {
+    captureSnapshot('nextStep:' + active.id);
+    return true;
   }
-  if (slides[index].id === 'slide-19') {
-    initAttentionQkvSlide();
-    setAttentionQkvStep(0);
+  if (runAutoStep(active)) {
+    captureSnapshot('nextStep:auto:' + active.id);
+    return true;
   }
+  return false;
+}
+
+function prevStep() {
+  prevSlide();
+  return true;
 }
 
 function runAutoStep(slideEl) {
@@ -3413,56 +3732,48 @@ function runProjectionLensStep(slideEl) {
 }
 
 function createAttentionVectorRect(vectorId) {
-  const vector = document.createElement('div');
-  vector.className = 'attn18-vector';
-  vector.id = vectorId;
-  for (let i = 1; i <= 3; i += 1) {
-    const divider = document.createElement('span');
-    divider.className = 'attn18-vector-divider';
-    divider.style.left = (i * 25) + '%';
-    vector.appendChild(divider);
-  }
-  return vector;
+  return createVectorRect({
+    id: vectorId,
+    baseClass: 'attn18-vector',
+    dividerClass: 'attn18-vector-divider'
+  });
 }
 
 function createAttentionTokenPrimitive(token) {
-  const primitive = document.createElement('div');
-  primitive.className = 'attn18-token-primitive';
-  primitive.dataset.token = token;
+  const primitive = createEl('div', {
+    className: 'attn18-token-primitive',
+    dataset: { token }
+  });
 
-  const chipWrap = document.createElement('div');
-  chipWrap.className = 'attn18-chip-wrap';
-
-  const chip = document.createElement('div');
-  chip.className = 'attn18-token-chip';
-  chip.id = 'attn18-chip-' + token;
-  chip.textContent = token;
-  chipWrap.appendChild(chip);
-
+  const chipWrap = createEl('div', { className: 'attn18-chip-wrap' }, [
+    createEl('div', {
+      className: 'attn18-token-chip',
+      id: 'attn18-chip-' + token,
+      text: token
+    })
+  ]);
   primitive.appendChild(chipWrap);
 
-  const vectorWrap = document.createElement('div');
-  vectorWrap.className = 'attn18-vector-wrap';
-  vectorWrap.id = 'attn18-vector-wrap-' + token;
-
-  const label = document.createElement('span');
-  label.className = 'attn18-vector-label';
-  label.textContent = 'x_' + token;
-
-  vectorWrap.appendChild(label);
-  vectorWrap.appendChild(createAttentionVectorRect('attn18-vector-' + token));
+  const vectorWrap = createEl('div', {
+    className: 'attn18-vector-wrap',
+    id: 'attn18-vector-wrap-' + token
+  }, [
+    createEl('span', {
+      className: 'attn18-vector-label',
+      text: 'x_' + token
+    }),
+    createAttentionVectorRect('attn18-vector-' + token)
+  ]);
   primitive.appendChild(vectorWrap);
 
   if (token === ATTN_INTRO_FOCUS) {
-    const updatedWrap = document.createElement('div');
-    updatedWrap.className = 'attn18-update-wrap';
-
-    const primeLabel = document.createElement('span');
-    primeLabel.className = 'attn18-vector-label prime';
-    primeLabel.textContent = 'x_sat\'';
-
-    updatedWrap.appendChild(primeLabel);
-    updatedWrap.appendChild(createAttentionVectorRect('attn18-vector-sat-prime'));
+    const updatedWrap = createEl('div', { className: 'attn18-update-wrap' }, [
+      createEl('span', {
+        className: 'attn18-vector-label prime',
+        text: 'x_sat\''
+      }),
+      createAttentionVectorRect('attn18-vector-sat-prime')
+    ]);
     primitive.appendChild(updatedWrap);
   }
 
@@ -3475,27 +3786,11 @@ function clearAttentionIntroFlowTimers() {
 }
 
 function hideAttentionIntroFlowArrow(path, head) {
-  if (!path) return;
-  const length = typeof path.getTotalLength === 'function' ? path.getTotalLength() : 0;
-  const dash = length > 0 ? length.toFixed(2) : '0';
-  path.style.transition = 'none';
-  path.style.strokeDasharray = dash;
-  path.style.strokeDashoffset = dash;
-  if (!head) return;
-  head.style.transition = 'none';
-  head.style.opacity = '0';
+  hideArrowElements({ path, head });
 }
 
 function showAttentionIntroFlowArrow(path, head) {
-  if (!path) return;
-  const length = typeof path.getTotalLength === 'function' ? path.getTotalLength() : 0;
-  const dash = length > 0 ? length.toFixed(2) : '0';
-  path.style.transition = 'none';
-  path.style.strokeDasharray = dash;
-  path.style.strokeDashoffset = '0';
-  if (!head) return;
-  head.style.transition = 'none';
-  head.style.opacity = '1';
+  showArrowElements({ path, head });
 }
 
 function getAttentionIntroFlowCount(step) {
@@ -3768,7 +4063,7 @@ function initAttentionIntroSlide() {
     });
 
     if (!attentionIntroState.resizeBound) {
-      window.addEventListener('resize', () => {
+      addTrackedListener(window, 'resize', () => {
         if (!attentionIntroState.initialized) return;
         clearAttentionIntroFlowTimers();
         updateAttentionIntroOverlay();
@@ -3806,83 +4101,88 @@ function resetAttentionIntroSlide() {
 }
 
 function createAttentionQkvVectorRect(vectorId, extraClass = '') {
-  const vector = document.createElement('div');
-  vector.className = 'attn19-vector' + (extraClass ? ' ' + extraClass : '');
-  vector.id = vectorId;
-  for (let i = 1; i <= 3; i += 1) {
-    const divider = document.createElement('span');
-    divider.className = 'attn19-vector-divider';
-    divider.style.left = (i * 25) + '%';
-    vector.appendChild(divider);
-  }
-  return vector;
+  return createVectorRect({
+    id: vectorId,
+    baseClass: 'attn19-vector' + (extraClass ? ' ' + extraClass : ''),
+    dividerClass: 'attn19-vector-divider'
+  });
 }
 
 function createAttentionQkvColumn(token) {
-  const col = document.createElement('div');
-  col.className = 'attn19-col';
-  col.dataset.token = token;
+  const col = createEl('div', {
+    className: 'attn19-col',
+    dataset: { token }
+  });
 
-  const scoreSlot = document.createElement('div');
-  scoreSlot.className = 'attn19-score-slot';
-  const scoreBar = document.createElement('div');
-  scoreBar.className = 'attn19-score-bar';
-  scoreBar.id = 'attn19-score-' + token;
+  const scoreSlot = createEl('div', { className: 'attn19-score-slot' });
+  const scoreBar = createEl('div', {
+    className: 'attn19-score-bar',
+    id: 'attn19-score-' + token
+  });
   scoreBar.style.setProperty('--score', String(ATTN_QKV_SCORE_LEVELS[token] || 0.2));
   scoreSlot.appendChild(scoreBar);
   col.appendChild(scoreSlot);
 
-  const chipWrap = document.createElement('div');
-  chipWrap.className = 'attn19-chip-wrap';
+  const chipWrap = createEl('div', { className: 'attn19-chip-wrap' });
   if (token === ATTN_QKV_FOCUS) {
-    const focusLabel = document.createElement('span');
-    focusLabel.className = 'attn19-focus-label';
-    focusLabel.textContent = 'FOCUS';
+    const focusLabel = createEl('span', {
+      className: 'attn19-focus-label',
+      text: 'FOCUS'
+    });
     chipWrap.appendChild(focusLabel);
   }
-  const chip = document.createElement('div');
-  chip.className = 'attn19-token-chip';
-  chip.id = 'attn19-chip-' + token;
-  chip.textContent = token;
+  const chip = createEl('div', {
+    className: 'attn19-token-chip',
+    id: 'attn19-chip-' + token,
+    text: token
+  });
   chipWrap.appendChild(chip);
   col.appendChild(chipWrap);
 
-  const xWrap = document.createElement('div');
-  xWrap.className = 'attn19-vector-wrap attn19-vector-wrap-x';
-  xWrap.id = 'attn19-vector-wrap-x-' + token;
-  const xLabel = document.createElement('span');
-  xLabel.className = 'attn19-vector-label';
-  xLabel.textContent = 'x_' + token;
+  const xWrap = createEl('div', {
+    className: 'attn19-vector-wrap attn19-vector-wrap-x',
+    id: 'attn19-vector-wrap-x-' + token
+  });
+  const xLabel = createEl('span', {
+    className: 'attn19-vector-label',
+    text: 'x_' + token
+  });
   xWrap.appendChild(xLabel);
   xWrap.appendChild(createAttentionQkvVectorRect('attn19-vector-x-' + token));
   col.appendChild(xWrap);
 
-  const wkTick = document.createElement('span');
-  wkTick.className = 'attn19-proj-tick wk';
-  wkTick.id = 'attn19-proj-wk-' + token;
+  const wkTick = createEl('span', {
+    className: 'attn19-proj-tick wk',
+    id: 'attn19-proj-wk-' + token
+  });
   col.appendChild(wkTick);
 
-  const kWrap = document.createElement('div');
-  kWrap.className = 'attn19-vector-wrap attn19-vector-wrap-k';
-  kWrap.id = 'attn19-vector-wrap-k-' + token;
-  const kLabel = document.createElement('span');
-  kLabel.className = 'attn19-vector-label';
-  kLabel.textContent = 'k_' + token;
+  const kWrap = createEl('div', {
+    className: 'attn19-vector-wrap attn19-vector-wrap-k',
+    id: 'attn19-vector-wrap-k-' + token
+  });
+  const kLabel = createEl('span', {
+    className: 'attn19-vector-label',
+    text: 'k_' + token
+  });
   kWrap.appendChild(kLabel);
   kWrap.appendChild(createAttentionQkvVectorRect('attn19-vector-k-' + token, 'attn19-vector-k'));
   col.appendChild(kWrap);
 
-  const wvTick = document.createElement('span');
-  wvTick.className = 'attn19-proj-tick wv';
-  wvTick.id = 'attn19-proj-wv-' + token;
+  const wvTick = createEl('span', {
+    className: 'attn19-proj-tick wv',
+    id: 'attn19-proj-wv-' + token
+  });
   col.appendChild(wvTick);
 
-  const vWrap = document.createElement('div');
-  vWrap.className = 'attn19-vector-wrap attn19-vector-wrap-v';
-  vWrap.id = 'attn19-vector-wrap-v-' + token;
-  const vLabel = document.createElement('span');
-  vLabel.className = 'attn19-vector-label';
-  vLabel.textContent = 'v_' + token;
+  const vWrap = createEl('div', {
+    className: 'attn19-vector-wrap attn19-vector-wrap-v',
+    id: 'attn19-vector-wrap-v-' + token
+  });
+  const vLabel = createEl('span', {
+    className: 'attn19-vector-label',
+    text: 'v_' + token
+  });
   vWrap.appendChild(vLabel);
   vWrap.appendChild(createAttentionQkvVectorRect('attn19-vector-v-' + token));
   col.appendChild(vWrap);
@@ -3899,50 +4199,14 @@ function hideAttentionQkvCompareArrow(token) {
   const path = document.getElementById('attn19-compare-path-' + token);
   const head = document.getElementById('attn19-compare-head-' + token);
   const dot = document.getElementById('attn19-compare-dot-' + token);
-  if (!path) return;
-  let length = 0;
-  if (typeof path.getTotalLength === 'function') {
-    try {
-      length = path.getTotalLength();
-    } catch (err) {
-      length = 0;
-    }
-  }
-  const dash = length > 0 ? length.toFixed(2) : '0';
-  path.style.transition = 'none';
-  path.style.strokeDasharray = dash;
-  path.style.strokeDashoffset = dash;
-  if (!head) return;
-  head.style.transition = 'none';
-  head.style.opacity = '0';
-  if (!dot) return;
-  dot.style.transition = 'none';
-  dot.style.opacity = '0';
+  hideArrowElements({ path, head, dot });
 }
 
 function showAttentionQkvCompareArrow(token) {
   const path = document.getElementById('attn19-compare-path-' + token);
   const head = document.getElementById('attn19-compare-head-' + token);
   const dot = document.getElementById('attn19-compare-dot-' + token);
-  if (!path) return;
-  let length = 0;
-  if (typeof path.getTotalLength === 'function') {
-    try {
-      length = path.getTotalLength();
-    } catch (err) {
-      length = 0;
-    }
-  }
-  const dash = length > 0 ? length.toFixed(2) : '0';
-  path.style.transition = 'none';
-  path.style.strokeDasharray = dash;
-  path.style.strokeDashoffset = '0';
-  if (!head) return;
-  head.style.transition = 'none';
-  head.style.opacity = '1';
-  if (!dot) return;
-  dot.style.transition = 'none';
-  dot.style.opacity = '1';
+  showArrowElements({ path, head, dot });
 }
 
 function syncAttentionQkvCompareVisuals(visibleCount = attentionQkvState.compareVisibleCount) {
@@ -4209,7 +4473,7 @@ function initAttentionQkvSlide() {
     });
 
     if (!attentionQkvState.resizeBound) {
-      window.addEventListener('resize', () => {
+      addTrackedListener(window, 'resize', () => {
         if (!attentionQkvState.initialized) return;
         clearAttentionQkvCompareTimers();
         if (attentionQkvState.step >= 4) {
@@ -4267,21 +4531,8 @@ function resetAttentionQkvSlide() {
 }
 
 function nextWithInteractions() {
-  if (total === 0) return;
-  const active = slides[current];
-  if (runProjectionLensStep(active)) return;
-  if (runAttentionIntroStep(active)) return;
-  if (runAttentionQkvStep(active)) return;
-  if (runAutoStep(active)) return;
-
-  if (current === total - 1) goTo(0);
-  else goTo(current + 1);
-}
-
-function toggleReveal(id) {
-  const el = document.getElementById(id);
-  if (!el) return;
-  el.classList.toggle('revealed');
+  if (nextStep()) return;
+  nextSlide();
 }
 
 function cloneLensState(lensKey) {
@@ -4320,10 +4571,10 @@ function updateProjectionReadout(lensKey) {
   meaningLabel.textContent = LENS_MEANINGS[lensKey] || '';
   neighborsWrap.innerHTML = '';
   (LENS_NEIGHBORS[lensKey] || []).forEach((token) => {
-    const chip = document.createElement('span');
-    chip.className = 'neighbor-chip';
-    chip.textContent = token;
-    neighborsWrap.appendChild(chip);
+    neighborsWrap.appendChild(createEl('span', {
+      className: 'neighbor-chip',
+      text: token
+    }));
   });
 
   readout.classList.add('updating');
@@ -4531,11 +4782,11 @@ function initProjectionSlide() {
     projectionState.activeLens = DEFAULT_PROJECTION_LENS;
 
     toolbar.querySelectorAll('.lens-btn').forEach((btn) => {
-      btn.addEventListener('click', () => setProjectionLens(btn.dataset.lens));
+      addTrackedListener(btn, 'click', () => setProjectionLens(btn.dataset.lens));
     });
 
     if (!projectionState.resizeBound) {
-      window.addEventListener('resize', () => {
+      addTrackedListener(window, 'resize', () => {
         if (!projectionState.initialized) return;
         resizeProjectionCanvas();
         drawProjection();
@@ -4572,14 +4823,14 @@ function resetProjectionSlide() {
   drawProjection();
 }
 
-$('#btnNext').addEventListener('click', nextWithInteractions);
-$('#btnSkip').addEventListener('click', () => {
-  if (current === total - 1) goTo(0);
-  else goTo(current + 1);
-});
-$('#btnPrev').addEventListener('click', () => goTo(current - 1));
+cacheUiReferences();
+refreshSlides();
 
-document.addEventListener('keydown', (e) => {
+addTrackedListener(state.ui.btnNext, 'click', nextWithInteractions);
+addTrackedListener(state.ui.btnSkip, 'click', nextSlide);
+addTrackedListener(state.ui.btnPrev, 'click', prevSlide);
+
+addTrackedListener(document, 'keydown', (e) => {
   const tag = e.target && e.target.tagName;
   if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || (e.target && e.target.isContentEditable)) return;
 
@@ -4593,19 +4844,20 @@ document.addEventListener('keydown', (e) => {
   }
   if (e.key === 'ArrowLeft') {
     e.preventDefault();
-    goTo(current - 1);
+    prevSlide();
   }
 });
 
-document.addEventListener('transitionend', (e) => {
+addTrackedListener(document, 'transitionend', (e) => {
   const el = e.target;
   if (!el.classList.contains('hidden-content') || e.propertyName !== 'max-height') return;
   if (el.classList.contains('revealed')) el.classList.add('settled');
   else el.classList.remove('settled');
 });
 
-refreshSlides();
-goTo(0);
+runDevStartupChecks();
+goToSlide(0);
+captureSnapshot('init');
 </script>
 </body>
 </html>
