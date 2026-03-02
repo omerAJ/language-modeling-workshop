@@ -2789,14 +2789,15 @@ function initAttentionP1Slide() {
 function updateAttentionP1Overlay() {
   const stage = document.getElementById('attn19p1-stage');
   const overlay = document.getElementById('attn19p1-overlay');
-  const sourceWrap = document.getElementById('attn19p1-source-wrap');
+  const contentWrap = stage ? stage.querySelector('.attn19p1-content') : null;
+  const satChip = document.getElementById('attn19p1-chip-' + ATTN_P1_FOCUS);
   const xSat = document.getElementById('attn19p1-x-sat');
   const sourceLine = document.getElementById('attn19p1-line-source');
   const busTrunkLine = document.getElementById('attn19p1-line-bus-trunk');
   const busMainLine = document.getElementById('attn19p1-line-bus-main');
   const copyNode = document.getElementById('attn19p1-copy-node');
   const copyLabel = document.getElementById('attn19p1-copy-label');
-  if (!stage || !overlay || !sourceWrap || !xSat || !sourceLine || !busTrunkLine || !busMainLine || !copyNode || !copyLabel) return;
+  if (!stage || !overlay || !xSat || !sourceLine || !busTrunkLine || !busMainLine || !copyNode || !copyLabel) return;
 
   const stageRect = stage.getBoundingClientRect();
   if (stageRect.width < 1 || stageRect.height < 1) return;
@@ -2810,7 +2811,15 @@ function updateAttentionP1Overlay() {
     };
   };
 
-  sourceWrap.style.transform = 'translateX(0px)';
+  if (contentWrap) {
+    contentWrap.style.transform = 'translateX(0px)';
+    if (satChip) {
+      const satCenterX = anchor(satChip, 0.5, 0.5).x;
+      const xCenterX = anchor(xSat, 0.5, 0.5).x;
+      const deltaX = satCenterX - xCenterX;
+      contentWrap.style.transform = 'translateX(' + deltaX.toFixed(2) + 'px)';
+    }
+  }
 
   const xBottom = anchor(xSat, 0.5, 1);
   const linePad = Math.max(stageRect.height * 0.009, 3.5);
