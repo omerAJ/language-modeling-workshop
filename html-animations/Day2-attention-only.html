@@ -954,6 +954,289 @@
       padding: 0.56rem 0.62rem;
     }
   }
+
+  /* =====================================================
+     SLIDE-19 — Step 1: project x_sat → Q/K/V fan-out
+     prefix: attn19p1-
+     ===================================================== */
+  .attn19p1-layout {
+    margin-top: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .attn19p1-sentence-row {
+    display: flex;
+    gap: clamp(0.36rem, 1vw, 0.72rem);
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.22s ease;
+    min-height: calc(0.28rem * 2 + 0.79rem * 1.2 + 2px);
+    width: 100%;
+    margin-top: clamp(0.2rem, 0.8vh, 0.5rem);
+    margin-bottom: clamp(0.3rem, 0.9vh, 0.5rem);
+  }
+  .slide.attn19p1-show-source .attn19p1-sentence-row { opacity: 1; }
+  .attn19p1-s-chip {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.79rem;
+    padding: 0.32rem 0.28rem;
+    border-radius: 0.44rem;
+    border: 1px solid rgba(var(--attn19-source-rgb), 0.44);
+    background: rgba(var(--attn19-source-rgb), 0.09);
+    color: #dbe1f6;
+    line-height: 1.2;
+    text-align: center;
+  }
+  .attn19p1-s-chip[data-focus="true"] {
+    border-color: rgba(var(--attn19-focus-rgb), 0.84);
+    background: rgba(var(--attn19-focus-rgb), 0.14);
+    box-shadow: 0 0 0 0.1rem rgba(var(--attn19-focus-rgb), 0.5);
+  }
+  .attn19p1-stage {
+    --attn19-source-rgb: 90, 232, 142;
+    --attn19-focus-rgb: 123, 154, 255;
+    --attn19p1-vec-w: clamp(4rem, 10vw, 6.2rem);
+    position: relative;
+    width: min(100%, 56rem);
+    flex: 1;
+    min-height: clamp(16rem, 52vh, 22.5rem);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: clamp(0.95rem, 2vw, 1.4rem) clamp(0.8rem, 2.4vw, 1.7rem);
+    overflow: hidden;
+    border-color: rgba(123,154,255,0.34);
+    background:
+      radial-gradient(circle at 14% 14%, rgba(123,154,255,0.1), transparent 42%),
+      var(--surface);
+  }
+  .attn19p1-overlay {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 2;
+  }
+  .attn19p1-content {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    flex: 1;
+  }
+  .attn19p1-source-row {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+  .attn19p1-source-wrap {
+    display: grid;
+    grid-template-columns: max-content var(--attn19p1-vec-w);
+    gap: 0.3rem;
+    align-items: center;
+    opacity: 0;
+    transition: opacity 0.22s ease;
+  }
+  .slide.attn19p1-show-source .attn19p1-source-wrap { opacity: 1; }
+  .attn19p1-src-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.62rem;
+    color: rgba(188,205,250,0.9);
+    white-space: nowrap;
+    text-align: right;
+  }
+  .attn19p1-src-label sub {
+    font-size: 0.75em;
+    line-height: 0;
+    vertical-align: -0.3em;
+    margin-left: 0.02em;
+  }
+  .attn19p1-x-vector {
+    position: relative;
+    height: 0.9rem;
+    border-radius: 0.3rem;
+    border: 1px solid rgba(184,194,221,0.44);
+    background: rgba(184,194,221,0.1);
+    overflow: hidden;
+  }
+  .attn19p1-vec-divider {
+    position: absolute;
+    top: 0.08rem;
+    bottom: 0.08rem;
+    width: 1px;
+    background: rgba(201,212,240,0.38);
+  }
+  .attn19p1-arrow-gap {
+    flex: none;
+    width: 100%;
+    height: clamp(3.2rem, 9vh, 5.2rem);
+  }
+  .attn19p1-proj-row {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(0.6rem, 2.4vw, 1.8rem);
+    width: min(100%, 36rem);
+  }
+  .attn19p1-proj-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.3rem;
+  }
+  .attn19p1-proj-header {
+    font-size: 0.57rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    min-height: 1em;
+    opacity: 0;
+    transition: opacity 0.22s ease;
+  }
+  .slide.attn19p1-show-headers .attn19p1-proj-header { opacity: 1; }
+  .attn19p1-proj-col[data-proj="q"] .attn19p1-proj-header {
+    color: rgba(var(--attn19-focus-rgb), 0.9);
+  }
+  .attn19p1-proj-col[data-proj="k"] .attn19p1-proj-header {
+    color: rgba(var(--attn19-source-rgb), 0.9);
+  }
+  .attn19p1-proj-col[data-proj="v"] .attn19p1-proj-header {
+    color: rgba(182,194,223,0.84);
+  }
+  .attn19p1-vector-wrap {
+    width: 100%;
+    display: grid;
+    grid-template-columns: max-content minmax(0, 1fr);
+    gap: 0.2rem;
+    align-items: center;
+    min-height: 1rem;
+  }
+  .attn19p1-vec-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.56rem;
+    color: rgba(188,199,225,0.78);
+    white-space: nowrap;
+    text-align: right;
+    opacity: 0;
+    transition: opacity 0.22s ease;
+  }
+  .attn19p1-vec-label sub {
+    font-size: 0.75em;
+    line-height: 0;
+    vertical-align: -0.3em;
+    margin-left: 0.02em;
+  }
+  .attn19p1-proj-vector {
+    position: relative;
+    height: 0.9rem;
+    border-radius: 0.3rem;
+    border: 1px solid rgba(184,194,221,0.18);
+    background: rgba(184,194,221,0.04);
+    overflow: hidden;
+    opacity: 0;
+    transition: opacity 0.22s ease, border-color 0.22s ease, background 0.22s ease;
+  }
+  .slide.attn19p1-show-headers .attn19p1-proj-vector { opacity: 1; }
+  .slide.attn19p1-show-q .attn19p1-proj-col[data-proj="q"] .attn19p1-proj-vector {
+    border-color: rgba(var(--attn19-focus-rgb), 0.7);
+    background: rgba(var(--attn19-focus-rgb), 0.14);
+  }
+  .slide.attn19p1-show-q .attn19p1-proj-col[data-proj="q"] .attn19p1-vec-label { opacity: 1; }
+  .slide.attn19p1-show-k .attn19p1-proj-col[data-proj="k"] .attn19p1-proj-vector {
+    border-color: rgba(var(--attn19-source-rgb), 0.44);
+    background: rgba(var(--attn19-source-rgb), 0.07);
+  }
+  .slide.attn19p1-show-k .attn19p1-proj-col[data-proj="k"] .attn19p1-vec-label { opacity: 1; }
+  .slide.attn19p1-show-v .attn19p1-proj-col[data-proj="v"] .attn19p1-proj-vector {
+    border-color: rgba(184,194,221,0.44);
+    background: rgba(184,194,221,0.1);
+  }
+  .slide.attn19p1-show-v .attn19p1-proj-col[data-proj="v"] .attn19p1-vec-label { opacity: 1; }
+  .attn19p1-meaning {
+    font-size: clamp(0.5rem, 1.05vw, 0.62rem);
+    color: rgba(182,194,223,0.7);
+    font-style: italic;
+    text-align: center;
+    white-space: nowrap;
+    min-height: 1em;
+    opacity: 0;
+    transition: opacity 0.22s ease;
+  }
+  .slide.attn19p1-show-q .attn19p1-proj-col[data-proj="q"] .attn19p1-meaning { opacity: 1; }
+  .slide.attn19p1-show-k .attn19p1-proj-col[data-proj="k"] .attn19p1-meaning { opacity: 1; }
+  .slide.attn19p1-show-v .attn19p1-proj-col[data-proj="v"] .attn19p1-meaning { opacity: 1; }
+  .attn19p1-arrow-line {
+    stroke: rgba(var(--attn19-focus-rgb), 0.68);
+    stroke-width: 1.4;
+    fill: none;
+    stroke-linecap: round;
+    opacity: 0;
+    transition: opacity 0.22s ease;
+  }
+  .attn19p1-wlabel {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.55rem;
+    fill: rgba(188,205,250,0.82);
+    font-weight: 600;
+    opacity: 0;
+    transition: opacity 0.22s ease;
+  }
+  .slide.attn19p1-show-q #attn19p1-line-q,
+  .slide.attn19p1-show-q #attn19p1-wlabel-q { opacity: 1; }
+  .slide.attn19p1-show-k #attn19p1-line-k,
+  .slide.attn19p1-show-k #attn19p1-wlabel-k { opacity: 1; }
+  .slide.attn19p1-show-v #attn19p1-line-v,
+  .slide.attn19p1-show-v #attn19p1-wlabel-v { opacity: 1; }
+  .attn19p1-takeaway {
+    margin-top: 0.82rem;
+    border: 1px solid rgba(123,154,255,0.28);
+    border-radius: 0.58rem;
+    background: rgba(123,154,255,0.1);
+    display: flex;
+    align-items: center;
+    padding: 0.62rem 0.72rem;
+    font-size: 0.85rem;
+    color: #dbe4ff;
+    line-height: 1.45;
+    width: min(100%, 56rem);
+  }
+  /* score-formula caption for slide-20 */
+  .attn19-score-caption {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    color: rgba(var(--attn19-focus-rgb), 0.9);
+    text-align: center;
+    margin-top: 0.42rem;
+    opacity: 0;
+    transition: opacity 0.22s ease;
+  }
+  .attn19-score-caption sub {
+    font-size: 0.76em;
+    line-height: 0;
+    vertical-align: -0.3em;
+  }
+  .slide.attn19-show-scores .attn19-score-caption { opacity: 1; }
+  @media (max-width: 56rem) {
+    .attn19p1-layout { margin-top: 0.4rem; }
+    .attn19p1-stage {
+      min-height: clamp(15rem, 60vh, 20rem);
+      padding: 0.9rem 0.72rem;
+    }
+    .attn19p1-s-chip { font-size: 0.66rem; padding: 0.24rem 0.28rem; }
+    .attn19p1-proj-header { font-size: 0.5rem; }
+    .attn19p1-vec-label { font-size: 0.48rem; }
+    .attn19p1-proj-vector { height: 0.74rem; }
+    .attn19p1-x-vector { height: 0.74rem; }
+    .attn19p1-meaning { font-size: 0.47rem; }
+    .attn19p1-wlabel { font-size: 0.46rem; }
+    .attn19p1-arrow-gap { height: clamp(2.6rem, 7vh, 4rem); }
+    .attn19p1-takeaway { font-size: 0.76rem; padding: 0.5rem 0.58rem; }
+  }
 </style>
 </head>
 <body>
@@ -1006,7 +1289,51 @@
     <span class="section-tag">Attention</span>
     <div class="badge concept">Mechanism</div>
     <h2>Attention</h2>
-    <p class="small-text attn19-subtitle">Step 1: project embeddings into Q/K/V subspaces</p>
+    <p class="small-text">Step 1: project embeddings into Q/K/V subspaces</p>
+
+    <div class="attn19p1-sentence-row" id="attn19p1-sentence-row"></div>
+
+    <div class="attn19p1-layout">
+      <div class="card attn19p1-stage" id="attn19p1-stage">
+        <svg class="attn19p1-overlay" id="attn19p1-overlay" aria-hidden="true">
+          <defs>
+            <marker id="attn19p1-arr-marker" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto" markerUnits="userSpaceOnUse">
+              <path d="M0,0 L8,4 L0,8 z" fill="rgba(123,154,255,0.82)"></path>
+            </marker>
+          </defs>
+          <line id="attn19p1-line-q" class="attn19p1-arrow-line" marker-end="url(#attn19p1-arr-marker)"></line>
+          <text id="attn19p1-wlabel-q" class="attn19p1-wlabel"></text>
+          <line id="attn19p1-line-k" class="attn19p1-arrow-line" marker-end="url(#attn19p1-arr-marker)"></line>
+          <text id="attn19p1-wlabel-k" class="attn19p1-wlabel"></text>
+          <line id="attn19p1-line-v" class="attn19p1-arrow-line" marker-end="url(#attn19p1-arr-marker)"></line>
+          <text id="attn19p1-wlabel-v" class="attn19p1-wlabel"></text>
+        </svg>
+
+        <div class="attn19p1-content">
+          <div class="attn19p1-source-row">
+            <div class="attn19p1-source-wrap" id="attn19p1-source-wrap">
+              <span class="attn19p1-src-label">x<sub>sat</sub></span>
+              <div class="attn19p1-x-vector" id="attn19p1-x-sat">
+                <span class="attn19p1-vec-divider" style="left:25%"></span>
+                <span class="attn19p1-vec-divider" style="left:50%"></span>
+                <span class="attn19p1-vec-divider" style="left:75%"></span>
+              </div>
+            </div>
+          </div>
+          <div class="attn19p1-arrow-gap"></div>
+          <div class="attn19p1-proj-row" id="attn19p1-proj-row"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="attn19p1-takeaway" id="attn19p1-takeaway">Embeddings are static — attention projects them into new roles</div>
+  </div>
+
+  <div class="slide" id="slide-20">
+    <span class="section-tag">Attention</span>
+    <div class="badge concept">Mechanism</div>
+    <h2>Attention</h2>
+    <p class="small-text attn19-subtitle">Step 2: compute scores</p>
 
     <div class="attn19-layout">
       <div class="card attn19-stage" id="attn19-stage">
@@ -1082,6 +1409,7 @@
       </div>
     </div>
 
+    <div class="attn19-score-caption">s<sub>j</sub> = q<sub>sat</sub> · k<sub>j</sub></div>
     <div class="attn19-takeaway" id="attn19-takeaway">We start from embeddings <i>x</i><sub>1</sub>…<i>x</i><sub>n</sub></div>
   </div>
 
@@ -1147,6 +1475,21 @@ const ATTN_QKV_COMPARE_STAGGER_MS = 190;
 const ATTN_QKV_SCORE_REVEAL_DELAY_MS = 140;
 const ATTN_QKV_MAX_STEP = 4;
 
+const ATTN_P1_TOKENS = ['cat', 'sat', 'on', 'the', 'mat'];
+const ATTN_P1_FOCUS = 'sat';
+const ATTN_P1_PROJS = ['q', 'k', 'v'];
+const ATTN_P1_PROJ_NAMES = { q: 'Query (Q)', k: 'Key (K)', v: 'Value (V)' };
+const ATTN_P1_MEANINGS = { q: 'what I need', k: 'what I offer', v: 'what I pass forward' };
+const ATTN_P1_MAX_STEP = 5;
+const ATTN_P1_TAKEAWAYS = [
+  'Embeddings are static \u2014 attention projects them into new roles',
+  '<i>x</i><sub>sat</sub> is sat\u2019s static embedding from the previous layer',
+  'Three learned projections create different \u201cviews\u201d of the same embedding',
+  'Query <i>q</i><sub>sat</sub>: what information does sat need?',
+  'Key <i>k</i><sub>sat</sub>: what sat offers to other tokens',
+  'Next: use <i>q</i><sub>sat</sub> to score every <i>k</i><sub>j</sub>\u2003(<i>q</i>\u00b7<i>k</i> \u2192 <i>s</i>)'
+];
+
 const state = {
   nav: {
     slides: [],
@@ -1174,6 +1517,12 @@ const state = {
     compareTimers: [],
     compareDone: false,
     compareVisibleCount: 0,
+    resizeBound: false
+  },
+  attentionP1: {
+    initialized: false,
+    step: 0,
+    overlayTimer: null,
     resizeBound: false
   }
 };
@@ -1821,7 +2170,7 @@ function animateAttentionQkvCompareArrow(token) {
 }
 
 function runAttentionQkvCompareSequence() {
-  const slide = document.getElementById('slide-19');
+  const slide = document.getElementById('slide-20');
   if (!slide) return;
   clearAttentionQkvCompareTimers();
   state.attentionQkv.compareDone = false;
@@ -2016,7 +2365,7 @@ function updateAttentionQkvOverlay() {
 }
 
 function setAttentionQkvStep(step) {
-  const slide = document.getElementById('slide-19');
+  const slide = document.getElementById('slide-20');
   const takeaway = document.getElementById('attn19-takeaway');
   if (!slide || !takeaway) return;
 
@@ -2062,7 +2411,7 @@ function setAttentionQkvStep(step) {
 }
 
 function initAttentionQkvSlide() {
-  const slide = document.getElementById('slide-19');
+  const slide = document.getElementById('slide-20');
   const cols = document.getElementById('attn19-cols');
   if (!slide || !cols) return;
 
@@ -2079,7 +2428,7 @@ function initAttentionQkvSlide() {
         if (state.attentionQkv.step >= 4) {
           state.attentionQkv.compareDone = true;
           state.attentionQkv.compareVisibleCount = ATTN_QKV_COMPARE_TOKENS.length;
-          const activeSlide = document.getElementById('slide-19');
+          const activeSlide = document.getElementById('slide-20');
           if (activeSlide) activeSlide.classList.add('attn19-compare-done');
         } else {
           state.attentionQkv.compareDone = false;
@@ -2115,8 +2464,186 @@ function runAttentionQkvStep() {
   return true;
 }
 
-function resetAttentionQkvSlide() {
+/* =====================================================
+   Slide-19 (Step 1) — Q/K/V projection fan-out
+   ===================================================== */
+
+function initAttentionP1Slide() {
   const slide = document.getElementById('slide-19');
+  const sentenceRow = document.getElementById('attn19p1-sentence-row');
+  const projRow = document.getElementById('attn19p1-proj-row');
+  if (!slide || !sentenceRow || !projRow) return;
+
+  if (!state.attentionP1.initialized) {
+    // Build sentence-row chips
+    sentenceRow.innerHTML = '';
+    ATTN_P1_TOKENS.forEach((token) => {
+      sentenceRow.appendChild(createEl('div', {
+        className: 'attn19p1-s-chip',
+        dataset: { focus: token === ATTN_P1_FOCUS ? 'true' : 'false' },
+        text: token
+      }));
+    });
+
+    // Build projection columns
+    projRow.innerHTML = '';
+    ATTN_P1_PROJS.forEach((proj) => {
+      const col = createEl('div', { className: 'attn19p1-proj-col', dataset: { proj } });
+
+      col.appendChild(createEl('div', {
+        className: 'attn19p1-proj-header',
+        text: ATTN_P1_PROJ_NAMES[proj]
+      }));
+
+      const vWrap = createEl('div', { className: 'attn19p1-vector-wrap' });
+      const label = createEl('span', { className: 'attn19p1-vec-label' }, [
+        proj,
+        createEl('sub', { text: ATTN_P1_FOCUS })
+      ]);
+      const vec = createEl('div', {
+        className: 'attn19p1-proj-vector',
+        id: 'attn19p1-vec-' + proj
+      });
+      for (let i = 1; i <= 3; i += 1) {
+        vec.appendChild(createEl('span', {
+          className: 'attn19p1-vec-divider',
+          style: { left: (i * 25) + '%' }
+        }));
+      }
+      vWrap.appendChild(label);
+      vWrap.appendChild(vec);
+      col.appendChild(vWrap);
+
+      col.appendChild(createEl('div', {
+        className: 'attn19p1-meaning',
+        text: ATTN_P1_MEANINGS[proj]
+      }));
+
+      projRow.appendChild(col);
+    });
+
+    // Populate SVG W-labels (× W with subscript)
+    ATTN_P1_PROJS.forEach((proj) => {
+      const labelEl = document.getElementById('attn19p1-wlabel-' + proj);
+      if (!labelEl) return;
+      while (labelEl.firstChild) labelEl.removeChild(labelEl.firstChild);
+      labelEl.appendChild(document.createTextNode('\u00d7 W'));
+      const tspan = document.createElementNS('http://www.w3.org/2000/svg', 'tspan');
+      tspan.setAttribute('dy', '3');
+      tspan.setAttribute('font-size', '0.8em');
+      tspan.textContent = proj.toUpperCase();
+      labelEl.appendChild(tspan);
+    });
+
+    if (!state.attentionP1.resizeBound) {
+      window.addEventListener('resize', () => {
+        if (!state.attentionP1.initialized) return;
+        updateAttentionP1Overlay();
+      });
+      state.attentionP1.resizeBound = true;
+    }
+
+    state.attentionP1.initialized = true;
+  }
+
+  const takeaway = document.getElementById('attn19p1-takeaway');
+  if (takeaway) takeaway.innerHTML = ATTN_P1_TAKEAWAYS[state.attentionP1.step] || ATTN_P1_TAKEAWAYS[0];
+  updateAttentionP1Overlay();
+}
+
+function updateAttentionP1Overlay() {
+  const stage = document.getElementById('attn19p1-stage');
+  const overlay = document.getElementById('attn19p1-overlay');
+  const xSat = document.getElementById('attn19p1-x-sat');
+  if (!stage || !overlay || !xSat) return;
+
+  const stageRect = stage.getBoundingClientRect();
+  if (stageRect.width < 1 || stageRect.height < 1) return;
+  overlay.setAttribute('viewBox', '0 0 ' + stageRect.width + ' ' + stageRect.height);
+
+  const anchor = (el, fx, fy) => {
+    const r = el.getBoundingClientRect();
+    return {
+      x: r.left - stageRect.left + r.width * fx,
+      y: r.top - stageRect.top + r.height * fy
+    };
+  };
+
+  const xBottom = anchor(xSat, 0.5, 1);
+  const linePad = Math.max(stageRect.height * 0.009, 3.5);
+  const labelOffsetX = Math.max(stageRect.width * 0.014, 5);
+
+  ATTN_P1_PROJS.forEach((proj) => {
+    const vec = document.getElementById('attn19p1-vec-' + proj);
+    const line = document.getElementById('attn19p1-line-' + proj);
+    const wLabel = document.getElementById('attn19p1-wlabel-' + proj);
+    if (!vec || !line || !wLabel) return;
+
+    const vecTop = anchor(vec, 0.5, 0);
+    const fromX = xBottom.x;
+    const fromY = xBottom.y + linePad;
+    const toX = vecTop.x;
+    const toY = vecTop.y - linePad;
+
+    line.setAttribute('x1', fromX.toFixed(2));
+    line.setAttribute('y1', fromY.toFixed(2));
+    line.setAttribute('x2', toX.toFixed(2));
+    line.setAttribute('y2', toY.toFixed(2));
+
+    const midX = (fromX + toX) * 0.5;
+    const midY = (fromY + toY) * 0.5;
+    wLabel.setAttribute('x', (midX + labelOffsetX).toFixed(2));
+    wLabel.setAttribute('y', midY.toFixed(2));
+    wLabel.setAttribute('text-anchor', 'start');
+    wLabel.setAttribute('dominant-baseline', 'middle');
+  });
+}
+
+function setAttentionP1Step(step) {
+  const slide = document.getElementById('slide-19');
+  const takeaway = document.getElementById('attn19p1-takeaway');
+  if (!slide || !takeaway) return;
+
+  const clamped = Math.max(0, Math.min(ATTN_P1_MAX_STEP, step));
+  state.attentionP1.step = clamped;
+
+  slide.classList.toggle('attn19p1-show-source', clamped >= 1);
+  slide.classList.toggle('attn19p1-show-headers', clamped >= 2);
+  slide.classList.toggle('attn19p1-show-q', clamped >= 3);
+  slide.classList.toggle('attn19p1-show-k', clamped >= 4);
+  slide.classList.toggle('attn19p1-show-v', clamped >= 5);
+  takeaway.innerHTML = ATTN_P1_TAKEAWAYS[clamped] || ATTN_P1_TAKEAWAYS[0];
+
+  updateAttentionP1Overlay();
+  requestAnimationFrame(updateAttentionP1Overlay);
+  if (state.attentionP1.overlayTimer) clearTimeout(state.attentionP1.overlayTimer);
+  state.attentionP1.overlayTimer = setTimeout(() => {
+    updateAttentionP1Overlay();
+    state.attentionP1.overlayTimer = null;
+  }, 240);
+}
+
+function runAttentionP1Step() {
+  if (!state.attentionP1.initialized) initAttentionP1Slide();
+  if (state.attentionP1.step >= ATTN_P1_MAX_STEP) return false;
+  setAttentionP1Step(state.attentionP1.step + 1);
+  return true;
+}
+
+function resetAttentionP1Slide() {
+  const slide = document.getElementById('slide-19');
+  if (!slide) return;
+  if (state.attentionP1.overlayTimer) {
+    clearTimeout(state.attentionP1.overlayTimer);
+    state.attentionP1.overlayTimer = null;
+  }
+  setAttentionP1Step(0);
+}
+
+/* ===================================================== */
+
+function resetAttentionQkvSlide() {
+  const slide = document.getElementById('slide-20');
   if (!slide) return;
   if (state.attentionQkv.overlayTimer) {
     clearTimeout(state.attentionQkv.overlayTimer);
@@ -2145,7 +2672,8 @@ function refreshSlides() {
 function resetSlideInteractions(slideEl) {
   if (!slideEl) return;
   if (slideEl.id === 'slide-18') resetAttentionIntroSlide();
-  if (slideEl.id === 'slide-19') resetAttentionQkvSlide();
+  if (slideEl.id === 'slide-19') resetAttentionP1Slide();
+  if (slideEl.id === 'slide-20') resetAttentionQkvSlide();
 }
 
 function goToSlide(index) {
@@ -2172,6 +2700,10 @@ function goToSlide(index) {
     setAttentionIntroStep(0);
   }
   if (activeSlide.id === 'slide-19') {
+    initAttentionP1Slide();
+    setAttentionP1Step(0);
+  }
+  if (activeSlide.id === 'slide-20') {
     initAttentionQkvSlide();
     setAttentionQkvStep(0);
   }
@@ -2197,7 +2729,8 @@ function nextStep() {
   const active = state.nav.slides[state.nav.current];
   if (!active) return false;
   if (active.id === 'slide-18') return runAttentionIntroStep();
-  if (active.id === 'slide-19') return runAttentionQkvStep();
+  if (active.id === 'slide-19') return runAttentionP1Step();
+  if (active.id === 'slide-20') return runAttentionQkvStep();
   return false;
 }
 
