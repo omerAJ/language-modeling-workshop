@@ -1317,6 +1317,395 @@
   .slide.attn18-show-flow #attn18-flow-group {
     opacity: 1;
   }
+  .attn19-subtitle {
+    margin-top: 0.2rem;
+    max-width: 40rem;
+  }
+  .attn19-layout {
+    margin-top: 0.85rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .attn19-stage {
+    --attn19-source-rgb: 90, 232, 142;
+    --attn19-focus-rgb: 123, 154, 255;
+    --attn19-label-col: clamp(6.8rem, 17vw, 10.2rem);
+    --attn19-score-row: 0.94rem;
+    --attn19-chip-row: auto;
+    --attn19-vector-row: 1.06rem;
+    --attn19-gap-xqk-row: clamp(3.2rem, 9.5vh, 4.4rem);
+    --attn19-gap-kv-row: clamp(0.56rem, 1.3vh, 0.76rem);
+    position: relative;
+    width: min(100%, 56rem);
+    min-height: clamp(16rem, 52vh, 22.5rem);
+    padding: clamp(0.95rem, 2vw, 1.4rem) clamp(0.8rem, 2.4vw, 1.7rem);
+    border-color: rgba(123,154,255,0.34);
+    background:
+      radial-gradient(circle at 14% 14%, rgba(123,154,255,0.1), transparent 42%),
+      var(--surface);
+    overflow: hidden;
+  }
+  .attn19-frame {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    display: grid;
+    grid-template-columns: var(--attn19-label-col) minmax(0, 1fr);
+    gap: clamp(0.36rem, 0.9vw, 0.8rem);
+    align-items: start;
+    padding-top: clamp(1.15rem, 4.2vh, 1.9rem);
+  }
+  .attn19-row-labels {
+    display: grid;
+    grid-template-rows:
+      var(--attn19-score-row)
+      var(--attn19-chip-row)
+      var(--attn19-vector-row)
+      var(--attn19-gap-xqk-row)
+      var(--attn19-vector-row)
+      var(--attn19-gap-kv-row)
+      var(--attn19-vector-row);
+    align-items: center;
+  }
+  .attn19-row-label {
+    font-size: 0.62rem;
+    letter-spacing: 0.01em;
+    color: rgba(182,194,223,0.84);
+    white-space: nowrap;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+  .attn19-row-label.x {
+    grid-row: 3;
+    opacity: 1;
+  }
+  .attn19-row-label.k {
+    grid-row: 5;
+    opacity: 0;
+    transform: translateY(0.2rem);
+  }
+  .attn19-row-label.v {
+    grid-row: 7;
+    opacity: 0;
+    transform: translateY(0.2rem);
+  }
+  .attn19-proj-hint {
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 3;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.53rem;
+    color: rgba(190,205,242,0.86);
+    border: 1px solid rgba(123,154,255,0.3);
+    border-radius: 0.28rem;
+    background: rgba(20,26,42,0.62);
+    padding: 0.08rem 0.26rem;
+    opacity: 0;
+    visibility: hidden;
+    transform: translate(-100%, -50%) translateY(0.12rem);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    white-space: nowrap;
+    pointer-events: none;
+  }
+  .attn19-cols {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: clamp(0.28rem, 0.8vw, 0.68rem);
+    align-items: start;
+  }
+  .attn19-col {
+    position: relative;
+    display: grid;
+    grid-template-rows:
+      var(--attn19-score-row)
+      var(--attn19-chip-row)
+      var(--attn19-vector-row)
+      var(--attn19-gap-xqk-row)
+      var(--attn19-vector-row)
+      var(--attn19-gap-kv-row)
+      var(--attn19-vector-row);
+    align-items: center;
+    gap: 0;
+  }
+  .attn19-score-slot {
+    grid-row: 1;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    height: 100%;
+  }
+  .attn19-score-bar {
+    width: 0.42rem;
+    height: calc(var(--score, 0.2) * 0.9rem);
+    border-radius: 0.24rem 0.24rem 0.14rem 0.14rem;
+    border: 1px solid rgba(var(--attn19-focus-rgb), 0.78);
+    background: rgba(var(--attn19-focus-rgb), 0.34);
+    opacity: 0;
+    transform: scaleY(0);
+    transform-origin: bottom center;
+    transition: opacity 0.24s ease, transform 0.24s ease;
+  }
+  .attn19-chip-wrap {
+    grid-row: 2;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    opacity: 1;
+  }
+  .attn19-focus-label {
+    position: absolute;
+    left: 50%;
+    bottom: calc(100% + 0.18rem);
+    width: max-content;
+    font-size: 0.54rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: rgba(207,220,252,0.92);
+    transform: translateX(-50%);
+    pointer-events: none;
+    white-space: nowrap;
+  }
+  .attn19-token-chip {
+    width: 100%;
+    text-align: center;
+    border: 1px solid var(--border);
+    border-radius: 0.44rem;
+    padding: 0.32rem 0.28rem;
+    background: var(--surface2);
+    color: #dbe1f6;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.79rem;
+    line-height: 1.2;
+  }
+  .attn19-col[data-token="sat"] .attn19-token-chip {
+    border-color: rgba(var(--attn19-focus-rgb), 0.84);
+    box-shadow: 0 0 0 0.1rem rgba(var(--attn19-focus-rgb), 0.5);
+    background: rgba(var(--attn19-focus-rgb), 0.14);
+  }
+  .attn19-col[data-token="cat"] .attn19-token-chip,
+  .attn19-col[data-token="on"] .attn19-token-chip,
+  .attn19-col[data-token="the"] .attn19-token-chip,
+  .attn19-col[data-token="mat"] .attn19-token-chip {
+    border-color: rgba(var(--attn19-source-rgb), 0.44);
+    background: rgba(var(--attn19-source-rgb), 0.09);
+  }
+  .attn19-vector-wrap {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 2.72rem minmax(0, 1fr);
+    align-items: center;
+    column-gap: 0.28rem;
+    min-height: 1rem;
+    transition: opacity 0.22s ease, transform 0.22s ease, visibility 0.22s ease;
+  }
+  .attn19-vector-wrap-x {
+    grid-row: 3;
+    opacity: 1;
+    visibility: visible;
+  }
+  .attn19-vector-wrap-k {
+    grid-row: 5;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(0.22rem);
+  }
+  .attn19-vector-wrap-v {
+    grid-row: 7;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(0.22rem);
+  }
+  .attn19-vector-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6rem;
+    color: rgba(188,199,225,0.74);
+    white-space: nowrap;
+    text-align: right;
+  }
+  .attn19-col[data-token="sat"] .attn19-vector-label {
+    color: rgba(188,205,250,0.86);
+  }
+  .attn19-col[data-token="cat"] .attn19-vector-label,
+  .attn19-col[data-token="on"] .attn19-vector-label,
+  .attn19-col[data-token="the"] .attn19-vector-label,
+  .attn19-col[data-token="mat"] .attn19-vector-label {
+    color: rgba(170,233,196,0.84);
+  }
+  .attn19-vector {
+    position: relative;
+    height: 0.9rem;
+    border-radius: 0.3rem;
+    border: 1px solid rgba(184,194,221,0.4);
+    background: rgba(184,194,221,0.08);
+    overflow: hidden;
+  }
+  .attn19-vector-k {
+    border-color: rgba(var(--attn19-source-rgb), 0.44);
+    background: rgba(var(--attn19-source-rgb), 0.07);
+  }
+  .attn19-vector-q {
+    border-color: rgba(var(--attn19-focus-rgb), 0.7);
+    background: rgba(var(--attn19-focus-rgb), 0.14);
+  }
+  .attn19-vector-divider {
+    position: absolute;
+    top: 0.08rem;
+    bottom: 0.08rem;
+    width: 1px;
+    background: rgba(201,212,240,0.38);
+  }
+  .attn19-proj-tick {
+    justify-self: center;
+    width: 1.8px;
+    height: 0.32rem;
+    border-radius: 999px;
+    background: rgba(166,178,210,0.48);
+    opacity: 0;
+    visibility: hidden;
+    transform: scaleY(0.7);
+    transform-origin: center top;
+    transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s ease;
+  }
+  .attn19-proj-tick.wk {
+    grid-row: 4;
+  }
+  .attn19-proj-tick.wv {
+    grid-row: 6;
+  }
+  .attn19-overlay {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 2;
+  }
+  .attn19-overlay-group {
+    opacity: 0;
+    transition: opacity 0.22s ease;
+  }
+  .attn19-q-link-line {
+    stroke: rgba(var(--attn19-focus-rgb), 0.92);
+    stroke-width: 1.4;
+    fill: none;
+  }
+  .attn19-compare-line {
+    stroke: rgba(var(--attn19-focus-rgb), 0.62);
+    stroke-width: 1.12;
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .attn19-compare-head {
+    fill: rgba(var(--attn19-focus-rgb), 0.84);
+    opacity: 0;
+    transition: opacity 0.14s ease;
+  }
+  .attn19-compare-dot {
+    fill: rgba(var(--attn19-focus-rgb), 0.78);
+    opacity: 0;
+    transition: opacity 0.14s ease;
+  }
+  .attn19-overlay-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.6rem;
+    fill: #bfd0f1;
+    font-weight: 600;
+  }
+  .attn19-overlay-label.footnote {
+    font-size: 0.51rem;
+    fill: rgba(191,208,241,0.78);
+    font-weight: 500;
+  }
+  .attn19-q-callout {
+    position: absolute;
+    z-index: 3;
+    left: 50%;
+    top: 0;
+    width: clamp(7.2rem, 16vw, 8.9rem);
+    border: 1px solid rgba(var(--attn19-focus-rgb), 0.46);
+    border-radius: 0.58rem;
+    background: rgba(var(--attn19-focus-rgb), 0.1);
+    padding: 0.24rem 0.28rem;
+    display: grid;
+    gap: 0.16rem;
+    opacity: 0;
+    visibility: hidden;
+    transform: translate(-50%, -0.2rem);
+    transition: opacity 0.22s ease, transform 0.22s ease, visibility 0.22s ease;
+  }
+  .attn19-q-title {
+    font-size: 0.55rem;
+    letter-spacing: 0.01em;
+    color: rgba(203,219,255,0.92);
+  }
+  .attn19-vector-wrap-q {
+    grid-template-columns: 2.5rem minmax(0, 1fr);
+    min-height: 0.94rem;
+  }
+  .attn19-vector-label-q {
+    color: rgba(212,225,255,0.95);
+    font-size: 0.58rem;
+  }
+  .attn19-q-hint {
+    font-size: 0.55rem;
+    color: rgba(var(--attn19-focus-rgb), 0.88);
+    font-weight: 600;
+    letter-spacing: 0.01em;
+  }
+  .attn19-takeaway {
+    margin-top: 0.82rem;
+    border: 1px solid rgba(123,154,255,0.28);
+    border-radius: 0.58rem;
+    background: rgba(123,154,255,0.1);
+    display: flex;
+    align-items: center;
+    padding: 0.62rem 0.72rem;
+    font-size: 0.85rem;
+    color: #dbe4ff;
+    line-height: 1.45;
+  }
+  .slide.attn19-show-k .attn19-row-label.k,
+  .slide.attn19-show-k .attn19-vector-wrap-k,
+  .slide.attn19-show-k .attn19-proj-tick.wk {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+  .slide.attn19-show-k .attn19-proj-hint.wk {
+    opacity: 1;
+    visibility: visible;
+    transform: translate(-100%, -50%);
+  }
+  .slide.attn19-show-v .attn19-row-label.v,
+  .slide.attn19-show-v .attn19-vector-wrap-v,
+  .slide.attn19-show-v .attn19-proj-tick.wv {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+  .slide.attn19-show-v .attn19-proj-hint.wv {
+    opacity: 1;
+    visibility: visible;
+    transform: translate(-100%, -50%);
+  }
+  .slide.attn19-show-q #attn19-q-callout {
+    opacity: 1;
+    visibility: visible;
+    transform: translate(-50%, 0);
+  }
+  .slide.attn19-show-q #attn19-q-group {
+    opacity: 1;
+    visibility: visible;
+  }
+  .slide.attn19-show-compare #attn19-compare-group {
+    opacity: 1;
+  }
+  .slide.attn19-compare-done .attn19-score-bar {
+    opacity: 1;
+    transform: scaleY(1);
+  }
 
   @media (max-width: 56rem) {
     .pair-grid {
@@ -1379,6 +1768,75 @@
     }
     .attn18-takeaway {
       font-size: 0.79rem;
+      padding: 0.56rem 0.62rem;
+    }
+    .attn19-layout {
+      margin-top: 0.72rem;
+    }
+    .attn19-stage {
+      --attn19-label-col: 6.5rem;
+      --attn19-score-row: 0.82rem;
+      --attn19-vector-row: 0.92rem;
+      --attn19-gap-xqk-row: clamp(2.8rem, 10vh, 3.8rem);
+      --attn19-gap-kv-row: clamp(0.48rem, 1.4vh, 0.68rem);
+      min-height: clamp(15rem, 60vh, 20rem);
+      padding: 0.9rem 0.72rem;
+    }
+    .attn19-frame {
+      gap: 0.26rem;
+      padding-top: clamp(1.05rem, 4.8vh, 1.55rem);
+    }
+    .attn19-row-label {
+      font-size: 0.5rem;
+    }
+    .attn19-proj-hint {
+      font-size: 0.46rem;
+      padding: 0.05rem 0.2rem;
+    }
+    .attn19-cols {
+      gap: 0.2rem;
+    }
+    .attn19-token-chip {
+      font-size: 0.66rem;
+      padding: 0.24rem 0.16rem;
+    }
+    .attn19-focus-label {
+      font-size: 0.46rem;
+    }
+    .attn19-vector-wrap,
+    .attn19-vector-wrap-q {
+      grid-template-columns: 2rem minmax(0, 1fr);
+      column-gap: 0.2rem;
+      min-height: 0.86rem;
+    }
+    .attn19-vector-label,
+    .attn19-vector-label-q {
+      font-size: 0.5rem;
+    }
+    .attn19-vector {
+      height: 0.72rem;
+    }
+    .attn19-q-callout {
+      width: clamp(7.2rem, 16vw, 8.9rem);
+      padding: 0.24rem 0.28rem;
+      gap: 0.16rem;
+    }
+    .attn19-q-title,
+    .attn19-q-hint {
+      font-size: 0.48rem;
+    }
+    .attn19-overlay-label {
+      font-size: 0.51rem;
+    }
+    .attn19-overlay-label.footnote {
+      font-size: 0.44rem;
+    }
+    .attn19-score-bar {
+      width: 0.34rem;
+      height: calc(var(--score, 0.2) * 0.78rem);
+    }
+    .attn19-takeaway {
+      font-size: 0.78rem;
       padding: 0.56rem 0.62rem;
     }
   }
@@ -2622,6 +3080,74 @@ params in E = 50,257 × 768 = 38,597,376</div>
     <div class="attn18-takeaway" id="attn18-takeaway">Next: how does sat decide which tokens matter — and what to copy from them?</div>
   </div>
 
+  <!-- ═══════ SLIDE 19 — ATTENTION Q/K/V + SCORES ═══════ -->
+  <div class="slide" id="slide-19">
+    <span class="section-tag">Attention</span>
+    <div class="badge concept">Mechanism</div>
+    <h2>Attention</h2>
+    <p class="small-text attn19-subtitle">Step 1: project embeddings into Q/K/V subspaces</p>
+
+    <div class="attn19-layout">
+      <div class="card attn19-stage" id="attn19-stage">
+        <svg class="attn19-overlay" id="attn19-overlay" aria-hidden="true">
+          <defs>
+            <marker id="attn19-arrow-focus" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto" markerUnits="userSpaceOnUse">
+              <path d="M0,0 L8,4 L0,8 z" fill="rgba(123,154,255,0.94)"></path>
+            </marker>
+          </defs>
+          <g id="attn19-q-group" class="attn19-overlay-group">
+            <line id="attn19-q-link" class="attn19-q-link-line" marker-end="url(#attn19-arrow-focus)"></line>
+          </g>
+          <g id="attn19-compare-group" class="attn19-overlay-group">
+            <path id="attn19-compare-path-cat" class="attn19-compare-line"></path>
+            <polygon id="attn19-compare-head-cat" class="attn19-compare-head"></polygon>
+            <circle id="attn19-compare-dot-cat" class="attn19-compare-dot"></circle>
+            <path id="attn19-compare-path-sat" class="attn19-compare-line"></path>
+            <polygon id="attn19-compare-head-sat" class="attn19-compare-head"></polygon>
+            <circle id="attn19-compare-dot-sat" class="attn19-compare-dot"></circle>
+            <path id="attn19-compare-path-on" class="attn19-compare-line"></path>
+            <polygon id="attn19-compare-head-on" class="attn19-compare-head"></polygon>
+            <circle id="attn19-compare-dot-on" class="attn19-compare-dot"></circle>
+            <path id="attn19-compare-path-the" class="attn19-compare-line"></path>
+            <polygon id="attn19-compare-head-the" class="attn19-compare-head"></polygon>
+            <circle id="attn19-compare-dot-the" class="attn19-compare-dot"></circle>
+            <path id="attn19-compare-path-mat" class="attn19-compare-line"></path>
+            <polygon id="attn19-compare-head-mat" class="attn19-compare-head"></polygon>
+            <circle id="attn19-compare-dot-mat" class="attn19-compare-dot"></circle>
+            <text id="attn19-score-caption" class="attn19-overlay-label">scores: how well q_sat matches each k_j</text>
+            <text id="attn19-score-footnote" class="attn19-overlay-label footnote">score_j = similarity(q_sat, k_j)</text>
+          </g>
+        </svg>
+
+        <div class="attn19-q-callout" id="attn19-q-callout">
+          <div class="attn19-q-title">Query (Q)</div>
+          <div class="attn19-vector-wrap attn19-vector-wrap-q">
+            <span class="attn19-vector-label attn19-vector-label-q">q_sat</span>
+            <div class="attn19-vector attn19-vector-q" id="attn19-q-sat">
+              <span class="attn19-vector-divider" style="left:25%"></span>
+              <span class="attn19-vector-divider" style="left:50%"></span>
+              <span class="attn19-vector-divider" style="left:75%"></span>
+            </div>
+          </div>
+          <div class="attn19-q-hint">who sat?</div>
+        </div>
+
+        <div class="attn19-frame">
+          <div class="attn19-row-labels">
+            <div class="attn19-row-label x">Embeddings (X)</div>
+            <div class="attn19-row-label k" id="attn19-row-k-label">Keys (K)</div>
+            <div class="attn19-row-label v" id="attn19-row-v-label">Values (V)</div>
+          </div>
+          <div class="attn19-cols" id="attn19-cols"></div>
+          <div class="attn19-proj-hint wk" id="attn19-label-wk">× W_K</div>
+          <div class="attn19-proj-hint wv" id="attn19-label-wv">× W_V</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="attn19-takeaway" id="attn19-takeaway">We start from embeddings x₁…xₙ</div>
+  </div>
+
 </div>
 
 <div class="bottom-bar">
@@ -2742,6 +3268,35 @@ const ATTN_INTRO_FLOW_HEIGHTS = {
 const ATTN_INTRO_FLOW_ANIM_MS = 380;
 const ATTN_INTRO_FLOW_HEAD_FADE_MS = 150;
 const ATTN_INTRO_MAX_STEP = 8;
+const ATTN_QKV_TOKENS = ['cat', 'sat', 'on', 'the', 'mat'];
+const ATTN_QKV_FOCUS = 'sat';
+const ATTN_QKV_COMPARE_TOKENS = ['cat', 'sat', 'on', 'the', 'mat'];
+const ATTN_QKV_COMPARE_CURVE_FACTORS = {
+  cat: 0.4,
+  sat: 0.52,
+  on: 0.58,
+  the: 0.64,
+  mat: 0.46
+};
+const ATTN_QKV_SCORE_LEVELS = {
+  cat: 1,
+  sat: 0.44,
+  on: 0.58,
+  the: 0.34,
+  mat: 0.52
+};
+const ATTN_QKV_TAKEAWAYS = [
+  'We start from embeddings x₁…xₙ',
+  'Project each x into a key: k = x W_K',
+  'Also project into a value: v = x W_V (this is what gets copied)',
+  'For the focus token, build a query: q_sat = x_sat W_Q',
+  'Compute scores: score_j = similarity(q_sat, k_j)'
+];
+const ATTN_QKV_COMPARE_DRAW_MS = 360;
+const ATTN_QKV_COMPARE_HEAD_FADE_MS = 140;
+const ATTN_QKV_COMPARE_STAGGER_MS = 190;
+const ATTN_QKV_SCORE_REVEAL_DELAY_MS = 140;
+const ATTN_QKV_MAX_STEP = 4;
 
 let projectionState = {
   initialized: false,
@@ -2763,6 +3318,15 @@ let attentionIntroState = {
   overlayTimer: null,
   flowTimers: []
 };
+let attentionQkvState = {
+  initialized: false,
+  step: 0,
+  resizeBound: false,
+  overlayTimer: null,
+  compareTimers: [],
+  compareDone: false,
+  compareVisibleCount: 0
+};
 
 function typesetMath(root = document) {
   if (!window.MathJax || !window.MathJax.typesetPromise) return;
@@ -2777,6 +3341,7 @@ function refreshSlides() {
 function resetSlideInteractions(slideEl) {
   if (slideEl.id === 'slide-16') resetProjectionSlide();
   if (slideEl.id === 'slide-18') resetAttentionIntroSlide();
+  if (slideEl.id === 'slide-19') resetAttentionQkvSlide();
 }
 
 function resetHiddenContent(slideEl) {
@@ -2812,6 +3377,10 @@ function goTo(index) {
   if (slides[index].id === 'slide-18') {
     initAttentionIntroSlide();
     setAttentionIntroStep(0);
+  }
+  if (slides[index].id === 'slide-19') {
+    initAttentionQkvSlide();
+    setAttentionQkvStep(0);
   }
 }
 
@@ -3236,11 +3805,473 @@ function resetAttentionIntroSlide() {
   setAttentionIntroStep(0);
 }
 
+function createAttentionQkvVectorRect(vectorId, extraClass = '') {
+  const vector = document.createElement('div');
+  vector.className = 'attn19-vector' + (extraClass ? ' ' + extraClass : '');
+  vector.id = vectorId;
+  for (let i = 1; i <= 3; i += 1) {
+    const divider = document.createElement('span');
+    divider.className = 'attn19-vector-divider';
+    divider.style.left = (i * 25) + '%';
+    vector.appendChild(divider);
+  }
+  return vector;
+}
+
+function createAttentionQkvColumn(token) {
+  const col = document.createElement('div');
+  col.className = 'attn19-col';
+  col.dataset.token = token;
+
+  const scoreSlot = document.createElement('div');
+  scoreSlot.className = 'attn19-score-slot';
+  const scoreBar = document.createElement('div');
+  scoreBar.className = 'attn19-score-bar';
+  scoreBar.id = 'attn19-score-' + token;
+  scoreBar.style.setProperty('--score', String(ATTN_QKV_SCORE_LEVELS[token] || 0.2));
+  scoreSlot.appendChild(scoreBar);
+  col.appendChild(scoreSlot);
+
+  const chipWrap = document.createElement('div');
+  chipWrap.className = 'attn19-chip-wrap';
+  if (token === ATTN_QKV_FOCUS) {
+    const focusLabel = document.createElement('span');
+    focusLabel.className = 'attn19-focus-label';
+    focusLabel.textContent = 'FOCUS';
+    chipWrap.appendChild(focusLabel);
+  }
+  const chip = document.createElement('div');
+  chip.className = 'attn19-token-chip';
+  chip.id = 'attn19-chip-' + token;
+  chip.textContent = token;
+  chipWrap.appendChild(chip);
+  col.appendChild(chipWrap);
+
+  const xWrap = document.createElement('div');
+  xWrap.className = 'attn19-vector-wrap attn19-vector-wrap-x';
+  xWrap.id = 'attn19-vector-wrap-x-' + token;
+  const xLabel = document.createElement('span');
+  xLabel.className = 'attn19-vector-label';
+  xLabel.textContent = 'x_' + token;
+  xWrap.appendChild(xLabel);
+  xWrap.appendChild(createAttentionQkvVectorRect('attn19-vector-x-' + token));
+  col.appendChild(xWrap);
+
+  const wkTick = document.createElement('span');
+  wkTick.className = 'attn19-proj-tick wk';
+  wkTick.id = 'attn19-proj-wk-' + token;
+  col.appendChild(wkTick);
+
+  const kWrap = document.createElement('div');
+  kWrap.className = 'attn19-vector-wrap attn19-vector-wrap-k';
+  kWrap.id = 'attn19-vector-wrap-k-' + token;
+  const kLabel = document.createElement('span');
+  kLabel.className = 'attn19-vector-label';
+  kLabel.textContent = 'k_' + token;
+  kWrap.appendChild(kLabel);
+  kWrap.appendChild(createAttentionQkvVectorRect('attn19-vector-k-' + token, 'attn19-vector-k'));
+  col.appendChild(kWrap);
+
+  const wvTick = document.createElement('span');
+  wvTick.className = 'attn19-proj-tick wv';
+  wvTick.id = 'attn19-proj-wv-' + token;
+  col.appendChild(wvTick);
+
+  const vWrap = document.createElement('div');
+  vWrap.className = 'attn19-vector-wrap attn19-vector-wrap-v';
+  vWrap.id = 'attn19-vector-wrap-v-' + token;
+  const vLabel = document.createElement('span');
+  vLabel.className = 'attn19-vector-label';
+  vLabel.textContent = 'v_' + token;
+  vWrap.appendChild(vLabel);
+  vWrap.appendChild(createAttentionQkvVectorRect('attn19-vector-v-' + token));
+  col.appendChild(vWrap);
+
+  return col;
+}
+
+function clearAttentionQkvCompareTimers() {
+  attentionQkvState.compareTimers.forEach((timerId) => clearTimeout(timerId));
+  attentionQkvState.compareTimers = [];
+}
+
+function hideAttentionQkvCompareArrow(token) {
+  const path = document.getElementById('attn19-compare-path-' + token);
+  const head = document.getElementById('attn19-compare-head-' + token);
+  const dot = document.getElementById('attn19-compare-dot-' + token);
+  if (!path) return;
+  let length = 0;
+  if (typeof path.getTotalLength === 'function') {
+    try {
+      length = path.getTotalLength();
+    } catch (err) {
+      length = 0;
+    }
+  }
+  const dash = length > 0 ? length.toFixed(2) : '0';
+  path.style.transition = 'none';
+  path.style.strokeDasharray = dash;
+  path.style.strokeDashoffset = dash;
+  if (!head) return;
+  head.style.transition = 'none';
+  head.style.opacity = '0';
+  if (!dot) return;
+  dot.style.transition = 'none';
+  dot.style.opacity = '0';
+}
+
+function showAttentionQkvCompareArrow(token) {
+  const path = document.getElementById('attn19-compare-path-' + token);
+  const head = document.getElementById('attn19-compare-head-' + token);
+  const dot = document.getElementById('attn19-compare-dot-' + token);
+  if (!path) return;
+  let length = 0;
+  if (typeof path.getTotalLength === 'function') {
+    try {
+      length = path.getTotalLength();
+    } catch (err) {
+      length = 0;
+    }
+  }
+  const dash = length > 0 ? length.toFixed(2) : '0';
+  path.style.transition = 'none';
+  path.style.strokeDasharray = dash;
+  path.style.strokeDashoffset = '0';
+  if (!head) return;
+  head.style.transition = 'none';
+  head.style.opacity = '1';
+  if (!dot) return;
+  dot.style.transition = 'none';
+  dot.style.opacity = '1';
+}
+
+function syncAttentionQkvCompareVisuals(visibleCount = attentionQkvState.compareVisibleCount) {
+  const clamped = Math.max(0, Math.min(ATTN_QKV_COMPARE_TOKENS.length, visibleCount));
+  ATTN_QKV_COMPARE_TOKENS.forEach((token, idx) => {
+    if (idx < clamped) showAttentionQkvCompareArrow(token);
+    else hideAttentionQkvCompareArrow(token);
+  });
+}
+
+function animateAttentionQkvCompareArrow(token) {
+  const path = document.getElementById('attn19-compare-path-' + token);
+  const head = document.getElementById('attn19-compare-head-' + token);
+  const dot = document.getElementById('attn19-compare-dot-' + token);
+  if (!path || !head || !dot) return;
+
+  hideAttentionQkvCompareArrow(token);
+  void path.getBoundingClientRect();
+  path.style.transition = 'stroke-dashoffset ' + ATTN_QKV_COMPARE_DRAW_MS + 'ms cubic-bezier(0.34, 0.08, 0.22, 1)';
+  path.style.strokeDashoffset = '0';
+
+  const headTimer = setTimeout(() => {
+    head.style.transition = 'opacity ' + ATTN_QKV_COMPARE_HEAD_FADE_MS + 'ms ease';
+    head.style.opacity = '1';
+    dot.style.transition = 'opacity ' + ATTN_QKV_COMPARE_HEAD_FADE_MS + 'ms ease';
+    dot.style.opacity = '1';
+  }, Math.max(ATTN_QKV_COMPARE_DRAW_MS - 70, 120));
+  attentionQkvState.compareTimers.push(headTimer);
+}
+
+function runAttentionQkvCompareSequence() {
+  const slide = document.getElementById('slide-19');
+  if (!slide) return;
+  clearAttentionQkvCompareTimers();
+  attentionQkvState.compareDone = false;
+  attentionQkvState.compareVisibleCount = 0;
+  slide.classList.remove('attn19-compare-done');
+  syncAttentionQkvCompareVisuals(0);
+
+  ATTN_QKV_COMPARE_TOKENS.forEach((token, idx) => {
+    const timer = setTimeout(() => {
+      if (attentionQkvState.step < 4) return;
+      attentionQkvState.compareVisibleCount = idx + 1;
+      animateAttentionQkvCompareArrow(token);
+
+      if (idx === ATTN_QKV_COMPARE_TOKENS.length - 1) {
+        const doneTimer = setTimeout(() => {
+          if (attentionQkvState.step < 4) return;
+          attentionQkvState.compareDone = true;
+          attentionQkvState.compareVisibleCount = ATTN_QKV_COMPARE_TOKENS.length;
+          slide.classList.add('attn19-compare-done');
+          syncAttentionQkvCompareVisuals(attentionQkvState.compareVisibleCount);
+        }, ATTN_QKV_COMPARE_DRAW_MS + ATTN_QKV_SCORE_REVEAL_DELAY_MS);
+        attentionQkvState.compareTimers.push(doneTimer);
+      }
+    }, idx * ATTN_QKV_COMPARE_STAGGER_MS);
+    attentionQkvState.compareTimers.push(timer);
+  });
+}
+
+function updateAttentionQkvOverlay() {
+  const stage = document.getElementById('attn19-stage');
+  const overlay = document.getElementById('attn19-overlay');
+  const qCallout = document.getElementById('attn19-q-callout');
+  const qVector = document.getElementById('attn19-q-sat');
+  const satChip = document.getElementById('attn19-chip-' + ATTN_QKV_FOCUS);
+  const satXVector = document.getElementById('attn19-vector-x-' + ATTN_QKV_FOCUS);
+  const satKVector = document.getElementById('attn19-vector-k-' + ATTN_QKV_FOCUS);
+  if (!stage || !overlay || !qCallout || !qVector || !satChip || !satXVector || !satKVector) return;
+
+  const stageRect = stage.getBoundingClientRect();
+  if (stageRect.width < 1 || stageRect.height < 1) return;
+  const stageH = stageRect.height;
+  overlay.setAttribute('viewBox', '0 0 ' + stageRect.width + ' ' + stageRect.height);
+
+  const anchor = (el, x, y) => {
+    const rect = el.getBoundingClientRect();
+    return {
+      x: rect.left - stageRect.left + rect.width * x,
+      y: rect.top - stageRect.top + rect.height * y
+    };
+  };
+
+  const satChipRect = satChip.getBoundingClientRect();
+  const satCenterX = satChipRect.left - stageRect.left + satChipRect.width * 0.5;
+  const xSatBottom = anchor(satXVector, 0.5, 1);
+  const kSatTop = anchor(satKVector, 0.5, 0);
+  const qCalloutRect = qCallout.getBoundingClientRect();
+  const gapFromX = Math.max(stageH * 0.03, 10);
+  const gapToK = Math.max(stageH * 0.022, 8);
+  const qTopDesired = xSatBottom.y + gapFromX;
+  const qTopMax = kSatTop.y - qCalloutRect.height - gapToK;
+  const qTop = Math.max(stageH * 0.02, Math.min(qTopDesired, qTopMax));
+  qCallout.style.left = satCenterX.toFixed(2) + 'px';
+  qCallout.style.top = qTop.toFixed(2) + 'px';
+
+  const qVectorTop = anchor(qVector, 0.5, 0);
+  const qBottom = anchor(qVector, 0.5, 1);
+  const qLink = document.getElementById('attn19-q-link');
+  if (qLink) {
+    const pad = Math.max(stageH * 0.007, 3.4);
+    qLink.setAttribute('x1', xSatBottom.x.toFixed(2));
+    qLink.setAttribute('y1', (xSatBottom.y + pad).toFixed(2));
+    qLink.setAttribute('x2', qVectorTop.x.toFixed(2));
+    qLink.setAttribute('y2', (qVectorTop.y - pad).toFixed(2));
+  }
+
+  const labelWk = document.getElementById('attn19-label-wk');
+  const labelWv = document.getElementById('attn19-label-wv');
+  const wkTick = document.getElementById('attn19-proj-wk-cat');
+  const wvTick = document.getElementById('attn19-proj-wv-cat');
+  if (labelWk && wkTick) {
+    const tickRect = wkTick.getBoundingClientRect();
+    const x = tickRect.left - stageRect.left - Math.max(stageRect.width * 0.028, 14);
+    const y = tickRect.top - stageRect.top + tickRect.height * 0.5;
+    labelWk.style.left = x.toFixed(2) + 'px';
+    labelWk.style.top = y.toFixed(2) + 'px';
+  }
+  if (labelWv && wvTick) {
+    const tickRect = wvTick.getBoundingClientRect();
+    const x = tickRect.left - stageRect.left - Math.max(stageRect.width * 0.028, 14);
+    const y = tickRect.top - stageRect.top + tickRect.height * 0.5;
+    labelWv.style.left = x.toFixed(2) + 'px';
+    labelWv.style.top = y.toFixed(2) + 'px';
+  }
+
+  let compareMinX = qBottom.x;
+  let compareMaxX = qBottom.x;
+  let compareMinControlY = qBottom.y;
+  const compareSource = {
+    x: qBottom.x,
+    y: qBottom.y
+  };
+
+  ATTN_QKV_COMPARE_TOKENS.forEach((token) => {
+    const kVector = document.getElementById('attn19-vector-k-' + token);
+    const path = document.getElementById('attn19-compare-path-' + token);
+    const head = document.getElementById('attn19-compare-head-' + token);
+    const dot = document.getElementById('attn19-compare-dot-' + token);
+    if (!kVector || !path || !head || !dot) return;
+
+    const kTop = anchor(kVector, 0.5, 0);
+    const target = {
+      x: kTop.x,
+      y: kTop.y + Math.max(stageH * 0.003, 1)
+    };
+    const distanceX = Math.abs(compareSource.x - target.x);
+    const distanceY = target.y - compareSource.y;
+    const curveFactor = ATTN_QKV_COMPARE_CURVE_FACTORS[token] || 0.5;
+    let controlY = compareSource.y + distanceY * curveFactor + distanceX * 0.01;
+    const controlYMax = target.y - Math.max(stageH * 0.006, 2.2);
+    if (controlY > controlYMax) controlY = controlYMax;
+    const cp1x = compareSource.x + (target.x - compareSource.x) * 0.3;
+    const cp2x = compareSource.x + (target.x - compareSource.x) * 0.72;
+
+    compareMinX = Math.min(compareMinX, target.x);
+    compareMaxX = Math.max(compareMaxX, target.x);
+    compareMinControlY = Math.min(compareMinControlY, controlY);
+
+    const d = 'M ' + compareSource.x.toFixed(2) + ' ' + compareSource.y.toFixed(2)
+      + ' C ' + cp1x.toFixed(2) + ' ' + controlY.toFixed(2)
+      + ' ' + cp2x.toFixed(2) + ' ' + controlY.toFixed(2)
+      + ' ' + target.x.toFixed(2) + ' ' + target.y.toFixed(2);
+    path.setAttribute('d', d);
+
+    const dirX = target.x - cp2x;
+    const dirY = target.y - controlY;
+    const dirLen = Math.hypot(dirX, dirY) || 1;
+    const unitX = dirX / dirLen;
+    const unitY = dirY / dirLen;
+    const headLen = Math.max(stageH * 0.022, 5.1);
+    const wing = headLen * 0.54;
+    const baseX = target.x - unitX * headLen;
+    const baseY = target.y - unitY * headLen;
+    const wingX = -unitY * wing;
+    const wingY = unitX * wing;
+    const points = target.x.toFixed(2) + ',' + target.y.toFixed(2)
+      + ' ' + (baseX + wingX).toFixed(2) + ',' + (baseY + wingY).toFixed(2)
+      + ' ' + (baseX - wingX).toFixed(2) + ',' + (baseY - wingY).toFixed(2);
+    head.setAttribute('points', points);
+
+    dot.setAttribute('cx', target.x.toFixed(2));
+    dot.setAttribute('cy', target.y.toFixed(2));
+    dot.setAttribute('r', Math.max(stageH * 0.0052, 1.7).toFixed(2));
+  });
+
+  const scoreCaption = document.getElementById('attn19-score-caption');
+  const scoreFootnote = document.getElementById('attn19-score-footnote');
+  if (scoreCaption) {
+    const captionX = (compareMinX + compareMaxX) * 0.5;
+    const captionFloor = qTop - Math.max(stageH * 0.01, 3);
+    const captionY = Math.max(captionFloor, compareMinControlY - Math.max(stageH * 0.018, 6));
+    scoreCaption.setAttribute('x', captionX.toFixed(2));
+    scoreCaption.setAttribute('y', captionY.toFixed(2));
+    scoreCaption.setAttribute('text-anchor', 'middle');
+    if (scoreFootnote) {
+      scoreFootnote.setAttribute('x', captionX.toFixed(2));
+      scoreFootnote.setAttribute('y', (captionY + Math.max(stageH * 0.028, 8)).toFixed(2));
+      scoreFootnote.setAttribute('text-anchor', 'middle');
+    }
+  }
+
+  if (attentionQkvState.step < 4) {
+    syncAttentionQkvCompareVisuals(0);
+  } else if (attentionQkvState.compareDone) {
+    syncAttentionQkvCompareVisuals(ATTN_QKV_COMPARE_TOKENS.length);
+  }
+}
+
+function setAttentionQkvStep(step) {
+  const slide = document.getElementById('slide-19');
+  const takeaway = document.getElementById('attn19-takeaway');
+  if (!slide || !takeaway) return;
+
+  const prevStep = attentionQkvState.step;
+  const clamped = Math.max(0, Math.min(ATTN_QKV_MAX_STEP, step));
+  attentionQkvState.step = clamped;
+
+  slide.classList.toggle('attn19-show-k', clamped >= 1);
+  slide.classList.toggle('attn19-show-v', clamped >= 2);
+  slide.classList.toggle('attn19-show-q', clamped >= 3);
+  slide.classList.toggle('attn19-show-compare', clamped >= 4);
+  takeaway.textContent = ATTN_QKV_TAKEAWAYS[clamped] || ATTN_QKV_TAKEAWAYS[0];
+
+  if (clamped < 4) {
+    clearAttentionQkvCompareTimers();
+    attentionQkvState.compareDone = false;
+    attentionQkvState.compareVisibleCount = 0;
+    slide.classList.remove('attn19-compare-done');
+  }
+
+  updateAttentionQkvOverlay();
+
+  if (clamped === 4) {
+    if (prevStep < 4 || !attentionQkvState.compareDone) {
+      runAttentionQkvCompareSequence();
+    } else {
+      attentionQkvState.compareVisibleCount = ATTN_QKV_COMPARE_TOKENS.length;
+      attentionQkvState.compareDone = true;
+      slide.classList.add('attn19-compare-done');
+      syncAttentionQkvCompareVisuals(attentionQkvState.compareVisibleCount);
+    }
+  } else {
+    syncAttentionQkvCompareVisuals(0);
+  }
+
+  requestAnimationFrame(updateAttentionQkvOverlay);
+  if (attentionQkvState.overlayTimer) clearTimeout(attentionQkvState.overlayTimer);
+  attentionQkvState.overlayTimer = setTimeout(() => {
+    updateAttentionQkvOverlay();
+    attentionQkvState.overlayTimer = null;
+  }, 240);
+}
+
+function initAttentionQkvSlide() {
+  const slide = document.getElementById('slide-19');
+  const cols = document.getElementById('attn19-cols');
+  if (!slide || !cols) return;
+
+  if (!attentionQkvState.initialized) {
+    cols.innerHTML = '';
+    ATTN_QKV_TOKENS.forEach((token) => {
+      cols.appendChild(createAttentionQkvColumn(token));
+    });
+
+    if (!attentionQkvState.resizeBound) {
+      window.addEventListener('resize', () => {
+        if (!attentionQkvState.initialized) return;
+        clearAttentionQkvCompareTimers();
+        if (attentionQkvState.step >= 4) {
+          attentionQkvState.compareDone = true;
+          attentionQkvState.compareVisibleCount = ATTN_QKV_COMPARE_TOKENS.length;
+          const activeSlide = document.getElementById('slide-19');
+          if (activeSlide) activeSlide.classList.add('attn19-compare-done');
+        } else {
+          attentionQkvState.compareDone = false;
+          attentionQkvState.compareVisibleCount = 0;
+        }
+        updateAttentionQkvOverlay();
+        if (attentionQkvState.step >= 4 && attentionQkvState.compareDone) {
+          syncAttentionQkvCompareVisuals(attentionQkvState.compareVisibleCount);
+        } else {
+          syncAttentionQkvCompareVisuals(0);
+        }
+      });
+      attentionQkvState.resizeBound = true;
+    }
+
+    attentionQkvState.initialized = true;
+  }
+
+  const takeaway = document.getElementById('attn19-takeaway');
+  if (takeaway) takeaway.textContent = ATTN_QKV_TAKEAWAYS[attentionQkvState.step] || ATTN_QKV_TAKEAWAYS[0];
+  updateAttentionQkvOverlay();
+  if (attentionQkvState.step >= 4 && attentionQkvState.compareDone) {
+    syncAttentionQkvCompareVisuals(attentionQkvState.compareVisibleCount);
+  } else {
+    syncAttentionQkvCompareVisuals(0);
+  }
+}
+
+function runAttentionQkvStep(slideEl) {
+  if (!slideEl || slideEl.id !== 'slide-19') return false;
+  if (!attentionQkvState.initialized) initAttentionQkvSlide();
+  if (attentionQkvState.step >= ATTN_QKV_MAX_STEP) return false;
+  setAttentionQkvStep(attentionQkvState.step + 1);
+  return true;
+}
+
+function resetAttentionQkvSlide() {
+  const slide = document.getElementById('slide-19');
+  if (!slide) return;
+  if (attentionQkvState.overlayTimer) {
+    clearTimeout(attentionQkvState.overlayTimer);
+    attentionQkvState.overlayTimer = null;
+  }
+  clearAttentionQkvCompareTimers();
+  attentionQkvState.compareDone = false;
+  attentionQkvState.compareVisibleCount = 0;
+  slide.classList.remove('attn19-compare-done');
+  setAttentionQkvStep(0);
+}
+
 function nextWithInteractions() {
   if (total === 0) return;
   const active = slides[current];
   if (runProjectionLensStep(active)) return;
   if (runAttentionIntroStep(active)) return;
+  if (runAttentionQkvStep(active)) return;
   if (runAutoStep(active)) return;
 
   if (current === total - 1) goTo(0);
