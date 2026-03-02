@@ -446,10 +446,11 @@
     --attn19-source-rgb: 90, 232, 142;
     --attn19-focus-rgb: 123, 154, 255;
     --attn19-label-col: clamp(6.8rem, 17vw, 10.2rem);
-    --attn19-score-row: 0.94rem;
     --attn19-chip-row: auto;
     --attn19-vector-row: 1.06rem;
-    --attn19-gap-xqk-row: clamp(4.6rem, 13vh, 6rem);
+    --attn19-score-row: 1.02rem;
+    --attn19-gap-xq-row: clamp(4.3rem, 12.2vh, 5.6rem);
+    --attn19-gap-sk-row: clamp(1.2rem, 3.2vh, 1.7rem);
     --attn19-gap-kv-row: clamp(1.25rem, 2.8vh, 1.7rem);
     position: relative;
     width: min(100%, 56rem);
@@ -476,10 +477,11 @@
     align-self: stretch;
     display: grid;
     grid-template-rows:
-      var(--attn19-score-row)
       var(--attn19-chip-row)
       var(--attn19-vector-row)
-      var(--attn19-gap-xqk-row)
+      var(--attn19-gap-xq-row)
+      var(--attn19-score-row)
+      var(--attn19-gap-sk-row)
       var(--attn19-vector-row)
       var(--attn19-gap-kv-row)
       var(--attn19-vector-row);
@@ -503,6 +505,9 @@
   .attn19-row-label.q {
     opacity: 0;
   }
+  .attn19-row-label.s {
+    opacity: 0;
+  }
   .attn19-row-label.k {
     opacity: 0;
   }
@@ -519,36 +524,19 @@
     position: relative;
     display: grid;
     grid-template-rows:
-      var(--attn19-score-row)
       var(--attn19-chip-row)
       var(--attn19-vector-row)
-      var(--attn19-gap-xqk-row)
+      var(--attn19-gap-xq-row)
+      var(--attn19-score-row)
+      var(--attn19-gap-sk-row)
       var(--attn19-vector-row)
       var(--attn19-gap-kv-row)
       var(--attn19-vector-row);
     align-items: center;
     gap: 0;
   }
-  .attn19-score-slot {
-    grid-row: 1;
-    display: flex;
-    align-items: flex-end;
-    justify-content: center;
-    height: 100%;
-  }
-  .attn19-score-bar {
-    width: 0.42rem;
-    height: calc(var(--score, 0.2) * 0.9rem);
-    border-radius: 0.24rem 0.24rem 0.14rem 0.14rem;
-    border: 1px solid rgba(var(--attn19-focus-rgb), 0.78);
-    background: rgba(var(--attn19-focus-rgb), 0.34);
-    opacity: 0;
-    transform: scaleY(0);
-    transform-origin: bottom center;
-    transition: opacity 0.24s ease, transform 0.24s ease;
-  }
   .attn19-chip-wrap {
-    grid-row: 2;
+    grid-row: 1;
     position: relative;
     display: flex;
     justify-content: center;
@@ -601,18 +589,95 @@
     transition: opacity 0.22s ease, transform 0.22s ease, visibility 0.22s ease;
   }
   .attn19-vector-wrap-x {
-    grid-row: 3;
+    grid-row: 2;
     opacity: 1;
     visibility: visible;
   }
+  .attn19-score-op-wrap {
+    grid-row: 4;
+    display: grid;
+    grid-template-columns: 1.24rem minmax(2rem, max-content);
+    column-gap: 0.66rem;
+    justify-content: start;
+    align-items: center;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(0.18rem);
+    transition: opacity 0.22s ease, transform 0.22s ease, visibility 0.22s ease;
+  }
+  .attn19-dot-node {
+    width: 1.24rem;
+    height: 1.24rem;
+    border-radius: 999px;
+    border: 1px solid rgba(var(--attn19-focus-rgb), 0.66);
+    background: rgba(var(--attn19-focus-rgb), 0.14);
+    color: rgba(216,228,255,0.96);
+    display: grid;
+    place-items: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.47rem;
+    line-height: 1;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+  }
+  .attn19-dot-node sup {
+    font-size: 0.68em;
+    line-height: 0;
+    vertical-align: 0.46em;
+    margin: 0 0.02em;
+  }
+  .attn19-col[data-token="sat"] .attn19-dot-node {
+    border-color: rgba(var(--attn19-focus-rgb), 0.86);
+    box-shadow: 0 0 0 0.08rem rgba(var(--attn19-focus-rgb), 0.28);
+  }
+  .attn19-score-pill {
+    min-width: 2.24rem;
+    border-radius: 999px;
+    border: 1px solid rgba(var(--attn19-focus-rgb), 0.62);
+    background: rgba(var(--attn19-focus-rgb), 0.14);
+    color: rgba(213,225,255,0.96);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.56rem;
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    text-align: center;
+    padding: 0.18rem 0.38rem;
+  }
+  .attn19-vector-label sub,
+  .attn19-vector-label-q sub,
+  .attn19-score-pill sub {
+    font-size: 0.75em;
+    line-height: 0;
+    vertical-align: -0.34em;
+    margin-left: 0.02em;
+  }
+  .attn19-score-pill[data-qual="strongest"] {
+    border-color: rgba(var(--attn19-source-rgb), 0.95);
+    background: rgba(var(--attn19-source-rgb), 0.22);
+    box-shadow: 0 0 0 0.08rem rgba(var(--attn19-source-rgb), 0.34);
+    color: rgba(222,255,235,0.98);
+  }
+  .attn19-score-pill[data-qual="medium"] {
+    border-color: rgba(var(--attn19-focus-rgb), 0.74);
+    background: rgba(var(--attn19-focus-rgb), 0.16);
+  }
+  .attn19-score-pill[data-qual="weak"] {
+    border-color: rgba(162,173,202,0.52);
+    background: rgba(162,173,202,0.08);
+    color: rgba(188,199,225,0.78);
+    opacity: 0.74;
+  }
   .attn19-vector-wrap-k {
-    grid-row: 5;
+    grid-row: 6;
     opacity: 0;
     visibility: hidden;
     transform: translateY(0.22rem);
   }
   .attn19-vector-wrap-v {
-    grid-row: 7;
+    grid-row: 8;
     opacity: 0;
     visibility: hidden;
     transform: translateY(0.22rem);
@@ -680,26 +745,26 @@
     stroke-linecap: round;
     stroke-linejoin: round;
   }
+  .attn19-compare-line.out {
+    stroke: rgba(var(--attn19-focus-rgb), 0.82);
+    stroke-width: 1.08;
+  }
   .attn19-compare-head {
     fill: rgba(var(--attn19-focus-rgb), 0.84);
     opacity: 0;
     transition: opacity 0.14s ease;
   }
-  .attn19-compare-dot {
-    fill: rgba(var(--attn19-focus-rgb), 0.78);
-    opacity: 0;
-    transition: opacity 0.14s ease;
+  .attn19-compare-head.out { fill: rgba(var(--attn19-focus-rgb), 0.92); }
+  #attn19-op-q-path-cat,
+  #attn19-op-k-path-cat,
+  #attn19-op-out-path-cat {
+    stroke-width: 1.45;
   }
   .attn19-overlay-label {
     font-family: 'Inter', sans-serif;
     font-size: 0.6rem;
     fill: #bfd0f1;
     font-weight: 600;
-  }
-  .attn19-overlay-label.footnote {
-    font-size: 0.51rem;
-    fill: rgba(191,208,241,0.78);
-    font-weight: 500;
   }
   .attn19-q-callout {
     --attn19-q-label-col: max-content;
@@ -776,6 +841,14 @@
     visibility: visible;
     transform: translateY(0);
   }
+  .slide.attn19-show-scores .attn19-row-label.s {
+    opacity: 1;
+  }
+  .slide.attn19-show-scores .attn19-score-op-wrap {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
   .slide.attn19-show-q .attn19-row-label.q {
     opacity: 1;
   }
@@ -790,10 +863,6 @@
   }
   .slide.attn19-show-compare #attn19-compare-group {
     opacity: 1;
-  }
-  .slide.attn19-compare-done .attn19-score-bar {
-    opacity: 1;
-    transform: scaleY(1);
   }
 
   @media (max-width: 56rem) {
@@ -827,9 +896,10 @@
     .attn19-layout { margin-top: 0.72rem; }
     .attn19-stage {
       --attn19-label-col: 6.5rem;
-      --attn19-score-row: 0.82rem;
       --attn19-vector-row: 0.92rem;
-      --attn19-gap-xqk-row: clamp(3.9rem, 12.5vh, 5.2rem);
+      --attn19-score-row: 0.86rem;
+      --attn19-gap-xq-row: clamp(3.6rem, 11.8vh, 4.8rem);
+      --attn19-gap-sk-row: clamp(0.96rem, 2.8vh, 1.35rem);
       --attn19-gap-kv-row: clamp(1.02rem, 2.6vh, 1.35rem);
       min-height: clamp(15rem, 60vh, 20rem);
       padding: 0.9rem 0.72rem;
@@ -865,10 +935,19 @@
     }
     .attn19-q-hint { font-size: 0.48rem; }
     .attn19-overlay-label { font-size: 0.51rem; }
-    .attn19-overlay-label.footnote { font-size: 0.44rem; }
-    .attn19-score-bar {
-      width: 0.34rem;
-      height: calc(var(--score, 0.2) * 0.78rem);
+    .attn19-dot-node {
+      width: 1.06rem;
+      height: 1.06rem;
+      font-size: 0.42rem;
+    }
+    .attn19-score-op-wrap {
+      grid-template-columns: 1.06rem minmax(1.7rem, max-content);
+      column-gap: 0.48rem;
+    }
+    .attn19-score-pill {
+      min-width: 1.9rem;
+      font-size: 0.46rem;
+      padding: 0.14rem 0.24rem;
     }
     .attn19-takeaway {
       font-size: 0.78rem;
@@ -941,29 +1020,46 @@
             <line id="attn19-q-link" class="attn19-q-link-line" marker-end="url(#attn19-arrow-focus)"></line>
           </g>
           <g id="attn19-compare-group" class="attn19-overlay-group">
-            <path id="attn19-compare-path-cat" class="attn19-compare-line"></path>
-            <polygon id="attn19-compare-head-cat" class="attn19-compare-head"></polygon>
-            <circle id="attn19-compare-dot-cat" class="attn19-compare-dot"></circle>
-            <path id="attn19-compare-path-sat" class="attn19-compare-line"></path>
-            <polygon id="attn19-compare-head-sat" class="attn19-compare-head"></polygon>
-            <circle id="attn19-compare-dot-sat" class="attn19-compare-dot"></circle>
-            <path id="attn19-compare-path-on" class="attn19-compare-line"></path>
-            <polygon id="attn19-compare-head-on" class="attn19-compare-head"></polygon>
-            <circle id="attn19-compare-dot-on" class="attn19-compare-dot"></circle>
-            <path id="attn19-compare-path-the" class="attn19-compare-line"></path>
-            <polygon id="attn19-compare-head-the" class="attn19-compare-head"></polygon>
-            <circle id="attn19-compare-dot-the" class="attn19-compare-dot"></circle>
-            <path id="attn19-compare-path-mat" class="attn19-compare-line"></path>
-            <polygon id="attn19-compare-head-mat" class="attn19-compare-head"></polygon>
-            <circle id="attn19-compare-dot-mat" class="attn19-compare-dot"></circle>
-            <text id="attn19-score-caption" class="attn19-overlay-label">scores: how well q_sat matches each k_j</text>
-            <text id="attn19-score-footnote" class="attn19-overlay-label footnote">score_j = similarity(q_sat, k_j)</text>
+            <path id="attn19-op-q-path-cat" class="attn19-compare-line q-input"></path>
+            <polygon id="attn19-op-q-head-cat" class="attn19-compare-head q-input"></polygon>
+            <path id="attn19-op-k-path-cat" class="attn19-compare-line q-input"></path>
+            <polygon id="attn19-op-k-head-cat" class="attn19-compare-head q-input"></polygon>
+            <path id="attn19-op-out-path-cat" class="attn19-compare-line out"></path>
+            <polygon id="attn19-op-out-head-cat" class="attn19-compare-head out"></polygon>
+
+            <path id="attn19-op-q-path-sat" class="attn19-compare-line q-input"></path>
+            <polygon id="attn19-op-q-head-sat" class="attn19-compare-head q-input"></polygon>
+            <path id="attn19-op-k-path-sat" class="attn19-compare-line q-input"></path>
+            <polygon id="attn19-op-k-head-sat" class="attn19-compare-head q-input"></polygon>
+            <path id="attn19-op-out-path-sat" class="attn19-compare-line out"></path>
+            <polygon id="attn19-op-out-head-sat" class="attn19-compare-head out"></polygon>
+
+            <path id="attn19-op-q-path-on" class="attn19-compare-line q-input"></path>
+            <polygon id="attn19-op-q-head-on" class="attn19-compare-head q-input"></polygon>
+            <path id="attn19-op-k-path-on" class="attn19-compare-line q-input"></path>
+            <polygon id="attn19-op-k-head-on" class="attn19-compare-head q-input"></polygon>
+            <path id="attn19-op-out-path-on" class="attn19-compare-line out"></path>
+            <polygon id="attn19-op-out-head-on" class="attn19-compare-head out"></polygon>
+
+            <path id="attn19-op-q-path-the" class="attn19-compare-line q-input"></path>
+            <polygon id="attn19-op-q-head-the" class="attn19-compare-head q-input"></polygon>
+            <path id="attn19-op-k-path-the" class="attn19-compare-line q-input"></path>
+            <polygon id="attn19-op-k-head-the" class="attn19-compare-head q-input"></polygon>
+            <path id="attn19-op-out-path-the" class="attn19-compare-line out"></path>
+            <polygon id="attn19-op-out-head-the" class="attn19-compare-head out"></polygon>
+
+            <path id="attn19-op-q-path-mat" class="attn19-compare-line q-input"></path>
+            <polygon id="attn19-op-q-head-mat" class="attn19-compare-head q-input"></polygon>
+            <path id="attn19-op-k-path-mat" class="attn19-compare-line q-input"></path>
+            <polygon id="attn19-op-k-head-mat" class="attn19-compare-head q-input"></polygon>
+            <path id="attn19-op-out-path-mat" class="attn19-compare-line out"></path>
+            <polygon id="attn19-op-out-head-mat" class="attn19-compare-head out"></polygon>
           </g>
         </svg>
 
         <div class="attn19-q-callout" id="attn19-q-callout">
           <div class="attn19-vector-wrap attn19-vector-wrap-q">
-            <span class="attn19-vector-label attn19-vector-label-q">q_sat</span>
+            <span class="attn19-vector-label attn19-vector-label-q">q<sub>sat</sub></span>
             <div class="attn19-vector attn19-vector-q" id="attn19-q-sat">
               <span class="attn19-vector-divider" style="left:25%"></span>
               <span class="attn19-vector-divider" style="left:50%"></span>
@@ -976,16 +1072,17 @@
         <div class="attn19-frame">
           <div class="attn19-row-labels" id="attn19-row-labels">
             <div class="attn19-row-label x" id="attn19-row-x-label">Embeddings (X)</div>
-          <div class="attn19-row-label q" id="attn19-row-q-label">Queries (Q)</div>
-          <div class="attn19-row-label k" id="attn19-row-k-label">Keys (K)</div>
-          <div class="attn19-row-label v" id="attn19-row-v-label">Values (V)</div>
+            <div class="attn19-row-label q" id="attn19-row-q-label">Queries (Q)</div>
+            <div class="attn19-row-label s" id="attn19-row-s-label">Scores (s)</div>
+            <div class="attn19-row-label k" id="attn19-row-k-label">Keys (K)</div>
+            <div class="attn19-row-label v" id="attn19-row-v-label">Values (V)</div>
           </div>
           <div class="attn19-cols" id="attn19-cols"></div>
         </div>
       </div>
     </div>
 
-    <div class="attn19-takeaway" id="attn19-takeaway">We start from embeddings x₁…xₙ</div>
+    <div class="attn19-takeaway" id="attn19-takeaway">We start from embeddings <i>x</i><sub>1</sub>…<i>x</i><sub>n</sub></div>
   </div>
 
 </div>
@@ -1030,19 +1127,19 @@ const ATTN_QKV_COMPARE_CURVE_FACTORS = {
   the: 0.64,
   mat: 0.46
 };
-const ATTN_QKV_SCORE_LEVELS = {
-  cat: 1,
-  sat: 0.44,
-  on: 0.58,
-  the: 0.34,
-  mat: 0.52
+const ATTN_QKV_SCORE_QUAL = {
+  cat: { tier: 'strongest' },
+  sat: { tier: 'medium' },
+  on: { tier: 'medium' },
+  the: { tier: 'weak' },
+  mat: { tier: 'weak' }
 };
 const ATTN_QKV_TAKEAWAYS = [
-  'We start from embeddings x₁…xₙ',
-  'Project each embedding into a key representation (k)',
-  'Also project into a value: v = x W_V (this is what gets copied)',
-  'For the focus token, build a query representation (q_sat)',
-  'Compute scores: score_j = similarity(q_sat, k_j)'
+  'We start from embeddings <i>x</i><sub>1</sub>…<i>x</i><sub>n</sub>',
+  'Project each embedding into a key representation (<i>k</i>)',
+  'Also project into a value: <i>v</i> = <i>x</i>W<sub>V</sub> (this is what gets copied)',
+  'For the focus token, build a query representation (<i>q</i><sub>sat</sub>)',
+  'Compute pairwise scores: <i>s</i><sub>j</sub> = <i>q</i><sub>sat</sub> · <i>k</i><sub>j</sub>'
 ];
 const ATTN_QKV_COMPARE_DRAW_MS = 360;
 const ATTN_QKV_COMPARE_HEAD_FADE_MS = 140;
@@ -1578,20 +1675,26 @@ function createAttentionQkvVectorRect(vectorId, extraClass = '') {
   });
 }
 
+function createMathSubLabel(base, sub, className) {
+  return createEl('span', { className }, [
+    base,
+    createEl('sub', { text: sub })
+  ]);
+}
+
+function createMathQTransposeK() {
+  return createEl('span', null, [
+    'q',
+    createEl('sup', { text: 'T' }),
+    'k'
+  ]);
+}
+
 function createAttentionQkvColumn(token) {
   const col = createEl('div', {
     className: 'attn19-col',
     dataset: { token }
   });
-
-  const scoreSlot = createEl('div', { className: 'attn19-score-slot' });
-  const scoreBar = createEl('div', {
-    className: 'attn19-score-bar',
-    id: 'attn19-score-' + token
-  });
-  scoreBar.style.setProperty('--score', String(ATTN_QKV_SCORE_LEVELS[token] || 0.2));
-  scoreSlot.appendChild(scoreBar);
-  col.appendChild(scoreSlot);
 
   const chipWrap = createEl('div', { className: 'attn19-chip-wrap' });
   chipWrap.appendChild(createEl('div', {
@@ -1605,22 +1708,37 @@ function createAttentionQkvColumn(token) {
     className: 'attn19-vector-wrap attn19-vector-wrap-x',
     id: 'attn19-vector-wrap-x-' + token
   }, [
-    createEl('span', {
-      className: 'attn19-vector-label',
-      text: 'x_' + token
-    }),
+    createMathSubLabel('x', token, 'attn19-vector-label'),
     createAttentionQkvVectorRect('attn19-vector-x-' + token)
   ]);
   col.appendChild(xWrap);
+
+  const scoreOpWrap = createEl('div', {
+    className: 'attn19-score-op-wrap',
+    id: 'attn19-score-op-wrap-' + token
+  });
+  const dotNode = createEl('div', {
+    className: 'attn19-dot-node',
+    id: 'attn19-dot-node-' + token
+  }, createMathQTransposeK());
+  const scoreQual = ATTN_QKV_SCORE_QUAL[token] || { tier: 'medium' };
+  const scorePill = createEl('div', {
+    className: 'attn19-score-pill',
+    id: 'attn19-score-pill-' + token,
+    dataset: { qual: scoreQual.tier }
+  }, [
+    's',
+    createEl('sub', { text: token })
+  ]);
+  scoreOpWrap.appendChild(dotNode);
+  scoreOpWrap.appendChild(scorePill);
+  col.appendChild(scoreOpWrap);
 
   const kWrap = createEl('div', {
     className: 'attn19-vector-wrap attn19-vector-wrap-k',
     id: 'attn19-vector-wrap-k-' + token
   }, [
-    createEl('span', {
-      className: 'attn19-vector-label',
-      text: 'k_' + token
-    }),
+    createMathSubLabel('k', token, 'attn19-vector-label'),
     createAttentionQkvVectorRect('attn19-vector-k-' + token, 'attn19-vector-k')
   ]);
   col.appendChild(kWrap);
@@ -1629,10 +1747,7 @@ function createAttentionQkvColumn(token) {
     className: 'attn19-vector-wrap attn19-vector-wrap-v',
     id: 'attn19-vector-wrap-v-' + token
   }, [
-    createEl('span', {
-      className: 'attn19-vector-label',
-      text: 'v_' + token
-    }),
+    createMathSubLabel('v', token, 'attn19-vector-label'),
     createAttentionQkvVectorRect('attn19-vector-v-' + token)
   ]);
   col.appendChild(vWrap);
@@ -1645,18 +1760,33 @@ function clearAttentionQkvCompareTimers() {
   state.attentionQkv.compareTimers = [];
 }
 
+function getAttentionQkvCompareTriplet(token) {
+  return [
+    {
+      path: document.getElementById('attn19-op-q-path-' + token),
+      head: document.getElementById('attn19-op-q-head-' + token)
+    },
+    {
+      path: document.getElementById('attn19-op-k-path-' + token),
+      head: document.getElementById('attn19-op-k-head-' + token)
+    },
+    {
+      path: document.getElementById('attn19-op-out-path-' + token),
+      head: document.getElementById('attn19-op-out-head-' + token)
+    }
+  ];
+}
+
 function hideAttentionQkvCompareArrow(token) {
-  const path = document.getElementById('attn19-compare-path-' + token);
-  const head = document.getElementById('attn19-compare-head-' + token);
-  const dot = document.getElementById('attn19-compare-dot-' + token);
-  hideArrowElements({ path, head, dot });
+  getAttentionQkvCompareTriplet(token).forEach((elements) => {
+    hideArrowElements({ path: elements.path, head: elements.head });
+  });
 }
 
 function showAttentionQkvCompareArrow(token) {
-  const path = document.getElementById('attn19-compare-path-' + token);
-  const head = document.getElementById('attn19-compare-head-' + token);
-  const dot = document.getElementById('attn19-compare-dot-' + token);
-  showArrowElements({ path, head, dot });
+  getAttentionQkvCompareTriplet(token).forEach((elements) => {
+    showArrowElements({ path: elements.path, head: elements.head });
+  });
 }
 
 function syncAttentionQkvCompareVisuals(visibleCount = state.attentionQkv.compareVisibleCount) {
@@ -1668,21 +1798,24 @@ function syncAttentionQkvCompareVisuals(visibleCount = state.attentionQkv.compar
 }
 
 function animateAttentionQkvCompareArrow(token) {
-  const path = document.getElementById('attn19-compare-path-' + token);
-  const head = document.getElementById('attn19-compare-head-' + token);
-  const dot = document.getElementById('attn19-compare-dot-' + token);
-  if (!path || !head || !dot) return;
-
   hideAttentionQkvCompareArrow(token);
-  void path.getBoundingClientRect();
-  path.style.transition = 'stroke-dashoffset ' + ATTN_QKV_COMPARE_DRAW_MS + 'ms cubic-bezier(0.34, 0.08, 0.22, 1)';
-  path.style.strokeDashoffset = '0';
+  const triplet = getAttentionQkvCompareTriplet(token).filter((elements) => elements.path && elements.head);
+  if (!triplet.length) return;
+
+  triplet.forEach((elements) => {
+    const path = elements.path;
+    path.style.transition = 'none';
+    void path.getBoundingClientRect();
+    path.style.transition = 'stroke-dashoffset ' + ATTN_QKV_COMPARE_DRAW_MS + 'ms cubic-bezier(0.34, 0.08, 0.22, 1)';
+    path.style.strokeDashoffset = '0';
+  });
 
   const headTimer = setTimeout(() => {
-    head.style.transition = 'opacity ' + ATTN_QKV_COMPARE_HEAD_FADE_MS + 'ms ease';
-    head.style.opacity = '1';
-    dot.style.transition = 'opacity ' + ATTN_QKV_COMPARE_HEAD_FADE_MS + 'ms ease';
-    dot.style.opacity = '1';
+    triplet.forEach((elements) => {
+      const head = elements.head;
+      head.style.transition = 'opacity ' + ATTN_QKV_COMPARE_HEAD_FADE_MS + 'ms ease';
+      head.style.opacity = '1';
+    });
   }, Math.max(ATTN_QKV_COMPARE_DRAW_MS - 70, 120));
   state.attentionQkv.compareTimers.push(headTimer);
 }
@@ -1722,11 +1855,13 @@ function updateAttentionQkvOverlay() {
   const overlay = document.getElementById('attn19-overlay');
   const qCallout = document.getElementById('attn19-q-callout');
   const qVector = document.getElementById('attn19-q-sat');
+  const satDotNode = document.getElementById('attn19-dot-node-' + ATTN_QKV_FOCUS);
+  const satScorePill = document.getElementById('attn19-score-pill-' + ATTN_QKV_FOCUS);
   const vSatVector = document.getElementById('attn19-vector-v-' + ATTN_QKV_FOCUS);
   const satChip = document.getElementById('attn19-chip-' + ATTN_QKV_FOCUS);
   const satXVector = document.getElementById('attn19-vector-x-' + ATTN_QKV_FOCUS);
   const satKVector = document.getElementById('attn19-vector-k-' + ATTN_QKV_FOCUS);
-  if (!stage || !overlay || !qCallout || !qVector || !vSatVector || !satChip || !satXVector || !satKVector) return;
+  if (!stage || !overlay || !qCallout || !qVector || !satDotNode || !satScorePill || !vSatVector || !satChip || !satXVector || !satKVector) return;
 
   const stageRect = stage.getBoundingClientRect();
   if (stageRect.width < 1 || stageRect.height < 1) return;
@@ -1741,10 +1876,28 @@ function updateAttentionQkvOverlay() {
     };
   };
   const stageY = (rect, frac = 0.5) => (rect.top - stageRect.top) + rect.height * frac;
+  const setArrowHeadPoints = (head, from, to, headLen) => {
+    if (!head) return;
+    const dirX = to.x - from.x;
+    const dirY = to.y - from.y;
+    const dirLen = Math.hypot(dirX, dirY) || 1;
+    const unitX = dirX / dirLen;
+    const unitY = dirY / dirLen;
+    const wing = headLen * 0.54;
+    const baseX = to.x - unitX * headLen;
+    const baseY = to.y - unitY * headLen;
+    const wingX = -unitY * wing;
+    const wingY = unitX * wing;
+    const points = to.x.toFixed(2) + ',' + to.y.toFixed(2)
+      + ' ' + (baseX + wingX).toFixed(2) + ',' + (baseY + wingY).toFixed(2)
+      + ' ' + (baseX - wingX).toFixed(2) + ',' + (baseY - wingY).toFixed(2);
+    head.setAttribute('points', points);
+  };
 
   const rowLabels = document.getElementById('attn19-row-labels');
   const rowXLabel = document.getElementById('attn19-row-x-label');
   const rowQLabel = document.getElementById('attn19-row-q-label');
+  const rowSLabel = document.getElementById('attn19-row-s-label');
   const rowKLabel = document.getElementById('attn19-row-k-label');
   const rowVLabel = document.getElementById('attn19-row-v-label');
   const syncRowLabelY = (label, targetRect) => {
@@ -1756,23 +1909,26 @@ function updateAttentionQkvOverlay() {
 
   const satChipRect = satChip.getBoundingClientRect();
   const satXRect = satXVector.getBoundingClientRect();
+  const satDotRect = satDotNode.getBoundingClientRect();
+  const satScoreRect = satScorePill.getBoundingClientRect();
   const satKRect = satKVector.getBoundingClientRect();
   const satVRect = vSatVector.getBoundingClientRect();
   const satCenterX = satChipRect.left - stageRect.left + satChipRect.width * 0.5;
   const xSatBottom = anchor(satXVector, 0.5, 1);
-  const kSatTop = anchor(satKVector, 0.5, 0);
+  const dotSatTop = satDotRect.top - stageRect.top;
   const qCalloutRect = qCallout.getBoundingClientRect();
   const gapFromX = Math.max(stageH * 0.03, 10);
-  const gapToK = Math.max(stageH * 0.022, 8);
+  const gapToDotNode = Math.max(stageH * 0.018, 7);
   const qDownNudge = Math.max(stageH * 0.012, 4);
   const qTopDesired = xSatBottom.y + gapFromX + qDownNudge;
-  const qTopMax = kSatTop.y - qCalloutRect.height - gapToK;
+  const qTopMax = dotSatTop - qCalloutRect.height - gapToDotNode;
   const qTop = Math.max(stageH * 0.02, Math.min(qTopDesired, qTopMax));
   qCallout.style.left = satCenterX.toFixed(2) + 'px';
   qCallout.style.top = qTop.toFixed(2) + 'px';
   const qRect = qVector.getBoundingClientRect();
   syncRowLabelY(rowXLabel, satXRect);
   syncRowLabelY(rowQLabel, qRect);
+  syncRowLabelY(rowSLabel, satDotRect || satScoreRect);
   syncRowLabelY(rowKLabel, satKRect);
   syncRowLabelY(rowVLabel, satVRect);
 
@@ -1787,75 +1943,70 @@ function updateAttentionQkvOverlay() {
     qLink.setAttribute('y2', (qVectorTop.y - pad).toFixed(2));
   }
 
-  let compareMinX = qBottom.x;
-  let compareMaxX = qBottom.x;
-  let compareMinControlY = qBottom.y;
   const compareSource = { x: qBottom.x, y: qBottom.y };
+  const headLenMain = Math.max(stageH * 0.02, 4.8);
+  const headLenMinor = Math.max(stageH * 0.017, 4.2);
 
   ATTN_QKV_COMPARE_TOKENS.forEach((token) => {
+    const dotNode = document.getElementById('attn19-dot-node-' + token);
+    const scorePill = document.getElementById('attn19-score-pill-' + token);
     const kVector = document.getElementById('attn19-vector-k-' + token);
-    const path = document.getElementById('attn19-compare-path-' + token);
-    const head = document.getElementById('attn19-compare-head-' + token);
-    const dot = document.getElementById('attn19-compare-dot-' + token);
-    if (!kVector || !path || !head || !dot) return;
+    const qPath = document.getElementById('attn19-op-q-path-' + token);
+    const qHead = document.getElementById('attn19-op-q-head-' + token);
+    const kPath = document.getElementById('attn19-op-k-path-' + token);
+    const kHead = document.getElementById('attn19-op-k-head-' + token);
+    const outPath = document.getElementById('attn19-op-out-path-' + token);
+    const outHead = document.getElementById('attn19-op-out-head-' + token);
+    if (!dotNode || !scorePill || !kVector || !qPath || !qHead || !kPath || !kHead || !outPath || !outHead) return;
 
+    const dotTop = anchor(dotNode, 0.5, 0);
+    const dotBottom = anchor(dotNode, 0.5, 1);
+    const dotRight = anchor(dotNode, 1, 0.5);
+    const scoreLeft = anchor(scorePill, 0, 0.5);
     const kTop = anchor(kVector, 0.5, 0);
-    const target = { x: kTop.x, y: kTop.y + Math.max(stageH * 0.003, 1) };
-    const distanceX = Math.abs(compareSource.x - target.x);
-    const distanceY = target.y - compareSource.y;
+    const qTarget = {
+      x: dotTop.x,
+      y: dotTop.y + Math.max(stageH * 0.0024, 1)
+    };
+    const distanceX = Math.abs(compareSource.x - qTarget.x);
+    const distanceY = qTarget.y - compareSource.y;
     const curveFactor = ATTN_QKV_COMPARE_CURVE_FACTORS[token] || 0.5;
     let controlY = compareSource.y + distanceY * curveFactor + distanceX * 0.01;
-    const controlYMax = target.y - Math.max(stageH * 0.006, 2.2);
+    const controlYMax = qTarget.y - Math.max(stageH * 0.004, 1.2);
     if (controlY > controlYMax) controlY = controlYMax;
-    const cp1x = compareSource.x + (target.x - compareSource.x) * 0.3;
-    const cp2x = compareSource.x + (target.x - compareSource.x) * 0.72;
-
-    compareMinX = Math.min(compareMinX, target.x);
-    compareMaxX = Math.max(compareMaxX, target.x);
-    compareMinControlY = Math.min(compareMinControlY, controlY);
-
-    const d = 'M ' + compareSource.x.toFixed(2) + ' ' + compareSource.y.toFixed(2)
+    const cp1x = compareSource.x + (qTarget.x - compareSource.x) * 0.3;
+    const cp2x = compareSource.x + (qTarget.x - compareSource.x) * 0.72;
+    const qPathD = 'M ' + compareSource.x.toFixed(2) + ' ' + compareSource.y.toFixed(2)
       + ' C ' + cp1x.toFixed(2) + ' ' + controlY.toFixed(2)
       + ' ' + cp2x.toFixed(2) + ' ' + controlY.toFixed(2)
-      + ' ' + target.x.toFixed(2) + ' ' + target.y.toFixed(2);
-    path.setAttribute('d', d);
+      + ' ' + qTarget.x.toFixed(2) + ' ' + qTarget.y.toFixed(2);
+    qPath.setAttribute('d', qPathD);
+    setArrowHeadPoints(qHead, { x: cp2x, y: controlY }, qTarget, headLenMain);
 
-    const dirX = target.x - cp2x;
-    const dirY = target.y - controlY;
-    const dirLen = Math.hypot(dirX, dirY) || 1;
-    const unitX = dirX / dirLen;
-    const unitY = dirY / dirLen;
-    const headLen = Math.max(stageH * 0.022, 5.1);
-    const wing = headLen * 0.54;
-    const baseX = target.x - unitX * headLen;
-    const baseY = target.y - unitY * headLen;
-    const wingX = -unitY * wing;
-    const wingY = unitX * wing;
-    const points = target.x.toFixed(2) + ',' + target.y.toFixed(2)
-      + ' ' + (baseX + wingX).toFixed(2) + ',' + (baseY + wingY).toFixed(2)
-      + ' ' + (baseX - wingX).toFixed(2) + ',' + (baseY - wingY).toFixed(2);
-    head.setAttribute('points', points);
+    const kPad = Math.max(stageH * 0.0035, 1.2);
+    const kSource = { x: kTop.x, y: kTop.y - kPad };
+    const kTarget = { x: dotBottom.x, y: dotBottom.y + kPad };
+    const kControlY = kSource.y + (kTarget.y - kSource.y) * 0.54;
+    const kCp1x = kSource.x + (kTarget.x - kSource.x) * 0.3;
+    const kCp2x = kSource.x + (kTarget.x - kSource.x) * 0.72;
+    const kPathD = 'M ' + kSource.x.toFixed(2) + ' ' + kSource.y.toFixed(2)
+      + ' C ' + kCp1x.toFixed(2) + ' ' + kControlY.toFixed(2)
+      + ' ' + kCp2x.toFixed(2) + ' ' + kControlY.toFixed(2)
+      + ' ' + kTarget.x.toFixed(2) + ' ' + kTarget.y.toFixed(2);
+    kPath.setAttribute('d', kPathD);
+    setArrowHeadPoints(kHead, { x: kCp2x, y: kControlY }, kTarget, headLenMain);
 
-    dot.setAttribute('cx', target.x.toFixed(2));
-    dot.setAttribute('cy', target.y.toFixed(2));
-    dot.setAttribute('r', Math.max(stageH * 0.0052, 1.7).toFixed(2));
+    const outPad = Math.max(stageH * 0.0035, 1.2);
+    const outSource = { x: dotRight.x + outPad, y: dotRight.y };
+    const outTarget = {
+      x: Math.max(outSource.x + Math.max(stageH * 0.01, 3), scoreLeft.x - outPad),
+      y: scoreLeft.y
+    };
+    const outPathD = 'M ' + outSource.x.toFixed(2) + ' ' + outSource.y.toFixed(2)
+      + ' L ' + outTarget.x.toFixed(2) + ' ' + outTarget.y.toFixed(2);
+    outPath.setAttribute('d', outPathD);
+    setArrowHeadPoints(outHead, outSource, outTarget, headLenMinor);
   });
-
-  const scoreCaption = document.getElementById('attn19-score-caption');
-  const scoreFootnote = document.getElementById('attn19-score-footnote');
-  if (scoreCaption) {
-    const captionX = (compareMinX + compareMaxX) * 0.5;
-    const captionFloor = qTop - Math.max(stageH * 0.01, 3);
-    const captionY = Math.max(captionFloor, compareMinControlY - Math.max(stageH * 0.018, 6));
-    scoreCaption.setAttribute('x', captionX.toFixed(2));
-    scoreCaption.setAttribute('y', captionY.toFixed(2));
-    scoreCaption.setAttribute('text-anchor', 'middle');
-    if (scoreFootnote) {
-      scoreFootnote.setAttribute('x', captionX.toFixed(2));
-      scoreFootnote.setAttribute('y', (captionY + Math.max(stageH * 0.028, 8)).toFixed(2));
-      scoreFootnote.setAttribute('text-anchor', 'middle');
-    }
-  }
 
   if (state.attentionQkv.step < 4) {
     syncAttentionQkvCompareVisuals(0);
@@ -1876,8 +2027,9 @@ function setAttentionQkvStep(step) {
   slide.classList.toggle('attn19-show-k', clamped >= 1);
   slide.classList.toggle('attn19-show-v', clamped >= 2);
   slide.classList.toggle('attn19-show-q', clamped >= 3);
+  slide.classList.toggle('attn19-show-scores', clamped >= 4);
   slide.classList.toggle('attn19-show-compare', clamped >= 4);
-  takeaway.textContent = ATTN_QKV_TAKEAWAYS[clamped] || ATTN_QKV_TAKEAWAYS[0];
+  takeaway.innerHTML = ATTN_QKV_TAKEAWAYS[clamped] || ATTN_QKV_TAKEAWAYS[0];
 
   if (clamped < 4) {
     clearAttentionQkvCompareTimers();
@@ -1947,7 +2099,7 @@ function initAttentionQkvSlide() {
   }
 
   const takeaway = document.getElementById('attn19-takeaway');
-  if (takeaway) takeaway.textContent = ATTN_QKV_TAKEAWAYS[state.attentionQkv.step] || ATTN_QKV_TAKEAWAYS[0];
+  if (takeaway) takeaway.innerHTML = ATTN_QKV_TAKEAWAYS[state.attentionQkv.step] || ATTN_QKV_TAKEAWAYS[0];
   updateAttentionQkvOverlay();
   if (state.attentionQkv.step >= 4 && state.attentionQkv.compareDone) {
     syncAttentionQkvCompareVisuals(state.attentionQkv.compareVisibleCount);
