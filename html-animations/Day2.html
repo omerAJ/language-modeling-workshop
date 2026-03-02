@@ -1077,6 +1077,246 @@
     background: rgba(123,154,255,0.1);
     margin-top: 0.55rem;
   }
+  .attn18-subtitle {
+    margin-top: 0.2rem;
+    max-width: 38rem;
+  }
+  .attn18-motivation {
+    margin-top: 0.14rem;
+    color: #aeb8d8;
+    max-width: 42rem;
+  }
+  .attn18-layout {
+    margin-top: 0.85rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .attn18-stage {
+    --attn18-source-rgb: 90, 232, 142;
+    --attn18-focus-rgb: 123, 154, 255;
+    position: relative;
+    width: min(100%, 56rem);
+    min-height: clamp(12rem, 36vh, 17rem);
+    padding: clamp(1rem, 2.2vw, 1.5rem) clamp(0.85rem, 2.6vw, 1.8rem);
+    border-color: rgba(123,154,255,0.34);
+    background:
+      radial-gradient(circle at 14% 16%, rgba(123,154,255,0.1), transparent 42%),
+      var(--surface);
+    overflow: hidden;
+  }
+  .attn18-token-band {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: clamp(0.35rem, 0.9vw, 0.75rem);
+    align-items: start;
+    padding-top: clamp(2.8rem, 10vh, 4rem);
+  }
+  .attn18-token-primitive {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+    gap: 0.28rem;
+  }
+  .attn18-chip-wrap {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(0.24rem);
+    transition: opacity 0.22s ease, transform 0.22s ease, visibility 0.22s ease;
+  }
+  .attn18-focus-label {
+    position: absolute;
+    left: 50%;
+    bottom: calc(100% + 0.18rem);
+    width: max-content;
+    font-size: 0.58rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #d7deff;
+    opacity: 0;
+    transform: translateX(-50%);
+    transition: opacity 0.2s ease;
+    pointer-events: none;
+    white-space: nowrap;
+  }
+  .attn18-token-chip {
+    width: 100%;
+    text-align: center;
+    border: 1px solid var(--border);
+    border-radius: 0.44rem;
+    padding: 0.32rem 0.28rem;
+    background: var(--surface2);
+    color: #dbe1f6;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.79rem;
+    line-height: 1.2;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+  }
+  .attn18-vector-wrap,
+  .attn18-update-wrap {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 2.85rem minmax(0, 1fr);
+    align-items: center;
+    column-gap: 0.32rem;
+    min-height: 1rem;
+  }
+  .attn18-vector-wrap {
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(0.28rem);
+    transition: opacity 0.22s ease, transform 0.22s ease, visibility 0.22s ease;
+  }
+  .attn18-vector-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.62rem;
+    color: rgba(190,200,226,0.9);
+    white-space: nowrap;
+    text-align: right;
+  }
+  .attn18-vector-label.prime {
+    color: rgba(220,230,252,0.96);
+  }
+  .attn18-vector {
+    position: relative;
+    height: 0.9rem;
+    border-radius: 0.3rem;
+    border: 1px solid rgba(184,194,221,0.4);
+    background: rgba(184,194,221,0.08);
+    overflow: hidden;
+  }
+  .attn18-vector-divider {
+    position: absolute;
+    top: 0.08rem;
+    bottom: 0.08rem;
+    width: 1px;
+    background: rgba(201,212,240,0.38);
+  }
+  .attn18-update-wrap {
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-0.22rem);
+    transition: opacity 0.22s ease, transform 0.22s ease, visibility 0.22s ease;
+  }
+  .attn18-token-primitive[data-token="sat"] .attn18-update-wrap {
+    margin-top: calc(0.34rem + 12px);
+  }
+  .attn18-overlay {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 2;
+  }
+  .attn18-overlay-group {
+    opacity: 0;
+    transition: opacity 0.24s ease;
+  }
+  .attn18-flow-line {
+    stroke: rgba(var(--attn18-source-rgb), 0.62);
+    stroke-width: 1.15;
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .attn18-flow-head {
+    fill: rgba(var(--attn18-source-rgb), 0.84);
+    opacity: 0;
+    transition: opacity 0.14s ease;
+  }
+  .attn18-update-line {
+    stroke: rgba(var(--attn18-focus-rgb), 0.94);
+    stroke-width: 1.45;
+    fill: none;
+  }
+  .attn18-overlay-label {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.62rem;
+    fill: #bfcae9;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+  }
+  .attn18-overlay-label.update {
+    fill: rgba(214,228,255,0.96);
+  }
+  .attn18-overlay-label.micro {
+    font-size: 0.52rem;
+    fill: rgba(var(--attn18-source-rgb), 0.9);
+    font-weight: 600;
+    text-anchor: middle;
+    opacity: 0;
+    transition: opacity 0.14s ease;
+  }
+  .attn18-token-primitive[data-token="cat"] .attn18-token-chip,
+  .attn18-token-primitive[data-token="on"] .attn18-token-chip,
+  .attn18-token-primitive[data-token="the"] .attn18-token-chip,
+  .attn18-token-primitive[data-token="mat"] .attn18-token-chip {
+    border-color: rgba(var(--attn18-source-rgb), 0.44);
+    background: rgba(var(--attn18-source-rgb), 0.09);
+  }
+  .attn18-token-primitive[data-token="cat"] .attn18-vector-label,
+  .attn18-token-primitive[data-token="on"] .attn18-vector-label,
+  .attn18-token-primitive[data-token="the"] .attn18-vector-label,
+  .attn18-token-primitive[data-token="mat"] .attn18-vector-label {
+    color: rgba(178,241,204,0.96);
+  }
+  .attn18-token-primitive[data-token="sat"] .attn18-token-chip {
+    border-color: rgba(var(--attn18-focus-rgb), 0.58);
+  }
+  .attn18-token-primitive[data-token="sat"] .attn18-vector-label {
+    color: rgba(197,213,255,0.96);
+  }
+  .attn18-takeaway {
+    margin-top: 0.82rem;
+    border: 1px solid rgba(123,154,255,0.28);
+    border-radius: 0.58rem;
+    background: rgba(123,154,255,0.1);
+    display: flex;
+    align-items: center;
+    padding: 0.62rem 0.72rem;
+    font-size: 0.85rem;
+    color: #dbe4ff;
+    line-height: 1.45;
+  }
+  .slide.attn18-show-vectors .attn18-vector-wrap {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+  .slide.attn18-show-vectors .attn18-chip-wrap {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+  .slide.attn18-show-focus .attn18-token-primitive[data-token="sat"] .attn18-focus-label {
+    opacity: 1;
+  }
+  .slide.attn18-show-focus .attn18-token-primitive[data-token="sat"] .attn18-token-chip {
+    border-color: rgba(var(--attn18-focus-rgb), 0.84);
+    box-shadow: 0 0 0 0.1rem rgba(var(--attn18-focus-rgb), 0.52);
+    background: rgba(var(--attn18-focus-rgb), 0.14);
+  }
+  .slide.attn18-show-update #attn18-update-group {
+    opacity: 1;
+  }
+  .slide.attn18-show-update .attn18-token-primitive[data-token="sat"] .attn18-update-wrap {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+  .slide.attn18-show-flow #attn18-flow-group {
+    opacity: 1;
+  }
 
   @media (max-width: 56rem) {
     .pair-grid {
@@ -1106,6 +1346,40 @@
     .neighbor-chip {
       font-size: 0.67rem;
       padding: 0.18rem 0.34rem;
+    }
+    .attn18-layout {
+      margin-top: 0.72rem;
+    }
+    .attn18-stage {
+      min-height: clamp(11rem, 40vh, 15rem);
+      padding: 0.92rem 0.75rem;
+    }
+    .attn18-token-band {
+      gap: 0.3rem;
+      padding-top: clamp(2.2rem, 8vh, 3.1rem);
+    }
+    .attn18-vector-wrap,
+    .attn18-update-wrap {
+      grid-template-columns: 2.2rem minmax(0, 1fr);
+      column-gap: 0.22rem;
+      min-height: 0.9rem;
+    }
+    .attn18-token-chip {
+      font-size: 0.69rem;
+      padding: 0.26rem 0.2rem;
+    }
+    .attn18-focus-label {
+      font-size: 0.5rem;
+    }
+    .attn18-vector-label {
+      font-size: 0.55rem;
+    }
+    .attn18-vector {
+      height: 0.74rem;
+    }
+    .attn18-takeaway {
+      font-size: 0.79rem;
+      padding: 0.56rem 0.62rem;
     }
   }
 </style>
@@ -2305,6 +2579,49 @@ params in E = 50,257 × 768 = 38,597,376</div>
     </div>
   </div>
 
+  <!-- ═══════ SLIDE 18 — ATTENTION INTRO ═══════ -->
+  <div class="slide" id="slide-18">
+    <span class="section-tag">Attention</span>
+    <div class="badge concept">Mechanism</div>
+    <h2>Attention</h2>
+    <p class="small-text attn18-subtitle">Tokens update each other’s representations</p>
+    <p class="tiny attn18-motivation">Embeddings are static — attention makes them context-aware.</p>
+
+    <div class="attn18-layout">
+      <div class="card attn18-stage" id="attn18-stage">
+        <svg class="attn18-overlay" id="attn18-overlay" aria-hidden="true">
+          <defs>
+            <marker id="attn18-arrow-main" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto" markerUnits="userSpaceOnUse">
+              <path d="M0,0 L8,4 L0,8 z" fill="rgba(123,154,255,0.95)"></path>
+            </marker>
+          </defs>
+          <g id="attn18-flow-group" class="attn18-overlay-group">
+            <path id="attn18-flow-path-cat" class="attn18-flow-line"></path>
+            <polygon id="attn18-flow-head-cat" class="attn18-flow-head"></polygon>
+            <path id="attn18-flow-path-on" class="attn18-flow-line"></path>
+            <polygon id="attn18-flow-head-on" class="attn18-flow-head"></polygon>
+            <path id="attn18-flow-path-the" class="attn18-flow-line"></path>
+            <polygon id="attn18-flow-head-the" class="attn18-flow-head"></polygon>
+            <path id="attn18-flow-path-mat" class="attn18-flow-line"></path>
+            <polygon id="attn18-flow-head-mat" class="attn18-flow-head"></polygon>
+            <path id="attn18-flow-path-sat" class="attn18-flow-line"></path>
+            <polygon id="attn18-flow-head-sat" class="attn18-flow-head"></polygon>
+            <text id="attn18-flow-caption" class="attn18-overlay-label">sat can pull in what it needs from other tokens</text>
+            <text id="attn18-flow-micro-cat" class="attn18-overlay-label micro">who sat?</text>
+            <text id="attn18-flow-micro-mat" class="attn18-overlay-label micro">where?</text>
+          </g>
+          <g id="attn18-update-group" class="attn18-overlay-group">
+            <line id="attn18-update-arrow" class="attn18-update-line" marker-end="url(#attn18-arrow-main)"></line>
+            <text id="attn18-update-text" class="attn18-overlay-label update">update</text>
+          </g>
+        </svg>
+        <div class="attn18-token-band" id="attn18-token-band"></div>
+      </div>
+    </div>
+
+    <div class="attn18-takeaway" id="attn18-takeaway">Next: how does sat decide which tokens matter — and what to copy from them?</div>
+  </div>
+
 </div>
 
 <div class="bottom-bar">
@@ -2313,7 +2630,7 @@ params in E = 50,257 × 768 = 38,597,376</div>
   <div class="progress-track">
     <div class="progress-fill" id="progressFill" style="width:0%"></div>
   </div>
-  <span class="slide-counter" id="slideCounter">1 / 17</span>
+  <span class="slide-counter" id="slideCounter">1 / 18</span>
   <button class="nav-btn primary" id="btnNext">Next &rarr;</button>
 </div>
 
@@ -2411,6 +2728,20 @@ const TOKEN_LABEL_OFFSETS = {
 };
 
 const PROJECTION_TOKENS = Object.keys(LENS_STATES[DEFAULT_PROJECTION_LENS]);
+const ATTN_INTRO_TOKENS = ['cat', 'sat', 'on', 'the', 'mat'];
+const ATTN_INTRO_FLOW_SOURCES = ['cat', 'on', 'the', 'mat', 'sat'];
+const ATTN_INTRO_FOCUS = 'sat';
+const ATTN_INTRO_FOOTER = 'Next: how does sat decide which tokens matter — and what to copy from them?';
+const ATTN_INTRO_FLOW_HEIGHTS = {
+  cat: 0.08,
+  on: 0.12,
+  the: 0.16,
+  mat: 0.2,
+  sat: 0.18
+};
+const ATTN_INTRO_FLOW_ANIM_MS = 380;
+const ATTN_INTRO_FLOW_HEAD_FADE_MS = 150;
+const ATTN_INTRO_MAX_STEP = 8;
 
 let projectionState = {
   initialized: false,
@@ -2425,6 +2756,13 @@ let projectionState = {
   resizeBound: false,
   readoutTimer: null
 };
+let attentionIntroState = {
+  initialized: false,
+  step: 0,
+  resizeBound: false,
+  overlayTimer: null,
+  flowTimers: []
+};
 
 function typesetMath(root = document) {
   if (!window.MathJax || !window.MathJax.typesetPromise) return;
@@ -2438,6 +2776,7 @@ function refreshSlides() {
 
 function resetSlideInteractions(slideEl) {
   if (slideEl.id === 'slide-16') resetProjectionSlide();
+  if (slideEl.id === 'slide-18') resetAttentionIntroSlide();
 }
 
 function resetHiddenContent(slideEl) {
@@ -2470,6 +2809,10 @@ function goTo(index) {
     initProjectionSlide();
     drawProjection();
   }
+  if (slides[index].id === 'slide-18') {
+    initAttentionIntroSlide();
+    setAttentionIntroStep(0);
+  }
 }
 
 function runAutoStep(slideEl) {
@@ -2500,10 +2843,404 @@ function runProjectionLensStep(slideEl) {
   return true;
 }
 
+function createAttentionVectorRect(vectorId) {
+  const vector = document.createElement('div');
+  vector.className = 'attn18-vector';
+  vector.id = vectorId;
+  for (let i = 1; i <= 3; i += 1) {
+    const divider = document.createElement('span');
+    divider.className = 'attn18-vector-divider';
+    divider.style.left = (i * 25) + '%';
+    vector.appendChild(divider);
+  }
+  return vector;
+}
+
+function createAttentionTokenPrimitive(token) {
+  const primitive = document.createElement('div');
+  primitive.className = 'attn18-token-primitive';
+  primitive.dataset.token = token;
+
+  const chipWrap = document.createElement('div');
+  chipWrap.className = 'attn18-chip-wrap';
+
+  const chip = document.createElement('div');
+  chip.className = 'attn18-token-chip';
+  chip.id = 'attn18-chip-' + token;
+  chip.textContent = token;
+  chipWrap.appendChild(chip);
+
+  primitive.appendChild(chipWrap);
+
+  const vectorWrap = document.createElement('div');
+  vectorWrap.className = 'attn18-vector-wrap';
+  vectorWrap.id = 'attn18-vector-wrap-' + token;
+
+  const label = document.createElement('span');
+  label.className = 'attn18-vector-label';
+  label.textContent = 'x_' + token;
+
+  vectorWrap.appendChild(label);
+  vectorWrap.appendChild(createAttentionVectorRect('attn18-vector-' + token));
+  primitive.appendChild(vectorWrap);
+
+  if (token === ATTN_INTRO_FOCUS) {
+    const updatedWrap = document.createElement('div');
+    updatedWrap.className = 'attn18-update-wrap';
+
+    const primeLabel = document.createElement('span');
+    primeLabel.className = 'attn18-vector-label prime';
+    primeLabel.textContent = 'x_sat\'';
+
+    updatedWrap.appendChild(primeLabel);
+    updatedWrap.appendChild(createAttentionVectorRect('attn18-vector-sat-prime'));
+    primitive.appendChild(updatedWrap);
+  }
+
+  return primitive;
+}
+
+function clearAttentionIntroFlowTimers() {
+  attentionIntroState.flowTimers.forEach((timerId) => clearTimeout(timerId));
+  attentionIntroState.flowTimers = [];
+}
+
+function hideAttentionIntroFlowArrow(path, head) {
+  if (!path) return;
+  const length = typeof path.getTotalLength === 'function' ? path.getTotalLength() : 0;
+  const dash = length > 0 ? length.toFixed(2) : '0';
+  path.style.transition = 'none';
+  path.style.strokeDasharray = dash;
+  path.style.strokeDashoffset = dash;
+  if (!head) return;
+  head.style.transition = 'none';
+  head.style.opacity = '0';
+}
+
+function showAttentionIntroFlowArrow(path, head) {
+  if (!path) return;
+  const length = typeof path.getTotalLength === 'function' ? path.getTotalLength() : 0;
+  const dash = length > 0 ? length.toFixed(2) : '0';
+  path.style.transition = 'none';
+  path.style.strokeDasharray = dash;
+  path.style.strokeDashoffset = '0';
+  if (!head) return;
+  head.style.transition = 'none';
+  head.style.opacity = '1';
+}
+
+function getAttentionIntroFlowCount(step) {
+  return Math.max(0, Math.min(ATTN_INTRO_FLOW_SOURCES.length, step - 2));
+}
+
+function syncAttentionIntroFlowVisuals(visibleCount = getAttentionIntroFlowCount(attentionIntroState.step)) {
+  ATTN_INTRO_FLOW_SOURCES.forEach((token, idx) => {
+    const path = document.getElementById('attn18-flow-path-' + token);
+    const head = document.getElementById('attn18-flow-head-' + token);
+    if (!path || !head) return;
+    if (idx < visibleCount) showAttentionIntroFlowArrow(path, head);
+    else hideAttentionIntroFlowArrow(path, head);
+  });
+
+  const flowMicroCat = document.getElementById('attn18-flow-micro-cat');
+  if (flowMicroCat) flowMicroCat.style.opacity = visibleCount >= 1 ? '1' : '0';
+  const flowMicroMat = document.getElementById('attn18-flow-micro-mat');
+  if (flowMicroMat) flowMicroMat.style.opacity = visibleCount >= 4 ? '1' : '0';
+}
+
+function animateAttentionIntroFlowArrow(token) {
+  const path = document.getElementById('attn18-flow-path-' + token);
+  const head = document.getElementById('attn18-flow-head-' + token);
+  if (!path || !head) return;
+
+  hideAttentionIntroFlowArrow(path, head);
+  void path.getBoundingClientRect();
+  path.style.transition = 'stroke-dashoffset ' + ATTN_INTRO_FLOW_ANIM_MS + 'ms cubic-bezier(0.34, 0.08, 0.22, 1)';
+  path.style.strokeDashoffset = '0';
+
+  const headTimer = setTimeout(() => {
+    head.style.transition = 'opacity ' + ATTN_INTRO_FLOW_HEAD_FADE_MS + 'ms ease';
+    head.style.opacity = '1';
+    if (token === 'cat') {
+      const flowMicroCat = document.getElementById('attn18-flow-micro-cat');
+      if (flowMicroCat) flowMicroCat.style.opacity = '1';
+    }
+    if (token === 'mat') {
+      const flowMicroMat = document.getElementById('attn18-flow-micro-mat');
+      if (flowMicroMat) flowMicroMat.style.opacity = '1';
+    }
+  }, Math.max(ATTN_INTRO_FLOW_ANIM_MS - 70, 120));
+  attentionIntroState.flowTimers.push(headTimer);
+}
+
+function updateAttentionIntroOverlay() {
+  const stage = document.getElementById('attn18-stage');
+  const overlay = document.getElementById('attn18-overlay');
+  const satChip = document.getElementById('attn18-chip-' + ATTN_INTRO_FOCUS);
+  const satVector = document.getElementById('attn18-vector-sat');
+  if (!stage || !overlay || !satChip || !satVector) return;
+
+  const stageRect = stage.getBoundingClientRect();
+  if (stageRect.width < 1 || stageRect.height < 1) return;
+  overlay.setAttribute('viewBox', '0 0 ' + stageRect.width + ' ' + stageRect.height);
+
+  const anchor = (el, x, y) => {
+    const rect = el.getBoundingClientRect();
+    return {
+      x: rect.left - stageRect.left + rect.width * x,
+      y: rect.top - stageRect.top + rect.height * y
+    };
+  };
+
+  const satChipRect = satChip.getBoundingClientRect();
+  const satTop = anchor(satChip, 0.5, 0);
+  const satInlet = {
+    x: satTop.x,
+    y: satTop.y - Math.max(stageRect.height * 0.03, satChipRect.height * 0.2)
+  };
+
+  let flowMinX = satInlet.x;
+  let flowMaxX = satInlet.x;
+  let highestControlY = satInlet.y;
+  const flowMicroCat = document.getElementById('attn18-flow-micro-cat');
+  const flowMicroMat = document.getElementById('attn18-flow-micro-mat');
+
+  ATTN_INTRO_FLOW_SOURCES.forEach((token) => {
+    const sourceChip = document.getElementById('attn18-chip-' + token);
+    const path = document.getElementById('attn18-flow-path-' + token);
+    const head = document.getElementById('attn18-flow-head-' + token);
+    if (!sourceChip || !path) return;
+
+    if (token === ATTN_INTRO_FOCUS) {
+      const loopStart = anchor(satChip, 0.34, 0);
+      const loopEnd = anchor(satChip, 0.66, 0);
+      const loopWidth = Math.max(satChipRect.width * 1.1, stageRect.width * 0.07);
+      const loopLift = Math.max(stageRect.height * 0.18, satChipRect.height * 2.1);
+      const cp1x = loopStart.x - loopWidth * 0.56;
+      const cp2x = loopEnd.x + loopWidth * 0.56;
+      const controlY = loopStart.y - loopLift;
+
+      flowMinX = Math.min(flowMinX, loopStart.x, cp1x);
+      flowMaxX = Math.max(flowMaxX, loopEnd.x, cp2x);
+      highestControlY = Math.min(highestControlY, controlY);
+
+      const d = 'M ' + loopStart.x.toFixed(2) + ' ' + loopStart.y.toFixed(2)
+        + ' C ' + cp1x.toFixed(2) + ' ' + controlY.toFixed(2)
+        + ' ' + cp2x.toFixed(2) + ' ' + controlY.toFixed(2)
+        + ' ' + loopEnd.x.toFixed(2) + ' ' + loopEnd.y.toFixed(2);
+      path.setAttribute('d', d);
+
+      if (head) {
+        const dirX = loopEnd.x - cp2x;
+        const dirY = loopEnd.y - controlY;
+        const dirLen = Math.hypot(dirX, dirY) || 1;
+        const unitX = dirX / dirLen;
+        const unitY = dirY / dirLen;
+        const headLen = Math.max(stageRect.height * 0.023, 5.2);
+        const wing = headLen * 0.54;
+        const baseX = loopEnd.x - unitX * headLen;
+        const baseY = loopEnd.y - unitY * headLen;
+        const wingX = -unitY * wing;
+        const wingY = unitX * wing;
+        const points = loopEnd.x.toFixed(2) + ',' + loopEnd.y.toFixed(2)
+          + ' ' + (baseX + wingX).toFixed(2) + ',' + (baseY + wingY).toFixed(2)
+          + ' ' + (baseX - wingX).toFixed(2) + ',' + (baseY - wingY).toFixed(2);
+        head.setAttribute('points', points);
+      }
+      return;
+    }
+
+    const source = anchor(sourceChip, 0.5, 0);
+    const distanceX = Math.abs(source.x - satInlet.x);
+    const topLimit = stageRect.height * 0.08;
+    const baseLift = stageRect.height * (ATTN_INTRO_FLOW_HEIGHTS[token] || 0.2);
+    const spreadLift = distanceX * 0.022;
+    const controlY = Math.max(topLimit, Math.min(source.y, satInlet.y) - baseLift - spreadLift);
+    const cp1x = source.x + (satInlet.x - source.x) * 0.3;
+    const cp2x = source.x + (satInlet.x - source.x) * 0.74;
+
+    flowMinX = Math.min(flowMinX, source.x);
+    flowMaxX = Math.max(flowMaxX, source.x);
+    highestControlY = Math.min(highestControlY, controlY);
+
+    const d = 'M ' + source.x.toFixed(2) + ' ' + source.y.toFixed(2)
+      + ' C ' + cp1x.toFixed(2) + ' ' + controlY.toFixed(2)
+      + ' ' + cp2x.toFixed(2) + ' ' + controlY.toFixed(2)
+      + ' ' + satInlet.x.toFixed(2) + ' ' + satInlet.y.toFixed(2);
+    path.setAttribute('d', d);
+
+    if (token === 'cat' && flowMicroCat) {
+      const t = 0.44;
+      const oneMinusT = 1 - t;
+      const microX =
+        (oneMinusT ** 3) * source.x +
+        3 * (oneMinusT ** 2) * t * cp1x +
+        3 * oneMinusT * (t ** 2) * cp2x +
+        (t ** 3) * satInlet.x;
+      const microY =
+        (oneMinusT ** 3) * source.y +
+        3 * (oneMinusT ** 2) * t * controlY +
+        3 * oneMinusT * (t ** 2) * controlY +
+        (t ** 3) * satInlet.y;
+      flowMicroCat.setAttribute('x', microX.toFixed(2));
+      flowMicroCat.setAttribute('y', (microY - Math.max(stageRect.height * 0.015, 4.5)).toFixed(2));
+    }
+    if (token === 'mat' && flowMicroMat) {
+      const t = 0.52;
+      const oneMinusT = 1 - t;
+      const microX =
+        (oneMinusT ** 3) * source.x +
+        3 * (oneMinusT ** 2) * t * cp1x +
+        3 * oneMinusT * (t ** 2) * cp2x +
+        (t ** 3) * satInlet.x;
+      const microY =
+        (oneMinusT ** 3) * source.y +
+        3 * (oneMinusT ** 2) * t * controlY +
+        3 * oneMinusT * (t ** 2) * controlY +
+        (t ** 3) * satInlet.y;
+      flowMicroMat.setAttribute('x', microX.toFixed(2));
+      flowMicroMat.setAttribute('y', (microY - Math.max(stageRect.height * 0.015, 4.5)).toFixed(2));
+    }
+
+    if (head) {
+      const dirX = satInlet.x - cp2x;
+      const dirY = satInlet.y - controlY;
+      const dirLen = Math.hypot(dirX, dirY) || 1;
+      const unitX = dirX / dirLen;
+      const unitY = dirY / dirLen;
+      const headLen = Math.max(stageRect.height * 0.023, 5.2);
+      const wing = headLen * 0.54;
+      const baseX = satInlet.x - unitX * headLen;
+      const baseY = satInlet.y - unitY * headLen;
+      const wingX = -unitY * wing;
+      const wingY = unitX * wing;
+      const points = satInlet.x.toFixed(2) + ',' + satInlet.y.toFixed(2)
+        + ' ' + (baseX + wingX).toFixed(2) + ',' + (baseY + wingY).toFixed(2)
+        + ' ' + (baseX - wingX).toFixed(2) + ',' + (baseY - wingY).toFixed(2);
+      head.setAttribute('points', points);
+    }
+  });
+
+  const flowCaption = document.getElementById('attn18-flow-caption');
+  if (flowCaption) {
+    const captionX = (flowMinX + flowMaxX) * 0.5;
+    const captionY = Math.max(stageRect.height * 0.06, highestControlY - stageRect.height * 0.05);
+    flowCaption.setAttribute('x', captionX.toFixed(2));
+    flowCaption.setAttribute('y', captionY.toFixed(2));
+    flowCaption.setAttribute('text-anchor', 'middle');
+  }
+
+  const satPrimeVector = document.getElementById('attn18-vector-sat-prime');
+  const updateArrow = document.getElementById('attn18-update-arrow');
+  const updateLabel = document.getElementById('attn18-update-text');
+  if (!satPrimeVector || !updateArrow || !updateLabel) return;
+
+  const from = anchor(satVector, 0.5, 1);
+  const to = anchor(satPrimeVector, 0.5, 0);
+  const satVectorRect = satVector.getBoundingClientRect();
+  const updatePad = Math.max(stageRect.height * 0.007, satVectorRect.height * 0.16);
+  updateArrow.setAttribute('x1', from.x.toFixed(2));
+  updateArrow.setAttribute('y1', (from.y + updatePad).toFixed(2));
+  updateArrow.setAttribute('x2', to.x.toFixed(2));
+  updateArrow.setAttribute('y2', (to.y - updatePad).toFixed(2));
+  updateLabel.setAttribute('x', (to.x + satVectorRect.width * 0.34).toFixed(2));
+  updateLabel.setAttribute('y', (((from.y + to.y) * 0.5 - satVectorRect.height * 0.32) + 12).toFixed(2));
+}
+
+function setAttentionIntroStep(step) {
+  const slide = document.getElementById('slide-18');
+  const takeaway = document.getElementById('attn18-takeaway');
+  if (!slide || !takeaway) return;
+
+  const prevStep = attentionIntroState.step;
+  const clamped = Math.max(0, Math.min(ATTN_INTRO_MAX_STEP, step));
+  const prevFlowCount = getAttentionIntroFlowCount(prevStep);
+  const nextFlowCount = getAttentionIntroFlowCount(clamped);
+
+  clearAttentionIntroFlowTimers();
+
+  attentionIntroState.step = clamped;
+  slide.classList.toggle('attn18-show-vectors', clamped >= 1);
+  slide.classList.toggle('attn18-show-focus', clamped >= 2);
+  slide.classList.toggle('attn18-show-flow', clamped >= 3);
+  slide.classList.toggle('attn18-show-update', clamped >= 8);
+  takeaway.textContent = ATTN_INTRO_FOOTER;
+
+  updateAttentionIntroOverlay();
+
+  if (nextFlowCount > prevFlowCount) {
+    if (nextFlowCount === prevFlowCount + 1) {
+      syncAttentionIntroFlowVisuals(prevFlowCount);
+      animateAttentionIntroFlowArrow(ATTN_INTRO_FLOW_SOURCES[nextFlowCount - 1]);
+    } else {
+      syncAttentionIntroFlowVisuals(nextFlowCount);
+    }
+  } else {
+    syncAttentionIntroFlowVisuals(nextFlowCount);
+  }
+
+  requestAnimationFrame(updateAttentionIntroOverlay);
+  if (attentionIntroState.overlayTimer) clearTimeout(attentionIntroState.overlayTimer);
+  attentionIntroState.overlayTimer = setTimeout(() => {
+    updateAttentionIntroOverlay();
+    attentionIntroState.overlayTimer = null;
+  }, 260);
+}
+
+function initAttentionIntroSlide() {
+  const slide = document.getElementById('slide-18');
+  const tokenBand = document.getElementById('attn18-token-band');
+  if (!slide || !tokenBand) return;
+
+  if (!attentionIntroState.initialized) {
+    tokenBand.innerHTML = '';
+    ATTN_INTRO_TOKENS.forEach((token) => {
+      tokenBand.appendChild(createAttentionTokenPrimitive(token));
+    });
+
+    if (!attentionIntroState.resizeBound) {
+      window.addEventListener('resize', () => {
+        if (!attentionIntroState.initialized) return;
+        clearAttentionIntroFlowTimers();
+        updateAttentionIntroOverlay();
+        syncAttentionIntroFlowVisuals(getAttentionIntroFlowCount(attentionIntroState.step));
+      });
+      attentionIntroState.resizeBound = true;
+    }
+
+    attentionIntroState.initialized = true;
+  }
+
+  const takeaway = document.getElementById('attn18-takeaway');
+  if (takeaway) takeaway.textContent = ATTN_INTRO_FOOTER;
+  updateAttentionIntroOverlay();
+  syncAttentionIntroFlowVisuals(getAttentionIntroFlowCount(attentionIntroState.step));
+}
+
+function runAttentionIntroStep(slideEl) {
+  if (!slideEl || slideEl.id !== 'slide-18') return false;
+  if (!attentionIntroState.initialized) initAttentionIntroSlide();
+  if (attentionIntroState.step >= ATTN_INTRO_MAX_STEP) return false;
+  setAttentionIntroStep(attentionIntroState.step + 1);
+  return true;
+}
+
+function resetAttentionIntroSlide() {
+  const slide = document.getElementById('slide-18');
+  if (!slide) return;
+  if (attentionIntroState.overlayTimer) {
+    clearTimeout(attentionIntroState.overlayTimer);
+    attentionIntroState.overlayTimer = null;
+  }
+  clearAttentionIntroFlowTimers();
+  setAttentionIntroStep(0);
+}
+
 function nextWithInteractions() {
   if (total === 0) return;
   const active = slides[current];
   if (runProjectionLensStep(active)) return;
+  if (runAttentionIntroStep(active)) return;
   if (runAutoStep(active)) return;
 
   if (current === total - 1) goTo(0);
