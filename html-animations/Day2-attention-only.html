@@ -1408,8 +1408,7 @@
   .slide.attn19-show-scores .attn19-score-caption { opacity: 1; }
 
   /* =====================================================
-     SLIDE-21 — Step 3: scale scores to attention weights
-     prefix: attn21-
+     Slide-21 (Step 3) — scale + softmax -> attention weights
      ===================================================== */
   .attn21-layout {
     margin-top: 0.84rem;
@@ -1417,17 +1416,19 @@
     justify-content: center;
   }
   .attn21-stage {
-    min-height: clamp(17rem, 55vh, 24rem);
+    --attn21-col-gap: clamp(0.2rem, 0.56vw, 0.34rem);
+    min-height: clamp(18rem, 58vh, 26rem);
+    width: min(100%, 62rem);
     display: flex;
     flex-direction: column;
-    gap: 0.72rem;
+    gap: 0.76rem;
   }
   .attn21-token-row {
-    width: min(100%, 36rem);
+    width: min(100%, 38rem);
     align-self: center;
     display: grid;
     grid-template-columns: repeat(5, minmax(0, 1fr));
-    gap: clamp(0.28rem, 0.8vw, 0.68rem);
+    gap: clamp(0.24rem, 0.72vw, 0.58rem);
   }
   .attn21-token-cell {
     display: flex;
@@ -1437,70 +1438,98 @@
   .attn21-chip-wrap {
     width: 100%;
   }
-  .attn21-token-cell[data-token="sat"] .attn19-token-chip {
-    border-color: rgba(var(--attn19-focus-rgb), 0.84);
+  .attn21-token-cell.is-focus .attn19-token-chip {
+    border-color: rgba(var(--attn19-focus-rgb), 0.86);
     box-shadow: 0 0 0 0.1rem rgba(var(--attn19-focus-rgb), 0.5);
     background: rgba(var(--attn19-focus-rgb), 0.14);
   }
-  .attn21-token-cell[data-token="cat"] .attn19-token-chip,
-  .attn21-token-cell[data-token="on"] .attn19-token-chip,
-  .attn21-token-cell[data-token="the"] .attn19-token-chip,
-  .attn21-token-cell[data-token="mat"] .attn19-token-chip {
+  .attn21-token-cell:not(.is-focus) .attn19-token-chip {
     border-color: rgba(var(--attn19-source-rgb), 0.44);
     background: rgba(var(--attn19-source-rgb), 0.09);
   }
   .attn21-workspace {
-    margin-top: 0.42rem;
+    margin-top: 0.38rem;
     width: 100%;
     display: grid;
-    grid-template-columns: minmax(0, 1fr) clamp(13.2rem, 29vw, 16.4rem);
-    gap: clamp(0.65rem, 1.8vw, 1.35rem);
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
     align-items: start;
   }
   .attn21-pipeline {
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) auto minmax(0, 1fr);
-    gap: clamp(0.38rem, 1.1vw, 0.8rem);
+    gap: clamp(0.34rem, 0.92vw, 0.64rem);
     align-items: stretch;
   }
   .attn21-block {
+    position: relative;
     border: 1px solid rgba(123,154,255,0.24);
-    border-radius: 0.52rem;
-    background: rgba(18,24,40,0.42);
-    padding: 0.48rem 0.5rem;
+    border-radius: 0.58rem;
+    background: rgba(18,24,40,0.52);
+    padding: 0.52rem 0.52rem 0.5rem;
     display: flex;
     flex-direction: column;
-    gap: 0.36rem;
-    min-height: 6.6rem;
+    gap: 0.34rem;
+    min-height: 9.1rem;
+    transition: opacity 0.24s ease, filter 0.24s ease, transform 0.24s ease, border-color 0.24s ease, box-shadow 0.24s ease;
   }
   .attn21-block-title {
-    font-size: 0.59rem;
+    font-size: 0.58rem;
     font-weight: 700;
     letter-spacing: 0.04em;
     text-transform: uppercase;
-    color: rgba(190,208,255,0.88);
-    white-space: nowrap;
+    color: rgba(191,208,248,0.92);
+    line-height: 1.3;
   }
-  .attn21-token-values {
+  .attn21-block-caption {
+    font-size: 0.5rem;
+    color: rgba(184,196,227,0.88);
+    line-height: 1.35;
+  }
+  .attn21-row-shell {
+    position: relative;
+  }
+  .attn21-chip-grid {
     display: grid;
     grid-template-columns: repeat(5, minmax(0, 1fr));
-    gap: clamp(0.18rem, 0.52vw, 0.36rem);
+    gap: var(--attn21-col-gap);
     width: 100%;
+    position: relative;
+    z-index: 1;
   }
-  .attn21-num-cell {
-    min-height: 1.28rem;
-    border-radius: 0.34rem;
+  .attn21-score-cell {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.18rem;
+  }
+  .attn21-num-chip {
+    width: 100%;
+    min-height: 1.3rem;
+    border-radius: 0.36rem;
     border: 1px solid rgba(184,194,221,0.28);
-    background: rgba(184,194,221,0.08);
+    background: rgba(184,194,221,0.09);
     display: flex;
     align-items: center;
     justify-content: center;
     font-family: 'JetBrains Mono', monospace;
     font-size: 0.6rem;
-    color: rgba(219,227,247,0.9);
-    opacity: 0;
-    transform: translateY(0.14rem);
-    transition: opacity 0.22s ease, transform 0.22s ease;
+    color: rgba(219,227,247,0.93);
+  }
+  .attn21-token-mini {
+    font-size: 0.46rem;
+    color: rgba(170,182,212,0.86);
+    letter-spacing: 0.01em;
+    text-transform: lowercase;
+  }
+  .attn21-scale-note {
+    margin-top: auto;
+    align-self: flex-end;
+    font-size: 0.47rem;
+    color: rgba(184,197,228,0.83);
+    line-height: 1.35;
+    text-align: right;
+    max-width: 11.2rem;
   }
   .attn21-op {
     align-self: center;
@@ -1509,8 +1538,8 @@
     background: rgba(123,154,255,0.12);
     color: rgba(196,212,252,0.9);
     font-family: 'JetBrains Mono', monospace;
-    font-size: 0.6rem;
-    letter-spacing: 0.02em;
+    font-size: 0.58rem;
+    letter-spacing: 0.01em;
     padding: 0.18rem 0.48rem;
     white-space: nowrap;
     opacity: 0;
@@ -1518,58 +1547,65 @@
     transform: translateY(0.12rem);
     transition: opacity 0.22s ease, transform 0.22s ease, visibility 0.22s ease;
   }
-  .attn21-formula-card {
-    border: 1px solid rgba(123,154,255,0.24);
-    border-radius: 0.52rem;
-    background: rgba(123,154,255,0.07);
-    padding: 0.5rem 0.58rem;
+  .attn21-link {
+    align-self: center;
     display: flex;
-    flex-direction: column;
-    gap: 0.36rem;
-    min-height: 6.6rem;
+    align-items: center;
+    gap: 0.22rem;
   }
-  .attn21-formula-title {
-    font-size: 0.58rem;
-    font-weight: 700;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    color: rgba(198,214,252,0.9);
+  .attn21-link-arrow {
+    width: 0.95rem;
+    border-top: 1px solid rgba(144,172,238,0.66);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(0.12rem);
+    transition: opacity 0.22s ease, transform 0.22s ease, visibility 0.22s ease;
+    position: relative;
   }
-  .attn21-formula-eq {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.72rem;
-    color: rgba(217,228,252,0.94);
-    line-height: 1.35;
+  .attn21-link-arrow::after {
+    content: '';
+    position: absolute;
+    top: -0.19rem;
+    right: -0.02rem;
+    border-top: 0.19rem solid transparent;
+    border-bottom: 0.19rem solid transparent;
+    border-left: 0.29rem solid rgba(144,172,238,0.72);
   }
-  .attn21-formula-note {
-    font-size: 0.52rem;
-    color: rgba(182,194,223,0.84);
-    line-height: 1.35;
+  .attn21-weight-shell {
+    margin-top: 0.04rem;
+    position: relative;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(0.12rem);
+    transition: opacity 0.24s ease, transform 0.24s ease, visibility 0.24s ease;
   }
   .attn21-weight-cells {
     display: grid;
     grid-template-columns: repeat(5, minmax(0, 1fr));
-    gap: clamp(0.18rem, 0.52vw, 0.36rem);
+    gap: var(--attn21-col-gap);
     align-items: end;
+    position: relative;
+    z-index: 1;
   }
   .attn21-weight-cell {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 0.18rem;
+    gap: 0.16rem;
+  }
+  .attn21-weight-value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.55rem;
+    color: rgba(213,224,250,0.92);
   }
   .attn21-weight-bar {
     width: 100%;
-    height: 3.25rem;
-    border-radius: 0.34rem;
-    border: 1px solid rgba(123,154,255,0.28);
+    height: 3.15rem;
+    border-radius: 0.32rem;
+    border: 1px solid rgba(123,154,255,0.3);
     background: rgba(123,154,255,0.08);
     position: relative;
     overflow: hidden;
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(0.14rem);
-    transition: opacity 0.24s ease, transform 0.24s ease, visibility 0.24s ease;
   }
   .attn21-weight-fill {
     position: absolute;
@@ -1577,132 +1613,101 @@
     right: 0;
     bottom: 0;
     height: var(--attn21-fill, 0%);
-    background: linear-gradient(180deg, rgba(123,154,255,0.92) 0%, rgba(90,232,142,0.82) 100%);
-  }
-  .attn21-weight-label {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.56rem;
-    color: rgba(214,225,251,0.92);
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(0.1rem);
-    transition: opacity 0.24s ease, transform 0.24s ease, visibility 0.24s ease;
+    background: linear-gradient(180deg, rgba(123,154,255,0.96) 0%, rgba(123,154,255,0.7) 100%);
   }
   .attn21-weight-token {
-    font-size: 0.5rem;
-    color: rgba(176,189,220,0.82);
+    font-size: 0.47rem;
+    color: rgba(174,188,220,0.84);
     text-transform: lowercase;
     letter-spacing: 0.01em;
   }
+  .attn21-weight-cell:not(.is-peak) .attn21-weight-bar,
+  .attn21-weight-cell:not(.is-peak) .attn21-weight-value,
+  .attn21-weight-cell:not(.is-peak) .attn21-weight-token {
+    opacity: 0.76;
+  }
+  .attn21-weight-cell.is-peak .attn21-weight-bar {
+    box-shadow: 0 0 0 1px rgba(123,154,255,0.46);
+  }
+  .attn21-weight-sweep {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: -32%;
+    width: 32%;
+    background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(240,244,255,0.3) 50%, rgba(255,255,255,0) 100%);
+    opacity: 0;
+    pointer-events: none;
+    z-index: 2;
+  }
   .attn21-sum {
-    margin-top: 0.24rem;
-    align-self: flex-end;
-    border: 1px solid rgba(123,154,255,0.28);
+    margin-top: 0.28rem;
+    align-self: flex-start;
+    border: 1px solid rgba(123,154,255,0.3);
     border-radius: 999px;
-    background: rgba(123,154,255,0.08);
+    background: rgba(123,154,255,0.11);
     padding: 0.18rem 0.52rem;
     font-family: 'JetBrains Mono', monospace;
     font-size: 0.56rem;
-    color: rgba(194,207,240,0.84);
-    opacity: 0.48;
-    transition: opacity 0.22s ease, border-color 0.22s ease, background 0.22s ease, color 0.22s ease;
+    color: rgba(197,210,242,0.88);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(0.12rem);
+    transition: opacity 0.22s ease, transform 0.22s ease, visibility 0.22s ease, border-color 0.22s ease, background 0.22s ease, color 0.22s ease;
   }
   .attn21-sum sub {
     font-size: 0.76em;
     line-height: 0;
     vertical-align: -0.3em;
   }
-  .attn21-why {
-    width: 100%;
-    border: 1px solid rgba(90,232,142,0.26);
-    border-radius: 0.52rem;
-    background: rgba(90,232,142,0.07);
-    padding: 0.48rem 0.56rem;
-    display: grid;
-    gap: 0.34rem;
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(0.18rem);
-    transition: opacity 0.24s ease, transform 0.24s ease, visibility 0.24s ease;
-  }
-  .attn21-why-title {
-    font-size: 0.58rem;
-    font-weight: 700;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    color: rgba(170,236,198,0.9);
-  }
-  .attn21-why-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0.42rem;
-  }
-  .attn21-why-card {
-    border: 1px solid rgba(90,232,142,0.2);
-    border-radius: 0.4rem;
-    background: rgba(90,232,142,0.06);
-    padding: 0.34rem 0.38rem;
-    display: grid;
-    gap: 0.26rem;
-  }
-  .attn21-why-label {
-    font-size: 0.5rem;
-    color: rgba(198,238,216,0.92);
-    line-height: 1.3;
-  }
-  .attn21-mini-bars {
-    height: 1.9rem;
-    display: grid;
-    grid-template-columns: repeat(5, minmax(0, 1fr));
-    gap: 0.12rem;
-    align-items: end;
-  }
-  .attn21-mini-bar {
-    width: 100%;
-    border-radius: 0.18rem 0.18rem 0.1rem 0.1rem;
-    background: rgba(90,232,142,0.78);
-    height: var(--attn21-mini, 40%);
-  }
-  .attn21-mini-caption {
-    font-size: 0.48rem;
-    color: rgba(184,230,202,0.86);
-    line-height: 1.3;
-  }
-  .slide.attn21-show-s .attn21-row-raw .attn21-num-cell {
-    opacity: 1;
-    transform: translateY(0);
+  .attn21-block-z,
+  .attn21-block-weights {
+    opacity: 0.44;
+    filter: blur(1.35px) saturate(0.84);
+    transform: translateY(0.08rem);
   }
   .slide.attn21-show-scale .attn21-op-scale,
-  .slide.attn21-show-scale .attn21-row-scaled .attn21-num-cell {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0);
-  }
   .slide.attn21-show-softmax .attn21-op-softmax {
     opacity: 1;
     visibility: visible;
     transform: translateY(0);
   }
-  .slide.attn21-show-softmax .attn21-weight-bar,
-  .slide.attn21-show-softmax .attn21-weight-label {
+  .slide.attn21-show-scale .attn21-link-scale .attn21-link-arrow,
+  .slide.attn21-show-softmax .attn21-link-softmax .attn21-link-arrow {
     opacity: 1;
     visibility: visible;
     transform: translateY(0);
   }
-  .slide.attn21-show-softmax .attn21-sum { opacity: 1; }
-  .slide.attn21-show-why .attn21-why {
+  .slide.attn21-show-scale .attn21-block-z {
+    opacity: 1;
+    filter: none;
+    transform: translateY(0);
+  }
+  .slide.attn21-show-softmax .attn21-block-weights {
+    opacity: 1;
+    filter: none;
+    transform: translateY(0);
+  }
+  .slide.attn21-show-softmax .attn21-weight-shell,
+  .slide.attn21-show-softmax .attn21-sum {
     opacity: 1;
     visibility: visible;
     transform: translateY(0);
   }
   .slide.attn21-show-final .attn21-block-weights {
-    border-color: rgba(var(--attn19-focus-rgb), 0.52);
-    box-shadow: 0 0 0 1px rgba(var(--attn19-focus-rgb), 0.32) inset;
+    border-color: rgba(var(--attn19-focus-rgb), 0.56);
+    box-shadow: 0 0 0 1px rgba(var(--attn19-focus-rgb), 0.3) inset;
   }
   .slide.attn21-show-final .attn21-sum {
-    border-color: rgba(90,232,142,0.62);
-    background: rgba(90,232,142,0.16);
-    color: rgba(204,245,219,0.98);
+    border-color: rgba(var(--attn19-focus-rgb), 0.56);
+    background: rgba(var(--attn19-focus-rgb), 0.2);
+    color: rgba(213,227,255,0.98);
+  }
+  .slide.attn21-show-final .attn21-weight-sweep {
+    animation: attn21-weight-sweep 760ms ease-out 1;
+  }
+  .slide.attn21-show-final .attn21-token-cell.is-focus .attn19-token-chip {
+    animation: attn21-sat-glow 820ms ease-out 1;
   }
   .attn21-takeaway {
     margin-top: 0.82rem;
@@ -1712,10 +1717,34 @@
     display: flex;
     align-items: center;
     padding: 0.62rem 0.72rem;
-    font-size: 0.85rem;
+    font-size: 0.84rem;
     color: #dbe4ff;
     line-height: 1.45;
     width: min(100%, 56rem);
+  }
+  @keyframes attn21-weight-sweep {
+    0% {
+      transform: translateX(0);
+      opacity: 0;
+    }
+    12% {
+      opacity: 0.75;
+    }
+    100% {
+      transform: translateX(435%);
+      opacity: 0;
+    }
+  }
+  @keyframes attn21-sat-glow {
+    0% {
+      box-shadow: 0 0 0 0.1rem rgba(var(--attn19-focus-rgb), 0.5);
+    }
+    46% {
+      box-shadow: 0 0 0 0.16rem rgba(var(--attn19-focus-rgb), 0.72), 0 0 0.7rem rgba(var(--attn19-focus-rgb), 0.34);
+    }
+    100% {
+      box-shadow: 0 0 0 0.1rem rgba(var(--attn19-focus-rgb), 0.5);
+    }
   }
   @media (max-width: 56rem) {
     .attn19p1-layout { margin-top: 0; }
@@ -1742,7 +1771,7 @@
     .attn19p1-meaning { font-size: 0.47rem; }
     .attn19p1-arrow-gap { height: clamp(2rem, 7vh, 3.4rem); }
     .attn19p1-takeaway { font-size: 0.76rem; padding: 0.5rem 0.58rem; }
-    .attn21-stage { min-height: clamp(19rem, 70vh, 26rem); }
+    .attn21-stage { min-height: clamp(21rem, 72vh, 30rem); }
     .attn21-token-row { gap: 0.2rem; }
     .attn21-workspace {
       grid-template-columns: 1fr;
@@ -1753,20 +1782,22 @@
       gap: 0.48rem;
     }
     .attn21-block { min-height: auto; }
+    .attn21-link { justify-content: center; }
+    .attn21-link-arrow { width: 0.7rem; }
     .attn21-op { justify-self: center; }
     .attn21-block-title { font-size: 0.52rem; }
-    .attn21-num-cell {
+    .attn21-num-chip {
       min-height: 1.1rem;
       font-size: 0.53rem;
     }
-    .attn21-formula-eq { font-size: 0.64rem; }
-    .attn21-formula-note { font-size: 0.47rem; }
+    .attn21-weight-value { font-size: 0.5rem; }
     .attn21-weight-bar { height: 2.55rem; }
-    .attn21-weight-label { font-size: 0.5rem; }
     .attn21-weight-token { font-size: 0.44rem; }
     .attn21-sum { font-size: 0.5rem; }
-    .attn21-why-grid { grid-template-columns: 1fr; }
-    .attn21-mini-caption { font-size: 0.44rem; }
+    .attn21-scale-note {
+      font-size: 0.44rem;
+      max-width: 100%;
+    }
     .attn21-takeaway { font-size: 0.76rem; padding: 0.5rem 0.58rem; }
   }
 </style>
@@ -1953,8 +1984,8 @@
   <div class="slide" id="slide-21">
     <span class="section-tag">Attention</span>
     <div class="badge concept">Mechanism</div>
-    <h2>Attention</h2>
-    <p class="small-text attn19-subtitle">Step 3: scale scores and normalize with softmax</p>
+    <h2>Step 3 — From scores to attention weights</h2>
+    <p class="small-text attn19-subtitle">Normalize → Softmax → Weights</p>
 
     <div class="attn21-layout">
       <div class="card attn19-stage attn21-stage" id="attn21-stage">
@@ -1963,64 +1994,48 @@
         <div class="attn21-workspace">
           <div class="attn21-pipeline">
             <div class="attn21-block attn21-block-s">
-              <div class="attn21-block-title">Raw scores s<sub>j</sub></div>
-              <div class="attn21-token-values attn21-row-raw" id="attn21-raw-row"></div>
+              <div class="attn21-block-title">RAW SCORES (S)</div>
+              <div class="attn21-block-caption">for query token: <span id="attn21-query-token">sat</span></div>
+              <div class="attn21-row-shell">
+                <div class="attn21-chip-grid attn21-row-raw" id="attn21-raw-row"></div>
+              </div>
             </div>
 
-            <div class="attn21-op attn21-op-scale">÷ √d<sub>k</sub></div>
+            <div class="attn21-link attn21-link-scale">
+              <span class="attn21-link-arrow" aria-hidden="true"></span>
+              <div class="attn21-op attn21-op-scale">÷ √d<sub>k</sub></div>
+              <span class="attn21-link-arrow" aria-hidden="true"></span>
+            </div>
 
             <div class="attn21-block attn21-block-z">
-              <div class="attn21-block-title">Scaled scores z<sub>j</sub></div>
-              <div class="attn21-token-values attn21-row-scaled" id="attn21-scaled-row"></div>
+              <div class="attn21-block-title">SCALED SCORES (Z)</div>
+              <div class="attn21-block-caption">z = s / √d<sub>k</sub></div>
+              <div class="attn21-row-shell">
+                <div class="attn21-chip-grid attn21-row-scaled" id="attn21-scaled-row"></div>
+              </div>
+              <div class="attn21-scale-note">√d<sub>k</sub> prevents overly large dot-products</div>
             </div>
 
-            <div class="attn21-op attn21-op-softmax">Softmax</div>
+            <div class="attn21-link attn21-link-softmax">
+              <span class="attn21-link-arrow" aria-hidden="true"></span>
+              <div class="attn21-op attn21-op-softmax">softmax</div>
+              <span class="attn21-link-arrow" aria-hidden="true"></span>
+            </div>
 
             <div class="attn21-block attn21-block-weights">
-              <div class="attn21-block-title">Attention weights α<sub>j</sub></div>
-              <div class="attn21-weight-cells" id="attn21-weight-row"></div>
-              <div class="attn21-sum" id="attn21-sum-chip">Σ α<sub>j</sub> = 1.00</div>
-            </div>
-          </div>
-
-          <aside class="attn21-formula-card">
-            <div class="attn21-formula-title">Formula</div>
-            <div class="attn21-formula-eq">α<sub>j</sub> = softmax(s<sub>j</sub> / √d<sub>k</sub>)</div>
-            <div class="attn21-formula-note">For this toy example: d<sub>k</sub> = 16, so we divide each score by 4 before softmax.</div>
-          </aside>
-        </div>
-
-        <div class="attn21-why" id="attn21-why-panel">
-          <div class="attn21-why-title">Why scaling matters</div>
-          <div class="attn21-why-grid">
-            <div class="attn21-why-card">
-              <div class="attn21-why-label">Without scaling</div>
-              <div class="attn21-mini-bars">
-                <span class="attn21-mini-bar" style="--attn21-mini: 82%;"></span>
-                <span class="attn21-mini-bar" style="--attn21-mini: 10%;"></span>
-                <span class="attn21-mini-bar" style="--attn21-mini: 5%;"></span>
-                <span class="attn21-mini-bar" style="--attn21-mini: 2%;"></span>
-                <span class="attn21-mini-bar" style="--attn21-mini: 1%;"></span>
+              <div class="attn21-block-title">ATTENTION WEIGHTS (A)</div>
+              <div class="attn21-weight-shell">
+                <div class="attn21-weight-cells" id="attn21-weight-row"></div>
+                <span class="attn21-weight-sweep" aria-hidden="true"></span>
               </div>
-              <div class="attn21-mini-caption">Softmax becomes too peaky; one token dominates quickly.</div>
-            </div>
-            <div class="attn21-why-card">
-              <div class="attn21-why-label">With scaling (÷ √d<sub>k</sub>)</div>
-              <div class="attn21-mini-bars">
-                <span class="attn21-mini-bar" style="--attn21-mini: 100%;"></span>
-                <span class="attn21-mini-bar" style="--attn21-mini: 69%;"></span>
-                <span class="attn21-mini-bar" style="--attn21-mini: 66%;"></span>
-                <span class="attn21-mini-bar" style="--attn21-mini: 55%;"></span>
-                <span class="attn21-mini-bar" style="--attn21-mini: 52%;"></span>
-              </div>
-              <div class="attn21-mini-caption">Weights stay smoother and gradients remain better behaved.</div>
+              <div class="attn21-sum" id="attn21-sum-chip">Σ a<sub>j</sub> = --</div>
             </div>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="attn21-takeaway" id="attn21-takeaway">We have compatibility scores <i>s</i><sub>j</sub>, but not yet attention weights.</div>
+    <div class="attn21-takeaway" id="attn21-takeaway">Raw similarity scores between q_sat and each key k_j.</div>
   </div>
 
 </div>
@@ -2108,14 +2123,12 @@ const ATTN_WGT_FOCUS = 'sat';
 const ATTN_WGT_RAW_SCORES = [3.0, 1.6, 1.3, 0.2, -0.4];
 const ATTN_WGT_SCALED_SCORES = [0.75, 0.40, 0.33, 0.05, -0.10];
 const ATTN_WGT_WEIGHTS = [0.29, 0.20, 0.19, 0.16, 0.15];
-const ATTN_WGT_MAX_STEP = 5;
+const ATTN_WGT_MAX_STEP = 3;
 const ATTN_WGT_TAKEAWAYS = [
-  'We have compatibility scores <i>s</i><sub>j</sub>, but not yet attention weights.',
-  'Raw scores are relative matches between <i>q</i><sub>sat</sub> and each <i>k</i><sub>j</sub>.',
-  'Scale by \u221ad<sub>k</sub> to keep logits in a workable range.',
-  'Softmax turns scaled scores into positive, comparable weights.',
-  'Scaling prevents softmax from becoming too sharp too early.',
-  'These \u03b1<sub>j</sub> are attention weights; next we apply them to <i>v</i><sub>j</sub>.'
+  'Raw similarity scores between q_sat and each key k_j.',
+  'Scale scores to keep values in a stable range before softmax.',
+  'Softmax converts scaled scores into normalized attention weights.',
+  'These weights decide how much each value v_j contributes to the updated token.'
 ];
 
 const state = {
@@ -2155,8 +2168,7 @@ const state = {
   },
   attentionWeights: {
     initialized: false,
-    step: 0,
-    resizeBound: false
+    step: 0
   }
 };
 
@@ -3398,6 +3410,7 @@ function initAttentionWeightsSlide() {
   const scaledRow = document.getElementById('attn21-scaled-row');
   const weightRow = document.getElementById('attn21-weight-row');
   const sumChip = document.getElementById('attn21-sum-chip');
+  const queryToken = document.getElementById('attn21-query-token');
   if (!slide || !tokenRow || !rawRow || !scaledRow || !weightRow || !sumChip) return;
 
   if (!state.attentionWeights.initialized) {
@@ -3405,13 +3418,14 @@ function initAttentionWeightsSlide() {
     rawRow.innerHTML = '';
     scaledRow.innerHTML = '';
     weightRow.innerHTML = '';
+    if (queryToken) queryToken.textContent = ATTN_WGT_FOCUS;
 
     const maxWeight = Math.max.apply(null, ATTN_WGT_WEIGHTS);
     const safeMaxWeight = maxWeight > 0 ? maxWeight : 1;
 
     ATTN_WGT_TOKENS.forEach((token, idx) => {
       const tokenCell = createEl('div', {
-        className: 'attn21-token-cell',
+        className: 'attn21-token-cell' + (token === ATTN_WGT_FOCUS ? ' is-focus' : ''),
         dataset: { token }
       });
       const chipWrap = createEl('div', { className: 'attn19-chip-wrap attn21-chip-wrap' });
@@ -3423,33 +3437,45 @@ function initAttentionWeightsSlide() {
       tokenCell.appendChild(chipWrap);
       tokenRow.appendChild(tokenCell);
 
-      rawRow.appendChild(createEl('div', {
-        className: 'attn21-num-cell',
+      const rawCell = createEl('div', { className: 'attn21-score-cell', dataset: { token } });
+      rawCell.appendChild(createEl('div', {
+        className: 'attn21-num-chip',
         id: 'attn21-raw-' + token,
         text: ATTN_WGT_RAW_SCORES[idx].toFixed(1)
       }));
+      rawCell.appendChild(createEl('div', {
+        className: 'attn21-token-mini',
+        text: token
+      }));
+      rawRow.appendChild(rawCell);
 
-      scaledRow.appendChild(createEl('div', {
-        className: 'attn21-num-cell',
+      const scaledCell = createEl('div', { className: 'attn21-score-cell', dataset: { token } });
+      scaledCell.appendChild(createEl('div', {
+        className: 'attn21-num-chip',
         id: 'attn21-scaled-' + token,
         text: ATTN_WGT_SCALED_SCORES[idx].toFixed(2)
       }));
+      scaledCell.appendChild(createEl('div', {
+        className: 'attn21-token-mini',
+        text: token
+      }));
+      scaledRow.appendChild(scaledCell);
 
       const weight = ATTN_WGT_WEIGHTS[idx];
       const fillPct = (weight / safeMaxWeight) * 100;
       const wCell = createEl('div', {
-        className: 'attn21-weight-cell',
+        className: 'attn21-weight-cell' + (weight === maxWeight ? ' is-peak' : ''),
         dataset: { token }
       });
+      wCell.appendChild(createEl('div', {
+        className: 'attn21-weight-value',
+        text: weight.toFixed(2)
+      }));
       const wBar = createEl('div', { className: 'attn21-weight-bar' });
       const wFill = createEl('span', { className: 'attn21-weight-fill' });
       wFill.style.setProperty('--attn21-fill', fillPct.toFixed(1) + '%');
       wBar.appendChild(wFill);
       wCell.appendChild(wBar);
-      wCell.appendChild(createEl('div', {
-        className: 'attn21-weight-label',
-        text: weight.toFixed(2)
-      }));
       wCell.appendChild(createEl('div', {
         className: 'attn21-weight-token',
         text: token
@@ -3458,29 +3484,27 @@ function initAttentionWeightsSlide() {
     });
 
     const sum = ATTN_WGT_WEIGHTS.reduce((acc, value) => acc + value, 0);
-    sumChip.innerHTML = '\u03a3 \u03b1<sub>j</sub> = ' + sum.toFixed(2);
+    sumChip.innerHTML = '\u03a3 a<sub>j</sub> = ' + sum.toFixed(2);
 
     state.attentionWeights.initialized = true;
   }
 
   const takeaway = document.getElementById('attn21-takeaway');
-  if (takeaway) takeaway.innerHTML = ATTN_WGT_TAKEAWAYS[state.attentionWeights.step] || ATTN_WGT_TAKEAWAYS[0];
+  if (takeaway) takeaway.textContent = ATTN_WGT_TAKEAWAYS[state.attentionWeights.step] || ATTN_WGT_TAKEAWAYS[0];
 }
 
 function setAttentionWeightsStep(step) {
   const slide = document.getElementById('slide-21');
   const takeaway = document.getElementById('attn21-takeaway');
-  if (!slide || !takeaway) return;
+  if (!slide) return;
 
   const clamped = Math.max(0, Math.min(ATTN_WGT_MAX_STEP, step));
   state.attentionWeights.step = clamped;
 
-  slide.classList.toggle('attn21-show-s', clamped >= 1);
-  slide.classList.toggle('attn21-show-scale', clamped >= 2);
-  slide.classList.toggle('attn21-show-softmax', clamped >= 3);
-  slide.classList.toggle('attn21-show-why', clamped >= 4);
-  slide.classList.toggle('attn21-show-final', clamped >= 5);
-  takeaway.innerHTML = ATTN_WGT_TAKEAWAYS[clamped] || ATTN_WGT_TAKEAWAYS[0];
+  slide.classList.toggle('attn21-show-scale', clamped >= 1);
+  slide.classList.toggle('attn21-show-softmax', clamped >= 2);
+  slide.classList.toggle('attn21-show-final', clamped >= 3);
+  if (takeaway) takeaway.textContent = ATTN_WGT_TAKEAWAYS[clamped] || ATTN_WGT_TAKEAWAYS[0];
 }
 
 function runAttentionWeightsStep() {
