@@ -619,6 +619,7 @@
     line-height: 1;
     font-weight: 700;
     letter-spacing: 0.01em;
+    transition: opacity 0.2s ease, visibility 0.2s ease;
   }
   .attn19-dot-node sup {
     font-size: 0.68em;
@@ -629,6 +630,17 @@
   .attn19-col[data-token="sat"] .attn19-dot-node {
     border-color: rgba(var(--attn19-focus-rgb), 0.86);
     box-shadow: 0 0 0 0.08rem rgba(var(--attn19-focus-rgb), 0.28);
+  }
+  .slide.attn19-cleanup-qk .attn19-dot-node {
+    opacity: 0;
+    visibility: hidden;
+  }
+  .attn19-score-op-wrap.no-dot {
+    grid-template-columns: minmax(2rem, max-content);
+    column-gap: 0;
+  }
+  .attn19-score-op-wrap.no-dot .attn19-score-pill {
+    justify-self: start;
   }
   .attn19-score-pill {
     min-width: 2.24rem;
@@ -897,19 +909,94 @@
   .slide.attn19-show-compare #attn22-compare-group {
     opacity: 1;
   }
+  #slide-22 {
+    --attn22-lane-label-w: 2.72rem;
+    --attn22-lane-gap: 0.28rem;
+  }
   #slide-22 #attn22-q-group,
   #slide-22 #attn22-compare-group {
     display: none;
   }
   #slide-22 .attn19-score-op-wrap {
-    grid-template-columns: minmax(2rem, max-content);
-    column-gap: 0;
+    grid-template-columns: var(--attn22-lane-label-w) minmax(0, 1fr);
+    column-gap: var(--attn22-lane-gap);
   }
   #slide-22 .attn19-score-pill {
-    justify-self: start;
+    grid-column: 2;
+    justify-self: center;
+    transition: opacity 0.16s ease, visibility 0.16s ease;
+  }
+  #slide-22 .attn22-col {
+    position: relative;
+  }
+  #slide-22 .attn19-chip-wrap,
+  #slide-22 .attn19-vector-wrap-x,
+  #slide-22 .attn19-score-op-wrap,
+  #slide-22 .attn19-vector-wrap-k,
+  #slide-22 .attn19-vector-wrap-v {
+    grid-column: 1;
+  }
+  #slide-22 .attn22-fly-pill {
+    position: absolute;
+    left: -9999px;
+    top: -9999px;
+    z-index: 5;
+    min-width: 2.1rem;
+    border-radius: 999px;
+    border: 1px solid rgba(var(--attn19-focus-rgb), 0.95);
+    background: rgba(var(--attn19-focus-rgb), 0.28);
+    color: rgba(228,238,255,0.98);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.54rem;
+    line-height: 1;
+    text-align: center;
+    padding: 0.16rem 0.32rem;
+    pointer-events: none;
+    opacity: 0;
+    box-shadow: 0 0 0 0.08rem rgba(var(--attn19-focus-rgb), 0.34), 0 0 0.68rem rgba(var(--attn19-focus-rgb), 0.24);
+    transform: translate(-50%, -50%);
+    transition: none;
+  }
+  #slide-22 .attn19-score-op-wrap,
+  #slide-22 .attn19-vector-wrap-v {
+    z-index: 2;
+  }
+  #slide-22.attn22-show-pairing .attn22-col.is-flying .attn19-score-pill,
+  #slide-22.attn22-show-pairing .attn22-col.is-paired .attn19-score-pill {
+    opacity: 0;
+    visibility: hidden;
+  }
+  #slide-22.attn22-show-pairing .attn22-col.is-pairing .attn19-score-pill {
+    border-color: rgba(var(--attn19-focus-rgb), 0.95);
+    box-shadow: 0 0 0 0.08rem rgba(var(--attn19-focus-rgb), 0.38), 0 0 0.58rem rgba(var(--attn19-focus-rgb), 0.34);
+    background: rgba(var(--attn19-focus-rgb), 0.2);
+  }
+  #slide-22.attn22-show-pairing .attn22-col.is-pairing .attn19-vector-wrap-v .attn19-vector-label {
+    color: rgba(228,238,255,0.98);
+    text-shadow: 0 0 0.35rem rgba(var(--attn19-focus-rgb), 0.48);
+  }
+  #slide-22.attn22-show-pairing .attn22-col.is-pairing .attn19-vector-wrap-v .attn19-vector {
+    border-color: rgba(var(--attn19-focus-rgb), 0.84);
+    box-shadow: 0 0 0 0.08rem rgba(var(--attn19-focus-rgb), 0.24), 0 0 0.6rem rgba(var(--attn19-focus-rgb), 0.24);
+    background: rgba(var(--attn19-focus-rgb), 0.14);
+  }
+  #slide-22.attn22-show-pairing .attn22-col.is-paired .attn19-score-pill {
+    border-color: rgba(var(--attn19-focus-rgb), 0.78);
+    background: rgba(var(--attn19-focus-rgb), 0.18);
+  }
+  #slide-22.attn22-show-pairing .attn22-col.is-paired .attn19-vector-wrap-v .attn19-vector-label {
+    color: rgba(208,222,255,0.92);
+  }
+  #slide-22.attn22-show-pairing .attn22-col.is-paired .attn19-vector-wrap-v .attn19-vector {
+    border-color: rgba(var(--attn19-focus-rgb), 0.62);
+    background: rgba(var(--attn19-focus-rgb), 0.11);
   }
 
   @media (max-width: 56rem) {
+    #slide-22 {
+      --attn22-lane-label-w: 2rem;
+      --attn22-lane-gap: 0.2rem;
+    }
     .attn18-layout { margin-top: 0.72rem; }
     .attn18-stage {
       min-height: clamp(11rem, 40vh, 15rem);
@@ -2163,8 +2250,8 @@
       </div>
     </div>
 
-    <div class="attn19-score-caption" id="attn22-score-caption">o<sub>sat</sub> = Σ a<sub>j</sub>v<sub>j</sub></div>
-    <div class="attn19-takeaway" id="attn22-takeaway">Start from attention weights <i>a</i><sub>j</sub> and value vectors <i>v</i><sub>j</sub>.</div>
+    <div class="attn19-score-caption" id="attn22-score-caption">s<sub>j</sub> = q<sub>sat</sub> · k<sub>j</sub></div>
+    <div class="attn19-takeaway" id="attn22-takeaway">Start from Step 3 scores <i>s</i><sub>j</sub> for each token.</div>
   </div>
 
 </div>
@@ -2243,13 +2330,14 @@ const ATTN_QKV_TAKEAWAYS = [
   'Project each embedding into a key representation (<i>k</i>)',
   'Also project into a value: <i>v</i> = <i>x</i>W<sub>V</sub> (this is what gets copied)',
   'For the focus token, build a query representation (<i>q</i><sub>sat</sub>)',
-  'Compute pairwise scores: <i>s</i><sub>j</sub> = <i>q</i><sub>sat</sub> · <i>k</i><sub>j</sub>'
+  'Compute pairwise scores: <i>s</i><sub>j</sub> = <i>q</i><sub>sat</sub> · <i>k</i><sub>j</sub>',
+  'Scores are ready — we no longer need Q or K for the next step.'
 ];
 const ATTN_QKV_COMPARE_DRAW_MS = 360;
 const ATTN_QKV_COMPARE_HEAD_FADE_MS = 140;
 const ATTN_QKV_COMPARE_STAGGER_MS = 190;
 const ATTN_QKV_SCORE_REVEAL_DELAY_MS = 140;
-const ATTN_QKV_MAX_STEP = 4;
+const ATTN_QKV_MAX_STEP = 5;
 
 const ATTN_STEP4_TOKENS = ['cat', 'sat', 'on', 'the', 'mat'];
 const ATTN_STEP4_FOCUS = 'sat';
@@ -2269,10 +2357,10 @@ const ATTN_STEP4_SCORE_QUAL = {
   mat: { tier: 'weak' }
 };
 const ATTN_STEP4_TAKEAWAYS = [
-  'Start from attention weights <i>a</i><sub>j</sub> and value vectors <i>v</i><sub>j</sub>.',
-  'Expose each value vector <i>v</i><sub>j</sub> as a candidate contribution.',
-  'Weight each value by attention: higher <i>a</i><sub>j</sub> means more contribution.',
-  'Aggregate for sat with a weighted sum: Σ a<sub>j</sub>v<sub>j</sub>.',
+  'Start from Step 3 scores <i>s</i><sub>j</sub> for each token.',
+  'Convert scores into attention weights: <i>a</i><sub>j</sub> = softmax(<i>s</i><sub>j</sub>/√<i>d</i><sub>k</sub>).',
+  'Pair each attention weight with its value vector and scale components: <i>a</i><sub>j</sub> × <i>v</i><sub>j</sub>.',
+  'Weight each value by attention and aggregate for sat: Σ a<sub>j</sub>v<sub>j</sub>.',
   'Residual step: add <i>x</i><sub>sat</sub> back to the attention output.'
 ];
 const ATTN_STEP4_COMPARE_DRAW_MS = 360;
@@ -2280,6 +2368,9 @@ const ATTN_STEP4_COMPARE_HEAD_FADE_MS = 140;
 const ATTN_STEP4_COMPARE_STAGGER_MS = 190;
 const ATTN_STEP4_SCORE_REVEAL_DELAY_MS = 140;
 const ATTN_STEP4_MAX_STEP = 4;
+const ATTN_STEP4_PAIR_STAGGER_MS = 320;
+const ATTN_STEP4_PAIR_ANIM_MS = 1000;
+const ATTN_STEP4_PAIR_FIRST_HOLD_MS = 360;
 
 const ATTN_P1_TOKENS = ['cat', 'sat', 'on', 'the', 'mat'];
 const ATTN_P1_FOCUS = 'sat';
@@ -2318,6 +2409,25 @@ const ATTN_WGT_TAKEAWAYS = [
   'Softmax converts scaled scores into normalized attention weights.',
   'These weights decide how much each value v_j contributes to the updated token.'
 ];
+const ATTN_STEP4_SCORE_BY_TOKEN = Object.fromEntries(
+  ATTN_STEP4_TOKENS.map((token) => [
+    token,
+    ATTN_WGT_RAW_SCORE_BY_TOKEN[token] || 0
+  ])
+);
+const ATTN_STEP4_WEIGHT_BY_TOKEN = Object.fromEntries(
+  ATTN_STEP4_TOKENS.map((token) => {
+    const idx = ATTN_WGT_TOKENS.indexOf(token);
+    return [token, idx >= 0 ? ATTN_WGT_WEIGHTS[idx] : 0];
+  })
+);
+const ATTN_STEP4_WEIGHTED_VALUE_VECTORS = Object.fromEntries(
+  ATTN_STEP4_TOKENS.map((token) => {
+    const weight = ATTN_STEP4_WEIGHT_BY_TOKEN[token] || 0;
+    const baseValues = ATTN_QKV_VALUE_VECTORS[token] || [];
+    return [token, baseValues.map((value) => value * weight)];
+  })
+);
 
 const state = {
   nav: {
@@ -2355,6 +2465,10 @@ const state = {
     compareTimers: [],
     compareDone: false,
     compareVisibleCount: 0,
+    pairTimers: [],
+    pairRafIds: [],
+    pairingDone: false,
+    pairVisibleCount: 0,
     resizeBound: false
   },
   attentionP1: {
@@ -2457,6 +2571,10 @@ function formatVectorValue(value) {
 
 function formatScoreValue(value) {
   return normalizeNegativeZero(Number(value) || 0).toFixed(1);
+}
+
+function formatWeightValue(value) {
+  return normalizeNegativeZero(Number(value) || 0).toFixed(2);
 }
 
 function populateVectorRect(vectorEl, values, dividerClass) {
@@ -3261,15 +3379,17 @@ function setAttentionQkvStep(step) {
   const prevStep = state.attentionQkv.step;
   const clamped = Math.max(0, Math.min(ATTN_QKV_MAX_STEP, step));
   state.attentionQkv.step = clamped;
+  const cleanupQk = clamped >= 5;
 
-  slide.classList.toggle('attn19-show-k', clamped >= 1);
+  slide.classList.toggle('attn19-show-k', clamped >= 1 && !cleanupQk);
   slide.classList.toggle('attn19-show-v', clamped >= 2);
-  slide.classList.toggle('attn19-show-q', clamped >= 3);
+  slide.classList.toggle('attn19-show-q', clamped >= 3 && !cleanupQk);
   slide.classList.toggle('attn19-show-scores', clamped >= 4);
-  slide.classList.toggle('attn19-show-compare', clamped >= 4);
+  slide.classList.toggle('attn19-show-compare', clamped === 4);
+  slide.classList.toggle('attn19-cleanup-qk', cleanupQk);
   takeaway.innerHTML = ATTN_QKV_TAKEAWAYS[clamped] || ATTN_QKV_TAKEAWAYS[0];
 
-  if (clamped < 4) {
+  if (clamped !== 4) {
     clearAttentionQkvCompareTimers();
     state.attentionQkv.compareDone = false;
     state.attentionQkv.compareVisibleCount = 0;
@@ -3315,7 +3435,7 @@ function initAttentionQkvSlide() {
       window.addEventListener('resize', () => {
         if (!state.attentionQkv.initialized) return;
         clearAttentionQkvCompareTimers();
-        if (state.attentionQkv.step >= 4) {
+        if (state.attentionQkv.step === 4) {
           state.attentionQkv.compareDone = true;
           state.attentionQkv.compareVisibleCount = ATTN_QKV_COMPARE_TOKENS.length;
           const activeSlide = document.getElementById('slide-20');
@@ -3370,7 +3490,8 @@ function createAttentionStep4VectorRect(vectorId, extraClass = '', values = null
 
 function createAttentionStep4Column(token) {
   const col = createEl('div', {
-    className: 'attn19-col',
+    className: 'attn19-col attn22-col',
+    id: 'attn22-col-' + token,
     dataset: { token }
   });
 
@@ -3400,9 +3521,14 @@ function createAttentionStep4Column(token) {
     className: 'attn19-score-pill',
     id: 'attn22-score-pill-' + token,
     dataset: { qual: scoreQual.tier }
-  }, formatScoreValue(ATTN_WGT_RAW_SCORE_BY_TOKEN[token]));
+  }, formatScoreValue(ATTN_STEP4_SCORE_BY_TOKEN[token]));
   scoreOpWrap.appendChild(scorePill);
   col.appendChild(scoreOpWrap);
+  col.appendChild(createEl('div', {
+    className: 'attn22-fly-pill',
+    id: 'attn22-fly-pill-' + token,
+    'aria-hidden': 'true'
+  }));
 
   const kWrap = createEl('div', {
     className: 'attn19-vector-wrap attn19-vector-wrap-k',
@@ -3413,16 +3539,216 @@ function createAttentionStep4Column(token) {
   ]);
   col.appendChild(kWrap);
 
+  const vLabel = createMathSubLabel('v', token, 'attn19-vector-label');
+  vLabel.id = 'attn22-v-label-' + token;
   const vWrap = createEl('div', {
     className: 'attn19-vector-wrap attn19-vector-wrap-v',
     id: 'attn22-vector-wrap-v-' + token
   }, [
-    createMathSubLabel('v', token, 'attn19-vector-label'),
+    vLabel,
     createAttentionStep4VectorRect('attn22-vector-v-' + token, '', ATTN_QKV_VALUE_VECTORS[token] || ATTN_QKV_QUERY_VECTOR)
   ]);
   col.appendChild(vWrap);
 
   return col;
+}
+
+function setAttentionStep4ValueVectorForToken(token, values, formatter = formatVectorValue) {
+  const vector = document.getElementById('attn22-vector-v-' + token);
+  if (!vector) return;
+  const valueEls = vector.querySelectorAll('.attn19-vector-value');
+  valueEls.forEach((el, idx) => {
+    const value = Array.isArray(values) && typeof values[idx] !== 'undefined' ? values[idx] : 0;
+    el.textContent = formatter(value);
+  });
+}
+
+function setAttentionStep4ValueLabelForToken(token, weighted = false) {
+  const label = document.getElementById('attn22-v-label-' + token);
+  if (!label) return;
+  if (weighted) {
+    const weight = ATTN_STEP4_WEIGHT_BY_TOKEN[token] || 0;
+    label.innerHTML = formatWeightValue(weight) + ' &times; v<sub>' + token + '</sub>';
+  } else {
+    label.innerHTML = 'v<sub>' + token + '</sub>';
+  }
+}
+
+function setAttentionStep4AllValueVectorsBase() {
+  ATTN_STEP4_TOKENS.forEach((token) => {
+    setAttentionStep4ValueVectorForToken(token, ATTN_QKV_VALUE_VECTORS[token] || [], formatVectorValue);
+    setAttentionStep4ValueLabelForToken(token, false);
+  });
+}
+
+function setAttentionStep4AllValueVectorsWeighted() {
+  ATTN_STEP4_TOKENS.forEach((token) => {
+    setAttentionStep4ValueVectorForToken(token, ATTN_STEP4_WEIGHTED_VALUE_VECTORS[token] || [], formatWeightValue);
+    setAttentionStep4ValueLabelForToken(token, true);
+  });
+}
+
+function resetAttentionStep4FlyPill(token) {
+  const flyPill = document.getElementById('attn22-fly-pill-' + token);
+  if (!flyPill) return;
+  flyPill.style.transition = 'none';
+  flyPill.style.left = '-9999px';
+  flyPill.style.top = '-9999px';
+  flyPill.style.opacity = '0';
+}
+
+function animateAttentionStep4FlyPill(token) {
+  const col = document.getElementById('attn22-col-' + token);
+  const scorePill = document.getElementById('attn22-score-pill-' + token);
+  const vVector = document.getElementById('attn22-vector-v-' + token);
+  const flyPill = document.getElementById('attn22-fly-pill-' + token);
+  if (!col || !scorePill || !vVector || !flyPill) return;
+
+  const colRect = col.getBoundingClientRect();
+  const scoreRect = scorePill.getBoundingClientRect();
+  const vRect = vVector.getBoundingClientRect();
+  const startX = scoreRect.left - colRect.left + scoreRect.width * 0.5;
+  const startY = scoreRect.top - colRect.top + scoreRect.height * 0.5;
+  const endX = vRect.left - colRect.left + vRect.width * 0.5;
+  const endY = vRect.top - colRect.top + vRect.height * 0.5;
+  const duration = Math.max(ATTN_STEP4_PAIR_ANIM_MS, 780);
+  const fadeDuration = 180;
+  const fadeStart = Math.max(Math.floor(duration * 0.82), duration - fadeDuration);
+
+  flyPill.textContent = formatWeightValue(ATTN_STEP4_WEIGHT_BY_TOKEN[token] || 0);
+  flyPill.style.transition = 'none';
+  flyPill.style.left = startX.toFixed(2) + 'px';
+  flyPill.style.top = startY.toFixed(2) + 'px';
+  flyPill.style.opacity = '0';
+  void flyPill.getBoundingClientRect();
+
+  flyPill.style.transition = 'left ' + duration + 'ms cubic-bezier(0.2, 0.75, 0.3, 1), top ' + duration + 'ms cubic-bezier(0.2, 0.75, 0.3, 1)';
+  flyPill.style.opacity = '0.94';
+  requestAnimationFrame(() => {
+    flyPill.style.left = endX.toFixed(2) + 'px';
+    flyPill.style.top = endY.toFixed(2) + 'px';
+  });
+
+  const fadeTimer = setTimeout(() => {
+    flyPill.style.transition = 'opacity ' + fadeDuration + 'ms ease';
+    flyPill.style.opacity = '0';
+  }, fadeStart);
+  state.attentionStep4.pairTimers.push(fadeTimer);
+
+  const cleanupTimer = setTimeout(() => {
+    resetAttentionStep4FlyPill(token);
+  }, duration + fadeDuration + 60);
+  state.attentionStep4.pairTimers.push(cleanupTimer);
+}
+
+function clearAttentionStep4PairTimers() {
+  state.attentionStep4.pairTimers.forEach((timerId) => clearTimeout(timerId));
+  state.attentionStep4.pairTimers = [];
+  state.attentionStep4.pairRafIds.forEach((rafId) => cancelAnimationFrame(rafId));
+  state.attentionStep4.pairRafIds = [];
+}
+
+function resetAttentionStep4PairVisuals() {
+  ATTN_STEP4_TOKENS.forEach((token) => {
+    const col = document.getElementById('attn22-col-' + token);
+    if (!col) return;
+    col.classList.remove('is-pairing');
+    col.classList.remove('is-flying');
+    col.classList.remove('is-paired');
+    resetAttentionStep4FlyPill(token);
+  });
+  state.attentionStep4.pairingDone = false;
+  state.attentionStep4.pairVisibleCount = 0;
+}
+
+function settleAttentionStep4PairState() {
+  clearAttentionStep4PairTimers();
+  setAttentionStep4AllValueVectorsWeighted();
+  ATTN_STEP4_TOKENS.forEach((token) => {
+    const col = document.getElementById('attn22-col-' + token);
+    if (!col) return;
+    col.classList.remove('is-pairing');
+    col.classList.remove('is-flying');
+    col.classList.add('is-paired');
+    resetAttentionStep4FlyPill(token);
+  });
+  state.attentionStep4.pairVisibleCount = ATTN_STEP4_TOKENS.length;
+  state.attentionStep4.pairingDone = true;
+}
+
+function animateAttentionStep4PairToken(token, delayMs, isLastToken = false) {
+  const timerId = setTimeout(() => {
+    if (state.attentionStep4.step < 2) return;
+    const col = document.getElementById('attn22-col-' + token);
+    if (!col) return;
+    col.classList.add('is-pairing');
+    col.classList.add('is-flying');
+    col.classList.remove('is-paired');
+    setAttentionStep4ValueLabelForToken(token, true);
+    animateAttentionStep4FlyPill(token);
+
+    const baseValues = ATTN_QKV_VALUE_VECTORS[token] || [];
+    const weightedValues = ATTN_STEP4_WEIGHTED_VALUE_VECTORS[token] || baseValues;
+    const startTime = performance.now();
+
+    const animate = (now) => {
+      if (state.attentionStep4.step < 2) return;
+      const progress = Math.max(0, Math.min(1, (now - startTime) / ATTN_STEP4_PAIR_ANIM_MS));
+      const eased = progress < 0.5
+        ? (2 * progress * progress)
+        : (1 - Math.pow(-2 * progress + 2, 2) / 2);
+      const values = baseValues.map((value, idx) => {
+        const target = typeof weightedValues[idx] === 'number' ? weightedValues[idx] : 0;
+        return value + (target - value) * eased;
+      });
+      setAttentionStep4ValueVectorForToken(token, values, formatWeightValue);
+
+      if (progress < 1) {
+        const rafId = requestAnimationFrame(animate);
+        state.attentionStep4.pairRafIds.push(rafId);
+        return;
+      }
+
+      col.classList.remove('is-pairing');
+      col.classList.remove('is-flying');
+      col.classList.add('is-paired');
+      state.attentionStep4.pairVisibleCount = Math.min(
+        ATTN_STEP4_TOKENS.length,
+        state.attentionStep4.pairVisibleCount + 1
+      );
+      if (isLastToken) {
+        state.attentionStep4.pairingDone = true;
+      }
+    };
+
+    const rafId = requestAnimationFrame(animate);
+    state.attentionStep4.pairRafIds.push(rafId);
+  }, delayMs);
+
+  state.attentionStep4.pairTimers.push(timerId);
+}
+
+function runAttentionStep4PairSequence() {
+  clearAttentionStep4PairTimers();
+  resetAttentionStep4PairVisuals();
+  setAttentionStep4AllValueVectorsBase();
+  if (!ATTN_STEP4_TOKENS.length) {
+    state.attentionStep4.pairingDone = true;
+    return;
+  }
+
+  const firstToken = ATTN_STEP4_TOKENS[0];
+  const restTokens = ATTN_STEP4_TOKENS.slice(1);
+  animateAttentionStep4PairToken(firstToken, 0, restTokens.length === 0);
+
+  const restStartDelay = ATTN_STEP4_PAIR_ANIM_MS + ATTN_STEP4_PAIR_FIRST_HOLD_MS;
+  restTokens.forEach((token, idx) => {
+    animateAttentionStep4PairToken(
+      token,
+      restStartDelay + idx * ATTN_STEP4_PAIR_STAGGER_MS,
+      idx === restTokens.length - 1
+    );
+  });
 }
 
 function clearAttentionStep4CompareTimers() {
@@ -3685,6 +4011,30 @@ function updateAttentionStep4Overlay() {
   }
 }
 
+function renderAttentionStep4ScoreMode(step) {
+  const scoreLabel = document.getElementById('attn22-row-s-label');
+  const scoreCaption = document.getElementById('attn22-score-caption');
+  const useWeights = step >= 1;
+
+  if (scoreLabel) {
+    scoreLabel.textContent = useWeights ? 'Attention Weights (A)' : 'Scores (s)';
+  }
+  if (scoreCaption) {
+    if (useWeights) {
+      scoreCaption.innerHTML = 'a<sub>j</sub> = softmax(s<sub>j</sub> / √d<sub>k</sub>)';
+    } else {
+      scoreCaption.innerHTML = 's<sub>j</sub> = q<sub>sat</sub> · k<sub>j</sub>';
+    }
+  }
+
+  ATTN_STEP4_TOKENS.forEach((token) => {
+    const scorePill = document.getElementById('attn22-score-pill-' + token);
+    if (!scorePill) return;
+    const value = useWeights ? ATTN_STEP4_WEIGHT_BY_TOKEN[token] : ATTN_STEP4_SCORE_BY_TOKEN[token];
+    scorePill.textContent = useWeights ? formatWeightValue(value) : formatScoreValue(value);
+  });
+}
+
 function setAttentionStep4Step(step) {
   const slide = document.getElementById('slide-22');
   const takeaway = document.getElementById('attn22-takeaway');
@@ -3693,12 +4043,29 @@ function setAttentionStep4Step(step) {
   const clamped = Math.max(0, Math.min(ATTN_STEP4_MAX_STEP, step));
   state.attentionStep4.step = clamped;
 
-  slide.classList.toggle('attn19-show-k', clamped >= 1);
-  slide.classList.toggle('attn19-show-v', clamped >= 2);
-  slide.classList.toggle('attn19-show-q', clamped >= 3);
-  slide.classList.toggle('attn19-show-scores', clamped >= 4);
+  slide.classList.remove('attn19-show-k');
+  slide.classList.add('attn19-show-v');
+  slide.classList.remove('attn19-show-q');
+  slide.classList.add('attn19-show-scores');
   slide.classList.remove('attn19-show-compare');
+  slide.classList.toggle('attn22-show-weights', clamped >= 1);
+  slide.classList.toggle('attn22-show-pairing', clamped >= 2);
   takeaway.innerHTML = ATTN_STEP4_TAKEAWAYS[clamped] || ATTN_STEP4_TAKEAWAYS[0];
+  renderAttentionStep4ScoreMode(clamped);
+
+  if (clamped < 2) {
+    clearAttentionStep4PairTimers();
+    resetAttentionStep4PairVisuals();
+    setAttentionStep4AllValueVectorsBase();
+  } else if (clamped === 2) {
+    if (!state.attentionStep4.pairingDone) {
+      runAttentionStep4PairSequence();
+    } else {
+      settleAttentionStep4PairState();
+    }
+  } else {
+    settleAttentionStep4PairState();
+  }
 
   clearAttentionStep4CompareTimers();
   state.attentionStep4.compareDone = false;
@@ -3758,6 +4125,14 @@ function initAttentionStep4Slide() {
     qVector.innerHTML = '';
     populateVectorRect(qVector, ATTN_QKV_QUERY_VECTOR, 'attn19-vector-divider');
   }
+  clearAttentionStep4PairTimers();
+  if (state.attentionStep4.step >= 2) {
+    settleAttentionStep4PairState();
+  } else {
+    resetAttentionStep4PairVisuals();
+    setAttentionStep4AllValueVectorsBase();
+  }
+  renderAttentionStep4ScoreMode(state.attentionStep4.step);
 
   const takeaway = document.getElementById('attn22-takeaway');
   if (takeaway) takeaway.innerHTML = ATTN_STEP4_TAKEAWAYS[state.attentionStep4.step] || ATTN_STEP4_TAKEAWAYS[0];
@@ -3784,10 +4159,12 @@ function resetAttentionStep4Slide() {
     state.attentionStep4.overlayTimer = null;
   }
   clearAttentionStep4CompareTimers();
+  clearAttentionStep4PairTimers();
+  resetAttentionStep4PairVisuals();
   state.attentionStep4.compareDone = false;
   state.attentionStep4.compareVisibleCount = 0;
   slide.classList.remove('attn19-compare-done');
-  setAttentionStep4Step(ATTN_STEP4_MAX_STEP);
+  setAttentionStep4Step(0);
 }
 
 /* =====================================================
@@ -4260,7 +4637,7 @@ function goToSlide(index) {
   }
   if (activeSlide.id === 'slide-22') {
     initAttentionStep4Slide();
-    setAttentionStep4Step(ATTN_STEP4_MAX_STEP);
+    setAttentionStep4Step(0);
   }
 
   devLog('slide', activeSlide.id);
