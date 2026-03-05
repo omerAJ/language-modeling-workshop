@@ -706,13 +706,38 @@
     background: rgba(184,194,221,0.08);
     overflow: hidden;
   }
+  .attn19-vector-values {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    align-items: center;
+    justify-items: center;
+    padding: 0 0.08rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.38rem;
+    line-height: 1;
+    letter-spacing: -0.01em;
+    color: rgba(213,223,246,0.5);
+    pointer-events: none;
+  }
+  .attn19-vector-value {
+    opacity: 0.78;
+  }
   .attn19-vector-k {
     border-color: rgba(var(--attn19-source-rgb), 0.44);
     background: rgba(var(--attn19-source-rgb), 0.07);
   }
+  .attn19-vector-k .attn19-vector-values {
+    color: rgba(192,244,215,0.5);
+  }
   .attn19-vector-q {
     border-color: rgba(var(--attn19-focus-rgb), 0.7);
     background: rgba(var(--attn19-focus-rgb), 0.14);
+  }
+  .attn19-vector-q .attn19-vector-values {
+    color: rgba(218,230,255,0.58);
   }
   .attn19-vector-divider {
     position: absolute;
@@ -720,6 +745,7 @@
     bottom: 0.08rem;
     width: 1px;
     background: rgba(201,212,240,0.38);
+    z-index: 2;
   }
   .attn19-overlay {
     position: absolute;
@@ -945,6 +971,7 @@
     .attn19-vector-label,
     .attn19-vector-label-q { font-size: 0.5rem; }
     .attn19-vector { height: 0.72rem; }
+    .attn19-vector-values { font-size: 0.32rem; }
     .attn19-q-callout {
       --attn19-q-col-gap: 0.2rem;
       --attn19-q-vector-w: 3.8rem;
@@ -2174,6 +2201,28 @@ const ATTN_INTRO_MAX_STEP = 8;
 
 const ATTN_QKV_TOKENS = ['cat', 'sat', 'on', 'the', 'mat'];
 const ATTN_QKV_FOCUS = 'sat';
+const ATTN_QKV_QUERY_VECTOR = [1.0, 1.0, 1.0, 1.0];
+const ATTN_QKV_KEY_VECTORS = {
+  cat: [1.1, 0.9, 0.6, 0.4],
+  sat: [0.7, 0.4, 0.3, 0.2],
+  on: [0.6, 0.4, 0.2, 0.1],
+  the: [0.3, 0.1, -0.1, -0.1],
+  mat: [0.1, -0.1, -0.2, -0.2]
+};
+const ATTN_QKV_VALUE_VECTORS = {
+  cat: [1.0, 0.0, 0.0, 0.0],
+  sat: [1.0, 1.0, 0.0, 0.0],
+  on: [0.0, 1.0, 1.0, 0.0],
+  the: [0.0, 0.0, 1.0, 1.0],
+  mat: [0.0, 0.0, 0.0, 1.0]
+};
+const ATTN_QKV_X_VECTORS = {
+  cat: [0.6, 0.2, -0.1, 0.3],
+  sat: [0.5, 0.7, 0.1, 0.4],
+  on: [0.3, 0.6, 0.4, 0.2],
+  the: [0.1, 0.4, 0.5, 0.2],
+  mat: [0.0, 0.2, 0.6, 0.3]
+};
 const ATTN_QKV_COMPARE_TOKENS = ['cat', 'sat', 'on', 'the', 'mat'];
 const ATTN_QKV_COMPARE_CURVE_FACTORS = {
   cat: 0.4,
@@ -2250,11 +2299,18 @@ const ATTN_P1_TAKEAWAYS = [
   'Next: use q_sat to score every k_j (q \u00b7 k \u2192 s)'
 ];
 
-const ATTN_WGT_TOKENS = ['cat', 'sat', 'on', 'the', 'mat'];
+const ATTN_WGT_TOKENS = ATTN_QKV_TOKENS.slice();
 const ATTN_WGT_FOCUS = 'sat';
-const ATTN_WGT_RAW_SCORES = [3.0, 1.6, 1.3, 0.2, -0.4];
-const ATTN_WGT_SCALED_SCORES = [0.75, 0.40, 0.33, 0.05, -0.10];
-const ATTN_WGT_WEIGHTS = [0.31, 0.20, 0.19, 0.16, 0.14];
+const ATTN_WGT_D_K = ATTN_QKV_QUERY_VECTOR.length;
+const ATTN_WGT_RAW_SCORE_BY_TOKEN = Object.fromEntries(
+  ATTN_WGT_TOKENS.map((token) => [
+    token,
+    dotProduct(ATTN_QKV_QUERY_VECTOR, ATTN_QKV_KEY_VECTORS[token] || [])
+  ])
+);
+const ATTN_WGT_RAW_SCORES = ATTN_WGT_TOKENS.map((token) => ATTN_WGT_RAW_SCORE_BY_TOKEN[token]);
+const ATTN_WGT_SCALED_SCORES = ATTN_WGT_RAW_SCORES.map((score) => score / Math.sqrt(ATTN_WGT_D_K));
+const ATTN_WGT_WEIGHTS = softmax(ATTN_WGT_SCALED_SCORES);
 const ATTN_WGT_MAX_STEP = 3;
 const ATTN_WGT_TAKEAWAYS = [
   'Raw similarity scores between q_sat and each key k_j.',
@@ -2373,19 +2429,68 @@ function createEl(tag, attrs, children) {
   return el;
 }
 
+function dotProduct(a, b) {
+  const len = Math.min(Array.isArray(a) ? a.length : 0, Array.isArray(b) ? b.length : 0);
+  let sum = 0;
+  for (let i = 0; i < len; i += 1) {
+    sum += (Number(a[i]) || 0) * (Number(b[i]) || 0);
+  }
+  return sum;
+}
+
+function softmax(values) {
+  if (!Array.isArray(values) || values.length === 0) return [];
+  const maxVal = Math.max.apply(null, values);
+  const exps = values.map((value) => Math.exp(value - maxVal));
+  const denom = exps.reduce((acc, value) => acc + value, 0);
+  if (denom <= 0) return values.map(() => 0);
+  return exps.map((value) => value / denom);
+}
+
+function normalizeNegativeZero(value) {
+  return Object.is(value, -0) ? 0 : value;
+}
+
+function formatVectorValue(value) {
+  return normalizeNegativeZero(Number(value) || 0).toFixed(1);
+}
+
+function formatScoreValue(value) {
+  return normalizeNegativeZero(Number(value) || 0).toFixed(1);
+}
+
+function populateVectorRect(vectorEl, values, dividerClass) {
+  if (!vectorEl) return;
+  const dims = Array.isArray(values) && values.length ? values.length : 4;
+
+  if (Array.isArray(values) && values.length) {
+    const valuesWrap = createEl('div', { className: 'attn19-vector-values' });
+    values.forEach((value) => {
+      valuesWrap.appendChild(createEl('span', {
+        className: 'attn19-vector-value',
+        text: formatVectorValue(value)
+      }));
+    });
+    valuesWrap.style.gridTemplateColumns = 'repeat(' + dims + ', minmax(0, 1fr))';
+    vectorEl.appendChild(valuesWrap);
+  }
+
+  for (let i = 1; i < dims; i += 1) {
+    vectorEl.appendChild(createEl('span', {
+      className: dividerClass,
+      style: {
+        left: ((i / dims) * 100) + '%'
+      }
+    }));
+  }
+}
+
 function createVectorRect(config) {
   const vector = createEl('div', {
     className: config.baseClass,
     id: config.id
   });
-  for (let i = 1; i <= 3; i += 1) {
-    vector.appendChild(createEl('span', {
-      className: config.dividerClass,
-      style: {
-        left: (i * 25) + '%'
-      }
-    }));
-  }
+  populateVectorRect(vector, config.values, config.dividerClass);
   return vector;
 }
 
@@ -2802,11 +2907,12 @@ function resetAttentionIntroSlide() {
   setAttentionIntroStep(0);
 }
 
-function createAttentionQkvVectorRect(vectorId, extraClass = '') {
+function createAttentionQkvVectorRect(vectorId, extraClass = '', values = null) {
   return createVectorRect({
     id: vectorId,
     baseClass: 'attn19-vector' + (extraClass ? ' ' + extraClass : ''),
-    dividerClass: 'attn19-vector-divider'
+    dividerClass: 'attn19-vector-divider',
+    values
   });
 }
 
@@ -2844,7 +2950,7 @@ function createAttentionQkvColumn(token) {
     id: 'attn19-vector-wrap-x-' + token
   }, [
     createMathSubLabel('x', token, 'attn19-vector-label'),
-    createAttentionQkvVectorRect('attn19-vector-x-' + token)
+    createAttentionQkvVectorRect('attn19-vector-x-' + token, '', ATTN_QKV_X_VECTORS[token] || ATTN_QKV_QUERY_VECTOR)
   ]);
   col.appendChild(xWrap);
 
@@ -2861,10 +2967,7 @@ function createAttentionQkvColumn(token) {
     className: 'attn19-score-pill',
     id: 'attn19-score-pill-' + token,
     dataset: { qual: scoreQual.tier }
-  }, [
-    's',
-    createEl('sub', { text: token })
-  ]);
+  }, formatScoreValue(ATTN_WGT_RAW_SCORE_BY_TOKEN[token]));
   scoreOpWrap.appendChild(dotNode);
   scoreOpWrap.appendChild(scorePill);
   col.appendChild(scoreOpWrap);
@@ -2874,7 +2977,7 @@ function createAttentionQkvColumn(token) {
     id: 'attn19-vector-wrap-k-' + token
   }, [
     createMathSubLabel('k', token, 'attn19-vector-label'),
-    createAttentionQkvVectorRect('attn19-vector-k-' + token, 'attn19-vector-k')
+    createAttentionQkvVectorRect('attn19-vector-k-' + token, 'attn19-vector-k', ATTN_QKV_KEY_VECTORS[token] || ATTN_QKV_QUERY_VECTOR)
   ]);
   col.appendChild(kWrap);
 
@@ -2883,7 +2986,7 @@ function createAttentionQkvColumn(token) {
     id: 'attn19-vector-wrap-v-' + token
   }, [
     createMathSubLabel('v', token, 'attn19-vector-label'),
-    createAttentionQkvVectorRect('attn19-vector-v-' + token)
+    createAttentionQkvVectorRect('attn19-vector-v-' + token, '', ATTN_QKV_VALUE_VECTORS[token] || ATTN_QKV_QUERY_VECTOR)
   ]);
   col.appendChild(vWrap);
 
@@ -3199,6 +3302,7 @@ function setAttentionQkvStep(step) {
 function initAttentionQkvSlide() {
   const slide = document.getElementById('slide-20');
   const cols = document.getElementById('attn19-cols');
+  const qVector = document.getElementById('attn19-q-sat');
   if (!slide || !cols) return;
 
   if (!state.attentionQkv.initialized) {
@@ -3233,6 +3337,11 @@ function initAttentionQkvSlide() {
     state.attentionQkv.initialized = true;
   }
 
+  if (qVector) {
+    qVector.innerHTML = '';
+    populateVectorRect(qVector, ATTN_QKV_QUERY_VECTOR, 'attn19-vector-divider');
+  }
+
   const takeaway = document.getElementById('attn19-takeaway');
   if (takeaway) takeaway.innerHTML = ATTN_QKV_TAKEAWAYS[state.attentionQkv.step] || ATTN_QKV_TAKEAWAYS[0];
   updateAttentionQkvOverlay();
@@ -3250,11 +3359,12 @@ function runAttentionQkvStep() {
   return true;
 }
 
-function createAttentionStep4VectorRect(vectorId, extraClass = '') {
+function createAttentionStep4VectorRect(vectorId, extraClass = '', values = null) {
   return createVectorRect({
     id: vectorId,
     baseClass: 'attn19-vector' + (extraClass ? ' ' + extraClass : ''),
-    dividerClass: 'attn19-vector-divider'
+    dividerClass: 'attn19-vector-divider',
+    values
   });
 }
 
@@ -3277,7 +3387,7 @@ function createAttentionStep4Column(token) {
     id: 'attn22-vector-wrap-x-' + token
   }, [
     createMathSubLabel('x', token, 'attn19-vector-label'),
-    createAttentionStep4VectorRect('attn22-vector-x-' + token)
+    createAttentionStep4VectorRect('attn22-vector-x-' + token, '', ATTN_QKV_X_VECTORS[token] || ATTN_QKV_QUERY_VECTOR)
   ]);
   col.appendChild(xWrap);
 
@@ -3290,10 +3400,7 @@ function createAttentionStep4Column(token) {
     className: 'attn19-score-pill',
     id: 'attn22-score-pill-' + token,
     dataset: { qual: scoreQual.tier }
-  }, [
-    's',
-    createEl('sub', { text: token })
-  ]);
+  }, formatScoreValue(ATTN_WGT_RAW_SCORE_BY_TOKEN[token]));
   scoreOpWrap.appendChild(scorePill);
   col.appendChild(scoreOpWrap);
 
@@ -3302,7 +3409,7 @@ function createAttentionStep4Column(token) {
     id: 'attn22-vector-wrap-k-' + token
   }, [
     createMathSubLabel('k', token, 'attn19-vector-label'),
-    createAttentionStep4VectorRect('attn22-vector-k-' + token, 'attn19-vector-k')
+    createAttentionStep4VectorRect('attn22-vector-k-' + token, 'attn19-vector-k', ATTN_QKV_KEY_VECTORS[token] || ATTN_QKV_QUERY_VECTOR)
   ]);
   col.appendChild(kWrap);
 
@@ -3311,7 +3418,7 @@ function createAttentionStep4Column(token) {
     id: 'attn22-vector-wrap-v-' + token
   }, [
     createMathSubLabel('v', token, 'attn19-vector-label'),
-    createAttentionStep4VectorRect('attn22-vector-v-' + token)
+    createAttentionStep4VectorRect('attn22-vector-v-' + token, '', ATTN_QKV_VALUE_VECTORS[token] || ATTN_QKV_QUERY_VECTOR)
   ]);
   col.appendChild(vWrap);
 
@@ -3612,6 +3719,7 @@ function setAttentionStep4Step(step) {
 function initAttentionStep4Slide() {
   const slide = document.getElementById('slide-22');
   const cols = document.getElementById('attn22-cols');
+  const qVector = document.getElementById('attn22-q-sat');
   if (!slide || !cols) return;
 
   if (!state.attentionStep4.initialized) {
@@ -3644,6 +3752,11 @@ function initAttentionStep4Slide() {
     }
 
     state.attentionStep4.initialized = true;
+  }
+
+  if (qVector) {
+    qVector.innerHTML = '';
+    populateVectorRect(qVector, ATTN_QKV_QUERY_VECTOR, 'attn19-vector-divider');
   }
 
   const takeaway = document.getElementById('attn22-takeaway');
