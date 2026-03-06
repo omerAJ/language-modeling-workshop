@@ -1213,6 +1213,304 @@
     background: rgba(var(--attn19-focus-rgb), 0.16);
   }
 
+  .attn23-stage {
+    --attn23-row-h: clamp(1.9rem, 5vh, 2.15rem);
+    --attn23-rail-gap: clamp(0.9rem, 2vw, 1.25rem);
+    --attn23-token-col-w: clamp(6rem, 15vw, 6.8rem);
+    --attn23-x-col-w: clamp(10rem, 23vw, 11.6rem);
+    min-height: clamp(18rem, 56vh, 24rem);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: clamp(0.95rem, 3vh, 1.35rem);
+    padding-top: clamp(0.92rem, 2vh, 1.32rem);
+  }
+  .attn23-ghost-layer {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 6;
+  }
+  .attn23-source-zone {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+  .attn23-source-row {
+    width: min(100%, 34rem);
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: clamp(0.22rem, 0.65vw, 0.54rem);
+  }
+  .attn23-source-item,
+  .attn23-token-item,
+  .attn23-x-item {
+    position: relative;
+    width: 100%;
+  }
+  .attn23-source-item {
+    display: grid;
+    gap: 0.22rem;
+    align-items: start;
+  }
+  .attn23-source-chip-wrap,
+  .attn23-source-vector-wrap {
+    transition: opacity 0.24s ease, transform 0.24s ease;
+  }
+  .attn23-source-chip-wrap,
+  .attn23-token-chip-wrap {
+    width: 100%;
+  }
+  .attn23-source-item .attn19-token-chip,
+  .attn23-token-item .attn19-token-chip {
+    width: 100%;
+  }
+  .attn23-source-vector-wrap,
+  .attn23-x-vector-wrap {
+    width: 100%;
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+  }
+  .attn23-source-item[data-token="sat"] .attn19-token-chip,
+  .attn23-token-item[data-token="sat"] .attn19-token-chip {
+    border-color: rgba(var(--attn19-focus-rgb), 0.84);
+    box-shadow: 0 0 0 0.1rem rgba(var(--attn19-focus-rgb), 0.5);
+    background: rgba(var(--attn19-focus-rgb), 0.14);
+  }
+  .attn23-source-item[data-token="cat"] .attn19-token-chip,
+  .attn23-source-item[data-token="on"] .attn19-token-chip,
+  .attn23-source-item[data-token="the"] .attn19-token-chip,
+  .attn23-source-item[data-token="mat"] .attn19-token-chip,
+  .attn23-token-item[data-token="cat"] .attn19-token-chip,
+  .attn23-token-item[data-token="on"] .attn19-token-chip,
+  .attn23-token-item[data-token="the"] .attn19-token-chip,
+  .attn23-token-item[data-token="mat"] .attn19-token-chip {
+    border-color: rgba(var(--attn19-source-rgb), 0.44);
+    background: rgba(var(--attn19-source-rgb), 0.09);
+  }
+  .attn23-source-item[data-token="sat"] .attn19-vector-label {
+    color: rgba(188,205,250,0.86);
+  }
+  .attn23-source-item[data-token="cat"] .attn19-vector-label,
+  .attn23-source-item[data-token="on"] .attn19-vector-label,
+  .attn23-source-item[data-token="the"] .attn19-vector-label,
+  .attn23-source-item[data-token="mat"] .attn19-vector-label {
+    color: rgba(170,233,196,0.84);
+  }
+  .attn23-rail {
+    width: min(100%, 34rem);
+    display: grid;
+    grid-template-columns: minmax(0, var(--attn23-token-col-w)) minmax(0, var(--attn23-x-col-w));
+    gap: var(--attn23-rail-gap);
+    justify-content: center;
+    align-items: start;
+  }
+  .attn23-col {
+    display: grid;
+    gap: 0.34rem;
+    align-content: start;
+  }
+  .attn23-col-head {
+    display: grid;
+    gap: 0.08rem;
+    justify-items: center;
+  }
+  .attn23-col-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.58rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    text-align: center;
+    opacity: 0.68;
+    transform: translateY(0.04rem);
+    transition: opacity 0.22s ease, transform 0.22s ease;
+  }
+  .attn23-col-label sub {
+    font-size: 0.75em;
+    line-height: 0;
+    vertical-align: -0.3em;
+    margin-left: 0.02em;
+  }
+  .attn23-col-token .attn23-col-label {
+    color: rgba(var(--attn19-focus-rgb), 0.86);
+  }
+  .attn23-col-x .attn23-col-label {
+    color: rgba(188,205,250,0.86);
+  }
+  .attn23-col-meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.48rem;
+    color: rgba(189,204,240,0.72);
+    opacity: 0.42;
+    transform: translateY(0.04rem);
+    transition: opacity 0.22s ease, transform 0.22s ease;
+    white-space: nowrap;
+  }
+  .attn23-col-meta sup {
+    font-size: 0.74em;
+    line-height: 0;
+    vertical-align: 0.48em;
+  }
+  .attn23-shell {
+    position: relative;
+    width: 100%;
+    border-radius: 0.52rem;
+    border: 1px solid rgba(184,194,221,0.24);
+    background: rgba(184,194,221,0.04);
+    padding: 0.44rem 0.46rem;
+    overflow: hidden;
+    transition: opacity 0.24s ease, border-color 0.24s ease, background 0.24s ease, box-shadow 0.24s ease;
+  }
+  .attn23-col-token .attn23-shell {
+    opacity: 0.76;
+  }
+  .attn23-col-x .attn23-shell {
+    opacity: 0.52;
+    padding: 0.2rem 0.28rem;
+  }
+  .attn23-shell::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(circle at top left, rgba(123,154,255,0.07), transparent 48%),
+      linear-gradient(180deg, rgba(184,194,221,0.02), rgba(184,194,221,0));
+    pointer-events: none;
+  }
+  .attn23-slots {
+    position: relative;
+    z-index: 1;
+    display: grid;
+  }
+  .attn23-slot {
+    min-height: var(--attn23-row-h);
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding: 0.14rem 0;
+  }
+  .attn23-slot + .attn23-slot {
+    border-top: 1px solid rgba(184,194,221,0.12);
+  }
+  .attn23-token-slot {
+    justify-content: center;
+  }
+  .attn23-x-slot {
+    justify-content: stretch;
+    min-height: 0.9rem;
+    padding: 0;
+  }
+  .attn23-x-slot + .attn23-x-slot {
+    border-top: 0;
+  }
+  .attn23-x-item .attn19-vector-wrap {
+    display: block;
+    width: 100%;
+    min-height: 0;
+  }
+  .attn23-x-item .attn19-vector {
+    width: 100%;
+    border-radius: 0;
+    border-color: rgba(184,194,221,0.34);
+    background: rgba(184,194,221,0.09);
+  }
+  .attn23-x-slot:first-child .attn19-vector {
+    border-top-left-radius: 0.24rem;
+    border-top-right-radius: 0.24rem;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+  .attn23-x-slot:last-child .attn19-vector {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    border-bottom-left-radius: 0.24rem;
+    border-bottom-right-radius: 0.24rem;
+  }
+  .attn23-x-slot:not(:first-child):not(:last-child) .attn19-vector {
+    border-radius: 0;
+  }
+  .attn23-x-slot + .attn23-x-slot .attn19-vector {
+    margin-top: -1px;
+  }
+  .attn23-token-item .attn19-chip-wrap {
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(0.12rem) scale(0.985);
+    transition: opacity 0.22s ease, transform 0.22s ease, visibility 0.22s ease;
+  }
+  .attn23-x-item .attn19-vector-wrap-x {
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(0.12rem) scale(0.985);
+    transition: opacity 0.22s ease, transform 0.22s ease, visibility 0.22s ease;
+  }
+  .attn23-token-slot.is-visible .attn19-chip-wrap {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0) scale(1);
+  }
+  .attn23-x-slot.is-visible .attn19-vector-wrap-x {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0) scale(1);
+  }
+  .attn23-x-slot.is-visible .attn19-vector {
+    border-color: rgba(184,194,221,0.48);
+    background: rgba(184,194,221,0.12);
+  }
+  .attn23-x-slot.is-visible .attn19-vector-values {
+    color: rgba(218,228,250,0.58);
+  }
+  #slide-23.attn23-show-token-matrix .attn23-col-token .attn23-col-label,
+  #slide-23.attn23-show-x-matrix .attn23-col-x .attn23-col-label,
+  #slide-23.attn23-show-x-matrix .attn23-col-x .attn23-col-meta {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  #slide-23.attn23-show-token-matrix .attn23-col-token .attn23-shell {
+    opacity: 1;
+    border-color: rgba(var(--attn19-focus-rgb), 0.38);
+    background: rgba(var(--attn19-focus-rgb), 0.08);
+    box-shadow: 0 0 0 0.08rem rgba(var(--attn19-focus-rgb), 0.12);
+  }
+  #slide-23.attn23-show-x-matrix .attn23-col-x .attn23-shell {
+    opacity: 1;
+    border-color: rgba(var(--attn19-focus-rgb), 0.34);
+    background: rgba(var(--attn19-focus-rgb), 0.07);
+    box-shadow: 0 0 0 0.08rem rgba(var(--attn19-focus-rgb), 0.1);
+  }
+  #slide-23.attn23-token-settled .attn23-source-chip-wrap {
+    opacity: 0.22;
+    transform: translateY(-0.02rem) scale(0.99);
+  }
+  #slide-23.attn23-full-settled .attn23-source-vector-wrap {
+    opacity: 0.2;
+    transform: translateY(-0.02rem) scale(0.99);
+  }
+  .attn23-ghost {
+    position: absolute;
+    margin: 0;
+    pointer-events: none;
+    opacity: 0.96;
+    transform: translate3d(0, 0, 0);
+    transform-origin: center center;
+    will-change: transform, opacity;
+  }
+  .attn23-ghost-token .attn19-token-chip {
+    box-shadow: 0 0 0 0.08rem rgba(var(--attn19-focus-rgb), 0.18), 0 0 0.44rem rgba(var(--attn19-focus-rgb), 0.12);
+  }
+  .attn23-ghost-x .attn19-vector-wrap-x {
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: none !important;
+  }
+  .attn23-ghost-x .attn19-vector {
+    border-color: rgba(var(--attn19-focus-rgb), 0.74);
+    background: rgba(var(--attn19-focus-rgb), 0.14);
+    box-shadow: 0 0 0 0.08rem rgba(var(--attn19-focus-rgb), 0.16), 0 0 0.48rem rgba(var(--attn19-focus-rgb), 0.12);
+  }
+
   @media (max-width: 56rem) {
     #slide-22 {
       --attn22-lane-label-w: 2rem;
@@ -1241,6 +1539,33 @@
     }
     #slide-22 .attn22-agg-formula-residual {
       font-size: 0.56rem;
+    }
+    .attn23-stage {
+      --attn23-row-h: 1.8rem;
+      --attn23-rail-gap: 0.78rem;
+      --attn23-token-col-w: 5.5rem;
+      --attn23-x-col-w: 9.6rem;
+      gap: 0.9rem;
+      padding-top: 0.82rem;
+    }
+    .attn23-source-row,
+    .attn23-rail {
+      width: min(100%, 27.5rem);
+    }
+    .attn23-source-row {
+      gap: 0.18rem;
+    }
+    .attn23-shell {
+      padding: 0.38rem 0.4rem;
+    }
+    .attn23-col-x .attn23-shell {
+      padding: 0.18rem 0.24rem;
+    }
+    .attn23-col-label {
+      font-size: 0.54rem;
+    }
+    .attn23-col-meta {
+      font-size: 0.44rem;
     }
     .attn18-layout { margin-top: 0.72rem; }
     .attn18-stage {
@@ -2177,6 +2502,54 @@
     }
     .attn21-takeaway { font-size: 0.76rem; padding: 0.5rem 0.58rem; }
   }
+  @media (max-width: 36rem) {
+    .attn23-stage {
+      --attn23-row-h: 1.72rem;
+      --attn23-rail-gap: 0.62rem;
+      --attn23-token-col-w: 4.9rem;
+      --attn23-x-col-w: 8.2rem;
+      gap: 0.76rem;
+      padding-top: 0.74rem;
+    }
+    .attn23-source-row,
+    .attn23-rail {
+      width: min(100%, 23.25rem);
+    }
+    .attn23-source-row {
+      gap: 0.12rem;
+    }
+    .attn23-source-item .attn19-token-chip,
+    .attn23-token-item .attn19-token-chip {
+      font-size: 0.66rem;
+      padding: 0.26rem 0.14rem;
+      border-radius: 0.38rem;
+    }
+    .attn23-source-item .attn19-vector-wrap {
+      grid-template-columns: 1.22rem minmax(0, 1fr);
+      column-gap: 0.12rem;
+      min-height: 0.78rem;
+    }
+    .attn23-x-item .attn19-vector-wrap {
+      min-height: 0.78rem;
+    }
+    .attn23-x-slot {
+      min-height: 0.68rem;
+    }
+    .attn23-source-item .attn19-vector-label {
+      font-size: 0.46rem;
+      letter-spacing: -0.01em;
+    }
+    .attn23-source-item .attn19-vector,
+    .attn23-x-item .attn19-vector {
+      height: 0.68rem;
+      border-radius: 0.24rem;
+    }
+    .attn23-source-item .attn19-vector-values,
+    .attn23-x-item .attn19-vector-values {
+      font-size: 0.31rem;
+      padding: 0 0.04rem;
+    }
+  }
 </style>
 </head>
 <body>
@@ -2508,6 +2881,45 @@
     <div class="attn19-takeaway" id="attn22-takeaway">Start from Step 3 scores <i>s</i><sub>j</sub> for each token.</div>
   </div>
 
+  <div class="slide" id="slide-23">
+    <span class="section-tag">Attention</span>
+    <div class="badge concept">Mechanism</div>
+    <h2>Matrix View of Attention</h2>
+    <p class="small-text attn19-subtitle">First stack tokens, then stack embedding rows</p>
+
+    <div class="attn19-layout">
+      <div class="card attn19-stage attn23-stage" id="attn23-stage">
+        <div class="attn23-ghost-layer" id="attn23-ghost-layer" aria-hidden="true"></div>
+
+        <div class="attn23-source-zone">
+          <div class="attn23-source-row" id="attn23-source-row"></div>
+        </div>
+
+        <div class="attn23-rail" id="attn23-rail">
+          <div class="attn23-col attn23-col-token" id="attn23-col-token">
+            <div class="attn23-col-head">
+              <div class="attn23-col-label" id="attn23-token-label">Token Matrix (T)</div>
+            </div>
+            <div class="attn23-shell attn23-token-shell" id="attn23-token-shell">
+              <div class="attn23-slots attn23-token-slots" id="attn23-token-slots"></div>
+            </div>
+          </div>
+          <div class="attn23-col attn23-col-x" id="attn23-col-x">
+            <div class="attn23-col-head">
+              <div class="attn23-col-label" id="attn23-x-label">Embedding Matrix (X)</div>
+              <div class="attn23-col-meta" id="attn23-x-dims">X ∈ R^(S × d)</div>
+            </div>
+            <div class="attn23-shell attn23-x-shell" id="attn23-x-shell">
+              <div class="attn23-slots attn23-x-slots" id="attn23-x-slots"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="attn19-takeaway" id="attn23-takeaway">Start from the same sequence: tokens plus their embedding rows.</div>
+  </div>
+
 </div>
 
 <div class="bottom-bar">
@@ -2516,7 +2928,7 @@
   <div class="progress-track">
     <div class="progress-fill" id="progressFill" style="width:0%"></div>
   </div>
-  <span class="slide-counter" id="slideCounter">1 / 5</span>
+  <span class="slide-counter" id="slideCounter">1 / 6</span>
   <button class="nav-btn primary" id="btnNext">Next &rarr;</button>
 </div>
 
@@ -2637,6 +3049,18 @@ const ATTN_STEP4_VEC_MERGE_FADE_MS = 180;
 const ATTN_STEP4_RESIDUAL_ANIM_MS = 900;
 const ATTN_STEP4_RESIDUAL_FADE_MS = 180;
 
+const ATTN_MATRIX_TOKENS = ATTN_QKV_TOKENS.slice();
+const ATTN_MATRIX_TAKEAWAYS = [
+  'Start from the same sequence: tokens plus their embedding rows.',
+  'First collect the sequence tokens into a compact token matrix <i>T</i>.',
+  'Then collect the embedding rows into the embedding matrix <i>X</i>.'
+];
+const ATTN_MATRIX_MAX_STEP = 2;
+const ATTN_MATRIX_ROW_STAGGER_MS = 140;
+const ATTN_MATRIX_TOKEN_TRAVEL_MS = 680;
+const ATTN_MATRIX_X_TRAVEL_MS = 720;
+const ATTN_MATRIX_FADE_MS = 180;
+
 const ATTN_P1_TOKENS = ['cat', 'sat', 'on', 'the', 'mat'];
 const ATTN_P1_FOCUS = 'sat';
 const ATTN_P1_PROJS = ['q', 'k', 'v'];
@@ -2756,6 +3180,17 @@ const state = {
     residualTimers: [],
     residualRafIds: [],
     residualDone: false,
+    resizeBound: false
+  },
+  attentionMatrix: {
+    initialized: false,
+    step: 0,
+    timers: [],
+    rafIds: [],
+    tokenMatrixDone: false,
+    xMatrixDone: false,
+    tokenVisibleCount: 0,
+    xVisibleCount: 0,
     resizeBound: false
   },
   attentionP1: {
@@ -5090,6 +5525,483 @@ function resetAttentionStep4Slide() {
 }
 
 /* =====================================================
+   Slide-23 — matrix view of the full sequence
+   ===================================================== */
+
+function createAttentionMatrixSourceItem(token) {
+  const item = createEl('div', {
+    className: 'attn23-source-item',
+    id: 'attn23-source-item-' + token,
+    dataset: { token }
+  });
+
+  const chipWrap = createEl('div', {
+    className: 'attn19-chip-wrap attn23-source-chip-wrap',
+    id: 'attn23-source-chip-wrap-' + token
+  });
+  chipWrap.appendChild(createEl('div', {
+    className: 'attn19-token-chip',
+    id: 'attn23-source-chip-' + token,
+    text: token
+  }));
+  item.appendChild(chipWrap);
+
+  const xWrap = createEl('div', {
+    className: 'attn19-vector-wrap attn19-vector-wrap-x attn23-source-vector-wrap',
+    id: 'attn23-source-vector-wrap-' + token
+  }, [
+    createMathSubLabel('x', token, 'attn19-vector-label'),
+    createAttentionQkvVectorRect(
+      'attn23-source-vector-' + token,
+      '',
+      ATTN_QKV_X_VECTORS[token] || ATTN_QKV_QUERY_VECTOR
+    )
+  ]);
+  item.appendChild(xWrap);
+
+  return item;
+}
+
+function createAttentionMatrixTokenItem(token) {
+  const item = createEl('div', {
+    className: 'attn23-token-item',
+    id: 'attn23-token-item-' + token,
+    dataset: { token }
+  });
+
+  const chipWrap = createEl('div', {
+    className: 'attn19-chip-wrap attn23-token-chip-wrap',
+    id: 'attn23-token-chip-wrap-' + token
+  });
+  chipWrap.appendChild(createEl('div', {
+    className: 'attn19-token-chip',
+    id: 'attn23-token-chip-' + token,
+    text: token
+  }));
+  item.appendChild(chipWrap);
+
+  return item;
+}
+
+function createAttentionMatrixXItem(token) {
+  const item = createEl('div', {
+    className: 'attn23-x-item',
+    id: 'attn23-x-item-' + token,
+    dataset: { token }
+  });
+
+  const xWrap = createEl('div', {
+    className: 'attn19-vector-wrap attn19-vector-wrap-x attn23-x-vector-wrap',
+    id: 'attn23-x-vector-wrap-' + token
+  }, createAttentionQkvVectorRect(
+    'attn23-x-vector-' + token,
+    '',
+    ATTN_QKV_X_VECTORS[token] || ATTN_QKV_QUERY_VECTOR
+  ));
+  item.appendChild(xWrap);
+
+  return item;
+}
+
+function clearAttentionMatrixTimers() {
+  state.attentionMatrix.timers.forEach((timerId) => clearTimeout(timerId));
+  state.attentionMatrix.timers = [];
+  state.attentionMatrix.rafIds.forEach((rafId) => cancelAnimationFrame(rafId));
+  state.attentionMatrix.rafIds = [];
+}
+
+function clearAttentionMatrixGhosts() {
+  const layer = document.getElementById('attn23-ghost-layer');
+  if (!layer) return;
+  layer.querySelectorAll('.attn23-ghost').forEach((ghost) => ghost.remove());
+}
+
+function setAttentionMatrixTokenSlotVisible(token, visible) {
+  const slot = document.getElementById('attn23-token-slot-' + token);
+  if (!slot) return;
+  slot.classList.toggle('is-visible', !!visible);
+}
+
+function setAttentionMatrixXSlotVisible(token, visible) {
+  const slot = document.getElementById('attn23-x-slot-' + token);
+  if (!slot) return;
+  slot.classList.toggle('is-visible', !!visible);
+}
+
+function syncAttentionMatrixTokenSlots(visibleCount = state.attentionMatrix.tokenVisibleCount) {
+  const clamped = Math.max(0, Math.min(ATTN_MATRIX_TOKENS.length, visibleCount));
+  ATTN_MATRIX_TOKENS.forEach((token, idx) => {
+    setAttentionMatrixTokenSlotVisible(token, idx < clamped);
+  });
+}
+
+function syncAttentionMatrixXSlots(visibleCount = state.attentionMatrix.xVisibleCount) {
+  const clamped = Math.max(0, Math.min(ATTN_MATRIX_TOKENS.length, visibleCount));
+  ATTN_MATRIX_TOKENS.forEach((token, idx) => {
+    setAttentionMatrixXSlotVisible(token, idx < clamped);
+  });
+}
+
+function resetAttentionMatrixVisuals() {
+  const slide = document.getElementById('slide-23');
+  clearAttentionMatrixTimers();
+  clearAttentionMatrixGhosts();
+  state.attentionMatrix.tokenMatrixDone = false;
+  state.attentionMatrix.xMatrixDone = false;
+  state.attentionMatrix.tokenVisibleCount = 0;
+  state.attentionMatrix.xVisibleCount = 0;
+  syncAttentionMatrixTokenSlots(0);
+  syncAttentionMatrixXSlots(0);
+  if (!slide) return;
+  slide.classList.remove('attn23-show-token-matrix');
+  slide.classList.remove('attn23-show-x-matrix');
+  slide.classList.remove('attn23-token-settled');
+  slide.classList.remove('attn23-full-settled');
+}
+
+function settleAttentionMatrixTokenState() {
+  const slide = document.getElementById('slide-23');
+  clearAttentionMatrixTimers();
+  clearAttentionMatrixGhosts();
+  state.attentionMatrix.tokenMatrixDone = true;
+  state.attentionMatrix.xMatrixDone = false;
+  state.attentionMatrix.tokenVisibleCount = ATTN_MATRIX_TOKENS.length;
+  state.attentionMatrix.xVisibleCount = 0;
+  syncAttentionMatrixTokenSlots(state.attentionMatrix.tokenVisibleCount);
+  syncAttentionMatrixXSlots(0);
+  if (!slide) return;
+  slide.classList.add('attn23-show-token-matrix');
+  slide.classList.add('attn23-token-settled');
+  slide.classList.remove('attn23-show-x-matrix');
+  slide.classList.remove('attn23-full-settled');
+}
+
+function settleAttentionMatrixFullState() {
+  const slide = document.getElementById('slide-23');
+  clearAttentionMatrixTimers();
+  clearAttentionMatrixGhosts();
+  state.attentionMatrix.tokenMatrixDone = true;
+  state.attentionMatrix.xMatrixDone = true;
+  state.attentionMatrix.tokenVisibleCount = ATTN_MATRIX_TOKENS.length;
+  state.attentionMatrix.xVisibleCount = ATTN_MATRIX_TOKENS.length;
+  syncAttentionMatrixTokenSlots(state.attentionMatrix.tokenVisibleCount);
+  syncAttentionMatrixXSlots(state.attentionMatrix.xVisibleCount);
+  if (!slide) return;
+  slide.classList.add('attn23-show-token-matrix');
+  slide.classList.add('attn23-show-x-matrix');
+  slide.classList.add('attn23-token-settled');
+  slide.classList.add('attn23-full-settled');
+}
+
+function cloneAttentionMatrixFragment(node, extraClass) {
+  if (!node) return null;
+  const ghost = node.cloneNode(true);
+  const stripIds = (el) => {
+    if (!el || el.nodeType !== 1) return;
+    el.removeAttribute('id');
+    Array.from(el.children).forEach(stripIds);
+  };
+  stripIds(ghost);
+  ghost.classList.add('attn23-ghost');
+  if (extraClass) ghost.classList.add(extraClass);
+  return ghost;
+}
+
+function placeAttentionMatrixGhost(ghost, rect, stageRect) {
+  if (!ghost || !rect || !stageRect) return;
+  ghost.style.left = (rect.left - stageRect.left).toFixed(2) + 'px';
+  ghost.style.top = (rect.top - stageRect.top).toFixed(2) + 'px';
+  ghost.style.width = rect.width.toFixed(2) + 'px';
+  ghost.style.height = rect.height.toFixed(2) + 'px';
+}
+
+function animateAttentionMatrixGhost(ghost, sourceEl, targetEl, durationMs) {
+  const stage = document.getElementById('attn23-stage');
+  if (!ghost || !stage || !sourceEl || !targetEl) return false;
+
+  const stageRect = stage.getBoundingClientRect();
+  const sourceRect = sourceEl.getBoundingClientRect();
+  const targetRect = targetEl.getBoundingClientRect();
+  if (
+    stageRect.width < 1 || stageRect.height < 1
+    || sourceRect.width < 1 || sourceRect.height < 1
+    || targetRect.width < 1 || targetRect.height < 1
+  ) return false;
+
+  const fromX = sourceRect.left - stageRect.left + sourceRect.width * 0.5;
+  const fromY = sourceRect.top - stageRect.top + sourceRect.height * 0.5;
+  const toX = targetRect.left - stageRect.left + targetRect.width * 0.5;
+  const toY = targetRect.top - stageRect.top + targetRect.height * 0.5;
+  const dx = toX - fromX;
+  const dy = toY - fromY;
+  const scaleX = sourceRect.width > 0 ? targetRect.width / sourceRect.width : 1;
+  const scaleY = sourceRect.height > 0 ? targetRect.height / sourceRect.height : 1;
+
+  ghost.style.transition = 'transform ' + durationMs + 'ms cubic-bezier(0.2, 0.75, 0.3, 1), opacity ' + ATTN_MATRIX_FADE_MS + 'ms ease';
+  const rafId = requestAnimationFrame(() => {
+    ghost.style.transform = 'translate3d(' + dx.toFixed(2) + 'px, ' + dy.toFixed(2) + 'px, 0) scale(' + scaleX.toFixed(3) + ', ' + scaleY.toFixed(3) + ')';
+  });
+  state.attentionMatrix.rafIds.push(rafId);
+  return true;
+}
+
+function createAttentionMatrixTokenGhost(token) {
+  const stage = document.getElementById('attn23-stage');
+  const layer = document.getElementById('attn23-ghost-layer');
+  const sourceWrap = document.getElementById('attn23-source-chip-wrap-' + token);
+  if (!stage || !layer || !sourceWrap) return null;
+
+  const stageRect = stage.getBoundingClientRect();
+  const sourceRect = sourceWrap.getBoundingClientRect();
+  if (stageRect.width < 1 || stageRect.height < 1 || sourceRect.width < 1 || sourceRect.height < 1) return null;
+
+  const ghost = cloneAttentionMatrixFragment(sourceWrap, 'attn23-ghost-token');
+  if (!ghost) return null;
+  placeAttentionMatrixGhost(ghost, sourceRect, stageRect);
+  layer.appendChild(ghost);
+  return ghost;
+}
+
+function createAttentionMatrixXGhost(token) {
+  const stage = document.getElementById('attn23-stage');
+  const layer = document.getElementById('attn23-ghost-layer');
+  const sourceWrap = document.getElementById('attn23-source-vector-wrap-' + token);
+  if (!stage || !layer || !sourceWrap) return null;
+
+  const stageRect = stage.getBoundingClientRect();
+  const sourceRect = sourceWrap.getBoundingClientRect();
+  if (stageRect.width < 1 || stageRect.height < 1 || sourceRect.width < 1 || sourceRect.height < 1) return null;
+
+  const ghost = cloneAttentionMatrixFragment(sourceWrap, 'attn23-ghost-x');
+  if (!ghost) return null;
+  placeAttentionMatrixGhost(ghost, sourceRect, stageRect);
+  layer.appendChild(ghost);
+  return ghost;
+}
+
+function animateAttentionMatrixTokenRow(token, idx, delayMs, isLastToken = false) {
+  const timerId = setTimeout(() => {
+    if (state.attentionMatrix.step < 1) return;
+    const sourceWrap = document.getElementById('attn23-source-chip-wrap-' + token);
+    const targetWrap = document.getElementById('attn23-token-chip-wrap-' + token);
+    const ghost = createAttentionMatrixTokenGhost(token);
+    if (!ghost || !sourceWrap || !targetWrap || !animateAttentionMatrixGhost(ghost, sourceWrap, targetWrap, ATTN_MATRIX_TOKEN_TRAVEL_MS)) {
+      state.attentionMatrix.tokenVisibleCount = Math.max(state.attentionMatrix.tokenVisibleCount, idx + 1);
+      syncAttentionMatrixTokenSlots(state.attentionMatrix.tokenVisibleCount);
+      if (isLastToken) settleAttentionMatrixTokenState();
+      return;
+    }
+
+    const revealTimer = setTimeout(() => {
+      if (state.attentionMatrix.step < 1) return;
+      state.attentionMatrix.tokenVisibleCount = Math.max(state.attentionMatrix.tokenVisibleCount, idx + 1);
+      syncAttentionMatrixTokenSlots(state.attentionMatrix.tokenVisibleCount);
+      ghost.style.opacity = '0';
+    }, ATTN_MATRIX_TOKEN_TRAVEL_MS);
+    state.attentionMatrix.timers.push(revealTimer);
+
+    const cleanupTimer = setTimeout(() => {
+      if (ghost.parentNode) ghost.parentNode.removeChild(ghost);
+      if (isLastToken) settleAttentionMatrixTokenState();
+    }, ATTN_MATRIX_TOKEN_TRAVEL_MS + ATTN_MATRIX_FADE_MS + 40);
+    state.attentionMatrix.timers.push(cleanupTimer);
+  }, delayMs);
+
+  state.attentionMatrix.timers.push(timerId);
+}
+
+function animateAttentionMatrixXRow(token, idx, delayMs, isLastToken = false) {
+  const timerId = setTimeout(() => {
+    if (state.attentionMatrix.step < 2) return;
+    const sourceWrap = document.getElementById('attn23-source-vector-wrap-' + token);
+    const targetWrap = document.getElementById('attn23-x-vector-wrap-' + token);
+    const ghost = createAttentionMatrixXGhost(token);
+    if (!ghost || !sourceWrap || !targetWrap || !animateAttentionMatrixGhost(ghost, sourceWrap, targetWrap, ATTN_MATRIX_X_TRAVEL_MS)) {
+      state.attentionMatrix.xVisibleCount = Math.max(state.attentionMatrix.xVisibleCount, idx + 1);
+      syncAttentionMatrixXSlots(state.attentionMatrix.xVisibleCount);
+      if (isLastToken) settleAttentionMatrixFullState();
+      return;
+    }
+
+    const revealTimer = setTimeout(() => {
+      if (state.attentionMatrix.step < 2) return;
+      state.attentionMatrix.xVisibleCount = Math.max(state.attentionMatrix.xVisibleCount, idx + 1);
+      syncAttentionMatrixXSlots(state.attentionMatrix.xVisibleCount);
+      ghost.style.opacity = '0';
+    }, ATTN_MATRIX_X_TRAVEL_MS);
+    state.attentionMatrix.timers.push(revealTimer);
+
+    const cleanupTimer = setTimeout(() => {
+      if (ghost.parentNode) ghost.parentNode.removeChild(ghost);
+      if (isLastToken) settleAttentionMatrixFullState();
+    }, ATTN_MATRIX_X_TRAVEL_MS + ATTN_MATRIX_FADE_MS + 40);
+    state.attentionMatrix.timers.push(cleanupTimer);
+  }, delayMs);
+
+  state.attentionMatrix.timers.push(timerId);
+}
+
+function runAttentionMatrixTokenSequence() {
+  const slide = document.getElementById('slide-23');
+  resetAttentionMatrixVisuals();
+  if (slide) slide.classList.add('attn23-show-token-matrix');
+
+  if (!ATTN_MATRIX_TOKENS.length) {
+    settleAttentionMatrixTokenState();
+    return;
+  }
+
+  ATTN_MATRIX_TOKENS.forEach((token, idx) => {
+    animateAttentionMatrixTokenRow(
+      token,
+      idx,
+      idx * ATTN_MATRIX_ROW_STAGGER_MS,
+      idx === ATTN_MATRIX_TOKENS.length - 1
+    );
+  });
+}
+
+function runAttentionMatrixXSequence() {
+  const slide = document.getElementById('slide-23');
+  if (!state.attentionMatrix.tokenMatrixDone) {
+    settleAttentionMatrixTokenState();
+  }
+
+  clearAttentionMatrixTimers();
+  clearAttentionMatrixGhosts();
+  state.attentionMatrix.xMatrixDone = false;
+  state.attentionMatrix.xVisibleCount = 0;
+  syncAttentionMatrixXSlots(0);
+  if (slide) {
+    slide.classList.add('attn23-show-token-matrix');
+    slide.classList.add('attn23-show-x-matrix');
+    slide.classList.add('attn23-token-settled');
+    slide.classList.remove('attn23-full-settled');
+  }
+
+  if (!ATTN_MATRIX_TOKENS.length) {
+    settleAttentionMatrixFullState();
+    return;
+  }
+
+  ATTN_MATRIX_TOKENS.forEach((token, idx) => {
+    animateAttentionMatrixXRow(
+      token,
+      idx,
+      idx * ATTN_MATRIX_ROW_STAGGER_MS,
+      idx === ATTN_MATRIX_TOKENS.length - 1
+    );
+  });
+}
+
+function initAttentionMatrixSlide() {
+  const slide = document.getElementById('slide-23');
+  const sourceRow = document.getElementById('attn23-source-row');
+  const tokenSlots = document.getElementById('attn23-token-slots');
+  const xSlots = document.getElementById('attn23-x-slots');
+  if (!slide || !sourceRow || !tokenSlots || !xSlots) return;
+
+  if (!state.attentionMatrix.initialized) {
+    sourceRow.innerHTML = '';
+    tokenSlots.innerHTML = '';
+    xSlots.innerHTML = '';
+
+    ATTN_MATRIX_TOKENS.forEach((token) => {
+      sourceRow.appendChild(createAttentionMatrixSourceItem(token));
+
+      const tokenSlot = createEl('div', {
+        className: 'attn23-slot attn23-token-slot',
+        id: 'attn23-token-slot-' + token,
+        dataset: { token }
+      });
+      tokenSlot.appendChild(createAttentionMatrixTokenItem(token));
+      tokenSlots.appendChild(tokenSlot);
+
+      const xSlot = createEl('div', {
+        className: 'attn23-slot attn23-x-slot',
+        id: 'attn23-x-slot-' + token,
+        dataset: { token }
+      });
+      xSlot.appendChild(createAttentionMatrixXItem(token));
+      xSlots.appendChild(xSlot);
+    });
+
+    if (!state.attentionMatrix.resizeBound) {
+      window.addEventListener('resize', () => {
+        if (!state.attentionMatrix.initialized) return;
+        if (state.attentionMatrix.step >= 2) {
+          settleAttentionMatrixFullState();
+        } else if (state.attentionMatrix.step >= 1) {
+          settleAttentionMatrixTokenState();
+        } else {
+          resetAttentionMatrixVisuals();
+        }
+      });
+      state.attentionMatrix.resizeBound = true;
+    }
+
+    state.attentionMatrix.initialized = true;
+  }
+
+  const takeaway = document.getElementById('attn23-takeaway');
+  if (takeaway) takeaway.innerHTML = ATTN_MATRIX_TAKEAWAYS[state.attentionMatrix.step] || ATTN_MATRIX_TAKEAWAYS[0];
+
+  if (state.attentionMatrix.step >= 2) {
+    settleAttentionMatrixFullState();
+  } else if (state.attentionMatrix.step >= 1) {
+    settleAttentionMatrixTokenState();
+  } else {
+    resetAttentionMatrixVisuals();
+  }
+}
+
+function setAttentionMatrixStep(step) {
+  const slide = document.getElementById('slide-23');
+  const takeaway = document.getElementById('attn23-takeaway');
+  if (!slide || !takeaway) return;
+
+  const clamped = Math.max(0, Math.min(ATTN_MATRIX_MAX_STEP, step));
+  state.attentionMatrix.step = clamped;
+  takeaway.innerHTML = ATTN_MATRIX_TAKEAWAYS[clamped] || ATTN_MATRIX_TAKEAWAYS[0];
+
+  if (clamped === 0) {
+    resetAttentionMatrixVisuals();
+    return;
+  }
+
+  if (clamped === 1) {
+    if (!state.attentionMatrix.tokenMatrixDone) {
+      runAttentionMatrixTokenSequence();
+    } else {
+      settleAttentionMatrixTokenState();
+    }
+    return;
+  }
+
+  if (!state.attentionMatrix.tokenMatrixDone) {
+    settleAttentionMatrixTokenState();
+  }
+  if (!state.attentionMatrix.xMatrixDone) {
+    runAttentionMatrixXSequence();
+  } else {
+    settleAttentionMatrixFullState();
+  }
+}
+
+function runAttentionMatrixStep() {
+  if (!state.attentionMatrix.initialized) initAttentionMatrixSlide();
+  if (state.attentionMatrix.step >= ATTN_MATRIX_MAX_STEP) return false;
+  setAttentionMatrixStep(state.attentionMatrix.step + 1);
+  return true;
+}
+
+function resetAttentionMatrixSlide() {
+  const slide = document.getElementById('slide-23');
+  if (!slide) return;
+  setAttentionMatrixStep(0);
+}
+
+/* =====================================================
    Slide-19 (Step 1) — Q/K/V projection fan-out
    ===================================================== */
 
@@ -5520,6 +6432,7 @@ function resetSlideInteractions(slideEl) {
   if (slideEl.id === 'slide-20') resetAttentionQkvSlide();
   if (slideEl.id === 'slide-21') resetAttentionWeightsSlide();
   if (slideEl.id === 'slide-22') resetAttentionStep4Slide();
+  if (slideEl.id === 'slide-23') resetAttentionMatrixSlide();
 }
 
 function goToSlide(index) {
@@ -5561,6 +6474,10 @@ function goToSlide(index) {
     initAttentionStep4Slide();
     setAttentionStep4Step(0);
   }
+  if (activeSlide.id === 'slide-23') {
+    initAttentionMatrixSlide();
+    setAttentionMatrixStep(0);
+  }
 
   devLog('slide', activeSlide.id);
 }
@@ -5587,6 +6504,7 @@ function nextStep() {
   if (active.id === 'slide-20') return runAttentionQkvStep();
   if (active.id === 'slide-21') return runAttentionWeightsStep();
   if (active.id === 'slide-22') return runAttentionStep4Step();
+  if (active.id === 'slide-23') return runAttentionMatrixStep();
   return false;
 }
 
