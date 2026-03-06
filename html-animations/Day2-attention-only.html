@@ -926,6 +926,21 @@
     justify-self: center;
     transition: opacity 0.16s ease, visibility 0.16s ease;
   }
+  #slide-22 .attn19-vector-wrap-v {
+    position: relative;
+    overflow: visible;
+  }
+  #slide-22 .attn19-vector-wrap-v .attn19-vector {
+    grid-column: 2;
+  }
+  #slide-22 .attn19-vector-wrap-v .attn19-vector-label {
+    position: absolute;
+    left: calc(var(--attn22-lane-label-w) + var(--attn22-lane-gap));
+    top: calc(100% + 0.08rem);
+    text-align: left;
+    z-index: 3;
+    pointer-events: none;
+  }
   #slide-22 .attn22-col {
     position: relative;
   }
@@ -961,6 +976,100 @@
   #slide-22 .attn19-vector-wrap-v {
     z-index: 2;
   }
+  #slide-22 .attn22-merge-layer {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 6;
+    overflow: visible;
+  }
+  #slide-22 .attn22-merge-ghost {
+    position: absolute;
+    margin: 0;
+    pointer-events: none;
+    opacity: 0.94;
+    transform: translate3d(0, 0, 0);
+    transform-origin: center center;
+    will-change: transform, opacity;
+    transition:
+      transform 760ms cubic-bezier(0.2, 0.75, 0.3, 1),
+      opacity 180ms ease;
+  }
+  #slide-22 .attn22-merge-ghost .attn19-vector-wrap-v {
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: none !important;
+  }
+  #slide-22 .attn22-merge-ghost .attn19-vector-wrap-v .attn19-vector-label {
+    color: rgba(221,233,255,0.96);
+    text-shadow: 0 0 0.34rem rgba(var(--attn19-focus-rgb), 0.42);
+  }
+  #slide-22 .attn22-merge-ghost .attn19-vector-wrap-v .attn19-vector {
+    border-color: rgba(var(--attn19-focus-rgb), 0.82);
+    box-shadow: 0 0 0 0.08rem rgba(var(--attn19-focus-rgb), 0.22), 0 0 0.62rem rgba(var(--attn19-focus-rgb), 0.26);
+    background: rgba(var(--attn19-focus-rgb), 0.14);
+  }
+  #slide-22 .attn22-col.is-merged-out .attn19-vector-wrap-v {
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(0.12rem);
+  }
+  #slide-22 .attn22-col.is-merge-target .attn19-vector-wrap-v .attn19-vector-label {
+    color: rgba(228,238,255,0.98);
+    text-shadow: 0 0 0.34rem rgba(var(--attn19-focus-rgb), 0.44);
+  }
+  #slide-22 .attn22-col.is-merge-target .attn19-vector-wrap-v .attn19-vector {
+    border-color: rgba(var(--attn19-focus-rgb), 0.86);
+    box-shadow: 0 0 0 0.08rem rgba(var(--attn19-focus-rgb), 0.26), 0 0 0.64rem rgba(var(--attn19-focus-rgb), 0.28);
+    background: rgba(var(--attn19-focus-rgb), 0.16);
+  }
+  #slide-22.attn22-show-merged #attn22-col-sat .attn19-vector-wrap-v .attn19-vector {
+    border-color: rgba(var(--attn19-focus-rgb), 0.9);
+    box-shadow: 0 0 0 0.08rem rgba(var(--attn19-focus-rgb), 0.28), 0 0 0.72rem rgba(var(--attn19-focus-rgb), 0.3);
+  }
+  #slide-22.attn22-show-merged #attn22-col-sat .attn19-vector-wrap-v .attn19-vector-label {
+    color: rgba(232,240,255,0.98);
+  }
+  #slide-22 .attn22-residual-ghost {
+    position: absolute;
+    margin: 0;
+    pointer-events: none;
+    opacity: 0.96;
+    transform: translate3d(0, 0, 0);
+    transform-origin: center center;
+    will-change: transform, opacity;
+    transition:
+      transform 860ms cubic-bezier(0.2, 0.75, 0.3, 1),
+      opacity 180ms ease;
+  }
+  #slide-22 .attn22-residual-ghost .attn19-vector-wrap-v {
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: none !important;
+  }
+  #slide-22 .attn22-residual-ghost .attn19-vector-wrap-v .attn19-vector-label {
+    color: rgba(228,238,255,0.98);
+    text-shadow: 0 0 0.34rem rgba(var(--attn19-focus-rgb), 0.44);
+  }
+  #slide-22 .attn22-residual-ghost .attn19-vector-wrap-v .attn19-vector {
+    border-color: rgba(var(--attn19-focus-rgb), 0.88);
+    box-shadow: 0 0 0 0.08rem rgba(var(--attn19-focus-rgb), 0.24), 0 0 0.66rem rgba(var(--attn19-focus-rgb), 0.28);
+    background: rgba(var(--attn19-focus-rgb), 0.18);
+  }
+  #slide-22 .attn22-col.is-residual-target .attn19-vector-wrap-x .attn19-vector-label {
+    color: rgba(232,240,255,0.98);
+    text-shadow: 0 0 0.34rem rgba(var(--attn19-focus-rgb), 0.44);
+  }
+  #slide-22 .attn22-col.is-residual-target .attn19-vector-wrap-x .attn19-vector {
+    border-color: rgba(var(--attn19-focus-rgb), 0.86);
+    box-shadow: 0 0 0 0.08rem rgba(var(--attn19-focus-rgb), 0.24), 0 0 0.66rem rgba(var(--attn19-focus-rgb), 0.28);
+    background: rgba(var(--attn19-focus-rgb), 0.15);
+  }
+  #slide-22 .attn22-col.is-residual-consumed .attn19-vector-wrap-v {
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(0.12rem);
+  }
   #slide-22.attn22-show-pairing .attn22-col.is-flying .attn19-score-pill,
   #slide-22.attn22-show-pairing .attn22-col.is-paired .attn19-score-pill {
     opacity: 0;
@@ -991,11 +1100,494 @@
     border-color: rgba(var(--attn19-focus-rgb), 0.62);
     background: rgba(var(--attn19-focus-rgb), 0.11);
   }
+  #slide-22 .attn22-agg-wrap {
+    --attn22-agg-collapse-ms: 240ms;
+    margin-top: 0.42rem;
+    border: 1px solid rgba(123,154,255,0.28);
+    border-radius: 0.56rem;
+    background: rgba(123,154,255,0.08);
+    padding: 0.48rem 0.56rem;
+    display: grid;
+    gap: 0.36rem;
+    opacity: 0;
+    transform: translateY(0.2rem);
+    pointer-events: none;
+    transition: opacity 0.24s ease, transform 0.24s ease;
+  }
+  #slide-22.attn22-show-aggregate .attn22-agg-wrap {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+  #slide-22 .attn22-agg-formula {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 0.2rem;
+    min-height: 1.45rem;
+    transition: opacity var(--attn22-agg-collapse-ms, 240ms) ease;
+  }
+  #slide-22 .attn22-agg-formula-residual {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    min-height: 1.45rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.62rem;
+    color: rgba(224,234,255,0.95);
+    letter-spacing: 0.01em;
+  }
+  #slide-22 .attn22-agg-term {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6rem;
+    color: rgba(214,226,252,0.92);
+    border: 1px solid rgba(var(--attn19-focus-rgb), 0.35);
+    background: rgba(var(--attn19-focus-rgb), 0.13);
+    border-radius: 999px;
+    padding: 0.14rem 0.28rem;
+    opacity: 0;
+    transform: translateY(0.16rem);
+    transition: opacity 0.22s ease, transform 0.22s ease;
+  }
+  #slide-22 .attn22-agg-term.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  #slide-22 .attn22-agg-output {
+    display: inline-flex;
+    justify-self: center;
+    align-items: center;
+    gap: 0.3rem;
+    opacity: 0.42;
+    transform: scale(0.97);
+    transition: opacity var(--attn22-agg-collapse-ms, 240ms) ease, transform var(--attn22-agg-collapse-ms, 240ms) ease;
+  }
+  #slide-22 .attn22-agg-output-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.62rem;
+    color: rgba(198,213,248,0.9);
+    white-space: nowrap;
+  }
+  #slide-22 .attn22-agg-output-vector {
+    border: 1px solid rgba(var(--attn19-focus-rgb), 0.44);
+    border-radius: 0.34rem;
+    background: rgba(var(--attn19-focus-rgb), 0.1);
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0;
+    min-width: 8.2rem;
+    overflow: hidden;
+  }
+  #slide-22 .attn22-agg-out-val {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.58rem;
+    color: rgba(220,232,255,0.94);
+    text-align: center;
+    padding: 0.16rem 0.12rem;
+    border-right: 1px solid rgba(var(--attn19-focus-rgb), 0.22);
+  }
+  #slide-22 .attn22-agg-out-val:last-child {
+    border-right: 0;
+  }
+  #slide-22 .attn22-agg-wrap.is-collapsed .attn22-agg-formula {
+    opacity: 0.35;
+  }
+  #slide-22 .attn22-agg-wrap.is-collapsed .attn22-agg-output {
+    opacity: 1;
+    transform: scale(1);
+  }
+  #slide-22 .attn22-agg-wrap.attn22-agg-mode-residual .attn22-agg-formula {
+    display: none;
+  }
+  #slide-22 .attn22-agg-wrap.attn22-agg-mode-residual .attn22-agg-formula-residual {
+    display: flex;
+  }
+  #slide-22 .attn22-agg-wrap.attn22-agg-mode-residual .attn22-agg-output {
+    opacity: 1;
+    transform: scale(1);
+  }
+  #slide-22.attn22-show-residual .attn22-agg-wrap.attn22-agg-mode-residual .attn22-agg-output-vector {
+    border-color: rgba(var(--attn19-focus-rgb), 0.68);
+    box-shadow: 0 0 0 0.08rem rgba(var(--attn19-focus-rgb), 0.22);
+    background: rgba(var(--attn19-focus-rgb), 0.16);
+  }
+
+  #slide-23 .attn23-layout {
+    margin-top: 0.76rem;
+  }
+  #slide-23 .attn23-stage {
+    position: relative;
+    min-height: clamp(22rem, 75vh, 33rem);
+    padding: 0.86rem 0.9rem;
+    display: grid;
+    align-content: start;
+    gap: 0.66rem;
+  }
+  #slide-23 .attn23-token-row {
+    width: min(25.5rem, 100%);
+    justify-self: center;
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 0.28rem;
+  }
+  #slide-23 .attn23-token-chip {
+    border: 1px solid rgba(181,194,223,0.34);
+    border-radius: 999px;
+    background: rgba(148,163,196,0.1);
+    color: rgba(215,226,251,0.94);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.56rem;
+    line-height: 1;
+    padding: 0.2rem 0.3rem;
+    text-align: center;
+  }
+  #slide-23 .attn23-token-chip.active {
+    border-color: rgba(var(--attn19-focus-rgb), 0.86);
+    background: rgba(var(--attn19-focus-rgb), 0.18);
+    box-shadow: 0 0 0 0.08rem rgba(var(--attn19-focus-rgb), 0.34);
+    color: rgba(229,238,255,0.99);
+  }
+  #slide-23 .attn23-main {
+    position: relative;
+    display: grid;
+    gap: 0.54rem;
+    align-content: start;
+  }
+  #slide-23 .attn23-top-row {
+    display: grid;
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+    gap: 0.48rem;
+    align-items: stretch;
+  }
+  #slide-23 .attn23-block {
+    border: 1px solid rgba(123,154,255,0.3);
+    border-radius: 0.58rem;
+    background: rgba(123,154,255,0.09);
+    padding: 0.42rem 0.5rem;
+    display: grid;
+    gap: 0.26rem;
+  }
+  #slide-23 .attn23-block-title {
+    text-transform: uppercase;
+    letter-spacing: 0.09em;
+    font-size: 0.5rem;
+    font-weight: 700;
+    color: rgba(198,214,245,0.85);
+  }
+  #slide-23 .attn23-vector-stack {
+    display: grid;
+    gap: 0.16rem;
+  }
+  #slide-23 .attn23-vector-wrap {
+    display: grid;
+    grid-template-columns: 2.72rem minmax(0, 1fr);
+    align-items: center;
+    column-gap: 0.28rem;
+    min-height: 1rem;
+  }
+  #slide-23 .attn23-vector-wrap .attn19-vector-label {
+    text-align: right;
+  }
+  #slide-23 .attn23-qkv-block {
+    opacity: 0.24;
+    transform: translateY(0.16rem);
+    filter: blur(1.5px);
+    transition: opacity 220ms ease, transform 220ms ease, filter 220ms ease;
+  }
+  #slide-23.attn23-show-qkv .attn23-qkv-block {
+    opacity: 1;
+    transform: translateY(0);
+    filter: none;
+  }
+  #slide-23 .attn23-split-mark {
+    justify-self: end;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.5rem;
+    color: rgba(var(--attn19-focus-rgb), 0.8);
+    opacity: 0;
+    transform: translateY(0.08rem);
+    transition: opacity 220ms ease, transform 220ms ease;
+  }
+  #slide-23.attn23-show-split .attn23-split-mark {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  #slide-23 .attn23-head-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.5rem;
+  }
+  #slide-23 .attn23-head-card {
+    border: 1px solid rgba(var(--attn19-focus-rgb), 0.32);
+    border-radius: 0.56rem;
+    background: rgba(var(--attn19-focus-rgb), 0.07);
+    padding: 0.4rem 0.46rem;
+    display: grid;
+    gap: 0.24rem;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(0.22rem);
+    transition: opacity var(--attn23-reveal-ms, 240ms) ease, transform var(--attn23-reveal-ms, 240ms) ease, visibility var(--attn23-reveal-ms, 240ms) ease;
+  }
+  #slide-23.attn23-show-split .attn23-head-card {
+    opacity: 0.74;
+    visibility: visible;
+    transform: translateY(0);
+  }
+  #slide-23 .attn23-head-card.is-active {
+    opacity: 1;
+    border-color: rgba(var(--attn19-focus-rgb), 0.74);
+    box-shadow: 0 0 0 0.08rem rgba(var(--attn19-focus-rgb), 0.22);
+    background: rgba(var(--attn19-focus-rgb), 0.12);
+  }
+  #slide-23 .attn23-head-title {
+    font-size: 0.56rem;
+    font-weight: 700;
+    color: rgba(214,227,255,0.94);
+    letter-spacing: 0.04em;
+  }
+  #slide-23 .attn23-head-qkv {
+    display: grid;
+    gap: 0.14rem;
+  }
+  #slide-23 .attn23-head-row {
+    display: grid;
+    grid-template-columns: 2.72rem minmax(0, 1fr);
+    align-items: center;
+    column-gap: 0.28rem;
+    min-height: 1rem;
+  }
+  #slide-23 .attn23-head-row .attn19-vector-label {
+    text-align: right;
+    font-size: 0.52rem;
+  }
+  #slide-23 .attn23-head-weights,
+  #slide-23 .attn23-head-output {
+    opacity: 0.24;
+    transition: opacity 220ms ease, transform 220ms ease;
+  }
+  #slide-23 .attn23-head-output {
+    transform: translateY(0.12rem);
+  }
+  #slide-23.attn23-show-head1 #attn23-head-h1 .attn23-head-weights,
+  #slide-23.attn23-show-head1 #attn23-head-h1 .attn23-head-output,
+  #slide-23.attn23-show-head2 #attn23-head-h2 .attn23-head-weights,
+  #slide-23.attn23-show-head2 #attn23-head-h2 .attn23-head-output {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  #slide-23 .attn23-weight-row {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 0.14rem;
+  }
+  #slide-23 .attn23-weight-cell {
+    border: 1px solid rgba(var(--attn19-focus-rgb), 0.4);
+    border-radius: 0.34rem;
+    background: rgba(var(--attn19-focus-rgb), 0.1);
+    text-align: center;
+    padding: 0.12rem 0.08rem;
+    display: grid;
+    gap: 0.06rem;
+  }
+  #slide-23 .attn23-weight-value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.48rem;
+    line-height: 1;
+    color: rgba(225,235,255,0.96);
+  }
+  #slide-23 .attn23-weight-token {
+    font-size: 0.41rem;
+    color: rgba(183,199,232,0.82);
+    letter-spacing: 0.02em;
+    text-transform: lowercase;
+  }
+  #slide-23 .attn23-head-output-row {
+    display: grid;
+    grid-template-columns: 2.72rem minmax(0, 1fr);
+    column-gap: 0.28rem;
+    align-items: center;
+    min-height: 1rem;
+  }
+  #slide-23 .attn23-head-output-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.5rem;
+    color: rgba(202,216,247,0.9);
+    text-align: right;
+    white-space: nowrap;
+  }
+  #slide-23 .attn23-final-row {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.48rem;
+  }
+  #slide-23 .attn23-concat-block,
+  #slide-23 .attn23-proj-block {
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(0.18rem);
+    transition: opacity 220ms ease, transform 220ms ease, visibility 220ms ease;
+  }
+  #slide-23.attn23-show-concat .attn23-concat-block {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+  #slide-23.attn23-show-proj .attn23-proj-block {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+  #slide-23 .attn23-formula {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.56rem;
+    color: rgba(212,225,251,0.9);
+    letter-spacing: 0.01em;
+  }
+  #slide-23 .attn23-final-vector-row {
+    display: grid;
+    grid-template-columns: 2.72rem minmax(0, 1fr);
+    align-items: center;
+    column-gap: 0.28rem;
+    min-height: 1rem;
+  }
+  #slide-23 .attn23-final-vector-row .attn19-vector-label {
+    text-align: right;
+  }
+  #slide-23 .attn23-split-layer {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 8;
+    overflow: visible;
+  }
+  #slide-23 .attn23-split-ghost {
+    position: absolute;
+    margin: 0;
+    opacity: 0;
+    transform: translate3d(0, 0, 0);
+    transform-origin: center center;
+    will-change: transform, opacity;
+    transition:
+      transform var(--attn23-split-ms, 760ms) cubic-bezier(0.22, 0.72, 0.3, 1),
+      opacity 200ms ease;
+  }
+  #slide-23 .attn23-split-ghost .attn19-vector {
+    border-color: rgba(var(--attn19-focus-rgb), 0.78);
+    box-shadow: 0 0 0 0.08rem rgba(var(--attn19-focus-rgb), 0.24), 0 0 0.6rem rgba(var(--attn19-focus-rgb), 0.24);
+    background: rgba(var(--attn19-focus-rgb), 0.18);
+  }
+  #slide-23 .attn23-split-ghost .attn19-vector.attn19-vector-k {
+    border-color: rgba(var(--attn19-source-rgb), 0.78);
+    box-shadow: 0 0 0 0.08rem rgba(var(--attn19-source-rgb), 0.24), 0 0 0.6rem rgba(var(--attn19-source-rgb), 0.24);
+    background: rgba(var(--attn19-source-rgb), 0.18);
+  }
+  #slide-23.attn23-show-split .attn23-qkv-row.is-splitting .attn19-vector {
+    border-color: rgba(var(--attn19-focus-rgb), 0.8);
+    box-shadow: 0 0 0 0.08rem rgba(var(--attn19-focus-rgb), 0.24);
+  }
+  #slide-23 .attn23-takeaway {
+    margin-top: 0.8rem;
+    border: 1px solid rgba(123,154,255,0.28);
+    border-radius: 0.58rem;
+    background: rgba(123,154,255,0.1);
+    display: flex;
+    align-items: center;
+    padding: 0.6rem 0.72rem;
+    font-size: 0.85rem;
+    color: #dbe4ff;
+    line-height: 1.45;
+  }
 
   @media (max-width: 56rem) {
     #slide-22 {
       --attn22-lane-label-w: 2rem;
       --attn22-lane-gap: 0.2rem;
+    }
+    #slide-22 .attn19-vector-wrap-v .attn19-vector-label {
+      top: calc(100% + 0.06rem);
+    }
+    #slide-22 .attn22-agg-wrap {
+      padding: 0.42rem 0.44rem;
+      gap: 0.3rem;
+    }
+    #slide-22 .attn22-agg-term {
+      font-size: 0.54rem;
+      padding: 0.12rem 0.24rem;
+    }
+    #slide-22 .attn22-agg-output-label {
+      font-size: 0.56rem;
+    }
+    #slide-22 .attn22-agg-output-vector {
+      min-width: 6.7rem;
+    }
+    #slide-22 .attn22-agg-out-val {
+      font-size: 0.52rem;
+      padding: 0.14rem 0.08rem;
+    }
+    #slide-22 .attn22-agg-formula-residual {
+      font-size: 0.56rem;
+    }
+    #slide-23 .attn23-stage {
+      padding: 0.78rem 0.68rem;
+      min-height: clamp(23rem, 78vh, 36rem);
+    }
+    #slide-23 .attn23-token-row {
+      gap: 0.2rem;
+    }
+    #slide-23 .attn23-token-chip {
+      font-size: 0.49rem;
+      padding: 0.16rem 0.2rem;
+    }
+    #slide-23 .attn23-top-row,
+    #slide-23 .attn23-head-grid,
+    #slide-23 .attn23-final-row {
+      grid-template-columns: 1fr;
+      gap: 0.36rem;
+    }
+    #slide-23 .attn23-block-title {
+      font-size: 0.47rem;
+      letter-spacing: 0.07em;
+    }
+    #slide-23 .attn23-vector-wrap {
+      grid-template-columns: 2rem minmax(0, 1fr);
+      column-gap: 0.2rem;
+      min-height: 0.86rem;
+    }
+    #slide-23 .attn23-vector-wrap .attn19-vector-label {
+      font-size: 0.5rem;
+    }
+    #slide-23 .attn23-head-row {
+      grid-template-columns: 2rem minmax(0, 1fr);
+      column-gap: 0.2rem;
+      min-height: 0.86rem;
+    }
+    #slide-23 .attn23-head-output-row {
+      grid-template-columns: 2rem minmax(0, 1fr);
+      column-gap: 0.2rem;
+      min-height: 0.86rem;
+    }
+    #slide-23 .attn23-final-vector-row {
+      grid-template-columns: 2rem minmax(0, 1fr);
+      column-gap: 0.2rem;
+      min-height: 0.86rem;
+    }
+    #slide-23 .attn23-head-output-label {
+      font-size: 0.46rem;
+    }
+    #slide-23 .attn23-formula {
+      font-size: 0.5rem;
+    }
+    #slide-23 .attn23-weight-value {
+      font-size: 0.44rem;
+    }
+    #slide-23 .attn23-weight-token {
+      font-size: 0.38rem;
+    }
+    #slide-23 .attn23-takeaway {
+      font-size: 0.76rem;
+      padding: 0.5rem 0.58rem;
     }
     .attn18-layout { margin-top: 0.72rem; }
     .attn18-stage {
@@ -2224,6 +2816,7 @@
             <polygon id="attn22-op-out-head-mat" class="attn19-compare-head out"></polygon>
           </g>
         </svg>
+        <div class="attn22-merge-layer" id="attn22-merge-layer" aria-hidden="true"></div>
 
         <div class="attn19-q-callout" id="attn22-q-callout">
           <div class="attn19-vector-wrap attn19-vector-wrap-q">
@@ -2251,7 +2844,70 @@
     </div>
 
     <div class="attn19-score-caption" id="attn22-score-caption">s<sub>j</sub> = q<sub>sat</sub> · k<sub>j</sub></div>
+    <div class="attn22-agg-wrap" id="attn22-agg-wrap" aria-live="polite">
+      <div class="attn22-agg-formula" id="attn22-agg-formula"></div>
+      <div class="attn22-agg-formula-residual" id="attn22-agg-formula-residual">y<sub>sat</sub> = x<sub>sat</sub> + o<sub>sat</sub></div>
+      <div class="attn22-agg-output" id="attn22-agg-output">
+        <span class="attn22-agg-output-label" id="attn22-agg-output-label">o<sub>sat</sub> ≈</span>
+        <div class="attn22-agg-output-vector" id="attn22-agg-output-vector"></div>
+      </div>
+    </div>
     <div class="attn19-takeaway" id="attn22-takeaway">Start from Step 3 scores <i>s</i><sub>j</sub> for each token.</div>
+  </div>
+
+  <div class="slide" id="slide-23">
+    <span class="section-tag">Attention</span>
+    <div class="badge concept">Mechanism</div>
+    <h2>Step 5 — Multi-head attention and output projection</h2>
+    <p class="small-text attn23-subtitle">Project Q/K/V → Split into heads → Concat → W<sub>O</sub></p>
+
+    <div class="attn23-layout">
+      <div class="card attn23-stage" id="attn23-stage">
+        <div class="attn23-token-row" id="attn23-token-row"></div>
+
+        <div class="attn23-main" id="attn23-main">
+          <div class="attn23-top-row">
+            <div class="attn23-block attn23-input-block" id="attn23-input-block">
+              <div class="attn23-block-title">Input</div>
+              <div class="attn23-vector-stack" id="attn23-input-vector-wrap"></div>
+            </div>
+
+            <div class="attn23-block attn23-qkv-block" id="attn23-qkv-block">
+              <div class="attn23-block-title">Full Q/K/V Projection</div>
+              <div class="attn23-vector-stack" id="attn23-qkv-rows"></div>
+              <div class="attn23-split-mark">split from middle (2 + 2)</div>
+            </div>
+          </div>
+
+          <div class="attn23-head-grid" id="attn23-head-grid"></div>
+
+          <div class="attn23-final-row">
+            <div class="attn23-block attn23-concat-block" id="attn23-concat-block">
+              <div class="attn23-block-title">Concatenate Heads</div>
+              <div class="attn23-formula" id="attn23-concat-formula">
+                h<sub>sat</sub> = [h<sub>sat</sub><sup>(1)</sup> || h<sub>sat</sub><sup>(2)</sup>]
+              </div>
+              <div class="attn23-final-vector-row">
+                <span class="attn19-vector-label">h<sub>sat</sub></span>
+                <div class="attn19-vector" id="attn23-vector-concat"></div>
+              </div>
+            </div>
+            <div class="attn23-block attn23-proj-block" id="attn23-proj-block">
+              <div class="attn23-block-title">Output Projection</div>
+              <div class="attn23-formula" id="attn23-proj-formula">z<sub>sat</sub> = W<sub>O</sub> · h<sub>sat</sub></div>
+              <div class="attn23-final-vector-row">
+                <span class="attn19-vector-label">z<sub>sat</sub></span>
+                <div class="attn19-vector" id="attn23-vector-z"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="attn23-split-layer" id="attn23-split-layer" aria-hidden="true"></div>
+      </div>
+    </div>
+
+    <div class="attn23-takeaway" id="attn23-takeaway">Start from the updated token stream, focusing on sat.</div>
   </div>
 
 </div>
@@ -2262,7 +2918,7 @@
   <div class="progress-track">
     <div class="progress-fill" id="progressFill" style="width:0%"></div>
   </div>
-  <span class="slide-counter" id="slideCounter">1 / 5</span>
+  <span class="slide-counter" id="slideCounter">1 / 6</span>
   <button class="nav-btn primary" id="btnNext">Next &rarr;</button>
 </div>
 
@@ -2359,18 +3015,82 @@ const ATTN_STEP4_SCORE_QUAL = {
 const ATTN_STEP4_TAKEAWAYS = [
   'Start from Step 3 scores <i>s</i><sub>j</sub> for each token.',
   'Convert scores into attention weights: <i>a</i><sub>j</sub> = softmax(<i>s</i><sub>j</sub>/√<i>d</i><sub>k</sub>).',
-  'Pair each attention weight with its value vector and scale components: <i>a</i><sub>j</sub> × <i>v</i><sub>j</sub>.',
-  'Weight each value by attention and aggregate for sat: Σ a<sub>j</sub>v<sub>j</sub>.',
-  'Residual step: add <i>x</i><sub>sat</sub> back to the attention output.'
+  'First multiplication: pair the first weight with its value vector and scale it.',
+  'Now apply the remaining attention multiplications across the other tokens.',
+  'Aggregate all weighted values: <i>o</i><sub>sat</sub> = Σ <i>a</i><sub>j</sub><i>v</i><sub>j</sub>.',
+  'Residual addition: <i>y</i><sub>sat</sub> = <i>x</i><sub>sat</sub> + <i>o</i><sub>sat</sub>.'
 ];
 const ATTN_STEP4_COMPARE_DRAW_MS = 360;
 const ATTN_STEP4_COMPARE_HEAD_FADE_MS = 140;
 const ATTN_STEP4_COMPARE_STAGGER_MS = 190;
 const ATTN_STEP4_SCORE_REVEAL_DELAY_MS = 140;
-const ATTN_STEP4_MAX_STEP = 4;
+const ATTN_STEP4_MAX_STEP = 5;
 const ATTN_STEP4_PAIR_STAGGER_MS = 320;
 const ATTN_STEP4_PAIR_ANIM_MS = 1000;
 const ATTN_STEP4_PAIR_FIRST_HOLD_MS = 360;
+const ATTN_STEP4_AGG_TERM_STAGGER_MS = 210;
+const ATTN_STEP4_AGG_COLLAPSE_DELAY_MS = 360;
+const ATTN_STEP4_AGG_COLLAPSE_MS = 340;
+const ATTN_STEP4_MERGE_TARGET = 'sat';
+const ATTN_STEP4_MERGE_ORDER = ['cat', 'sat', 'on', 'the', 'mat'];
+const ATTN_STEP4_VEC_MERGE_STAGGER_MS = 250;
+const ATTN_STEP4_VEC_MERGE_MS = 760;
+const ATTN_STEP4_VEC_MERGE_FADE_MS = 180;
+const ATTN_STEP4_RESIDUAL_ANIM_MS = 900;
+const ATTN_STEP4_RESIDUAL_FADE_MS = 180;
+
+const ATTN_STEP5_TOKENS = ['cat', 'sat', 'on', 'the', 'mat'];
+const ATTN_STEP5_FOCUS = 'sat';
+const ATTN_STEP5_HEADS = ['h1', 'h2'];
+const ATTN_STEP5_MAX_STEP = 6;
+const ATTN_STEP5_TAKEAWAYS = [
+  'Start from the updated token stream, focusing on sat.',
+  'Project sat into full q_sat, k_sat, v_sat.',
+  'Split q/k/v into two heads so each head attends independently.',
+  'Head 1 computes its own attention pattern and output.',
+  'Head 2 computes a different attention pattern and output.',
+  'Concatenate both head outputs into one vector.',
+  'Apply W_O to mix head information into final z_sat.'
+];
+const ATTN_STEP5_SPLIT_ANIM_MS = 760;
+const ATTN_STEP5_SPLIT_STAGGER_MS = 120;
+const ATTN_STEP5_REVEAL_FADE_MS = 240;
+const ATTN_STEP5_HEAD_WEIGHTS = {
+  h1: [0.52, 0.22, 0.13, 0.08, 0.05],
+  h2: [0.10, 0.16, 0.39, 0.24, 0.11]
+};
+const ATTN_STEP5_HEAD_OUTPUT = {
+  h1: [0.64, 0.39],
+  h2: [0.29, 0.18]
+};
+const ATTN_STEP5_CONCAT_VECTOR = [
+  ATTN_STEP5_HEAD_OUTPUT.h1[0], ATTN_STEP5_HEAD_OUTPUT.h1[1],
+  ATTN_STEP5_HEAD_OUTPUT.h2[0], ATTN_STEP5_HEAD_OUTPUT.h2[1]
+];
+const ATTN_STEP5_WO = [
+  [0.8, 0.1, 0.1, 0.0],
+  [0.1, 0.8, 0.1, 0.0],
+  [0.0, 0.2, 0.6, 0.2],
+  [0.1, 0.1, 0.2, 0.6]
+];
+const ATTN_STEP5_OUTPUT_VECTOR = matVecMultiply(ATTN_STEP5_WO, ATTN_STEP5_CONCAT_VECTOR);
+const ATTN_STEP5_SOURCE_QKV = {
+  q: ATTN_QKV_QUERY_VECTOR.slice(),
+  k: (ATTN_QKV_KEY_VECTORS[ATTN_STEP5_FOCUS] || []).slice(),
+  v: (ATTN_QKV_VALUE_VECTORS[ATTN_STEP5_FOCUS] || []).slice()
+};
+const ATTN_STEP5_HEAD_QKV = {
+  h1: {
+    q: ATTN_STEP5_SOURCE_QKV.q.slice(0, 2),
+    k: ATTN_STEP5_SOURCE_QKV.k.slice(0, 2),
+    v: ATTN_STEP5_SOURCE_QKV.v.slice(0, 2)
+  },
+  h2: {
+    q: ATTN_STEP5_SOURCE_QKV.q.slice(2, 4),
+    k: ATTN_STEP5_SOURCE_QKV.k.slice(2, 4),
+    v: ATTN_STEP5_SOURCE_QKV.v.slice(2, 4)
+  }
+};
 
 const ATTN_P1_TOKENS = ['cat', 'sat', 'on', 'the', 'mat'];
 const ATTN_P1_FOCUS = 'sat';
@@ -2428,6 +3148,17 @@ const ATTN_STEP4_WEIGHTED_VALUE_VECTORS = Object.fromEntries(
     return [token, baseValues.map((value) => value * weight)];
   })
 );
+const ATTN_STEP4_AGG_VECTOR = ATTN_QKV_QUERY_VECTOR.map((_, idx) => (
+  ATTN_STEP4_TOKENS.reduce(
+    (sum, token) => sum + (((ATTN_STEP4_WEIGHTED_VALUE_VECTORS[token] || [])[idx]) || 0),
+    0
+  )
+));
+const ATTN_STEP4_RESIDUAL_INPUT_VECTOR = (ATTN_QKV_X_VECTORS[ATTN_STEP4_FOCUS] || []).slice();
+const ATTN_STEP4_RESIDUAL_OUTPUT_VECTOR = ATTN_STEP4_AGG_VECTOR.map(
+  (value, idx) => (Number(ATTN_STEP4_RESIDUAL_INPUT_VECTOR[idx]) || 0) + (Number(value) || 0)
+);
+const ATTN_STEP5_INPUT_VECTOR = ATTN_STEP4_RESIDUAL_OUTPUT_VECTOR.slice();
 
 const state = {
   nav: {
@@ -2467,8 +3198,28 @@ const state = {
     compareVisibleCount: 0,
     pairTimers: [],
     pairRafIds: [],
+    firstPairDone: false,
     pairingDone: false,
     pairVisibleCount: 0,
+    aggTimers: [],
+    aggDone: false,
+    aggTermsVisibleCount: 0,
+    aggCollapsed: false,
+    mergeTimers: [],
+    mergeRafIds: [],
+    mergeDone: false,
+    mergeVisibleCount: 0,
+    residualTimers: [],
+    residualRafIds: [],
+    residualDone: false,
+    resizeBound: false
+  },
+  attentionStep5: {
+    initialized: false,
+    step: 0,
+    splitTimers: [],
+    splitRafIds: [],
+    splitDone: false,
     resizeBound: false
   },
   attentionP1: {
@@ -2559,6 +3310,11 @@ function softmax(values) {
   const denom = exps.reduce((acc, value) => acc + value, 0);
   if (denom <= 0) return values.map(() => 0);
   return exps.map((value) => value / denom);
+}
+
+function matVecMultiply(matrix, vector) {
+  if (!Array.isArray(matrix) || !Array.isArray(vector)) return [];
+  return matrix.map((row) => dotProduct(Array.isArray(row) ? row : [], vector));
 }
 
 function normalizeNegativeZero(value) {
@@ -3503,11 +4259,13 @@ function createAttentionStep4Column(token) {
   }));
   col.appendChild(chipWrap);
 
+  const xLabel = createMathSubLabel('x', token, 'attn19-vector-label');
+  xLabel.id = 'attn22-x-label-' + token;
   const xWrap = createEl('div', {
     className: 'attn19-vector-wrap attn19-vector-wrap-x',
     id: 'attn22-vector-wrap-x-' + token
   }, [
-    createMathSubLabel('x', token, 'attn19-vector-label'),
+    xLabel,
     createAttentionStep4VectorRect('attn22-vector-x-' + token, '', ATTN_QKV_X_VECTORS[token] || ATTN_QKV_QUERY_VECTOR)
   ]);
   col.appendChild(xWrap);
@@ -3563,10 +4321,12 @@ function setAttentionStep4ValueVectorForToken(token, values, formatter = formatV
   });
 }
 
-function setAttentionStep4ValueLabelForToken(token, weighted = false) {
+function setAttentionStep4ValueLabelForToken(token, mode = 'base') {
   const label = document.getElementById('attn22-v-label-' + token);
   if (!label) return;
-  if (weighted) {
+  if (mode === 'aggregate' && token === ATTN_STEP4_MERGE_TARGET) {
+    label.innerHTML = 'o<sub>sat</sub>';
+  } else if (mode === 'weighted') {
     const weight = ATTN_STEP4_WEIGHT_BY_TOKEN[token] || 0;
     label.innerHTML = formatWeightValue(weight) + ' &times; v<sub>' + token + '</sub>';
   } else {
@@ -3577,15 +4337,66 @@ function setAttentionStep4ValueLabelForToken(token, weighted = false) {
 function setAttentionStep4AllValueVectorsBase() {
   ATTN_STEP4_TOKENS.forEach((token) => {
     setAttentionStep4ValueVectorForToken(token, ATTN_QKV_VALUE_VECTORS[token] || [], formatVectorValue);
-    setAttentionStep4ValueLabelForToken(token, false);
+    setAttentionStep4ValueLabelForToken(token, 'base');
   });
 }
 
 function setAttentionStep4AllValueVectorsWeighted() {
   ATTN_STEP4_TOKENS.forEach((token) => {
     setAttentionStep4ValueVectorForToken(token, ATTN_STEP4_WEIGHTED_VALUE_VECTORS[token] || [], formatWeightValue);
-    setAttentionStep4ValueLabelForToken(token, true);
+    setAttentionStep4ValueLabelForToken(token, 'weighted');
   });
+}
+
+function setAttentionStep4XVectorForToken(token, values, formatter = formatVectorValue) {
+  const vector = document.getElementById('attn22-vector-x-' + token);
+  if (!vector) return;
+  const valueEls = vector.querySelectorAll('.attn19-vector-value');
+  valueEls.forEach((el, idx) => {
+    const value = Array.isArray(values) && typeof values[idx] !== 'undefined' ? values[idx] : 0;
+    el.textContent = formatter(value);
+  });
+}
+
+function setAttentionStep4AllXVectorsBase() {
+  ATTN_STEP4_TOKENS.forEach((token) => {
+    setAttentionStep4XVectorForToken(token, ATTN_QKV_X_VECTORS[token] || [], formatVectorValue);
+    const xLabel = document.getElementById('attn22-x-label-' + token);
+    if (!xLabel) return;
+    xLabel.innerHTML = 'x<sub>' + token + '</sub>';
+  });
+}
+
+function setAttentionStep4SatXValues(values, formatter = formatWeightValue) {
+  setAttentionStep4XVectorForToken(ATTN_STEP4_FOCUS, values, formatter);
+}
+
+function setAttentionStep4SatXLabel(mode = 'base') {
+  const label = document.getElementById('attn22-x-label-' + ATTN_STEP4_FOCUS);
+  if (!label) return;
+  if (mode === 'residual') {
+    label.innerHTML = 'y<sub>sat</sub>';
+    return;
+  }
+  label.innerHTML = 'x<sub>sat</sub>';
+}
+
+function setAttentionStep4SatAggregateValues(values) {
+  setAttentionStep4ValueVectorForToken(ATTN_STEP4_MERGE_TARGET, values, formatWeightValue);
+}
+
+function interpolateVectors(fromValues, toValues, t) {
+  const from = Array.isArray(fromValues) ? fromValues : [];
+  const to = Array.isArray(toValues) ? toValues : [];
+  const len = Math.max(from.length, to.length);
+  const clamped = Math.max(0, Math.min(1, Number(t) || 0));
+  const out = [];
+  for (let i = 0; i < len; i += 1) {
+    const fromVal = Number(from[i]) || 0;
+    const toVal = Number(to[i]) || 0;
+    out.push(fromVal + (toVal - fromVal) * clamped);
+  }
+  return out;
 }
 
 function resetAttentionStep4FlyPill(token) {
@@ -3657,6 +4468,7 @@ function resetAttentionStep4PairVisuals() {
     col.classList.remove('is-paired');
     resetAttentionStep4FlyPill(token);
   });
+  state.attentionStep4.firstPairDone = false;
   state.attentionStep4.pairingDone = false;
   state.attentionStep4.pairVisibleCount = 0;
 }
@@ -3672,11 +4484,12 @@ function settleAttentionStep4PairState() {
     col.classList.add('is-paired');
     resetAttentionStep4FlyPill(token);
   });
+  state.attentionStep4.firstPairDone = true;
   state.attentionStep4.pairVisibleCount = ATTN_STEP4_TOKENS.length;
   state.attentionStep4.pairingDone = true;
 }
 
-function animateAttentionStep4PairToken(token, delayMs, isLastToken = false) {
+function animateAttentionStep4PairToken(token, delayMs, isLastToken = false, onComplete = null) {
   const timerId = setTimeout(() => {
     if (state.attentionStep4.step < 2) return;
     const col = document.getElementById('attn22-col-' + token);
@@ -3684,7 +4497,7 @@ function animateAttentionStep4PairToken(token, delayMs, isLastToken = false) {
     col.classList.add('is-pairing');
     col.classList.add('is-flying');
     col.classList.remove('is-paired');
-    setAttentionStep4ValueLabelForToken(token, true);
+    setAttentionStep4ValueLabelForToken(token, 'weighted');
     animateAttentionStep4FlyPill(token);
 
     const baseValues = ATTN_QKV_VALUE_VECTORS[token] || [];
@@ -3716,6 +4529,7 @@ function animateAttentionStep4PairToken(token, delayMs, isLastToken = false) {
         ATTN_STEP4_TOKENS.length,
         state.attentionStep4.pairVisibleCount + 1
       );
+      if (typeof onComplete === 'function') onComplete();
       if (isLastToken) {
         state.attentionStep4.pairingDone = true;
       }
@@ -3728,20 +4542,53 @@ function animateAttentionStep4PairToken(token, delayMs, isLastToken = false) {
   state.attentionStep4.pairTimers.push(timerId);
 }
 
-function runAttentionStep4PairSequence() {
+function settleAttentionStep4PairToken(token) {
+  const col = document.getElementById('attn22-col-' + token);
+  setAttentionStep4ValueVectorForToken(token, ATTN_STEP4_WEIGHTED_VALUE_VECTORS[token] || [], formatWeightValue);
+  setAttentionStep4ValueLabelForToken(token, 'weighted');
+  if (!col) return;
+  col.classList.remove('is-pairing');
+  col.classList.remove('is-flying');
+  col.classList.add('is-paired');
+  resetAttentionStep4FlyPill(token);
+}
+
+function runAttentionStep4FirstPair() {
   clearAttentionStep4PairTimers();
   resetAttentionStep4PairVisuals();
   setAttentionStep4AllValueVectorsBase();
   if (!ATTN_STEP4_TOKENS.length) {
+    state.attentionStep4.firstPairDone = true;
     state.attentionStep4.pairingDone = true;
     return;
   }
 
   const firstToken = ATTN_STEP4_TOKENS[0];
-  const restTokens = ATTN_STEP4_TOKENS.slice(1);
-  animateAttentionStep4PairToken(firstToken, 0, restTokens.length === 0);
+  const isOnlyToken = ATTN_STEP4_TOKENS.length === 1;
+  animateAttentionStep4PairToken(firstToken, 0, isOnlyToken, () => {
+    state.attentionStep4.firstPairDone = true;
+  });
+}
 
-  const restStartDelay = ATTN_STEP4_PAIR_ANIM_MS + ATTN_STEP4_PAIR_FIRST_HOLD_MS;
+function runAttentionStep4RemainingPairs() {
+  if (!ATTN_STEP4_TOKENS.length) {
+    state.attentionStep4.firstPairDone = true;
+    state.attentionStep4.pairingDone = true;
+    return;
+  }
+  clearAttentionStep4PairTimers();
+  const firstToken = ATTN_STEP4_TOKENS[0];
+  settleAttentionStep4PairToken(firstToken);
+  state.attentionStep4.firstPairDone = true;
+
+  const restTokens = ATTN_STEP4_TOKENS.slice(1);
+  if (!restTokens.length) {
+    state.attentionStep4.pairingDone = true;
+    return;
+  }
+
+  state.attentionStep4.pairingDone = false;
+  const restStartDelay = ATTN_STEP4_PAIR_FIRST_HOLD_MS;
   restTokens.forEach((token, idx) => {
     animateAttentionStep4PairToken(
       token,
@@ -3749,6 +4596,466 @@ function runAttentionStep4PairSequence() {
       idx === restTokens.length - 1
     );
   });
+}
+
+function clearAttentionStep4MergeTimers() {
+  state.attentionStep4.mergeTimers.forEach((timerId) => clearTimeout(timerId));
+  state.attentionStep4.mergeTimers = [];
+  state.attentionStep4.mergeRafIds.forEach((rafId) => cancelAnimationFrame(rafId));
+  state.attentionStep4.mergeRafIds = [];
+}
+
+function clearAttentionStep4MergeGhosts() {
+  const layer = document.getElementById('attn22-merge-layer');
+  if (!layer) return;
+  layer.querySelectorAll('.attn22-merge-ghost').forEach((ghost) => ghost.remove());
+}
+
+function resetAttentionStep4MergeVisuals() {
+  const slide = document.getElementById('slide-22');
+  clearAttentionStep4MergeTimers();
+  clearAttentionStep4MergeGhosts();
+  ATTN_STEP4_TOKENS.forEach((token) => {
+    const col = document.getElementById('attn22-col-' + token);
+    if (!col) return;
+    col.classList.remove('is-merged-out');
+    col.classList.remove('is-merge-target');
+  });
+  if (slide) slide.classList.remove('attn22-show-merged');
+  state.attentionStep4.mergeDone = false;
+  state.attentionStep4.mergeVisibleCount = 0;
+}
+
+function createAttentionStep4MergeGhost(token) {
+  const stage = document.getElementById('attn22-stage');
+  const layer = document.getElementById('attn22-merge-layer');
+  const sourceWrap = document.getElementById('attn22-vector-wrap-v-' + token);
+  if (!stage || !layer || !sourceWrap) return null;
+
+  const stageRect = stage.getBoundingClientRect();
+  const sourceRect = sourceWrap.getBoundingClientRect();
+  if (stageRect.width < 1 || stageRect.height < 1 || sourceRect.width < 1 || sourceRect.height < 1) return null;
+
+  const ghost = sourceWrap.cloneNode(true);
+  const stripIds = (node) => {
+    if (!node || node.nodeType !== 1) return;
+    node.removeAttribute('id');
+    Array.from(node.children).forEach(stripIds);
+  };
+  stripIds(ghost);
+  ghost.classList.add('attn22-merge-ghost');
+  ghost.style.left = (sourceRect.left - stageRect.left).toFixed(2) + 'px';
+  ghost.style.top = (sourceRect.top - stageRect.top).toFixed(2) + 'px';
+  ghost.style.width = sourceRect.width.toFixed(2) + 'px';
+  ghost.style.height = sourceRect.height.toFixed(2) + 'px';
+  ghost.style.opacity = '0.94';
+  ghost.style.transform = 'translate3d(0, 0, 0)';
+  layer.appendChild(ghost);
+  return ghost;
+}
+
+function settleAttentionStep4MergedState() {
+  const slide = document.getElementById('slide-22');
+  clearAttentionStep4MergeTimers();
+  clearAttentionStep4MergeGhosts();
+
+  ATTN_STEP4_TOKENS.forEach((token) => {
+    const col = document.getElementById('attn22-col-' + token);
+    if (!col) return;
+    col.classList.remove('is-merge-target');
+    col.classList.toggle('is-merged-out', token !== ATTN_STEP4_MERGE_TARGET);
+  });
+
+  const targetCol = document.getElementById('attn22-col-' + ATTN_STEP4_MERGE_TARGET);
+  if (targetCol) targetCol.classList.add('is-merge-target');
+  setAttentionStep4SatAggregateValues(ATTN_STEP4_AGG_VECTOR);
+  setAttentionStep4ValueLabelForToken(ATTN_STEP4_MERGE_TARGET, 'aggregate');
+
+  if (slide) slide.classList.add('attn22-show-merged');
+  state.attentionStep4.mergeDone = true;
+  state.attentionStep4.mergeVisibleCount = ATTN_STEP4_MERGE_ORDER.length;
+}
+
+function animateAttentionStep4MergeToken(token, delayMs, runningFrom, runningTo, isLastToken = false, onComplete = null) {
+  const timerId = setTimeout(() => {
+    if (state.attentionStep4.step < 4) return;
+
+    const slide = document.getElementById('slide-22');
+    const stage = document.getElementById('attn22-stage');
+    const sourceWrap = document.getElementById('attn22-vector-wrap-v-' + token);
+    const sourceCol = document.getElementById('attn22-col-' + token);
+    const targetWrap = document.getElementById('attn22-vector-wrap-v-' + ATTN_STEP4_MERGE_TARGET);
+    const targetCol = document.getElementById('attn22-col-' + ATTN_STEP4_MERGE_TARGET);
+    if (!stage || !sourceWrap || !targetWrap || !targetCol) return;
+
+    targetCol.classList.add('is-merge-target');
+    setAttentionStep4ValueLabelForToken(ATTN_STEP4_MERGE_TARGET, 'aggregate');
+    setAttentionStep4SatAggregateValues(runningFrom);
+
+    let ghost = null;
+    if (token !== ATTN_STEP4_MERGE_TARGET) {
+      ghost = createAttentionStep4MergeGhost(token);
+      if (ghost) {
+        const stageRect = stage.getBoundingClientRect();
+        const sourceRect = sourceWrap.getBoundingClientRect();
+        const targetRect = targetWrap.getBoundingClientRect();
+        const fromX = sourceRect.left - stageRect.left + sourceRect.width * 0.5;
+        const fromY = sourceRect.top - stageRect.top + sourceRect.height * 0.5;
+        const toX = targetRect.left - stageRect.left + targetRect.width * 0.5;
+        const toY = targetRect.top - stageRect.top + targetRect.height * 0.5;
+        const dx = toX - fromX;
+        const dy = toY - fromY;
+        requestAnimationFrame(() => {
+          ghost.style.transform = 'translate3d(' + dx.toFixed(2) + 'px, ' + dy.toFixed(2) + 'px, 0) scale(0.9)';
+        });
+      }
+    }
+
+    const startTime = performance.now();
+    const animate = (now) => {
+      if (state.attentionStep4.step < 4) return;
+      const progress = Math.max(0, Math.min(1, (now - startTime) / ATTN_STEP4_VEC_MERGE_MS));
+      const eased = progress < 0.5
+        ? (2 * progress * progress)
+        : (1 - Math.pow(-2 * progress + 2, 2) / 2);
+      setAttentionStep4SatAggregateValues(interpolateVectors(runningFrom, runningTo, eased));
+
+      if (progress < 1) {
+        const rafId = requestAnimationFrame(animate);
+        state.attentionStep4.mergeRafIds.push(rafId);
+        return;
+      }
+
+      setAttentionStep4SatAggregateValues(runningTo);
+      state.attentionStep4.mergeVisibleCount = Math.min(
+        ATTN_STEP4_MERGE_ORDER.length,
+        state.attentionStep4.mergeVisibleCount + 1
+      );
+      if (sourceCol && token !== ATTN_STEP4_MERGE_TARGET) {
+        sourceCol.classList.add('is-merged-out');
+      }
+      if (ghost) {
+        ghost.style.opacity = '0';
+        const cleanupTimer = setTimeout(() => {
+          if (ghost && ghost.parentNode) ghost.parentNode.removeChild(ghost);
+          ghost = null;
+        }, ATTN_STEP4_VEC_MERGE_FADE_MS + 30);
+        state.attentionStep4.mergeTimers.push(cleanupTimer);
+      }
+
+      if (isLastToken) {
+        setAttentionStep4SatAggregateValues(ATTN_STEP4_AGG_VECTOR);
+        if (slide) slide.classList.add('attn22-show-merged');
+        state.attentionStep4.mergeDone = true;
+      }
+      if (typeof onComplete === 'function') onComplete();
+    };
+
+    const rafId = requestAnimationFrame(animate);
+    state.attentionStep4.mergeRafIds.push(rafId);
+  }, delayMs);
+
+  state.attentionStep4.mergeTimers.push(timerId);
+}
+
+function runAttentionStep4VectorMergeSequence(onComplete = null) {
+  const slide = document.getElementById('slide-22');
+  resetAttentionStep4MergeVisuals();
+  if (slide) slide.classList.remove('attn22-show-merged');
+
+  const mergeOrder = ATTN_STEP4_MERGE_ORDER.filter((token) => ATTN_STEP4_TOKENS.includes(token));
+  if (!mergeOrder.length) {
+    setAttentionStep4SatAggregateValues(ATTN_STEP4_AGG_VECTOR);
+    setAttentionStep4ValueLabelForToken(ATTN_STEP4_MERGE_TARGET, 'aggregate');
+    state.attentionStep4.mergeDone = true;
+    if (slide) slide.classList.add('attn22-show-merged');
+    if (typeof onComplete === 'function') onComplete();
+    return;
+  }
+
+  const targetCol = document.getElementById('attn22-col-' + ATTN_STEP4_MERGE_TARGET);
+  if (targetCol) targetCol.classList.add('is-merge-target');
+  setAttentionStep4ValueLabelForToken(ATTN_STEP4_MERGE_TARGET, 'aggregate');
+
+  let running = ATTN_STEP4_AGG_VECTOR.map(() => 0);
+  setAttentionStep4SatAggregateValues(running);
+  state.attentionStep4.mergeDone = false;
+  state.attentionStep4.mergeVisibleCount = 0;
+
+  mergeOrder.forEach((token, idx) => {
+    const weighted = ATTN_STEP4_WEIGHTED_VALUE_VECTORS[token] || [];
+    const fromValues = running.slice();
+    const toValues = running.map((value, compIdx) => value + (Number(weighted[compIdx]) || 0));
+    const isLast = idx === mergeOrder.length - 1;
+
+    animateAttentionStep4MergeToken(
+      token,
+      idx * ATTN_STEP4_VEC_MERGE_STAGGER_MS,
+      fromValues,
+      toValues,
+      isLast,
+      () => {
+        if (!isLast) return;
+        if (state.attentionStep4.step < 4) return;
+        setAttentionStep4SatAggregateValues(ATTN_STEP4_AGG_VECTOR);
+        setAttentionStep4ValueLabelForToken(ATTN_STEP4_MERGE_TARGET, 'aggregate');
+        state.attentionStep4.mergeDone = true;
+        state.attentionStep4.mergeVisibleCount = mergeOrder.length;
+        if (slide) slide.classList.add('attn22-show-merged');
+        if (typeof onComplete === 'function') onComplete();
+      }
+    );
+
+    running = toValues;
+  });
+}
+
+function clearAttentionStep4ResidualTimers() {
+  state.attentionStep4.residualTimers.forEach((timerId) => clearTimeout(timerId));
+  state.attentionStep4.residualTimers = [];
+  state.attentionStep4.residualRafIds.forEach((rafId) => cancelAnimationFrame(rafId));
+  state.attentionStep4.residualRafIds = [];
+}
+
+function clearAttentionStep4ResidualGhosts() {
+  const layer = document.getElementById('attn22-merge-layer');
+  if (!layer) return;
+  layer.querySelectorAll('.attn22-residual-ghost').forEach((ghost) => ghost.remove());
+}
+
+function resetAttentionStep4ResidualVisuals(options = {}) {
+  const settings = Object.assign({ restoreX: true }, options);
+  clearAttentionStep4ResidualTimers();
+  clearAttentionStep4ResidualGhosts();
+  ATTN_STEP4_TOKENS.forEach((token) => {
+    const col = document.getElementById('attn22-col-' + token);
+    if (!col) return;
+    col.classList.remove('is-residual-target');
+    col.classList.remove('is-residual-consumed');
+  });
+  if (settings.restoreX) {
+    setAttentionStep4SatXValues(ATTN_STEP4_RESIDUAL_INPUT_VECTOR, formatVectorValue);
+    setAttentionStep4SatXLabel('base');
+  }
+  state.attentionStep4.residualDone = false;
+}
+
+function createAttentionStep4ResidualGhost() {
+  const stage = document.getElementById('attn22-stage');
+  const layer = document.getElementById('attn22-merge-layer');
+  const sourceWrap = document.getElementById('attn22-vector-wrap-v-' + ATTN_STEP4_MERGE_TARGET);
+  if (!stage || !layer || !sourceWrap) return null;
+
+  const stageRect = stage.getBoundingClientRect();
+  const sourceRect = sourceWrap.getBoundingClientRect();
+  if (stageRect.width < 1 || stageRect.height < 1 || sourceRect.width < 1 || sourceRect.height < 1) return null;
+
+  const ghost = sourceWrap.cloneNode(true);
+  const stripIds = (node) => {
+    if (!node || node.nodeType !== 1) return;
+    node.removeAttribute('id');
+    Array.from(node.children).forEach(stripIds);
+  };
+  stripIds(ghost);
+  ghost.classList.add('attn22-residual-ghost');
+  ghost.style.left = (sourceRect.left - stageRect.left).toFixed(2) + 'px';
+  ghost.style.top = (sourceRect.top - stageRect.top).toFixed(2) + 'px';
+  ghost.style.width = sourceRect.width.toFixed(2) + 'px';
+  ghost.style.height = sourceRect.height.toFixed(2) + 'px';
+  layer.appendChild(ghost);
+  return ghost;
+}
+
+function settleAttentionStep4ResidualState() {
+  clearAttentionStep4ResidualTimers();
+  clearAttentionStep4ResidualGhosts();
+  const satCol = document.getElementById('attn22-col-' + ATTN_STEP4_FOCUS);
+  if (satCol) {
+    satCol.classList.remove('is-residual-target');
+    satCol.classList.add('is-residual-consumed');
+  }
+  setAttentionStep4SatXValues(ATTN_STEP4_RESIDUAL_OUTPUT_VECTOR, formatWeightValue);
+  setAttentionStep4SatXLabel('residual');
+  state.attentionStep4.residualDone = true;
+}
+
+function runAttentionStep4ResidualSequence() {
+  const stage = document.getElementById('attn22-stage');
+  const satCol = document.getElementById('attn22-col-' + ATTN_STEP4_FOCUS);
+  const satVWrap = document.getElementById('attn22-vector-wrap-v-' + ATTN_STEP4_FOCUS);
+  const satXWrap = document.getElementById('attn22-vector-wrap-x-' + ATTN_STEP4_FOCUS);
+  if (!stage || !satCol || !satVWrap || !satXWrap) {
+    settleAttentionStep4ResidualState();
+    return;
+  }
+
+  resetAttentionStep4ResidualVisuals({ restoreX: false });
+  satCol.classList.add('is-residual-target');
+  satCol.classList.remove('is-residual-consumed');
+  setAttentionStep4SatXLabel('base');
+  setAttentionStep4SatXValues(ATTN_STEP4_RESIDUAL_INPUT_VECTOR, formatWeightValue);
+
+  const ghost = createAttentionStep4ResidualGhost();
+  if (ghost) {
+    const stageRect = stage.getBoundingClientRect();
+    const vRect = satVWrap.getBoundingClientRect();
+    const xRect = satXWrap.getBoundingClientRect();
+    const fromX = vRect.left - stageRect.left + vRect.width * 0.5;
+    const fromY = vRect.top - stageRect.top + vRect.height * 0.5;
+    const toX = xRect.left - stageRect.left + xRect.width * 0.5;
+    const toY = xRect.top - stageRect.top + xRect.height * 0.5;
+    const dx = toX - fromX;
+    const dy = toY - fromY;
+    requestAnimationFrame(() => {
+      ghost.style.transform = 'translate3d(' + dx.toFixed(2) + 'px, ' + dy.toFixed(2) + 'px, 0) scale(0.9)';
+    });
+  }
+
+  const startValues = ATTN_STEP4_RESIDUAL_INPUT_VECTOR.slice();
+  const targetValues = ATTN_STEP4_RESIDUAL_OUTPUT_VECTOR.slice();
+  const startTime = performance.now();
+  const animate = (now) => {
+    if (state.attentionStep4.step < 5) return;
+    const progress = Math.max(0, Math.min(1, (now - startTime) / ATTN_STEP4_RESIDUAL_ANIM_MS));
+    const eased = progress < 0.5
+      ? (2 * progress * progress)
+      : (1 - Math.pow(-2 * progress + 2, 2) / 2);
+    setAttentionStep4SatXValues(interpolateVectors(startValues, targetValues, eased), formatWeightValue);
+
+    if (progress < 1) {
+      const rafId = requestAnimationFrame(animate);
+      state.attentionStep4.residualRafIds.push(rafId);
+      return;
+    }
+
+    setAttentionStep4SatXValues(targetValues, formatWeightValue);
+    setAttentionStep4SatXLabel('residual');
+    satCol.classList.remove('is-residual-target');
+    satCol.classList.add('is-residual-consumed');
+    if (ghost) {
+      ghost.style.opacity = '0';
+      const cleanupTimer = setTimeout(() => {
+        if (ghost.parentNode) ghost.parentNode.removeChild(ghost);
+      }, ATTN_STEP4_RESIDUAL_FADE_MS + 30);
+      state.attentionStep4.residualTimers.push(cleanupTimer);
+    }
+    state.attentionStep4.residualDone = true;
+  };
+  const rafId = requestAnimationFrame(animate);
+  state.attentionStep4.residualRafIds.push(rafId);
+}
+
+function clearAttentionStep4AggTimers() {
+  state.attentionStep4.aggTimers.forEach((timerId) => clearTimeout(timerId));
+  state.attentionStep4.aggTimers = [];
+}
+
+function renderAttentionStep4AggregationBase() {
+  const wrap = document.getElementById('attn22-agg-wrap');
+  const formula = document.getElementById('attn22-agg-formula');
+  const outputVector = document.getElementById('attn22-agg-output-vector');
+  if (!wrap || !formula || !outputVector) return;
+  wrap.style.setProperty('--attn22-agg-collapse-ms', ATTN_STEP4_AGG_COLLAPSE_MS + 'ms');
+
+  if (!formula.dataset.rendered) {
+    formula.innerHTML = '';
+    ATTN_STEP4_TOKENS.forEach((token, idx) => {
+      const weight = ATTN_STEP4_WEIGHT_BY_TOKEN[token] || 0;
+      const prefix = idx === 0 ? '' : '+ ';
+      const term = createEl('span', {
+        className: 'attn22-agg-term',
+        id: 'attn22-agg-term-' + token
+      });
+      term.innerHTML = prefix + formatWeightValue(weight) + '&times;v<sub>' + token + '</sub>';
+      formula.appendChild(term);
+    });
+    formula.dataset.rendered = '1';
+  }
+}
+
+function renderAttentionStep4PanelMode(mode = 'aggregation') {
+  const wrap = document.getElementById('attn22-agg-wrap');
+  const outputLabel = document.getElementById('attn22-agg-output-label');
+  const outputVector = document.getElementById('attn22-agg-output-vector');
+  if (!wrap || !outputLabel || !outputVector) return;
+
+  const useResidual = mode === 'residual';
+  const values = useResidual ? ATTN_STEP4_RESIDUAL_OUTPUT_VECTOR : ATTN_STEP4_AGG_VECTOR;
+  wrap.classList.toggle('attn22-agg-mode-residual', useResidual);
+  outputLabel.innerHTML = useResidual ? 'y<sub>sat</sub> ≈' : 'o<sub>sat</sub> ≈';
+  outputVector.innerHTML = '';
+  values.forEach((value) => {
+    outputVector.appendChild(createEl('span', {
+      className: 'attn22-agg-out-val',
+      text: formatWeightValue(value)
+    }));
+  });
+}
+
+function syncAttentionStep4AggregationVisuals(visibleCount = state.attentionStep4.aggTermsVisibleCount, collapsed = state.attentionStep4.aggCollapsed) {
+  const wrap = document.getElementById('attn22-agg-wrap');
+  if (!wrap) return;
+  const clamped = Math.max(0, Math.min(ATTN_STEP4_TOKENS.length, visibleCount));
+  ATTN_STEP4_TOKENS.forEach((token, idx) => {
+    const term = document.getElementById('attn22-agg-term-' + token);
+    if (!term) return;
+    term.classList.toggle('is-visible', idx < clamped);
+  });
+  wrap.classList.toggle('is-collapsed', !!collapsed);
+}
+
+function runAttentionStep4AggregationSequence() {
+  renderAttentionStep4AggregationBase();
+  renderAttentionStep4PanelMode('aggregation');
+  clearAttentionStep4AggTimers();
+  resetAttentionStep4MergeVisuals();
+  state.attentionStep4.aggDone = false;
+  state.attentionStep4.aggCollapsed = false;
+  state.attentionStep4.aggTermsVisibleCount = 0;
+  syncAttentionStep4AggregationVisuals(0, false);
+
+  if (!ATTN_STEP4_TOKENS.length) {
+    state.attentionStep4.aggTermsVisibleCount = 0;
+    state.attentionStep4.aggCollapsed = true;
+    settleAttentionStep4MergedState();
+    state.attentionStep4.aggDone = true;
+    syncAttentionStep4AggregationVisuals(0, true);
+    return;
+  }
+
+  ATTN_STEP4_TOKENS.forEach((_, idx) => {
+    const timerId = setTimeout(() => {
+      if (state.attentionStep4.step < 4) return;
+      state.attentionStep4.aggTermsVisibleCount = idx + 1;
+      syncAttentionStep4AggregationVisuals(state.attentionStep4.aggTermsVisibleCount, false);
+    }, idx * ATTN_STEP4_AGG_TERM_STAGGER_MS);
+    state.attentionStep4.aggTimers.push(timerId);
+  });
+
+  const collapseDelay = (ATTN_STEP4_TOKENS.length - 1) * ATTN_STEP4_AGG_TERM_STAGGER_MS
+    + ATTN_STEP4_AGG_COLLAPSE_DELAY_MS;
+  const collapseTimer = setTimeout(() => {
+    if (state.attentionStep4.step < 4) return;
+    state.attentionStep4.aggTermsVisibleCount = ATTN_STEP4_TOKENS.length;
+    state.attentionStep4.aggCollapsed = true;
+    syncAttentionStep4AggregationVisuals(state.attentionStep4.aggTermsVisibleCount, true);
+    runAttentionStep4VectorMergeSequence(() => {
+      if (state.attentionStep4.step < 4) return;
+      state.attentionStep4.aggDone = true;
+    });
+  }, collapseDelay);
+  state.attentionStep4.aggTimers.push(collapseTimer);
+}
+
+function settleAttentionStep4AggregationState() {
+  renderAttentionStep4AggregationBase();
+  renderAttentionStep4PanelMode('aggregation');
+  clearAttentionStep4AggTimers();
+  state.attentionStep4.aggTermsVisibleCount = ATTN_STEP4_TOKENS.length;
+  state.attentionStep4.aggCollapsed = true;
+  settleAttentionStep4MergedState();
+  state.attentionStep4.aggDone = true;
+  syncAttentionStep4AggregationVisuals(state.attentionStep4.aggTermsVisibleCount, true);
 }
 
 function clearAttentionStep4CompareTimers() {
@@ -4050,21 +5357,63 @@ function setAttentionStep4Step(step) {
   slide.classList.remove('attn19-show-compare');
   slide.classList.toggle('attn22-show-weights', clamped >= 1);
   slide.classList.toggle('attn22-show-pairing', clamped >= 2);
+  slide.classList.toggle('attn22-show-aggregate', clamped >= 4);
+  slide.classList.toggle('attn22-show-residual', clamped >= 5);
+  if (clamped < 4) slide.classList.remove('attn22-show-merged');
   takeaway.innerHTML = ATTN_STEP4_TAKEAWAYS[clamped] || ATTN_STEP4_TAKEAWAYS[0];
   renderAttentionStep4ScoreMode(clamped);
+  renderAttentionStep4PanelMode(clamped >= 5 ? 'residual' : 'aggregation');
 
   if (clamped < 2) {
     clearAttentionStep4PairTimers();
     resetAttentionStep4PairVisuals();
     setAttentionStep4AllValueVectorsBase();
   } else if (clamped === 2) {
+    if (!state.attentionStep4.firstPairDone) {
+      runAttentionStep4FirstPair();
+    } else {
+      settleAttentionStep4PairToken(ATTN_STEP4_TOKENS[0]);
+    }
+  } else if (clamped === 3) {
     if (!state.attentionStep4.pairingDone) {
-      runAttentionStep4PairSequence();
+      runAttentionStep4RemainingPairs();
     } else {
       settleAttentionStep4PairState();
     }
   } else {
     settleAttentionStep4PairState();
+  }
+
+  if (clamped < 4) {
+    clearAttentionStep4AggTimers();
+    state.attentionStep4.aggDone = false;
+    state.attentionStep4.aggTermsVisibleCount = 0;
+    state.attentionStep4.aggCollapsed = false;
+    syncAttentionStep4AggregationVisuals(0, false);
+    resetAttentionStep4MergeVisuals();
+  } else if (clamped === 4) {
+    if (!state.attentionStep4.aggDone) {
+      runAttentionStep4AggregationSequence();
+    } else {
+      settleAttentionStep4AggregationState();
+    }
+  } else {
+    settleAttentionStep4AggregationState();
+  }
+
+  if (clamped < 5) {
+    renderAttentionStep4PanelMode('aggregation');
+    resetAttentionStep4ResidualVisuals({ restoreX: true });
+  } else {
+    renderAttentionStep4PanelMode('residual');
+    if (!state.attentionStep4.aggDone) {
+      settleAttentionStep4AggregationState();
+    }
+    if (!state.attentionStep4.residualDone) {
+      runAttentionStep4ResidualSequence();
+    } else {
+      settleAttentionStep4ResidualState();
+    }
   }
 
   clearAttentionStep4CompareTimers();
@@ -4114,6 +5463,13 @@ function initAttentionStep4Slide() {
         } else {
           syncAttentionStep4CompareVisuals(0);
         }
+        if (state.attentionStep4.step >= 5) {
+          settleAttentionStep4ResidualState();
+          renderAttentionStep4PanelMode('residual');
+        } else if (state.attentionStep4.step >= 4) {
+          settleAttentionStep4AggregationState();
+          renderAttentionStep4PanelMode('aggregation');
+        }
       });
       state.attentionStep4.resizeBound = true;
     }
@@ -4125,12 +5481,30 @@ function initAttentionStep4Slide() {
     qVector.innerHTML = '';
     populateVectorRect(qVector, ATTN_QKV_QUERY_VECTOR, 'attn19-vector-divider');
   }
+  setAttentionStep4AllXVectorsBase();
+  renderAttentionStep4AggregationBase();
+  renderAttentionStep4PanelMode(state.attentionStep4.step >= 5 ? 'residual' : 'aggregation');
   clearAttentionStep4PairTimers();
   if (state.attentionStep4.step >= 2) {
     settleAttentionStep4PairState();
   } else {
     resetAttentionStep4PairVisuals();
     setAttentionStep4AllValueVectorsBase();
+  }
+  if (state.attentionStep4.step >= 4) {
+    settleAttentionStep4AggregationState();
+  } else {
+    clearAttentionStep4AggTimers();
+    state.attentionStep4.aggDone = false;
+    state.attentionStep4.aggTermsVisibleCount = 0;
+    state.attentionStep4.aggCollapsed = false;
+    syncAttentionStep4AggregationVisuals(0, false);
+    resetAttentionStep4MergeVisuals();
+  }
+  if (state.attentionStep4.step >= 5) {
+    settleAttentionStep4ResidualState();
+  } else {
+    resetAttentionStep4ResidualVisuals({ restoreX: true });
   }
   renderAttentionStep4ScoreMode(state.attentionStep4.step);
 
@@ -4160,11 +5534,467 @@ function resetAttentionStep4Slide() {
   }
   clearAttentionStep4CompareTimers();
   clearAttentionStep4PairTimers();
+  clearAttentionStep4AggTimers();
+  clearAttentionStep4MergeTimers();
+  clearAttentionStep4MergeGhosts();
+  clearAttentionStep4ResidualTimers();
+  clearAttentionStep4ResidualGhosts();
   resetAttentionStep4PairVisuals();
+  resetAttentionStep4MergeVisuals();
+  resetAttentionStep4ResidualVisuals({ restoreX: true });
   state.attentionStep4.compareDone = false;
   state.attentionStep4.compareVisibleCount = 0;
+  state.attentionStep4.aggDone = false;
+  state.attentionStep4.aggTermsVisibleCount = 0;
+  state.attentionStep4.aggCollapsed = false;
+  state.attentionStep4.mergeDone = false;
+  state.attentionStep4.mergeVisibleCount = 0;
+  state.attentionStep4.residualDone = false;
+  syncAttentionStep4AggregationVisuals(0, false);
   slide.classList.remove('attn19-compare-done');
+  slide.classList.remove('attn22-show-aggregate');
+  slide.classList.remove('attn22-show-residual');
+  slide.classList.remove('attn22-show-merged');
   setAttentionStep4Step(0);
+}
+
+/* =====================================================
+   Slide-23 (Step 5) — Multi-head intro and output projection
+   ===================================================== */
+
+function createAttentionStep5VectorRect(vectorId, values = null, extraClass = '') {
+  return createVectorRect({
+    id: vectorId,
+    baseClass: 'attn19-vector' + (extraClass ? ' ' + extraClass : ''),
+    dividerClass: 'attn19-vector-divider',
+    values
+  });
+}
+
+function populateVectorRectFormatted(vectorEl, values, dividerClass, formatter = formatVectorValue) {
+  if (!vectorEl) return;
+  const dims = Array.isArray(values) && values.length ? values.length : 4;
+
+  if (Array.isArray(values) && values.length) {
+    const valuesWrap = createEl('div', { className: 'attn19-vector-values' });
+    values.forEach((value) => {
+      valuesWrap.appendChild(createEl('span', {
+        className: 'attn19-vector-value',
+        text: formatter(value)
+      }));
+    });
+    valuesWrap.style.gridTemplateColumns = 'repeat(' + dims + ', minmax(0, 1fr))';
+    vectorEl.appendChild(valuesWrap);
+  }
+
+  for (let i = 1; i < dims; i += 1) {
+    vectorEl.appendChild(createEl('span', {
+      className: dividerClass,
+      style: {
+        left: ((i / dims) * 100) + '%'
+      }
+    }));
+  }
+}
+
+function setAttentionStep5VectorValues(vectorId, values, formatter = formatVectorValue, extraClass = '') {
+  const vector = document.getElementById(vectorId);
+  if (!vector) return;
+  vector.className = 'attn19-vector' + (extraClass ? ' ' + extraClass : '');
+  vector.innerHTML = '';
+  populateVectorRectFormatted(vector, values, 'attn19-vector-divider', formatter);
+}
+
+function createAttentionStep5VectorRow(config) {
+  const wrap = createEl('div', {
+    className: 'attn23-vector-wrap' + (config.rowClass ? ' ' + config.rowClass : ''),
+    id: config.wrapId || ''
+  });
+  if (!config.wrapId) wrap.removeAttribute('id');
+  wrap.dataset.kind = config.kind || '';
+  wrap.appendChild(config.labelNode);
+  wrap.appendChild(createAttentionStep5VectorRect(
+    config.vectorId,
+    config.values,
+    config.vectorClass || ''
+  ));
+  return wrap;
+}
+
+function createAttentionStep5HeadOutputLabel(headId) {
+  const headNum = headId === 'h1' ? '1' : '2';
+  return createEl('span', { className: 'attn23-head-output-label' }, [
+    'h',
+    createEl('sub', { text: 'sat' }),
+    createEl('sup', { text: '(' + headNum + ')' }),
+    ' ≈'
+  ]);
+}
+
+function createAttentionStep5HeadCard(headId) {
+  const headNum = headId === 'h1' ? '1' : '2';
+  const card = createEl('div', {
+    className: 'attn23-head-card',
+    id: 'attn23-head-' + headId,
+    dataset: { head: headId }
+  });
+
+  card.appendChild(createEl('div', {
+    className: 'attn23-head-title',
+    text: 'Head ' + headNum
+  }));
+
+  const qkvWrap = createEl('div', { className: 'attn23-head-qkv' });
+  ['q', 'k', 'v'].forEach((kind) => {
+    qkvWrap.appendChild(createAttentionStep5VectorRow({
+      rowClass: 'attn23-head-row',
+      kind,
+      vectorId: 'attn23-vector-' + headId + '-' + kind,
+      values: (ATTN_STEP5_HEAD_QKV[headId] || {})[kind] || [],
+      vectorClass: kind === 'q' ? 'attn19-vector-q' : (kind === 'k' ? 'attn19-vector-k' : ''),
+      labelNode: createMathSubLabel(kind, headId, 'attn19-vector-label')
+    }));
+  });
+  card.appendChild(qkvWrap);
+
+  const weightsWrap = createEl('div', {
+    className: 'attn23-head-weights',
+    id: 'attn23-head-weights-' + headId
+  });
+  const weightRow = createEl('div', { className: 'attn23-weight-row' });
+  ATTN_STEP5_TOKENS.forEach((token, idx) => {
+    const weight = ((ATTN_STEP5_HEAD_WEIGHTS[headId] || [])[idx]) || 0;
+    const cell = createEl('div', {
+      className: 'attn23-weight-cell',
+      id: 'attn23-weight-cell-' + headId + '-' + token
+    });
+    cell.appendChild(createEl('span', {
+      className: 'attn23-weight-value',
+      id: 'attn23-weight-' + headId + '-' + token,
+      text: formatWeightValue(weight)
+    }));
+    cell.appendChild(createEl('span', {
+      className: 'attn23-weight-token',
+      text: token
+    }));
+    weightRow.appendChild(cell);
+  });
+  weightsWrap.appendChild(weightRow);
+  card.appendChild(weightsWrap);
+
+  const outputWrap = createEl('div', {
+    className: 'attn23-head-output',
+    id: 'attn23-head-output-' + headId
+  });
+  outputWrap.appendChild(createEl('div', { className: 'attn23-head-output-row' }, [
+    createAttentionStep5HeadOutputLabel(headId),
+    createAttentionStep5VectorRect(
+      'attn23-vector-out-' + headId,
+      ATTN_STEP5_HEAD_OUTPUT[headId] || [],
+      ''
+    )
+  ]));
+  card.appendChild(outputWrap);
+
+  return card;
+}
+
+function renderAttentionStep5Values() {
+  setAttentionStep5VectorValues('attn23-vector-x-sat', ATTN_STEP5_INPUT_VECTOR, formatWeightValue);
+  setAttentionStep5VectorValues('attn23-vector-q-sat', ATTN_STEP5_SOURCE_QKV.q, formatVectorValue, 'attn19-vector-q');
+  setAttentionStep5VectorValues('attn23-vector-k-sat', ATTN_STEP5_SOURCE_QKV.k, formatVectorValue, 'attn19-vector-k');
+  setAttentionStep5VectorValues('attn23-vector-v-sat', ATTN_STEP5_SOURCE_QKV.v, formatVectorValue);
+
+  ATTN_STEP5_HEADS.forEach((headId) => {
+    setAttentionStep5VectorValues(
+      'attn23-vector-' + headId + '-q',
+      ((ATTN_STEP5_HEAD_QKV[headId] || {}).q) || [],
+      formatVectorValue,
+      'attn19-vector-q'
+    );
+    setAttentionStep5VectorValues(
+      'attn23-vector-' + headId + '-k',
+      ((ATTN_STEP5_HEAD_QKV[headId] || {}).k) || [],
+      formatVectorValue,
+      'attn19-vector-k'
+    );
+    setAttentionStep5VectorValues(
+      'attn23-vector-' + headId + '-v',
+      ((ATTN_STEP5_HEAD_QKV[headId] || {}).v) || [],
+      formatVectorValue
+    );
+    setAttentionStep5VectorValues(
+      'attn23-vector-out-' + headId,
+      ATTN_STEP5_HEAD_OUTPUT[headId] || [],
+      formatWeightValue
+    );
+  });
+
+  setAttentionStep5VectorValues('attn23-vector-concat', ATTN_STEP5_CONCAT_VECTOR, formatWeightValue);
+  setAttentionStep5VectorValues('attn23-vector-z', ATTN_STEP5_OUTPUT_VECTOR, formatWeightValue);
+}
+
+function renderAttentionStep5Takeaway(step) {
+  const takeaway = document.getElementById('attn23-takeaway');
+  if (!takeaway) return;
+  takeaway.textContent = ATTN_STEP5_TAKEAWAYS[step] || ATTN_STEP5_TAKEAWAYS[0];
+}
+
+function clearAttentionStep5SplitTimers() {
+  state.attentionStep5.splitTimers.forEach((timerId) => clearTimeout(timerId));
+  state.attentionStep5.splitTimers = [];
+  state.attentionStep5.splitRafIds.forEach((rafId) => cancelAnimationFrame(rafId));
+  state.attentionStep5.splitRafIds = [];
+}
+
+function clearAttentionStep5SplitGhosts() {
+  const layer = document.getElementById('attn23-split-layer');
+  if (!layer) return;
+  layer.querySelectorAll('.attn23-split-ghost').forEach((ghost) => ghost.remove());
+}
+
+function resetAttentionStep5SplitVisuals() {
+  const slide = document.getElementById('slide-23');
+  clearAttentionStep5SplitTimers();
+  clearAttentionStep5SplitGhosts();
+  ['q', 'k', 'v'].forEach((kind) => {
+    const row = document.getElementById('attn23-qkv-row-' + kind);
+    if (row) row.classList.remove('is-splitting');
+  });
+  if (slide) slide.classList.remove('attn23-split-settled');
+  state.attentionStep5.splitDone = false;
+}
+
+function createAttentionStep5SplitGhost(kind, headId, values) {
+  const stage = document.getElementById('attn23-stage');
+  const layer = document.getElementById('attn23-split-layer');
+  const source = document.getElementById('attn23-vector-' + kind + '-sat');
+  const target = document.getElementById('attn23-vector-' + headId + '-' + kind);
+  if (!stage || !layer || !source || !target) return null;
+
+  const stageRect = stage.getBoundingClientRect();
+  const sourceRect = source.getBoundingClientRect();
+  const targetRect = target.getBoundingClientRect();
+  const sourceCenterX = sourceRect.left - stageRect.left + sourceRect.width * 0.5;
+  const sourceCenterY = sourceRect.top - stageRect.top + sourceRect.height * 0.5;
+  const targetCenterX = targetRect.left - stageRect.left + targetRect.width * 0.5;
+  const targetCenterY = targetRect.top - stageRect.top + targetRect.height * 0.5;
+
+  const ghost = createEl('div', {
+    className: 'attn23-split-ghost',
+    dataset: { kind, head: headId }
+  });
+  ghost.style.width = sourceRect.width.toFixed(2) + 'px';
+  ghost.style.left = (sourceCenterX - sourceRect.width * 0.5).toFixed(2) + 'px';
+  ghost.style.top = (sourceCenterY - sourceRect.height * 0.5).toFixed(2) + 'px';
+  ghost.style.setProperty('--attn23-split-ms', ATTN_STEP5_SPLIT_ANIM_MS + 'ms');
+
+  const vectorClass = kind === 'q' ? 'attn19-vector-q' : (kind === 'k' ? 'attn19-vector-k' : '');
+  const vector = createAttentionStep5VectorRect('', values, vectorClass);
+  vector.removeAttribute('id');
+  ghost.appendChild(vector);
+  layer.appendChild(ghost);
+
+  return {
+    ghost,
+    dx: (targetCenterX - sourceCenterX),
+    dy: (targetCenterY - sourceCenterY)
+  };
+}
+
+function runAttentionStep5SplitSequence() {
+  const slide = document.getElementById('slide-23');
+  if (!slide) return;
+
+  resetAttentionStep5SplitVisuals();
+  const pieces = [];
+  ['q', 'k', 'v'].forEach((kind) => {
+    ATTN_STEP5_HEADS.forEach((headId) => {
+      pieces.push({
+        kind,
+        headId,
+        values: (((ATTN_STEP5_HEAD_QKV[headId] || {})[kind]) || []).slice()
+      });
+    });
+  });
+
+  if (!pieces.length) {
+    state.attentionStep5.splitDone = true;
+    slide.classList.add('attn23-split-settled');
+    return;
+  }
+
+  let completed = 0;
+  const finish = () => {
+    completed += 1;
+    if (completed < pieces.length) return;
+    ['q', 'k', 'v'].forEach((kind) => {
+      const row = document.getElementById('attn23-qkv-row-' + kind);
+      if (row) row.classList.remove('is-splitting');
+    });
+    state.attentionStep5.splitDone = true;
+    slide.classList.add('attn23-split-settled');
+  };
+
+  pieces.forEach((piece, idx) => {
+    const timerId = setTimeout(() => {
+      if (state.attentionStep5.step < 2) return;
+
+      const row = document.getElementById('attn23-qkv-row-' + piece.kind);
+      if (row) row.classList.add('is-splitting');
+
+      const anim = createAttentionStep5SplitGhost(piece.kind, piece.headId, piece.values);
+      if (!anim || !anim.ghost) {
+        finish();
+        return;
+      }
+
+      const rafId = requestAnimationFrame(() => {
+        anim.ghost.style.opacity = '0.97';
+        anim.ghost.style.transform = 'translate(' + anim.dx.toFixed(2) + 'px, ' + anim.dy.toFixed(2) + 'px)';
+      });
+      state.attentionStep5.splitRafIds.push(rafId);
+
+      const cleanupId = setTimeout(() => {
+        anim.ghost.style.opacity = '0';
+        const removeId = setTimeout(() => {
+          anim.ghost.remove();
+          finish();
+        }, 220);
+        state.attentionStep5.splitTimers.push(removeId);
+      }, ATTN_STEP5_SPLIT_ANIM_MS + 30);
+      state.attentionStep5.splitTimers.push(cleanupId);
+    }, idx * ATTN_STEP5_SPLIT_STAGGER_MS);
+    state.attentionStep5.splitTimers.push(timerId);
+  });
+}
+
+function settleAttentionStep5SplitState() {
+  const slide = document.getElementById('slide-23');
+  clearAttentionStep5SplitTimers();
+  clearAttentionStep5SplitGhosts();
+  ['q', 'k', 'v'].forEach((kind) => {
+    const row = document.getElementById('attn23-qkv-row-' + kind);
+    if (row) row.classList.remove('is-splitting');
+  });
+  if (slide) slide.classList.add('attn23-split-settled');
+  state.attentionStep5.splitDone = true;
+}
+
+function setAttentionStep5Step(step) {
+  const slide = document.getElementById('slide-23');
+  if (!slide) return;
+
+  const clamped = Math.max(0, Math.min(ATTN_STEP5_MAX_STEP, step));
+  state.attentionStep5.step = clamped;
+  slide.style.setProperty('--attn23-reveal-ms', ATTN_STEP5_REVEAL_FADE_MS + 'ms');
+
+  slide.classList.toggle('attn23-show-qkv', clamped >= 1);
+  slide.classList.toggle('attn23-show-split', clamped >= 2);
+  slide.classList.toggle('attn23-show-head1', clamped >= 3);
+  slide.classList.toggle('attn23-show-head2', clamped >= 4);
+  slide.classList.toggle('attn23-show-concat', clamped >= 5);
+  slide.classList.toggle('attn23-show-proj', clamped >= 6);
+
+  const head1 = document.getElementById('attn23-head-h1');
+  const head2 = document.getElementById('attn23-head-h2');
+  if (head1) head1.classList.toggle('is-active', clamped === 3);
+  if (head2) head2.classList.toggle('is-active', clamped === 4);
+
+  renderAttentionStep5Values();
+  renderAttentionStep5Takeaway(clamped);
+
+  if (clamped < 2) {
+    resetAttentionStep5SplitVisuals();
+  } else if (clamped === 2) {
+    if (!state.attentionStep5.splitDone) runAttentionStep5SplitSequence();
+    else settleAttentionStep5SplitState();
+  } else {
+    settleAttentionStep5SplitState();
+  }
+}
+
+function initAttentionStep5Slide() {
+  const slide = document.getElementById('slide-23');
+  const tokenRow = document.getElementById('attn23-token-row');
+  const inputWrap = document.getElementById('attn23-input-vector-wrap');
+  const qkvRows = document.getElementById('attn23-qkv-rows');
+  const headGrid = document.getElementById('attn23-head-grid');
+  if (!slide || !tokenRow || !inputWrap || !qkvRows || !headGrid) return;
+
+  if (!state.attentionStep5.initialized) {
+    tokenRow.innerHTML = '';
+    ATTN_STEP5_TOKENS.forEach((token) => {
+      tokenRow.appendChild(createEl('div', {
+        className: 'attn23-token-chip' + (token === ATTN_STEP5_FOCUS ? ' active' : ''),
+        id: 'attn23-chip-' + token,
+        text: token
+      }));
+    });
+
+    inputWrap.innerHTML = '';
+    inputWrap.appendChild(createAttentionStep5VectorRow({
+      wrapId: 'attn23-input-row-x',
+      rowClass: 'attn23-input-row',
+      kind: 'x',
+      vectorId: 'attn23-vector-x-sat',
+      values: ATTN_STEP5_INPUT_VECTOR,
+      labelNode: createMathSubLabel('x', 'sat', 'attn19-vector-label')
+    }));
+
+    qkvRows.innerHTML = '';
+    ['q', 'k', 'v'].forEach((kind) => {
+      qkvRows.appendChild(createAttentionStep5VectorRow({
+        wrapId: 'attn23-qkv-row-' + kind,
+        rowClass: 'attn23-qkv-row',
+        kind,
+        vectorId: 'attn23-vector-' + kind + '-sat',
+        values: ATTN_STEP5_SOURCE_QKV[kind] || [],
+        vectorClass: kind === 'q' ? 'attn19-vector-q' : (kind === 'k' ? 'attn19-vector-k' : ''),
+        labelNode: createMathSubLabel(kind, 'sat', 'attn19-vector-label')
+      }));
+    });
+
+    headGrid.innerHTML = '';
+    ATTN_STEP5_HEADS.forEach((headId) => {
+      headGrid.appendChild(createAttentionStep5HeadCard(headId));
+    });
+
+    if (!state.attentionStep5.resizeBound) {
+      window.addEventListener('resize', () => {
+        if (!state.attentionStep5.initialized) return;
+        if (state.attentionStep5.step >= 2) settleAttentionStep5SplitState();
+        else resetAttentionStep5SplitVisuals();
+      });
+      state.attentionStep5.resizeBound = true;
+    }
+
+    state.attentionStep5.initialized = true;
+  }
+
+  renderAttentionStep5Values();
+  renderAttentionStep5Takeaway(state.attentionStep5.step);
+}
+
+function runAttentionStep5Step() {
+  if (!state.attentionStep5.initialized) initAttentionStep5Slide();
+  if (state.attentionStep5.step >= ATTN_STEP5_MAX_STEP) return false;
+  setAttentionStep5Step(state.attentionStep5.step + 1);
+  return true;
+}
+
+function resetAttentionStep5Slide() {
+  const slide = document.getElementById('slide-23');
+  if (!slide) return;
+  resetAttentionStep5SplitVisuals();
+  slide.classList.remove('attn23-show-qkv');
+  slide.classList.remove('attn23-show-split');
+  slide.classList.remove('attn23-show-head1');
+  slide.classList.remove('attn23-show-head2');
+  slide.classList.remove('attn23-show-concat');
+  slide.classList.remove('attn23-show-proj');
+  slide.classList.remove('attn23-split-settled');
+  setAttentionStep5Step(0);
 }
 
 /* =====================================================
@@ -4598,6 +6428,7 @@ function resetSlideInteractions(slideEl) {
   if (slideEl.id === 'slide-20') resetAttentionQkvSlide();
   if (slideEl.id === 'slide-21') resetAttentionWeightsSlide();
   if (slideEl.id === 'slide-22') resetAttentionStep4Slide();
+  if (slideEl.id === 'slide-23') resetAttentionStep5Slide();
 }
 
 function goToSlide(index) {
@@ -4639,6 +6470,10 @@ function goToSlide(index) {
     initAttentionStep4Slide();
     setAttentionStep4Step(0);
   }
+  if (activeSlide.id === 'slide-23') {
+    initAttentionStep5Slide();
+    setAttentionStep5Step(0);
+  }
 
   devLog('slide', activeSlide.id);
 }
@@ -4665,6 +6500,7 @@ function nextStep() {
   if (active.id === 'slide-20') return runAttentionQkvStep();
   if (active.id === 'slide-21') return runAttentionWeightsStep();
   if (active.id === 'slide-22') return runAttentionStep4Step();
+  if (active.id === 'slide-23') return runAttentionStep5Step();
   return false;
 }
 
