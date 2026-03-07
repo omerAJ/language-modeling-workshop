@@ -2042,6 +2042,8 @@
     border-top: 1px solid rgba(184,194,221,0.16);
   }
   .attn23-score-cell {
+    position: relative;
+    overflow: hidden;
     min-width: 0;
     min-height: var(--attn23-score-cell-h);
     display: grid;
@@ -2052,6 +2054,43 @@
     color: rgba(222,232,255,0.95);
     background: rgba(184,194,221,0.03);
     border-right: 1px solid rgba(184,194,221,0.16);
+  }
+  .attn23-score-cell-value {
+    position: relative;
+    z-index: 2;
+    transition: opacity 0.22s ease, color 0.22s ease;
+  }
+  .attn23-score-cell-mask {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.22s ease, background 0.22s ease, box-shadow 0.22s ease;
+  }
+  .attn23-score-cell-mask::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    background-image: repeating-linear-gradient(
+      135deg,
+      rgba(226,233,250,0.22) 0,
+      rgba(226,233,250,0.22) 0.16rem,
+      rgba(226,233,250,0) 0.16rem,
+      rgba(226,233,250,0) 0.34rem
+    );
+    transition: opacity 0.22s ease;
+  }
+  .attn23-score-cell-value.is-dimmed {
+    opacity: 0.22;
+  }
+  .attn23-score-cell-mask.is-visible {
+    opacity: 1;
+    background: linear-gradient(180deg, rgba(18,22,31,0.78), rgba(27,34,48,0.88));
+  }
+  .attn23-score-cell-mask.is-visible::before {
+    opacity: 1;
   }
   .attn23-score-cell:last-child {
     border-right: 0;
@@ -2110,6 +2149,69 @@
     opacity: 1;
     visibility: visible;
     transform: translateY(0);
+  }
+  #slide-23.attn23-show-score-mask-focus .attn23-score-q-wrap,
+  #slide-23.attn23-show-score-mask-focus .attn23-score-k-wrap {
+    filter: saturate(0.9);
+  }
+  #slide-23.attn23-show-score-future-problem .attn23-score-row.is-mask-problem-visible .attn23-score-cell[data-future="true"] {
+    background: rgba(255,176,98,0.12);
+    box-shadow: inset 0 0 0 1px rgba(255,183,108,0.42), 0 0 0.4rem rgba(255,163,82,0.14);
+    animation: attn23MaskPulse 0.42s ease;
+  }
+  #slide-23.attn23-show-score-future-problem .attn23-score-row.is-mask-problem-visible .attn23-score-cell[data-future="true"] .attn23-score-cell-value {
+    color: rgba(255,224,186,0.98);
+  }
+  #slide-23.attn23-show-score-causal-mask .attn23-score-row.is-mask-applied-visible .attn23-score-cell[data-future="true"],
+  #slide-23.attn23-show-score-causal-mask .attn23-score-row.is-mask-question-visible .attn23-score-cell[data-future="true"] {
+    background:
+      repeating-linear-gradient(
+        135deg,
+        rgba(226,233,250,0.08) 0,
+        rgba(226,233,250,0.08) 0.16rem,
+        rgba(226,233,250,0) 0.16rem,
+        rgba(226,233,250,0) 0.34rem
+      ),
+      linear-gradient(180deg, rgba(35,42,58,0.78), rgba(27,34,48,0.88));
+    box-shadow: inset 0 0 0 1px rgba(105,117,146,0.42);
+  }
+  #slide-23.attn23-show-score-causal-mask .attn23-score-row.is-mask-applied-visible .attn23-score-cell[data-future="true"] .attn23-score-cell-mask,
+  #slide-23.attn23-show-score-causal-mask .attn23-score-row.is-mask-question-visible .attn23-score-cell[data-future="true"] .attn23-score-cell-mask {
+    opacity: 1;
+    background: linear-gradient(180deg, rgba(18,22,31,0.78), rgba(27,34,48,0.88));
+  }
+  #slide-23.attn23-show-score-causal-mask .attn23-score-row.is-mask-applied-visible .attn23-score-cell[data-future="true"] .attn23-score-cell-mask::before,
+  #slide-23.attn23-show-score-causal-mask .attn23-score-row.is-mask-question-visible .attn23-score-cell[data-future="true"] .attn23-score-cell-mask::before {
+    opacity: 1;
+  }
+  #slide-23.attn23-show-score-causal-mask .attn23-score-row.is-mask-applied-visible .attn23-score-cell[data-future="true"] .attn23-score-cell-value,
+  #slide-23.attn23-show-score-causal-mask .attn23-score-row.is-mask-question-visible .attn23-score-cell[data-future="true"] .attn23-score-cell-value {
+    color: rgba(242,246,255,0.94);
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    text-shadow: 0 0 0.32rem rgba(156,177,255,0.18);
+  }
+  #slide-23.attn23-show-score-mask-question .attn23-score-row.is-mask-question-visible .attn23-score-cell[data-future="true"] {
+    box-shadow: inset 0 0 0 1px rgba(139,156,214,0.6), 0 0 0.5rem rgba(131,157,255,0.16);
+  }
+  #slide-23.attn23-show-score-mask-question .attn23-score-row.is-mask-question-visible .attn23-score-cell[data-future="true"] .attn23-score-cell-value {
+    color: rgba(248,250,255,0.98);
+    text-shadow: 0 0 0.48rem rgba(156,177,255,0.28);
+  }
+  #slide-23.attn23-show-score-mask-question .attn23-score-row.is-mask-question-visible .attn23-score-cell[data-future="false"] .attn23-score-cell-value {
+    color: rgba(203,214,239,0.78);
+  }
+
+  @keyframes attn23MaskPulse {
+    0% {
+      box-shadow: inset 0 0 0 1px rgba(255,183,108,0.14), 0 0 0 rgba(255,163,82,0);
+    }
+    55% {
+      box-shadow: inset 0 0 0 1px rgba(255,183,108,0.5), 0 0 0.52rem rgba(255,163,82,0.24);
+    }
+    100% {
+      box-shadow: inset 0 0 0 1px rgba(255,183,108,0.42), 0 0 0.4rem rgba(255,163,82,0.14);
+    }
   }
 
   @media (max-width: 56rem) {
@@ -3613,7 +3715,7 @@
     <span class="section-tag">Attention</span>
     <div class="badge concept">Mechanism</div>
     <h2>Matrix View of Attention</h2>
-    <p class="small-text attn19-subtitle">Stack tokens, project X into Q/K/V, then compute the score matrix</p>
+    <p class="small-text attn19-subtitle">Stack tokens, project X into Q/K/V, compute scores, then block future attention</p>
 
     <div class="attn19-layout">
       <div class="card attn19-stage attn23-stage" id="attn23-stage">
@@ -3811,9 +3913,12 @@ const ATTN_MATRIX_TAKEAWAYS = [
   'Now apply the same Step 1 projection to the whole matrix: X is copied into three branches and projected into Q, K, and V.',
   'Bring Q and K to the center as the matrices used for score computation.',
   'Transpose K so the matrix dimensions line up for multiplication.',
-  'Compute raw attention scores for the whole sequence: S = QK^T.'
+  'Compute raw attention scores for the whole sequence: S = QK^T.',
+  'Without a mask, earlier tokens can attend to later tokens.<br><i>cat</i> could use information from <i>sat</i>, <i>on</i>, <i>the</i>, and <i>mat</i> before those tokens should exist.<br>That leaks future information and breaks left-to-right generation.',
+  'The fix is a causal attention mask.<br>For every future token position, replace that score with <i>−∞</i> so it is blocked.<br>Only the current token and the tokens before it are allowed to remain.',
+  'Notice what appears in the blocked cells: <i>−∞</i>.<br>Why do we write negative infinity there instead of 0 or just removing the cell?<br>The next step will make that clear when we apply the rowwise softmax.'
 ];
-const ATTN_MATRIX_MAX_STEP = 6;
+const ATTN_MATRIX_MAX_STEP = 9;
 const ATTN_MATRIX_ROW_STAGGER_MS = 140;
 const ATTN_MATRIX_TOKEN_TRAVEL_MS = 680;
 const ATTN_MATRIX_X_TRAVEL_MS = 720;
@@ -3844,6 +3949,8 @@ const ATTN_MATRIX_SCORE_CENTER_MS = 620;
 const ATTN_MATRIX_SCORE_TRANSPOSE_MS = 360;
 const ATTN_MATRIX_SCORE_ROW_STAGGER_MS = 96;
 const ATTN_MATRIX_SCORE_FADE_MS = 200;
+const ATTN_MATRIX_MASK_ROW_STAGGER_MS = 120;
+const ATTN_MATRIX_MASK_FADE_MS = 220;
 
 const ATTN_P1_TOKENS = ['cat', 'sat', 'on', 'the', 'mat'];
 const ATTN_P1_FOCUS = 'sat';
@@ -3984,6 +4091,11 @@ const state = {
     scoreMatrixDone: false,
     scoreVisible: false,
     scoreVisibleCount: 0,
+    maskProblemDone: false,
+    maskAppliedDone: false,
+    maskQuestionDone: false,
+    maskVisibleCount: 0,
+    maskMode: 'none',
     scoreTimers: [],
     scoreRafIds: [],
     resizeBound: false
@@ -6766,12 +6878,27 @@ function createAttentionMatrixScoreKTransposeMatrix() {
 }
 
 function createAttentionMatrixScoreCell(rowToken, colToken, value, mode = 'score') {
-  return createEl('div', {
+  const rowIdx = ATTN_MATRIX_SCORE_TOKENS.indexOf(rowToken);
+  const colIdx = ATTN_MATRIX_SCORE_TOKENS.indexOf(colToken);
+  const cell = createEl('div', {
     className: 'attn23-score-cell',
     id: 'attn23-score-cell-' + rowToken + '-' + colToken,
-    dataset: { rowToken, colToken },
-    text: formatAttentionMatrixScoreCellValue(value, mode)
+    dataset: {
+      rowToken,
+      colToken,
+      future: String(colIdx > rowIdx),
+      diagonal: String(colIdx === rowIdx)
+    }
   });
+  cell.appendChild(createEl('span', {
+    className: 'attn23-score-cell-value',
+    text: formatAttentionMatrixScoreCellValue(value, mode)
+  }));
+  cell.appendChild(createEl('span', {
+    className: 'attn23-score-cell-mask',
+    'aria-hidden': 'true'
+  }));
+  return cell;
 }
 
 function createAttentionMatrixScoreMatrix() {
@@ -6939,6 +7066,83 @@ function syncAttentionMatrixScoreRows(visibleCount = state.attentionMatrix.score
   });
 }
 
+function setAttentionMatrixScoreMaskRowState(token, mode = 'none') {
+  const row = document.getElementById('attn23-score-row-' + token);
+  if (!row) return;
+  row.classList.remove('is-mask-problem-visible', 'is-mask-applied-visible', 'is-mask-question-visible');
+  if (mode === 'problem') row.classList.add('is-mask-problem-visible');
+  if (mode === 'mask') row.classList.add('is-mask-applied-visible');
+  if (mode === 'question') row.classList.add('is-mask-question-visible');
+}
+
+function syncAttentionMatrixScoreMaskRows(mode = state.attentionMatrix.maskMode, visibleCount = state.attentionMatrix.maskVisibleCount) {
+  const clamped = Math.max(0, Math.min(ATTN_MATRIX_SCORE_TOKENS.length, visibleCount));
+  ATTN_MATRIX_SCORE_TOKENS.forEach((token, idx) => {
+    setAttentionMatrixScoreMaskRowState(token, idx < clamped ? mode : 'none');
+  });
+  syncAttentionMatrixScoreMaskCellStyles();
+  syncAttentionMatrixScoreCellText(mode);
+}
+
+function syncAttentionMatrixScoreCellText(mode = state.attentionMatrix.maskMode) {
+  const slide = document.getElementById('slide-23');
+  if (!slide) return;
+  slide.querySelectorAll('.attn23-score-cell').forEach((cell) => {
+    const value = cell.querySelector('.attn23-score-cell-value');
+    if (!value) return;
+    const row = cell.closest('.attn23-score-row');
+    const rowToken = cell.dataset.rowToken;
+    const colToken = cell.dataset.colToken;
+    const future = cell.dataset.future === 'true';
+    const rawValue = ((ATTN_MATRIX_SCORE_RAW_ROWS[rowToken] || {})[colToken]);
+    const rowMasked = !!(row && (
+      row.classList.contains('is-mask-applied-visible')
+      || row.classList.contains('is-mask-question-visible')
+    ));
+    const showMaskedValue = (mode === 'mask' || mode === 'question') && future && rowMasked;
+    const displayValue = showMaskedValue
+      ? Number.NEGATIVE_INFINITY
+      : rawValue;
+    const displayMode = showMaskedValue ? 'masked' : 'score';
+    value.textContent = formatAttentionMatrixScoreCellValue(displayValue, displayMode);
+    value.classList.remove('is-dimmed');
+  });
+}
+
+function resetAttentionMatrixScoreMaskVisuals() {
+  const slide = document.getElementById('slide-23');
+  state.attentionMatrix.maskProblemDone = false;
+  state.attentionMatrix.maskAppliedDone = false;
+  state.attentionMatrix.maskQuestionDone = false;
+  state.attentionMatrix.maskVisibleCount = 0;
+  state.attentionMatrix.maskMode = 'none';
+  syncAttentionMatrixScoreMaskRows('none', 0);
+  if (!slide) return;
+  slide.classList.remove('attn23-show-score-mask-focus');
+  slide.classList.remove('attn23-show-score-future-problem');
+  slide.classList.remove('attn23-show-score-causal-mask');
+  slide.classList.remove('attn23-show-score-mask-question');
+}
+
+function syncAttentionMatrixScoreMaskCellStyles() {
+  const slide = document.getElementById('slide-23');
+  if (!slide) return;
+  const causalMask = slide.classList.contains('attn23-show-score-causal-mask');
+  slide.querySelectorAll('.attn23-score-cell').forEach((cell) => {
+    const row = cell.closest('.attn23-score-row');
+    const value = cell.querySelector('.attn23-score-cell-value');
+    const mask = cell.querySelector('.attn23-score-cell-mask');
+    const future = cell.dataset.future === 'true';
+    const rowMasked = !!(row && (
+      row.classList.contains('is-mask-applied-visible')
+      || row.classList.contains('is-mask-question-visible')
+    ));
+    const shouldMask = causalMask && future && rowMasked;
+    if (value) value.classList.remove('is-dimmed');
+    if (mask) mask.classList.toggle('is-visible', shouldMask);
+  });
+}
+
 function setAttentionMatrixScoreKState(transposed) {
   const label = document.getElementById('attn23-score-k-label');
   const dims = document.getElementById('attn23-score-k-dims');
@@ -6967,6 +7171,7 @@ function syncAttentionMatrixScoreStageFromClasses() {
   const cleanup = slide.classList.contains('attn23-score-cleanup-active');
   const mode = slide.classList.contains('attn23-show-score-mode');
   const operands = slide.classList.contains('attn23-show-score-operands');
+  const maskFocus = slide.classList.contains('attn23-show-score-mask-focus');
   const transposed = slide.classList.contains('attn23-show-score-transposed');
   const formula = slide.classList.contains('attn23-show-score-formula');
   const matrix = slide.classList.contains('attn23-show-score-matrix');
@@ -7011,7 +7216,7 @@ function syncAttentionMatrixScoreStageFromClasses() {
   [qWrap, kWrap].forEach((el) => {
     if (!el) return;
     el.style.removeProperty('display');
-    el.style.setProperty('opacity', operands ? '1' : '0', 'important');
+    el.style.setProperty('opacity', operands ? (maskFocus ? '0.76' : '1') : '0', 'important');
     el.style.setProperty('visibility', operands ? 'visible' : 'hidden', 'important');
     el.style.setProperty('transform', operands ? 'translateY(0)' : 'translateY(0.16rem)', 'important');
   });
@@ -7049,6 +7254,7 @@ function syncAttentionMatrixScoreStageFromClasses() {
     kRowHeaders.style.setProperty('visibility', transposed ? 'hidden' : 'visible', 'important');
     kRowHeaders.style.setProperty('transform', transposed ? 'translateX(-0.08rem)' : 'translateX(0)', 'important');
   }
+  syncAttentionMatrixScoreMaskCellStyles();
 }
 
 function resetAttentionMatrixScoreVisuals() {
@@ -7061,6 +7267,7 @@ function resetAttentionMatrixScoreVisuals() {
   state.attentionMatrix.scoreVisible = false;
   state.attentionMatrix.scoreVisibleCount = 0;
   syncAttentionMatrixScoreRows(0);
+  resetAttentionMatrixScoreMaskVisuals();
   setAttentionMatrixScoreKState(false);
   if (!slide) return;
   ATTN_MATRIX_PROJS.forEach((proj) => setAttentionMatrixProjectionOutputVisible(proj, true));
@@ -7093,6 +7300,7 @@ function resetAttentionMatrixVisuals() {
   syncAttentionMatrixTokenSlots(0);
   syncAttentionMatrixXSlots(0);
   syncAttentionMatrixScoreRows(0);
+  resetAttentionMatrixScoreMaskVisuals();
   if (!slide) return;
   ATTN_MATRIX_PROJS.forEach((proj) => setAttentionMatrixProjectionOutputVisible(proj, true));
   slide.classList.remove('attn23-show-token-matrix');
@@ -7135,6 +7343,7 @@ function settleAttentionMatrixTokenState() {
   syncAttentionMatrixTokenSlots(state.attentionMatrix.tokenVisibleCount);
   syncAttentionMatrixXSlots(0);
   syncAttentionMatrixScoreRows(0);
+  resetAttentionMatrixScoreMaskVisuals();
   if (!slide) return;
   ATTN_MATRIX_PROJS.forEach((proj) => setAttentionMatrixProjectionOutputVisible(proj, true));
   slide.classList.add('attn23-show-token-matrix');
@@ -7177,6 +7386,7 @@ function settleAttentionMatrixFullState() {
   syncAttentionMatrixTokenSlots(state.attentionMatrix.tokenVisibleCount);
   syncAttentionMatrixXSlots(state.attentionMatrix.xVisibleCount);
   syncAttentionMatrixScoreRows(0);
+  resetAttentionMatrixScoreMaskVisuals();
   if (!slide) return;
   ATTN_MATRIX_PROJS.forEach((proj) => setAttentionMatrixProjectionOutputVisible(proj, true));
   slide.classList.add('attn23-show-token-matrix');
@@ -7307,6 +7517,7 @@ function resetAttentionMatrixProjectionVisuals() {
   state.attentionMatrix.scoreMatrixDone = false;
   state.attentionMatrix.scoreVisible = false;
   state.attentionMatrix.scoreVisibleCount = 0;
+  resetAttentionMatrixScoreMaskVisuals();
   if (!slide) return;
   ATTN_MATRIX_PROJS.forEach((proj) => setAttentionMatrixProjectionOutputVisible(proj, true));
   slide.classList.remove('attn23-show-projections');
@@ -7337,6 +7548,7 @@ function settleAttentionMatrixProjectionState() {
   state.attentionMatrix.scoreMatrixDone = false;
   state.attentionMatrix.scoreVisible = false;
   state.attentionMatrix.scoreVisibleCount = 0;
+  resetAttentionMatrixScoreMaskVisuals();
   if (!slide) return;
   ATTN_MATRIX_PROJS.forEach((proj) => setAttentionMatrixProjectionOutputVisible(proj, true));
   slide.classList.add('attn23-show-projections');
@@ -7539,6 +7751,7 @@ function settleAttentionMatrixScoreCenterState() {
   state.attentionMatrix.scoreVisible = true;
   state.attentionMatrix.scoreVisibleCount = 0;
   syncAttentionMatrixScoreRows(0);
+  resetAttentionMatrixScoreMaskVisuals();
   setAttentionMatrixScoreKState(false);
   if (!slide) return;
   setAttentionMatrixProjectionOutputVisible('q', false);
@@ -7562,6 +7775,7 @@ function settleAttentionMatrixScoreTransposeState() {
   state.attentionMatrix.scoreVisible = true;
   state.attentionMatrix.scoreVisibleCount = 0;
   syncAttentionMatrixScoreRows(0);
+  resetAttentionMatrixScoreMaskVisuals();
   setAttentionMatrixScoreKState(true);
   if (!slide) return;
   setAttentionMatrixProjectionOutputVisible('q', false);
@@ -7585,6 +7799,7 @@ function settleAttentionMatrixScoreMatrixState() {
   state.attentionMatrix.scoreVisible = true;
   state.attentionMatrix.scoreVisibleCount = ATTN_MATRIX_SCORE_TOKENS.length;
   syncAttentionMatrixScoreRows(state.attentionMatrix.scoreVisibleCount);
+  resetAttentionMatrixScoreMaskVisuals();
   setAttentionMatrixScoreKState(true);
   if (!slide) return;
   setAttentionMatrixProjectionOutputVisible('q', false);
@@ -7753,6 +7968,159 @@ function runAttentionMatrixScoreMatrixSequence() {
   state.attentionMatrix.scoreTimers.push(settleTimer);
 }
 
+function settleAttentionMatrixMaskProblemState() {
+  const slide = document.getElementById('slide-23');
+  settleAttentionMatrixScoreMatrixState();
+  clearAttentionMatrixScoreTimers();
+  clearAttentionMatrixGhosts();
+  state.attentionMatrix.maskProblemDone = true;
+  state.attentionMatrix.maskAppliedDone = false;
+  state.attentionMatrix.maskQuestionDone = false;
+  state.attentionMatrix.maskVisibleCount = ATTN_MATRIX_SCORE_TOKENS.length;
+  state.attentionMatrix.maskMode = 'problem';
+  if (!slide) return;
+  slide.classList.add('attn23-show-score-mask-focus');
+  slide.classList.add('attn23-show-score-future-problem');
+  slide.classList.remove('attn23-show-score-causal-mask');
+  slide.classList.remove('attn23-show-score-mask-question');
+  syncAttentionMatrixScoreMaskRows('problem', state.attentionMatrix.maskVisibleCount);
+  syncAttentionMatrixScoreStageFromClasses();
+}
+
+function settleAttentionMatrixCausalMaskState() {
+  const slide = document.getElementById('slide-23');
+  settleAttentionMatrixScoreMatrixState();
+  clearAttentionMatrixScoreTimers();
+  clearAttentionMatrixGhosts();
+  state.attentionMatrix.maskProblemDone = true;
+  state.attentionMatrix.maskAppliedDone = true;
+  state.attentionMatrix.maskQuestionDone = false;
+  state.attentionMatrix.maskVisibleCount = ATTN_MATRIX_SCORE_TOKENS.length;
+  state.attentionMatrix.maskMode = 'mask';
+  if (!slide) return;
+  slide.classList.add('attn23-show-score-mask-focus');
+  slide.classList.remove('attn23-show-score-future-problem');
+  slide.classList.add('attn23-show-score-causal-mask');
+  slide.classList.remove('attn23-show-score-mask-question');
+  syncAttentionMatrixScoreMaskRows('mask', state.attentionMatrix.maskVisibleCount);
+  syncAttentionMatrixScoreStageFromClasses();
+}
+
+function settleAttentionMatrixMaskQuestionState() {
+  const slide = document.getElementById('slide-23');
+  settleAttentionMatrixCausalMaskState();
+  clearAttentionMatrixScoreTimers();
+  clearAttentionMatrixGhosts();
+  state.attentionMatrix.maskProblemDone = true;
+  state.attentionMatrix.maskAppliedDone = true;
+  state.attentionMatrix.maskQuestionDone = true;
+  state.attentionMatrix.maskVisibleCount = ATTN_MATRIX_SCORE_TOKENS.length;
+  state.attentionMatrix.maskMode = 'question';
+  if (!slide) return;
+  slide.classList.add('attn23-show-score-mask-focus');
+  slide.classList.add('attn23-show-score-causal-mask');
+  slide.classList.add('attn23-show-score-mask-question');
+  syncAttentionMatrixScoreMaskRows('question', state.attentionMatrix.maskVisibleCount);
+  syncAttentionMatrixScoreStageFromClasses();
+}
+
+function runAttentionMatrixMaskProblemSequence() {
+  const slide = document.getElementById('slide-23');
+  if (!slide) return;
+
+  settleAttentionMatrixScoreMatrixState();
+  clearAttentionMatrixScoreTimers();
+  clearAttentionMatrixGhosts();
+  resetAttentionMatrixScoreMaskVisuals();
+  state.attentionMatrix.maskProblemDone = false;
+  state.attentionMatrix.maskAppliedDone = false;
+  state.attentionMatrix.maskQuestionDone = false;
+  state.attentionMatrix.maskVisibleCount = 0;
+  state.attentionMatrix.maskMode = 'problem';
+  slide.classList.add('attn23-show-score-mask-focus');
+  slide.classList.add('attn23-show-score-future-problem');
+  syncAttentionMatrixScoreMaskRows('problem', 0);
+  syncAttentionMatrixScoreStageFromClasses();
+
+  ATTN_MATRIX_SCORE_TOKENS.forEach((token, idx) => {
+    const timer = setTimeout(() => {
+      if (state.attentionMatrix.step < 7) return;
+      state.attentionMatrix.maskVisibleCount = Math.max(state.attentionMatrix.maskVisibleCount, idx + 1);
+      syncAttentionMatrixScoreMaskRows('problem', state.attentionMatrix.maskVisibleCount);
+    }, 40 + (idx * ATTN_MATRIX_MASK_ROW_STAGGER_MS));
+    state.attentionMatrix.scoreTimers.push(timer);
+  });
+
+  const settleTimer = setTimeout(() => {
+    if (state.attentionMatrix.step < 7) return;
+    settleAttentionMatrixMaskProblemState();
+  }, 40 + ((ATTN_MATRIX_SCORE_TOKENS.length - 1) * ATTN_MATRIX_MASK_ROW_STAGGER_MS) + ATTN_MATRIX_MASK_FADE_MS);
+  state.attentionMatrix.scoreTimers.push(settleTimer);
+}
+
+function runAttentionMatrixCausalMaskSequence() {
+  const slide = document.getElementById('slide-23');
+  if (!slide) return;
+
+  settleAttentionMatrixMaskProblemState();
+  clearAttentionMatrixScoreTimers();
+  state.attentionMatrix.maskAppliedDone = false;
+  state.attentionMatrix.maskQuestionDone = false;
+  state.attentionMatrix.maskVisibleCount = 0;
+  state.attentionMatrix.maskMode = 'mask';
+  slide.classList.add('attn23-show-score-mask-focus');
+  slide.classList.remove('attn23-show-score-future-problem');
+  slide.classList.add('attn23-show-score-causal-mask');
+  slide.classList.remove('attn23-show-score-mask-question');
+  syncAttentionMatrixScoreMaskRows('mask', 0);
+
+  ATTN_MATRIX_SCORE_TOKENS.forEach((token, idx) => {
+    const timer = setTimeout(() => {
+      if (state.attentionMatrix.step < 8) return;
+      state.attentionMatrix.maskVisibleCount = Math.max(state.attentionMatrix.maskVisibleCount, idx + 1);
+      syncAttentionMatrixScoreMaskRows('mask', state.attentionMatrix.maskVisibleCount);
+    }, 40 + (idx * ATTN_MATRIX_MASK_ROW_STAGGER_MS));
+    state.attentionMatrix.scoreTimers.push(timer);
+  });
+
+  const settleTimer = setTimeout(() => {
+    if (state.attentionMatrix.step < 8) return;
+    settleAttentionMatrixCausalMaskState();
+  }, 40 + ((ATTN_MATRIX_SCORE_TOKENS.length - 1) * ATTN_MATRIX_MASK_ROW_STAGGER_MS) + ATTN_MATRIX_MASK_FADE_MS);
+  state.attentionMatrix.scoreTimers.push(settleTimer);
+}
+
+function runAttentionMatrixMaskQuestionSequence() {
+  const slide = document.getElementById('slide-23');
+  if (!slide) return;
+
+  settleAttentionMatrixCausalMaskState();
+  clearAttentionMatrixScoreTimers();
+  state.attentionMatrix.maskQuestionDone = false;
+  state.attentionMatrix.maskVisibleCount = 0;
+  state.attentionMatrix.maskMode = 'question';
+  slide.classList.add('attn23-show-score-mask-question');
+  syncAttentionMatrixScoreMaskCellStyles();
+  syncAttentionMatrixScoreCellText('question');
+
+  ATTN_MATRIX_SCORE_TOKENS.forEach((token, idx) => {
+    const timer = setTimeout(() => {
+      if (state.attentionMatrix.step < 9) return;
+      state.attentionMatrix.maskVisibleCount = Math.max(state.attentionMatrix.maskVisibleCount, idx + 1);
+      setAttentionMatrixScoreMaskRowState(token, 'question');
+      syncAttentionMatrixScoreMaskCellStyles();
+      syncAttentionMatrixScoreCellText('question');
+    }, 40 + (idx * ATTN_MATRIX_MASK_ROW_STAGGER_MS));
+    state.attentionMatrix.scoreTimers.push(timer);
+  });
+
+  const settleTimer = setTimeout(() => {
+    if (state.attentionMatrix.step < 9) return;
+    settleAttentionMatrixMaskQuestionState();
+  }, 40 + ((ATTN_MATRIX_SCORE_TOKENS.length - 1) * ATTN_MATRIX_MASK_ROW_STAGGER_MS) + ATTN_MATRIX_MASK_FADE_MS);
+  state.attentionMatrix.scoreTimers.push(settleTimer);
+}
+
 function animateAttentionMatrixTokenRow(token, idx, delayMs, isLastToken = false) {
   const timerId = setTimeout(() => {
     if (state.attentionMatrix.step < 1) return;
@@ -7911,7 +8279,13 @@ function initAttentionMatrixSlide() {
     if (!state.attentionMatrix.resizeBound) {
       window.addEventListener('resize', () => {
         if (!state.attentionMatrix.initialized) return;
-        if (state.attentionMatrix.step >= 6) {
+        if (state.attentionMatrix.step >= 9) {
+          settleAttentionMatrixMaskQuestionState();
+        } else if (state.attentionMatrix.step >= 8) {
+          settleAttentionMatrixCausalMaskState();
+        } else if (state.attentionMatrix.step >= 7) {
+          settleAttentionMatrixMaskProblemState();
+        } else if (state.attentionMatrix.step >= 6) {
           settleAttentionMatrixScoreMatrixState();
         } else if (state.attentionMatrix.step >= 5) {
           settleAttentionMatrixScoreTransposeState();
@@ -7936,7 +8310,13 @@ function initAttentionMatrixSlide() {
   const takeaway = document.getElementById('attn23-takeaway');
   if (takeaway) takeaway.innerHTML = ATTN_MATRIX_TAKEAWAYS[state.attentionMatrix.step] || ATTN_MATRIX_TAKEAWAYS[0];
 
-  if (state.attentionMatrix.step >= 6) {
+  if (state.attentionMatrix.step >= 9) {
+    settleAttentionMatrixMaskQuestionState();
+  } else if (state.attentionMatrix.step >= 8) {
+    settleAttentionMatrixCausalMaskState();
+  } else if (state.attentionMatrix.step >= 7) {
+    settleAttentionMatrixMaskProblemState();
+  } else if (state.attentionMatrix.step >= 6) {
     settleAttentionMatrixScoreMatrixState();
   } else if (state.attentionMatrix.step >= 5) {
     settleAttentionMatrixScoreTransposeState();
@@ -7969,6 +8349,9 @@ function setAttentionMatrixStep(step) {
   }
   if (clamped < 4) {
     resetAttentionMatrixScoreVisuals();
+  }
+  if (clamped < 7) {
+    resetAttentionMatrixScoreMaskVisuals();
   }
 
   if (clamped === 0) {
@@ -8039,10 +8422,50 @@ function setAttentionMatrixStep(step) {
   if (!state.attentionMatrix.scoreTransposedDone) {
     settleAttentionMatrixScoreTransposeState();
   }
-  if (!state.attentionMatrix.scoreMatrixDone && animateStep) {
-    runAttentionMatrixScoreMatrixSequence();
-  } else {
+
+  if (clamped === 6) {
+    if (!state.attentionMatrix.scoreMatrixDone && animateStep) {
+      runAttentionMatrixScoreMatrixSequence();
+    } else {
+      settleAttentionMatrixScoreMatrixState();
+    }
+    return;
+  }
+
+  if (!state.attentionMatrix.scoreMatrixDone) {
     settleAttentionMatrixScoreMatrixState();
+  }
+
+  if (clamped === 7) {
+    if (!state.attentionMatrix.maskProblemDone && animateStep) {
+      runAttentionMatrixMaskProblemSequence();
+    } else {
+      settleAttentionMatrixMaskProblemState();
+    }
+    return;
+  }
+
+  if (!state.attentionMatrix.maskProblemDone) {
+    settleAttentionMatrixMaskProblemState();
+  }
+  if (clamped === 8) {
+    if (!state.attentionMatrix.maskAppliedDone && animateStep) {
+      runAttentionMatrixCausalMaskSequence();
+    } else {
+      settleAttentionMatrixCausalMaskState();
+    }
+    return;
+  }
+
+  if (!state.attentionMatrix.maskAppliedDone) {
+    settleAttentionMatrixCausalMaskState();
+  }
+  if (clamped === 9) {
+    if (!state.attentionMatrix.maskQuestionDone && animateStep) {
+      runAttentionMatrixMaskQuestionSequence();
+    } else {
+      settleAttentionMatrixMaskQuestionState();
+    }
   }
 }
 
