@@ -1219,6 +1219,16 @@
     --attn23-token-col-w: clamp(6rem, 15vw, 6.8rem);
     --attn23-x-col-w: clamp(10rem, 23vw, 11.6rem);
     --attn23-proj-col-w: clamp(14.8rem, 31vw, 17.8rem);
+    --attn23-score-operand-w: clamp(4.9rem, 12vw, 5.4rem);
+    --attn23-score-operand-row-h: 0.92rem;
+    --attn23-score-operand-row-count: 5;
+    --attn23-score-operand-h: calc(var(--attn23-score-operand-row-h) * var(--attn23-score-operand-row-count));
+    --attn23-score-k-header-col-w: 1.22rem;
+    --attn23-score-k-wrap-w: calc(var(--attn23-score-k-header-col-w) + var(--attn23-score-operand-w));
+    --attn23-score-k-transpose-frame-w: var(--attn23-score-operand-h);
+    --attn23-score-k-transpose-frame-h: var(--attn23-score-operand-w);
+    --attn23-score-s-w: clamp(16rem, 38vw, 18rem);
+    --attn23-score-cell-h: 1.56rem;
     min-height: clamp(18rem, 56vh, 24rem);
     display: flex;
     flex-direction: column;
@@ -1239,6 +1249,7 @@
     height: 100%;
     pointer-events: none;
     z-index: 4;
+    transition: opacity 0.24s ease, transform 0.24s ease;
   }
   .attn23-proj-line,
   .attn23-proj-bus-line {
@@ -1279,6 +1290,7 @@
     width: 100%;
     display: flex;
     justify-content: center;
+    transition: opacity 0.26s ease, transform 0.26s ease;
   }
   .attn23-source-row {
     width: min(100%, 34rem);
@@ -1352,6 +1364,7 @@
     gap: var(--attn23-rail-gap);
     justify-content: center;
     align-items: start;
+    transition: opacity 0.26s ease, transform 0.26s ease;
   }
   .attn23-col {
     display: grid;
@@ -1795,6 +1808,309 @@
     background: rgba(var(--attn19-focus-rgb), 0.14);
     box-shadow: 0 0 0 0.08rem rgba(var(--attn19-focus-rgb), 0.16), 0 0 0.48rem rgba(var(--attn19-focus-rgb), 0.12);
   }
+  .attn23-ghost-proj-output .attn19-vector {
+    box-shadow: 0 0 0 0.08rem rgba(var(--attn19-focus-rgb), 0.16), 0 0 0.48rem rgba(var(--attn19-focus-rgb), 0.12);
+  }
+  .attn23-score-stage {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    display: grid;
+    place-items: center;
+    padding: clamp(1rem, 3.5vh, 1.5rem) clamp(0.9rem, 2.3vw, 1.25rem) clamp(0.5rem, 1.4vh, 0.8rem);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateY(0.24rem);
+    transition: opacity 0.26s ease, transform 0.26s ease, visibility 0.26s ease;
+  }
+  .attn23-score-workspace {
+    width: min(100%, 56rem);
+    display: grid;
+    gap: 0.42rem;
+    justify-items: center;
+  }
+  .attn23-score-formula-row {
+    width: 100%;
+    display: grid;
+    grid-template-columns: max-content auto max-content auto max-content;
+    gap: clamp(0.72rem, 1.6vw, 1.24rem);
+    align-items: center;
+    justify-content: center;
+  }
+  .attn23-score-matrix-wrap {
+    display: grid;
+    gap: 0.16rem;
+    justify-items: center;
+    min-width: 0;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(0.16rem);
+    transition: opacity 0.24s ease, transform 0.24s ease, visibility 0.24s ease;
+  }
+  .attn23-score-matrix-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    color: rgba(220,230,252,0.95);
+    text-align: center;
+  }
+  .attn23-score-dims {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.56rem;
+    color: rgba(189,204,240,0.72);
+    white-space: nowrap;
+    text-align: center;
+  }
+  .attn23-score-q-wrap .attn23-score-matrix-label {
+    color: rgba(var(--attn19-focus-rgb), 0.92);
+  }
+  .attn23-score-k-wrap .attn23-score-matrix-label {
+    color: rgba(var(--attn19-source-rgb), 0.9);
+  }
+  .attn23-score-s-wrap .attn23-score-matrix-label {
+    color: rgba(220,230,252,0.95);
+  }
+  .attn23-score-struct-layout {
+    display: grid;
+    grid-template-columns: max-content minmax(0, 1fr);
+    gap: 0.22rem;
+    align-items: start;
+  }
+  .attn23-score-row-headers {
+    display: grid;
+    grid-auto-rows: var(--attn23-score-operand-row-h);
+    gap: 0;
+    padding-top: 0.08rem;
+  }
+  .attn23-score-token-header {
+    min-width: 0;
+    display: grid;
+    place-items: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.54rem;
+    color: rgba(206,217,245,0.78);
+    letter-spacing: 0.01em;
+    text-transform: lowercase;
+  }
+  .attn23-score-shell {
+    position: relative;
+    border-radius: 0.42rem;
+    border: 1px solid rgba(184,194,221,0.24);
+    background: rgba(184,194,221,0.05);
+    overflow: hidden;
+  }
+  .attn23-score-shell::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(circle at top left, rgba(123,154,255,0.05), transparent 50%),
+      linear-gradient(180deg, rgba(184,194,221,0.03), rgba(184,194,221,0));
+    pointer-events: none;
+  }
+  .attn23-score-struct-shell {
+    width: var(--attn23-score-operand-w);
+    padding: 0.08rem;
+  }
+  .attn23-score-struct-slots {
+    position: relative;
+    z-index: 1;
+    display: grid;
+  }
+  .attn23-score-struct-row {
+    padding: 0;
+    min-height: 0;
+  }
+  .attn23-score-struct-row .attn19-vector-wrap {
+    display: block;
+    width: 100%;
+    min-height: 0;
+  }
+  .attn23-score-struct-row .attn19-vector {
+    width: 100%;
+    height: var(--attn23-score-operand-row-h);
+    border-radius: 0;
+  }
+  .attn23-score-struct-row + .attn23-score-struct-row .attn19-vector {
+    margin-top: -1px;
+  }
+  .attn23-score-struct-row:first-child .attn19-vector {
+    border-top-left-radius: 0.24rem;
+    border-top-right-radius: 0.24rem;
+  }
+  .attn23-score-struct-row:last-child .attn19-vector {
+    border-bottom-left-radius: 0.24rem;
+    border-bottom-right-radius: 0.24rem;
+  }
+  .attn23-score-q-shell .attn19-vector {
+    border-color: rgba(var(--attn19-focus-rgb), 0.46);
+    background: rgba(var(--attn19-focus-rgb), 0.11);
+  }
+  .attn23-score-k-shell .attn19-vector {
+    border-color: rgba(var(--attn19-source-rgb), 0.44);
+    background: rgba(var(--attn19-source-rgb), 0.11);
+  }
+  .attn23-score-k-stage {
+    width: var(--attn23-score-k-wrap-w);
+    display: grid;
+    gap: 0.14rem;
+    justify-items: center;
+  }
+  .attn23-score-k-col-headers {
+    width: var(--attn23-score-k-transpose-frame-w);
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(0.08rem);
+    transition: opacity 0.22s ease, transform 0.22s ease, visibility 0.22s ease, max-height 0.22s ease;
+  }
+  .attn23-score-k-body-area {
+    width: var(--attn23-score-k-wrap-w);
+    display: grid;
+    grid-template-columns: var(--attn23-score-k-header-col-w) minmax(0, 1fr);
+    gap: 0.22rem;
+    align-items: center;
+  }
+  .attn23-score-k-row-headers {
+    width: var(--attn23-score-k-header-col-w);
+    transition: opacity 0.22s ease, visibility 0.22s ease, transform 0.22s ease;
+  }
+  .attn23-score-col-headers {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 0;
+  }
+  .attn23-score-k-body-frame {
+    width: var(--attn23-score-operand-w);
+    height: var(--attn23-score-operand-h);
+    display: grid;
+    place-items: center;
+    transition: width 0.28s ease, height 0.28s ease, transform 0.28s ease;
+  }
+  .attn23-score-k-rotate {
+    width: var(--attn23-score-operand-w);
+    transform: rotate(0deg);
+    transform-origin: center center;
+    transition: transform 0.36s cubic-bezier(0.2, 0.75, 0.3, 1);
+  }
+  .attn23-score-k-shell {
+    width: var(--attn23-score-operand-w);
+    padding: 0.08rem;
+  }
+  .attn23-score-s-layout {
+    display: grid;
+    grid-template-columns: max-content minmax(0, var(--attn23-score-s-w));
+    gap: 0.22rem 0.28rem;
+    align-items: start;
+  }
+  .attn23-score-s-corner {
+    width: 1.76rem;
+    min-height: 0.52rem;
+  }
+  .attn23-score-s-col-headers {
+    width: var(--attn23-score-s-w);
+  }
+  .attn23-score-s-row-headers {
+    grid-auto-rows: var(--attn23-score-cell-h);
+    padding-top: 0;
+  }
+  .attn23-score-grid-shell {
+    width: var(--attn23-score-s-w);
+    padding: 0;
+  }
+  .attn23-score-grid {
+    position: relative;
+    z-index: 1;
+    display: grid;
+  }
+  .attn23-score-row {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    opacity: 0;
+    transform: translateY(0.14rem);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+  .attn23-score-row.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .attn23-score-row + .attn23-score-row {
+    border-top: 1px solid rgba(184,194,221,0.16);
+  }
+  .attn23-score-cell {
+    min-width: 0;
+    min-height: var(--attn23-score-cell-h);
+    display: grid;
+    place-items: center;
+    padding: 0.16rem 0.12rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.64rem;
+    color: rgba(222,232,255,0.95);
+    background: rgba(184,194,221,0.03);
+    border-right: 1px solid rgba(184,194,221,0.16);
+  }
+  .attn23-score-cell:last-child {
+    border-right: 0;
+  }
+  .attn23-score-mul,
+  .attn23-score-equals {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.22rem;
+    font-weight: 600;
+    color: rgba(214,226,252,0.9);
+    line-height: 1;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(0.1rem);
+    transition: opacity 0.22s ease, transform 0.22s ease, visibility 0.22s ease;
+  }
+  #slide-23.attn23-show-score-mode .attn23-score-stage {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+  #slide-23.attn23-show-score-mode .attn23-source-zone,
+  #slide-23.attn23-show-score-mode .attn23-rail,
+  #slide-23.attn23-show-score-mode .attn23-proj-overlay {
+    opacity: 0;
+    transform: translateY(-0.28rem) scale(0.985);
+    pointer-events: none;
+  }
+  #slide-23.attn23-show-score-operands .attn23-score-q-wrap,
+  #slide-23.attn23-show-score-operands .attn23-score-k-wrap {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+  #slide-23.attn23-show-score-transposed .attn23-score-k-rotate {
+    transform: rotate(90deg);
+  }
+  #slide-23.attn23-show-score-transposed .attn23-score-k-body-frame {
+    width: var(--attn23-score-k-transpose-frame-w);
+    height: var(--attn23-score-k-transpose-frame-h);
+  }
+  #slide-23.attn23-show-score-transposed .attn23-score-k-col-headers {
+    max-height: 1rem;
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+  #slide-23.attn23-show-score-transposed .attn23-score-k-row-headers {
+    opacity: 0;
+    visibility: hidden;
+    transform: translateX(-0.08rem);
+  }
+  #slide-23.attn23-show-score-formula .attn23-score-mul,
+  #slide-23.attn23-show-score-formula .attn23-score-equals,
+  #slide-23.attn23-show-score-matrix .attn23-score-s-wrap {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
 
   @media (max-width: 56rem) {
     #slide-22 {
@@ -1831,6 +2147,14 @@
       --attn23-token-col-w: 5.5rem;
       --attn23-x-col-w: 9.6rem;
       --attn23-proj-col-w: 14rem;
+      --attn23-score-operand-w: 4rem;
+      --attn23-score-operand-row-h: 0.82rem;
+      --attn23-score-k-header-col-w: 1.08rem;
+      --attn23-score-k-wrap-w: calc(var(--attn23-score-k-header-col-w) + var(--attn23-score-operand-w));
+      --attn23-score-k-transpose-frame-w: var(--attn23-score-operand-h);
+      --attn23-score-k-transpose-frame-h: var(--attn23-score-operand-w);
+      --attn23-score-s-w: 12.8rem;
+      --attn23-score-cell-h: 1.22rem;
       gap: 0.9rem;
       padding-top: 0.82rem;
     }
@@ -1848,7 +2172,7 @@
       padding: 0.18rem 0.24rem;
     }
     .attn23-col-label {
-      font-size: 0.54rem;
+      font-size: 0.56rem;
     }
     .attn23-col-meta {
       font-size: 0.44rem;
@@ -1877,6 +2201,27 @@
     .attn23-mini-x-row .attn19-vector,
     .attn23-proj-output-row .attn19-vector {
       height: 0.52rem;
+    }
+    .attn23-score-stage {
+      padding-inline: 0.72rem;
+    }
+    .attn23-score-formula-row {
+      gap: 0.44rem;
+    }
+    .attn23-score-matrix-label {
+      font-size: 0.54rem;
+    }
+    .attn23-score-dims,
+    .attn23-score-token-header {
+      font-size: 0.44rem;
+    }
+    .attn23-score-cell {
+      font-size: 0.5rem;
+      padding: 0.12rem 0.08rem;
+    }
+    .attn23-score-mul,
+    .attn23-score-equals {
+      font-size: 0.88rem;
     }
     .attn18-layout { margin-top: 0.72rem; }
     .attn18-stage {
@@ -1965,6 +2310,29 @@
     .attn19-takeaway {
       font-size: 0.78rem;
       padding: 0.56rem 0.62rem;
+    }
+  }
+
+  @media (max-width: 44rem) {
+    .attn23-stage {
+      --attn23-score-operand-w: 3.2rem;
+      --attn23-score-operand-row-h: 0.7rem;
+      --attn23-score-k-header-col-w: 0.94rem;
+      --attn23-score-k-wrap-w: calc(var(--attn23-score-k-header-col-w) + var(--attn23-score-operand-w));
+      --attn23-score-k-transpose-frame-w: var(--attn23-score-operand-h);
+      --attn23-score-k-transpose-frame-h: var(--attn23-score-operand-w);
+      --attn23-score-s-w: min(100%, 11.2rem);
+    }
+    .attn23-score-workspace {
+      width: min(100%, 20rem);
+    }
+    .attn23-score-formula-row {
+      grid-template-columns: 1fr;
+      justify-items: center;
+    }
+    .attn23-score-mul,
+    .attn23-score-equals {
+      margin: 0.06rem 0;
     }
   }
 
@@ -3245,7 +3613,7 @@
     <span class="section-tag">Attention</span>
     <div class="badge concept">Mechanism</div>
     <h2>Matrix View of Attention</h2>
-    <p class="small-text attn19-subtitle">First stack tokens, then stack embedding rows</p>
+    <p class="small-text attn19-subtitle">Stack tokens, project X into Q/K/V, then compute the score matrix</p>
 
     <div class="attn19-layout">
       <div class="card attn19-stage attn23-stage" id="attn23-stage">
@@ -3299,6 +3667,7 @@
             </div>
           </div>
         </div>
+        <div class="attn23-score-stage" id="attn23-score-stage"></div>
       </div>
     </div>
 
@@ -3437,11 +3806,14 @@ const ATTN_STEP4_RESIDUAL_FADE_MS = 180;
 const ATTN_MATRIX_TOKENS = ATTN_QKV_TOKENS.slice();
 const ATTN_MATRIX_TAKEAWAYS = [
   'Start from the same sequence: tokens plus their embedding rows.',
-  'First collect the sequence tokens into a compact token matrix <i>T</i>.',
-  'Then collect the embedding rows into the embedding matrix <i>X</i>.',
-  'Now apply the same Step 1 projection to the whole matrix: X is copied into three branches and projected into Q, K, and V.'
+  'First collect the sequence tokens into a compact token matrix T.',
+  'Then collect the embedding rows into the embedding matrix X.',
+  'Now apply the same Step 1 projection to the whole matrix: X is copied into three branches and projected into Q, K, and V.',
+  'Bring Q and K to the center as the matrices used for score computation.',
+  'Transpose K so the matrix dimensions line up for multiplication.',
+  'Compute raw attention scores for the whole sequence: S = QK^T.'
 ];
-const ATTN_MATRIX_MAX_STEP = 3;
+const ATTN_MATRIX_MAX_STEP = 6;
 const ATTN_MATRIX_ROW_STAGGER_MS = 140;
 const ATTN_MATRIX_TOKEN_TRAVEL_MS = 680;
 const ATTN_MATRIX_X_TRAVEL_MS = 720;
@@ -3459,6 +3831,19 @@ const ATTN_MATRIX_Q_VECTORS = {
 const ATTN_MATRIX_PROJ_STAGGER_MS = 150;
 const ATTN_MATRIX_PROJ_ANIM_MS = 260;
 const ATTN_MATRIX_PROJ_FADE_MS = 200;
+const ATTN_MATRIX_D_K = ATTN_QKV_QUERY_VECTOR.length;
+const ATTN_MATRIX_SCORE_TOKENS = ATTN_MATRIX_TOKENS.slice();
+const ATTN_MATRIX_SCORE_RAW_ROWS = computeAttentionMatrixRawScores();
+const ATTN_MATRIX_SCORE_SCALED_ROWS = computeAttentionMatrixScaledScores();
+const ATTN_MATRIX_CAUSAL_MASK = computeAttentionMatrixCausalMask();
+const ATTN_MATRIX_SCORE_MASKED_ROWS = computeAttentionMatrixMaskedScores();
+const ATTN_MATRIX_ATTN_ROWS = computeAttentionMatrixWeights();
+const ATTN_MATRIX_OUTPUT_ROWS = computeAttentionMatrixOutputs();
+const ATTN_MATRIX_SCORE_CLEANUP_MS = 280;
+const ATTN_MATRIX_SCORE_CENTER_MS = 620;
+const ATTN_MATRIX_SCORE_TRANSPOSE_MS = 360;
+const ATTN_MATRIX_SCORE_ROW_STAGGER_MS = 96;
+const ATTN_MATRIX_SCORE_FADE_MS = 200;
 
 const ATTN_P1_TOKENS = ['cat', 'sat', 'on', 'the', 'mat'];
 const ATTN_P1_FOCUS = 'sat';
@@ -3594,6 +3979,13 @@ const state = {
     projectionVisible: false,
     projectionTimers: [],
     projectionRafIds: [],
+    scoreCenteredDone: false,
+    scoreTransposedDone: false,
+    scoreMatrixDone: false,
+    scoreVisible: false,
+    scoreVisibleCount: 0,
+    scoreTimers: [],
+    scoreRafIds: [],
     resizeBound: false
   },
   attentionP1: {
@@ -3700,6 +4092,102 @@ function formatScoreValue(value) {
 
 function formatWeightValue(value) {
   return normalizeNegativeZero(Number(value) || 0).toFixed(2);
+}
+
+function formatAttentionMatrixScoreCellValue(value, mode = 'score') {
+  if (mode === 'masked' && !Number.isFinite(value)) return '\u2212\u221e';
+  if (mode === 'probability') return formatWeightValue(value);
+  return formatScoreValue(value);
+}
+
+function computeAttentionMatrixRawScores() {
+  return Object.fromEntries(
+    ATTN_MATRIX_TOKENS.map((rowToken) => [
+      rowToken,
+      Object.fromEntries(
+        ATTN_MATRIX_SCORE_TOKENS.map((colToken) => [
+          colToken,
+          dotProduct(
+            ATTN_MATRIX_Q_VECTORS[rowToken] || [],
+            ATTN_QKV_KEY_VECTORS[colToken] || []
+          )
+        ])
+      )
+    ])
+  );
+}
+
+function computeAttentionMatrixScaledScores() {
+  const scale = Math.sqrt(ATTN_MATRIX_D_K) || 1;
+  return Object.fromEntries(
+    ATTN_MATRIX_TOKENS.map((rowToken) => [
+      rowToken,
+      Object.fromEntries(
+        ATTN_MATRIX_SCORE_TOKENS.map((colToken) => [
+          colToken,
+          (ATTN_MATRIX_SCORE_RAW_ROWS[rowToken] || {})[colToken] / scale
+        ])
+      )
+    ])
+  );
+}
+
+function computeAttentionMatrixCausalMask() {
+  return Object.fromEntries(
+    ATTN_MATRIX_TOKENS.map((rowToken, rowIdx) => [
+      rowToken,
+      Object.fromEntries(
+        ATTN_MATRIX_SCORE_TOKENS.map((colToken, colIdx) => [colToken, colIdx > rowIdx])
+      )
+    ])
+  );
+}
+
+function computeAttentionMatrixMaskedScores() {
+  return Object.fromEntries(
+    ATTN_MATRIX_TOKENS.map((rowToken) => [
+      rowToken,
+      Object.fromEntries(
+        ATTN_MATRIX_SCORE_TOKENS.map((colToken) => [
+          colToken,
+          (ATTN_MATRIX_CAUSAL_MASK[rowToken] || {})[colToken]
+            ? Number.NEGATIVE_INFINITY
+            : ((ATTN_MATRIX_SCORE_SCALED_ROWS[rowToken] || {})[colToken])
+        ])
+      )
+    ])
+  );
+}
+
+function computeAttentionMatrixWeights() {
+  return Object.fromEntries(
+    ATTN_MATRIX_TOKENS.map((rowToken) => {
+      const maskedRow = ATTN_MATRIX_SCORE_TOKENS.map(
+        (colToken) => ((ATTN_MATRIX_SCORE_MASKED_ROWS[rowToken] || {})[colToken])
+      );
+      const weights = softmax(maskedRow);
+      return [
+        rowToken,
+        Object.fromEntries(
+          ATTN_MATRIX_SCORE_TOKENS.map((colToken, idx) => [colToken, weights[idx] || 0])
+        )
+      ];
+    })
+  );
+}
+
+function computeAttentionMatrixOutputs() {
+  return Object.fromEntries(
+    ATTN_MATRIX_TOKENS.map((rowToken) => {
+      const outVector = Array.from({ length: ATTN_QKV_QUERY_VECTOR.length }, (_, dimIdx) => (
+        ATTN_MATRIX_SCORE_TOKENS.reduce((sum, colToken) => (
+          sum + (((ATTN_MATRIX_ATTN_ROWS[rowToken] || {})[colToken] || 0)
+            * (((ATTN_QKV_VALUE_VECTORS[colToken] || [])[dimIdx]) || 0))
+        ), 0)
+      ));
+      return [rowToken, outVector];
+    })
+  );
 }
 
 function populateVectorRect(vectorEl, values, dividerClass) {
@@ -6137,6 +6625,258 @@ function createAttentionMatrixProjectionColumn(proj) {
   return col;
 }
 
+function createAttentionMatrixScoreStructRow(prefix, token, vectorClass = '') {
+  const row = createEl('div', {
+    className: 'attn23-score-struct-row',
+    id: prefix + '-row-' + token,
+    dataset: { token }
+  });
+  row.appendChild(createEl('div', {
+    className: 'attn19-vector-wrap attn19-vector-wrap-x'
+  }, createAttentionQkvVectorRect(
+    prefix + '-vector-' + token,
+    vectorClass,
+    null
+  )));
+  return row;
+}
+
+function createAttentionMatrixScoreQMatrix() {
+  const wrap = createEl('div', {
+    className: 'attn23-score-matrix-wrap attn23-score-q-wrap',
+    id: 'attn23-score-q-wrap'
+  });
+  wrap.appendChild(createEl('div', {
+    className: 'attn23-score-matrix-label',
+    id: 'attn23-score-q-label',
+    text: 'Q'
+  }));
+  wrap.appendChild(createEl('div', {
+    className: 'attn23-score-dims',
+    id: 'attn23-score-q-dims',
+    text: 'Q ∈ R^(S × d_k)'
+  }));
+
+  const layout = createEl('div', {
+    className: 'attn23-score-struct-layout attn23-score-q-layout'
+  });
+  const rowHeaders = createEl('div', {
+    className: 'attn23-score-row-headers attn23-score-q-row-headers'
+  });
+  const shell = createEl('div', {
+    className: 'attn23-score-shell attn23-score-struct-shell attn23-score-q-shell',
+    id: 'attn23-score-q-shell'
+  });
+  const slots = createEl('div', {
+    className: 'attn23-score-struct-slots',
+    id: 'attn23-score-q-body'
+  });
+
+  ATTN_MATRIX_SCORE_TOKENS.forEach((token) => {
+    rowHeaders.appendChild(createEl('span', {
+      className: 'attn23-score-token-header',
+      text: token
+    }));
+    slots.appendChild(createAttentionMatrixScoreStructRow('attn23-score-q', token, 'attn23-score-struct-vector-q'));
+  });
+
+  shell.appendChild(slots);
+  layout.appendChild(rowHeaders);
+  layout.appendChild(shell);
+  wrap.appendChild(layout);
+  return wrap;
+}
+
+function createAttentionMatrixScoreKTransposeMatrix() {
+  const wrap = createEl('div', {
+    className: 'attn23-score-matrix-wrap attn23-score-k-wrap',
+    id: 'attn23-score-k-wrap'
+  });
+  wrap.appendChild(createEl('div', {
+    className: 'attn23-score-matrix-label',
+    id: 'attn23-score-k-label',
+    text: 'K'
+  }));
+  wrap.appendChild(createEl('div', {
+    className: 'attn23-score-dims',
+    id: 'attn23-score-k-dims',
+    text: 'K ∈ R^(S × d_k)'
+  }));
+
+  const stage = createEl('div', {
+    className: 'attn23-score-k-stage',
+    id: 'attn23-score-k-stage'
+  });
+  const colHeaders = createEl('div', {
+    className: 'attn23-score-col-headers attn23-score-k-col-headers',
+    id: 'attn23-score-k-col-headers'
+  });
+  ATTN_MATRIX_SCORE_TOKENS.forEach((token) => {
+    colHeaders.appendChild(createEl('span', {
+      className: 'attn23-score-token-header',
+      text: token
+    }));
+  });
+
+  const bodyArea = createEl('div', {
+    className: 'attn23-score-k-body-area',
+    id: 'attn23-score-k-body-area'
+  });
+  const rowHeaders = createEl('div', {
+    className: 'attn23-score-row-headers attn23-score-k-row-headers',
+    id: 'attn23-score-k-row-headers'
+  });
+  ATTN_MATRIX_SCORE_TOKENS.forEach((token) => {
+    rowHeaders.appendChild(createEl('span', {
+      className: 'attn23-score-token-header',
+      text: token
+    }));
+  });
+
+  const frame = createEl('div', {
+    className: 'attn23-score-k-body-frame',
+    id: 'attn23-score-k-body-frame'
+  });
+  const rotate = createEl('div', {
+    className: 'attn23-score-k-rotate',
+    id: 'attn23-score-k-rotate'
+  });
+  const shell = createEl('div', {
+    className: 'attn23-score-shell attn23-score-struct-shell attn23-score-k-shell',
+    id: 'attn23-score-k-shell'
+  });
+  const slots = createEl('div', {
+    className: 'attn23-score-struct-slots',
+    id: 'attn23-score-k-body'
+  });
+
+  ATTN_MATRIX_SCORE_TOKENS.forEach((token) => {
+    slots.appendChild(createAttentionMatrixScoreStructRow('attn23-score-k', token, 'attn23-score-struct-vector-k'));
+  });
+
+  shell.appendChild(slots);
+  rotate.appendChild(shell);
+  frame.appendChild(rotate);
+  bodyArea.appendChild(rowHeaders);
+  bodyArea.appendChild(frame);
+  stage.appendChild(colHeaders);
+  stage.appendChild(bodyArea);
+  wrap.appendChild(stage);
+  return wrap;
+}
+
+function createAttentionMatrixScoreCell(rowToken, colToken, value, mode = 'score') {
+  return createEl('div', {
+    className: 'attn23-score-cell',
+    id: 'attn23-score-cell-' + rowToken + '-' + colToken,
+    dataset: { rowToken, colToken },
+    text: formatAttentionMatrixScoreCellValue(value, mode)
+  });
+}
+
+function createAttentionMatrixScoreMatrix() {
+  const wrap = createEl('div', {
+    className: 'attn23-score-matrix-wrap attn23-score-s-wrap',
+    id: 'attn23-score-s-wrap'
+  });
+  wrap.appendChild(createEl('div', {
+    className: 'attn23-score-matrix-label',
+    id: 'attn23-score-s-label',
+    text: 'Raw Scores (S)'
+  }));
+  wrap.appendChild(createEl('div', {
+    className: 'attn23-score-dims',
+    id: 'attn23-score-s-dims',
+    text: 'S ∈ R^(S × S)'
+  }));
+
+  const layout = createEl('div', {
+    className: 'attn23-score-s-layout'
+  });
+  layout.appendChild(createEl('div', {
+    className: 'attn23-score-s-corner'
+  }));
+
+  const colHeaders = createEl('div', {
+    className: 'attn23-score-col-headers attn23-score-s-col-headers'
+  });
+  ATTN_MATRIX_SCORE_TOKENS.forEach((token) => {
+    colHeaders.appendChild(createEl('span', {
+      className: 'attn23-score-token-header',
+      text: token
+    }));
+  });
+  layout.appendChild(colHeaders);
+
+  const rowHeaders = createEl('div', {
+    className: 'attn23-score-row-headers attn23-score-s-row-headers'
+  });
+  const shell = createEl('div', {
+    className: 'attn23-score-shell attn23-score-grid-shell',
+    id: 'attn23-score-matrix-shell'
+  });
+  const grid = createEl('div', {
+    className: 'attn23-score-grid',
+    id: 'attn23-score-matrix-grid'
+  });
+
+  ATTN_MATRIX_SCORE_TOKENS.forEach((rowToken) => {
+    rowHeaders.appendChild(createEl('span', {
+      className: 'attn23-score-token-header',
+      text: rowToken
+    }));
+
+    const row = createEl('div', {
+      className: 'attn23-score-row',
+      id: 'attn23-score-row-' + rowToken,
+      dataset: { rowToken }
+    });
+    ATTN_MATRIX_SCORE_TOKENS.forEach((colToken) => {
+      row.appendChild(createAttentionMatrixScoreCell(
+        rowToken,
+        colToken,
+        (ATTN_MATRIX_SCORE_RAW_ROWS[rowToken] || {})[colToken],
+        'score'
+      ));
+    });
+    grid.appendChild(row);
+  });
+
+  shell.appendChild(grid);
+  layout.appendChild(rowHeaders);
+  layout.appendChild(shell);
+  wrap.appendChild(layout);
+  return wrap;
+}
+
+function createAttentionMatrixScoreStage() {
+  const workspace = createEl('div', {
+    className: 'attn23-score-workspace',
+    id: 'attn23-score-workspace'
+  });
+  const formulaRow = createEl('div', {
+    className: 'attn23-score-formula-row',
+    id: 'attn23-score-formula-row'
+  });
+
+  formulaRow.appendChild(createAttentionMatrixScoreQMatrix());
+  formulaRow.appendChild(createEl('div', {
+    className: 'attn23-score-mul',
+    id: 'attn23-score-mul',
+    text: '\u00d7'
+  }));
+  formulaRow.appendChild(createAttentionMatrixScoreKTransposeMatrix());
+  formulaRow.appendChild(createEl('div', {
+    className: 'attn23-score-equals',
+    id: 'attn23-score-equals',
+    text: '='
+  }));
+  formulaRow.appendChild(createAttentionMatrixScoreMatrix());
+
+  workspace.appendChild(formulaRow);
+  return workspace;
+}
+
 function clearAttentionMatrixTimers() {
   state.attentionMatrix.timers.forEach((timerId) => clearTimeout(timerId));
   state.attentionMatrix.timers = [];
@@ -6149,6 +6889,13 @@ function clearAttentionMatrixProjectionTimers() {
   state.attentionMatrix.projectionTimers = [];
   state.attentionMatrix.projectionRafIds.forEach((rafId) => cancelAnimationFrame(rafId));
   state.attentionMatrix.projectionRafIds = [];
+}
+
+function clearAttentionMatrixScoreTimers() {
+  state.attentionMatrix.scoreTimers.forEach((timerId) => clearTimeout(timerId));
+  state.attentionMatrix.scoreTimers = [];
+  state.attentionMatrix.scoreRafIds.forEach((rafId) => cancelAnimationFrame(rafId));
+  state.attentionMatrix.scoreRafIds = [];
 }
 
 function clearAttentionMatrixGhosts() {
@@ -6183,10 +6930,138 @@ function syncAttentionMatrixXSlots(visibleCount = state.attentionMatrix.xVisible
   });
 }
 
+function syncAttentionMatrixScoreRows(visibleCount = state.attentionMatrix.scoreVisibleCount) {
+  const clamped = Math.max(0, Math.min(ATTN_MATRIX_SCORE_TOKENS.length, visibleCount));
+  ATTN_MATRIX_SCORE_TOKENS.forEach((token, idx) => {
+    const row = document.getElementById('attn23-score-row-' + token);
+    if (!row) return;
+    row.classList.toggle('is-visible', idx < clamped);
+  });
+}
+
+function setAttentionMatrixScoreKState(transposed) {
+  const label = document.getElementById('attn23-score-k-label');
+  const dims = document.getElementById('attn23-score-k-dims');
+  if (label) label.textContent = transposed ? 'K^T' : 'K';
+  if (dims) dims.textContent = transposed ? 'K^T ∈ R^(d_k × S)' : 'K ∈ R^(S × d_k)';
+}
+
+function syncAttentionMatrixScoreStageFromClasses() {
+  const slide = document.getElementById('slide-23');
+  if (!slide) return;
+
+  const mode = slide.classList.contains('attn23-show-score-mode');
+  const operands = slide.classList.contains('attn23-show-score-operands');
+  const transposed = slide.classList.contains('attn23-show-score-transposed');
+  const formula = slide.classList.contains('attn23-show-score-formula');
+  const matrix = slide.classList.contains('attn23-show-score-matrix');
+
+  const scoreStage = document.getElementById('attn23-score-stage');
+  const sourceZone = slide.querySelector('.attn23-source-zone');
+  const rail = document.getElementById('attn23-rail');
+  const projOverlay = document.getElementById('attn23-proj-overlay');
+  const qWrap = document.getElementById('attn23-score-q-wrap');
+  const kWrap = document.getElementById('attn23-score-k-wrap');
+  const sWrap = document.getElementById('attn23-score-s-wrap');
+  const mul = document.getElementById('attn23-score-mul');
+  const equals = document.getElementById('attn23-score-equals');
+  const kRotate = document.getElementById('attn23-score-k-rotate');
+  const kFrame = document.getElementById('attn23-score-k-body-frame');
+  const kColHeaders = document.getElementById('attn23-score-k-col-headers');
+  const kRowHeaders = document.getElementById('attn23-score-k-row-headers');
+
+  if (scoreStage) {
+    scoreStage.style.setProperty('display', 'grid', 'important');
+    scoreStage.style.setProperty('opacity', mode ? '1' : '0', 'important');
+    scoreStage.style.setProperty('visibility', mode ? 'visible' : 'hidden', 'important');
+    scoreStage.style.setProperty('transform', mode ? 'translateY(0)' : 'translateY(0.24rem)', 'important');
+  }
+
+  [sourceZone, rail, projOverlay].forEach((el) => {
+    if (!el) return;
+    if (mode) {
+      el.style.setProperty('display', 'none', 'important');
+      el.style.setProperty('opacity', '0', 'important');
+      el.style.setProperty('visibility', 'hidden', 'important');
+      el.style.setProperty('transform', 'translateY(-0.28rem) scale(0.985)', 'important');
+      el.style.setProperty('pointer-events', 'none', 'important');
+    } else {
+      el.style.removeProperty('display');
+      el.style.removeProperty('opacity');
+      el.style.removeProperty('visibility');
+      el.style.removeProperty('transform');
+      el.style.removeProperty('pointer-events');
+    }
+  });
+
+  [qWrap, kWrap].forEach((el) => {
+    if (!el) return;
+    el.style.setProperty('display', operands ? 'grid' : 'none', 'important');
+    el.style.setProperty('opacity', operands ? '1' : '0', 'important');
+    el.style.setProperty('visibility', operands ? 'visible' : 'hidden', 'important');
+    el.style.setProperty('transform', operands ? 'translateY(0)' : 'translateY(0.16rem)', 'important');
+  });
+
+  [mul, equals].forEach((el) => {
+    if (!el) return;
+    el.style.setProperty('display', formula ? 'block' : 'none', 'important');
+    el.style.setProperty('opacity', formula ? '1' : '0', 'important');
+    el.style.setProperty('visibility', formula ? 'visible' : 'hidden', 'important');
+    el.style.setProperty('transform', formula ? 'translateY(0)' : 'translateY(0.1rem)', 'important');
+  });
+
+  if (sWrap) {
+    sWrap.style.setProperty('display', matrix ? 'grid' : 'none', 'important');
+    sWrap.style.setProperty('opacity', matrix ? '1' : '0', 'important');
+    sWrap.style.setProperty('visibility', matrix ? 'visible' : 'hidden', 'important');
+    sWrap.style.setProperty('transform', matrix ? 'translateY(0)' : 'translateY(0.16rem)', 'important');
+  }
+
+  if (kRotate) {
+    kRotate.style.setProperty('transform', transposed ? 'rotate(90deg)' : 'rotate(0deg)', 'important');
+  }
+  if (kFrame) {
+    kFrame.style.setProperty('width', transposed ? 'var(--attn23-score-k-transpose-frame-w)' : 'var(--attn23-score-operand-w)', 'important');
+    kFrame.style.setProperty('height', transposed ? 'var(--attn23-score-k-transpose-frame-h)' : 'var(--attn23-score-operand-h)', 'important');
+  }
+  if (kColHeaders) {
+    kColHeaders.style.setProperty('max-height', transposed ? '1rem' : '0', 'important');
+    kColHeaders.style.setProperty('opacity', transposed ? '1' : '0', 'important');
+    kColHeaders.style.setProperty('visibility', transposed ? 'visible' : 'hidden', 'important');
+    kColHeaders.style.setProperty('transform', transposed ? 'translateY(0)' : 'translateY(0.08rem)', 'important');
+  }
+  if (kRowHeaders) {
+    kRowHeaders.style.setProperty('opacity', transposed ? '0' : '1', 'important');
+    kRowHeaders.style.setProperty('visibility', transposed ? 'hidden' : 'visible', 'important');
+    kRowHeaders.style.setProperty('transform', transposed ? 'translateX(-0.08rem)' : 'translateX(0)', 'important');
+  }
+}
+
+function resetAttentionMatrixScoreVisuals() {
+  const slide = document.getElementById('slide-23');
+  clearAttentionMatrixScoreTimers();
+  clearAttentionMatrixGhosts();
+  state.attentionMatrix.scoreCenteredDone = false;
+  state.attentionMatrix.scoreTransposedDone = false;
+  state.attentionMatrix.scoreMatrixDone = false;
+  state.attentionMatrix.scoreVisible = false;
+  state.attentionMatrix.scoreVisibleCount = 0;
+  syncAttentionMatrixScoreRows(0);
+  setAttentionMatrixScoreKState(false);
+  if (!slide) return;
+  slide.classList.remove('attn23-show-score-mode');
+  slide.classList.remove('attn23-show-score-operands');
+  slide.classList.remove('attn23-show-score-transposed');
+  slide.classList.remove('attn23-show-score-formula');
+  slide.classList.remove('attn23-show-score-matrix');
+  syncAttentionMatrixScoreStageFromClasses();
+}
+
 function resetAttentionMatrixVisuals() {
   const slide = document.getElementById('slide-23');
   clearAttentionMatrixTimers();
   clearAttentionMatrixProjectionTimers();
+  clearAttentionMatrixScoreTimers();
   clearAttentionMatrixGhosts();
   state.attentionMatrix.tokenMatrixDone = false;
   state.attentionMatrix.xMatrixDone = false;
@@ -6194,8 +7069,14 @@ function resetAttentionMatrixVisuals() {
   state.attentionMatrix.xVisibleCount = 0;
   state.attentionMatrix.projectionDone = false;
   state.attentionMatrix.projectionVisible = false;
+  state.attentionMatrix.scoreCenteredDone = false;
+  state.attentionMatrix.scoreTransposedDone = false;
+  state.attentionMatrix.scoreMatrixDone = false;
+  state.attentionMatrix.scoreVisible = false;
+  state.attentionMatrix.scoreVisibleCount = 0;
   syncAttentionMatrixTokenSlots(0);
   syncAttentionMatrixXSlots(0);
+  syncAttentionMatrixScoreRows(0);
   if (!slide) return;
   slide.classList.remove('attn23-show-token-matrix');
   slide.classList.remove('attn23-show-x-matrix');
@@ -6205,9 +7086,15 @@ function resetAttentionMatrixVisuals() {
   slide.classList.remove('attn23-show-copies');
   slide.classList.remove('attn23-show-proj-matrices');
   slide.classList.remove('attn23-show-proj-outputs');
+  slide.classList.remove('attn23-show-score-mode');
+  slide.classList.remove('attn23-show-score-operands');
+  slide.classList.remove('attn23-show-score-transposed');
+  slide.classList.remove('attn23-show-score-formula');
+  slide.classList.remove('attn23-show-score-matrix');
   slide.querySelectorAll('.attn23-proj-col').forEach((col) => {
     col.classList.remove('is-output-visible');
   });
+  syncAttentionMatrixScoreStageFromClasses();
 }
 
 function settleAttentionMatrixTokenState() {
@@ -6215,14 +7102,21 @@ function settleAttentionMatrixTokenState() {
   clearAttentionMatrixTimers();
   clearAttentionMatrixGhosts();
   clearAttentionMatrixProjectionTimers();
+  clearAttentionMatrixScoreTimers();
   state.attentionMatrix.tokenMatrixDone = true;
   state.attentionMatrix.xMatrixDone = false;
   state.attentionMatrix.projectionDone = false;
   state.attentionMatrix.projectionVisible = false;
+  state.attentionMatrix.scoreCenteredDone = false;
+  state.attentionMatrix.scoreTransposedDone = false;
+  state.attentionMatrix.scoreMatrixDone = false;
+  state.attentionMatrix.scoreVisible = false;
+  state.attentionMatrix.scoreVisibleCount = 0;
   state.attentionMatrix.tokenVisibleCount = ATTN_MATRIX_TOKENS.length;
   state.attentionMatrix.xVisibleCount = 0;
   syncAttentionMatrixTokenSlots(state.attentionMatrix.tokenVisibleCount);
   syncAttentionMatrixXSlots(0);
+  syncAttentionMatrixScoreRows(0);
   if (!slide) return;
   slide.classList.add('attn23-show-token-matrix');
   slide.classList.add('attn23-token-settled');
@@ -6232,21 +7126,37 @@ function settleAttentionMatrixTokenState() {
   slide.classList.remove('attn23-show-copies');
   slide.classList.remove('attn23-show-proj-matrices');
   slide.classList.remove('attn23-show-proj-outputs');
+  slide.classList.remove('attn23-show-score-mode');
+  slide.classList.remove('attn23-show-score-operands');
+  slide.classList.remove('attn23-show-score-transposed');
+  slide.classList.remove('attn23-show-score-formula');
+  slide.classList.remove('attn23-show-score-matrix');
   slide.querySelectorAll('.attn23-proj-col').forEach((col) => {
     col.classList.remove('is-output-visible');
   });
+  syncAttentionMatrixScoreStageFromClasses();
 }
 
 function settleAttentionMatrixFullState() {
   const slide = document.getElementById('slide-23');
   clearAttentionMatrixTimers();
   clearAttentionMatrixGhosts();
+  clearAttentionMatrixProjectionTimers();
+  clearAttentionMatrixScoreTimers();
   state.attentionMatrix.tokenMatrixDone = true;
   state.attentionMatrix.xMatrixDone = true;
+  state.attentionMatrix.projectionDone = false;
+  state.attentionMatrix.projectionVisible = false;
+  state.attentionMatrix.scoreCenteredDone = false;
+  state.attentionMatrix.scoreTransposedDone = false;
+  state.attentionMatrix.scoreMatrixDone = false;
+  state.attentionMatrix.scoreVisible = false;
+  state.attentionMatrix.scoreVisibleCount = 0;
   state.attentionMatrix.tokenVisibleCount = ATTN_MATRIX_TOKENS.length;
   state.attentionMatrix.xVisibleCount = ATTN_MATRIX_TOKENS.length;
   syncAttentionMatrixTokenSlots(state.attentionMatrix.tokenVisibleCount);
   syncAttentionMatrixXSlots(state.attentionMatrix.xVisibleCount);
+  syncAttentionMatrixScoreRows(0);
   if (!slide) return;
   slide.classList.add('attn23-show-token-matrix');
   slide.classList.add('attn23-show-x-matrix');
@@ -6256,9 +7166,15 @@ function settleAttentionMatrixFullState() {
   slide.classList.remove('attn23-show-copies');
   slide.classList.remove('attn23-show-proj-matrices');
   slide.classList.remove('attn23-show-proj-outputs');
+  slide.classList.remove('attn23-show-score-mode');
+  slide.classList.remove('attn23-show-score-operands');
+  slide.classList.remove('attn23-show-score-transposed');
+  slide.classList.remove('attn23-show-score-formula');
+  slide.classList.remove('attn23-show-score-matrix');
   slide.querySelectorAll('.attn23-proj-col').forEach((col) => {
     col.classList.remove('is-output-visible');
   });
+  syncAttentionMatrixScoreStageFromClasses();
 }
 
 function updateAttentionMatrixProjectionOverlay() {
@@ -6364,14 +7280,26 @@ function resetAttentionMatrixProjectionVisuals() {
   clearAttentionMatrixProjectionTimers();
   state.attentionMatrix.projectionDone = false;
   state.attentionMatrix.projectionVisible = false;
+  state.attentionMatrix.scoreCenteredDone = false;
+  state.attentionMatrix.scoreTransposedDone = false;
+  state.attentionMatrix.scoreMatrixDone = false;
+  state.attentionMatrix.scoreVisible = false;
+  state.attentionMatrix.scoreVisibleCount = 0;
   if (!slide) return;
   slide.classList.remove('attn23-show-projections');
   slide.classList.remove('attn23-show-copies');
   slide.classList.remove('attn23-show-proj-matrices');
   slide.classList.remove('attn23-show-proj-outputs');
+  slide.classList.remove('attn23-show-score-mode');
+  slide.classList.remove('attn23-show-score-operands');
+  slide.classList.remove('attn23-show-score-transposed');
+  slide.classList.remove('attn23-show-score-formula');
+  slide.classList.remove('attn23-show-score-matrix');
   slide.querySelectorAll('.attn23-proj-col').forEach((col) => {
     col.classList.remove('is-output-visible');
   });
+  syncAttentionMatrixScoreRows(0);
+  syncAttentionMatrixScoreStageFromClasses();
 }
 
 function settleAttentionMatrixProjectionState() {
@@ -6380,14 +7308,26 @@ function settleAttentionMatrixProjectionState() {
   clearAttentionMatrixProjectionTimers();
   state.attentionMatrix.projectionDone = true;
   state.attentionMatrix.projectionVisible = true;
+  state.attentionMatrix.scoreCenteredDone = false;
+  state.attentionMatrix.scoreTransposedDone = false;
+  state.attentionMatrix.scoreMatrixDone = false;
+  state.attentionMatrix.scoreVisible = false;
+  state.attentionMatrix.scoreVisibleCount = 0;
   if (!slide) return;
   slide.classList.add('attn23-show-projections');
   slide.classList.add('attn23-show-copies');
   slide.classList.add('attn23-show-proj-matrices');
   slide.classList.add('attn23-show-proj-outputs');
+  slide.classList.remove('attn23-show-score-mode');
+  slide.classList.remove('attn23-show-score-operands');
+  slide.classList.remove('attn23-show-score-transposed');
+  slide.classList.remove('attn23-show-score-formula');
+  slide.classList.remove('attn23-show-score-matrix');
   slide.querySelectorAll('.attn23-proj-col').forEach((col) => {
     col.classList.add('is-output-visible');
   });
+  syncAttentionMatrixScoreRows(0);
+  syncAttentionMatrixScoreStageFromClasses();
   updateAttentionMatrixProjectionOverlay();
 }
 
@@ -6435,6 +7375,24 @@ function runAttentionMatrixProjectionSequence() {
   state.attentionMatrix.projectionTimers.push(settleTimer);
 }
 
+function createAttentionMatrixProjectionGhost(proj) {
+  const stage = document.getElementById('attn23-stage');
+  const layer = document.getElementById('attn23-ghost-layer');
+  const sourceShell = document.getElementById('attn23-proj-output-shell-' + proj);
+  if (!stage || !layer || !sourceShell) return null;
+
+  const stageRect = stage.getBoundingClientRect();
+  const sourceRect = sourceShell.getBoundingClientRect();
+  if (stageRect.width < 1 || stageRect.height < 1 || sourceRect.width < 1 || sourceRect.height < 1) return null;
+
+  const ghost = cloneAttentionMatrixFragment(sourceShell, 'attn23-ghost-proj-output');
+  if (!ghost) return null;
+  ghost.dataset.proj = proj;
+  placeAttentionMatrixGhost(ghost, sourceRect, stageRect);
+  layer.appendChild(ghost);
+  return ghost;
+}
+
 function cloneAttentionMatrixFragment(node, extraClass) {
   if (!node) return null;
   const ghost = node.cloneNode(true);
@@ -6457,12 +7415,12 @@ function placeAttentionMatrixGhost(ghost, rect, stageRect) {
   ghost.style.height = rect.height.toFixed(2) + 'px';
 }
 
-function animateAttentionMatrixGhost(ghost, sourceEl, targetEl, durationMs) {
+function animateAttentionMatrixGhost(ghost, sourceEl, targetEl, durationMs, options = {}) {
   const stage = document.getElementById('attn23-stage');
   if (!ghost || !stage || !sourceEl || !targetEl) return false;
 
   const stageRect = stage.getBoundingClientRect();
-  const sourceRect = sourceEl.getBoundingClientRect();
+  const sourceRect = options.useGhostPosition ? ghost.getBoundingClientRect() : sourceEl.getBoundingClientRect();
   const targetRect = targetEl.getBoundingClientRect();
   if (
     stageRect.width < 1 || stageRect.height < 1
@@ -6478,12 +7436,14 @@ function animateAttentionMatrixGhost(ghost, sourceEl, targetEl, durationMs) {
   const dy = toY - fromY;
   const scaleX = sourceRect.width > 0 ? targetRect.width / sourceRect.width : 1;
   const scaleY = sourceRect.height > 0 ? targetRect.height / sourceRect.height : 1;
+  const rotateDeg = Number(options.rotateDeg) || 0;
 
   ghost.style.transition = 'transform ' + durationMs + 'ms cubic-bezier(0.2, 0.75, 0.3, 1), opacity ' + ATTN_MATRIX_FADE_MS + 'ms ease';
   const rafId = requestAnimationFrame(() => {
-    ghost.style.transform = 'translate3d(' + dx.toFixed(2) + 'px, ' + dy.toFixed(2) + 'px, 0) scale(' + scaleX.toFixed(3) + ', ' + scaleY.toFixed(3) + ')';
+    ghost.style.transform = 'translate3d(' + dx.toFixed(2) + 'px, ' + dy.toFixed(2) + 'px, 0) rotate(' + rotateDeg.toFixed(2) + 'deg) scale(' + scaleX.toFixed(3) + ', ' + scaleY.toFixed(3) + ')';
   });
-  state.attentionMatrix.rafIds.push(rafId);
+  const rafStore = Array.isArray(options.rafStore) ? options.rafStore : state.attentionMatrix.rafIds;
+  rafStore.push(rafId);
   return true;
 }
 
@@ -6519,6 +7479,221 @@ function createAttentionMatrixXGhost(token) {
   placeAttentionMatrixGhost(ghost, sourceRect, stageRect);
   layer.appendChild(ghost);
   return ghost;
+}
+
+function runAttentionMatrixScoreCleanup() {
+  const slide = document.getElementById('slide-23');
+  if (!slide) return;
+  slide.classList.add('attn23-show-score-mode');
+  slide.classList.remove('attn23-show-score-operands');
+  slide.classList.remove('attn23-show-score-transposed');
+  slide.classList.remove('attn23-show-score-formula');
+  slide.classList.remove('attn23-show-score-matrix');
+  state.attentionMatrix.scoreVisible = true;
+  syncAttentionMatrixScoreStageFromClasses();
+}
+
+function settleAttentionMatrixScoreCenterState() {
+  const slide = document.getElementById('slide-23');
+  settleAttentionMatrixProjectionState();
+  clearAttentionMatrixScoreTimers();
+  clearAttentionMatrixGhosts();
+  state.attentionMatrix.scoreCenteredDone = true;
+  state.attentionMatrix.scoreTransposedDone = false;
+  state.attentionMatrix.scoreMatrixDone = false;
+  state.attentionMatrix.scoreVisible = true;
+  state.attentionMatrix.scoreVisibleCount = 0;
+  syncAttentionMatrixScoreRows(0);
+  setAttentionMatrixScoreKState(false);
+  if (!slide) return;
+  slide.classList.add('attn23-show-score-mode');
+  slide.classList.add('attn23-show-score-operands');
+  slide.classList.remove('attn23-show-score-transposed');
+  slide.classList.remove('attn23-show-score-formula');
+  slide.classList.remove('attn23-show-score-matrix');
+  syncAttentionMatrixScoreStageFromClasses();
+}
+
+function settleAttentionMatrixScoreTransposeState() {
+  const slide = document.getElementById('slide-23');
+  clearAttentionMatrixScoreTimers();
+  clearAttentionMatrixGhosts();
+  state.attentionMatrix.scoreCenteredDone = true;
+  state.attentionMatrix.scoreTransposedDone = true;
+  state.attentionMatrix.scoreMatrixDone = false;
+  state.attentionMatrix.scoreVisible = true;
+  state.attentionMatrix.scoreVisibleCount = 0;
+  syncAttentionMatrixScoreRows(0);
+  setAttentionMatrixScoreKState(true);
+  if (!slide) return;
+  slide.classList.add('attn23-show-score-mode');
+  slide.classList.add('attn23-show-score-operands');
+  slide.classList.add('attn23-show-score-transposed');
+  slide.classList.remove('attn23-show-score-formula');
+  slide.classList.remove('attn23-show-score-matrix');
+  syncAttentionMatrixScoreStageFromClasses();
+}
+
+function settleAttentionMatrixScoreMatrixState() {
+  const slide = document.getElementById('slide-23');
+  clearAttentionMatrixScoreTimers();
+  clearAttentionMatrixGhosts();
+  state.attentionMatrix.scoreCenteredDone = true;
+  state.attentionMatrix.scoreTransposedDone = true;
+  state.attentionMatrix.scoreMatrixDone = true;
+  state.attentionMatrix.scoreVisible = true;
+  state.attentionMatrix.scoreVisibleCount = ATTN_MATRIX_SCORE_TOKENS.length;
+  syncAttentionMatrixScoreRows(state.attentionMatrix.scoreVisibleCount);
+  setAttentionMatrixScoreKState(true);
+  if (!slide) return;
+  slide.classList.add('attn23-show-score-mode');
+  slide.classList.add('attn23-show-score-operands');
+  slide.classList.add('attn23-show-score-transposed');
+  slide.classList.add('attn23-show-score-formula');
+  slide.classList.add('attn23-show-score-matrix');
+  syncAttentionMatrixScoreStageFromClasses();
+}
+
+function runAttentionMatrixScoreCenterSequence() {
+  const slide = document.getElementById('slide-23');
+  if (!slide) return;
+
+  settleAttentionMatrixProjectionState();
+  clearAttentionMatrixScoreTimers();
+  clearAttentionMatrixGhosts();
+  state.attentionMatrix.scoreCenteredDone = false;
+  state.attentionMatrix.scoreTransposedDone = false;
+  state.attentionMatrix.scoreMatrixDone = false;
+  state.attentionMatrix.scoreVisible = false;
+  state.attentionMatrix.scoreVisibleCount = 0;
+  syncAttentionMatrixScoreRows(0);
+  setAttentionMatrixScoreKState(false);
+  slide.classList.remove('attn23-show-score-mode');
+  slide.classList.remove('attn23-show-score-operands');
+  slide.classList.remove('attn23-show-score-transposed');
+  slide.classList.remove('attn23-show-score-formula');
+  slide.classList.remove('attn23-show-score-matrix');
+  syncAttentionMatrixScoreStageFromClasses();
+
+  const qSource = document.getElementById('attn23-proj-output-shell-q');
+  const kSource = document.getElementById('attn23-proj-output-shell-k');
+  const qTarget = document.getElementById('attn23-score-q-shell');
+  const kTarget = document.getElementById('attn23-score-k-shell');
+  const qGhost = createAttentionMatrixProjectionGhost('q');
+  const kGhost = createAttentionMatrixProjectionGhost('k');
+
+  runAttentionMatrixScoreCleanup();
+
+  const moveTimer = setTimeout(() => {
+    if (state.attentionMatrix.step < 4) return;
+    if (qGhost && qSource && qTarget) {
+      animateAttentionMatrixGhost(
+        qGhost,
+        qSource,
+        qTarget,
+        ATTN_MATRIX_SCORE_CENTER_MS,
+        { rafStore: state.attentionMatrix.scoreRafIds, useGhostPosition: true }
+      );
+    }
+    if (kGhost && kSource && kTarget) {
+      animateAttentionMatrixGhost(
+        kGhost,
+        kSource,
+        kTarget,
+        ATTN_MATRIX_SCORE_CENTER_MS,
+        { rafStore: state.attentionMatrix.scoreRafIds, useGhostPosition: true }
+      );
+    }
+  }, ATTN_MATRIX_SCORE_CLEANUP_MS);
+  state.attentionMatrix.scoreTimers.push(moveTimer);
+
+  const operandTimer = setTimeout(() => {
+    if (state.attentionMatrix.step < 4) return;
+    slide.classList.add('attn23-show-score-operands');
+    syncAttentionMatrixScoreStageFromClasses();
+    if (qGhost) qGhost.style.opacity = '0';
+    if (kGhost) kGhost.style.opacity = '0';
+  }, ATTN_MATRIX_SCORE_CLEANUP_MS + ATTN_MATRIX_SCORE_CENTER_MS - 90);
+  state.attentionMatrix.scoreTimers.push(operandTimer);
+
+  const cleanupGhostTimer = setTimeout(() => {
+    if (qGhost && qGhost.parentNode) qGhost.parentNode.removeChild(qGhost);
+    if (kGhost && kGhost.parentNode) kGhost.parentNode.removeChild(kGhost);
+  }, ATTN_MATRIX_SCORE_CLEANUP_MS + ATTN_MATRIX_SCORE_CENTER_MS + ATTN_MATRIX_FADE_MS + 60);
+  state.attentionMatrix.scoreTimers.push(cleanupGhostTimer);
+
+  const settleTimer = setTimeout(() => {
+    if (state.attentionMatrix.step < 4) return;
+    settleAttentionMatrixScoreCenterState();
+  }, ATTN_MATRIX_SCORE_CLEANUP_MS + ATTN_MATRIX_SCORE_CENTER_MS + ATTN_MATRIX_FADE_MS + 80);
+  state.attentionMatrix.scoreTimers.push(settleTimer);
+}
+
+function runAttentionMatrixScoreTransposeSequence() {
+  const slide = document.getElementById('slide-23');
+  if (!slide) return;
+
+  settleAttentionMatrixScoreCenterState();
+  clearAttentionMatrixScoreTimers();
+  state.attentionMatrix.scoreTransposedDone = false;
+  setAttentionMatrixScoreKState(false);
+
+  const transposeTimer = setTimeout(() => {
+    if (state.attentionMatrix.step < 5) return;
+    slide.classList.add('attn23-show-score-transposed');
+    setAttentionMatrixScoreKState(true);
+    syncAttentionMatrixScoreStageFromClasses();
+  }, 30);
+  state.attentionMatrix.scoreTimers.push(transposeTimer);
+
+  const settleTimer = setTimeout(() => {
+    if (state.attentionMatrix.step < 5) return;
+    settleAttentionMatrixScoreTransposeState();
+  }, 30 + ATTN_MATRIX_SCORE_TRANSPOSE_MS);
+  state.attentionMatrix.scoreTimers.push(settleTimer);
+}
+
+function runAttentionMatrixScoreMatrixSequence() {
+  const slide = document.getElementById('slide-23');
+  if (!slide) return;
+
+  settleAttentionMatrixScoreTransposeState();
+  clearAttentionMatrixScoreTimers();
+  state.attentionMatrix.scoreMatrixDone = false;
+  state.attentionMatrix.scoreVisibleCount = 0;
+  syncAttentionMatrixScoreRows(0);
+  slide.classList.remove('attn23-show-score-formula');
+  slide.classList.remove('attn23-show-score-matrix');
+  syncAttentionMatrixScoreStageFromClasses();
+
+  const formulaTimer = setTimeout(() => {
+    if (state.attentionMatrix.step < 6) return;
+    slide.classList.add('attn23-show-score-formula');
+    syncAttentionMatrixScoreStageFromClasses();
+  }, 40);
+  state.attentionMatrix.scoreTimers.push(formulaTimer);
+
+  const matrixTimer = setTimeout(() => {
+    if (state.attentionMatrix.step < 6) return;
+    slide.classList.add('attn23-show-score-matrix');
+    syncAttentionMatrixScoreStageFromClasses();
+  }, 40 + ATTN_MATRIX_SCORE_FADE_MS);
+  state.attentionMatrix.scoreTimers.push(matrixTimer);
+
+  ATTN_MATRIX_SCORE_TOKENS.forEach((token, idx) => {
+    const rowTimer = setTimeout(() => {
+      if (state.attentionMatrix.step < 6) return;
+      state.attentionMatrix.scoreVisibleCount = Math.max(state.attentionMatrix.scoreVisibleCount, idx + 1);
+      syncAttentionMatrixScoreRows(state.attentionMatrix.scoreVisibleCount);
+    }, 40 + ATTN_MATRIX_SCORE_FADE_MS + 70 + (idx * ATTN_MATRIX_SCORE_ROW_STAGGER_MS));
+    state.attentionMatrix.scoreTimers.push(rowTimer);
+  });
+
+  const settleTimer = setTimeout(() => {
+    if (state.attentionMatrix.step < 6) return;
+    settleAttentionMatrixScoreMatrixState();
+  }, 40 + ATTN_MATRIX_SCORE_FADE_MS + 70 + ((ATTN_MATRIX_SCORE_TOKENS.length - 1) * ATTN_MATRIX_SCORE_ROW_STAGGER_MS) + ATTN_MATRIX_SCORE_FADE_MS);
+  state.attentionMatrix.scoreTimers.push(settleTimer);
 }
 
 function animateAttentionMatrixTokenRow(token, idx, delayMs, isLastToken = false) {
@@ -6642,13 +7817,15 @@ function initAttentionMatrixSlide() {
   const tokenSlots = document.getElementById('attn23-token-slots');
   const xSlots = document.getElementById('attn23-x-slots');
   const projRow = document.getElementById('attn23-proj-row');
-  if (!slide || !sourceRow || !tokenSlots || !xSlots || !projRow) return;
+  const scoreStage = document.getElementById('attn23-score-stage');
+  if (!slide || !sourceRow || !tokenSlots || !xSlots || !projRow || !scoreStage) return;
 
   if (!state.attentionMatrix.initialized) {
     sourceRow.innerHTML = '';
     tokenSlots.innerHTML = '';
     xSlots.innerHTML = '';
     projRow.innerHTML = '';
+    scoreStage.innerHTML = '';
 
     ATTN_MATRIX_TOKENS.forEach((token) => {
       sourceRow.appendChild(createAttentionMatrixSourceItem(token));
@@ -6672,11 +7849,18 @@ function initAttentionMatrixSlide() {
     ATTN_MATRIX_PROJS.forEach((proj) => {
       projRow.appendChild(createAttentionMatrixProjectionColumn(proj));
     });
+    scoreStage.appendChild(createAttentionMatrixScoreStage());
 
     if (!state.attentionMatrix.resizeBound) {
       window.addEventListener('resize', () => {
         if (!state.attentionMatrix.initialized) return;
-        if (state.attentionMatrix.step >= 3) {
+        if (state.attentionMatrix.step >= 6) {
+          settleAttentionMatrixScoreMatrixState();
+        } else if (state.attentionMatrix.step >= 5) {
+          settleAttentionMatrixScoreTransposeState();
+        } else if (state.attentionMatrix.step >= 4) {
+          settleAttentionMatrixScoreCenterState();
+        } else if (state.attentionMatrix.step >= 3) {
           settleAttentionMatrixProjectionState();
         } else if (state.attentionMatrix.step >= 2) {
           settleAttentionMatrixFullState();
@@ -6695,7 +7879,13 @@ function initAttentionMatrixSlide() {
   const takeaway = document.getElementById('attn23-takeaway');
   if (takeaway) takeaway.innerHTML = ATTN_MATRIX_TAKEAWAYS[state.attentionMatrix.step] || ATTN_MATRIX_TAKEAWAYS[0];
 
-  if (state.attentionMatrix.step >= 3) {
+  if (state.attentionMatrix.step >= 6) {
+    settleAttentionMatrixScoreMatrixState();
+  } else if (state.attentionMatrix.step >= 5) {
+    settleAttentionMatrixScoreTransposeState();
+  } else if (state.attentionMatrix.step >= 4) {
+    settleAttentionMatrixScoreCenterState();
+  } else if (state.attentionMatrix.step >= 3) {
     settleAttentionMatrixProjectionState();
   } else if (state.attentionMatrix.step >= 2) {
     settleAttentionMatrixFullState();
@@ -6711,12 +7901,17 @@ function setAttentionMatrixStep(step) {
   const takeaway = document.getElementById('attn23-takeaway');
   if (!slide || !takeaway) return;
 
+  const prevStep = state.attentionMatrix.step;
   const clamped = Math.max(0, Math.min(ATTN_MATRIX_MAX_STEP, step));
   state.attentionMatrix.step = clamped;
   takeaway.innerHTML = ATTN_MATRIX_TAKEAWAYS[clamped] || ATTN_MATRIX_TAKEAWAYS[0];
+  const animateStep = clamped === prevStep + 1;
 
   if (clamped < 3) {
     resetAttentionMatrixProjectionVisuals();
+  }
+  if (clamped < 4) {
+    resetAttentionMatrixScoreVisuals();
   }
 
   if (clamped === 0) {
@@ -6725,7 +7920,7 @@ function setAttentionMatrixStep(step) {
   }
 
   if (clamped === 1) {
-    if (!state.attentionMatrix.tokenMatrixDone) {
+    if (!state.attentionMatrix.tokenMatrixDone && animateStep) {
       runAttentionMatrixTokenSequence();
     } else {
       settleAttentionMatrixTokenState();
@@ -6737,7 +7932,7 @@ function setAttentionMatrixStep(step) {
     if (!state.attentionMatrix.tokenMatrixDone) {
       settleAttentionMatrixTokenState();
     }
-    if (!state.attentionMatrix.xMatrixDone) {
+    if (!state.attentionMatrix.xMatrixDone && animateStep) {
       runAttentionMatrixXSequence();
     } else {
       settleAttentionMatrixFullState();
@@ -6751,10 +7946,46 @@ function setAttentionMatrixStep(step) {
   if (!state.attentionMatrix.xMatrixDone) {
     settleAttentionMatrixFullState();
   }
+  if (clamped === 3) {
+    if (!state.attentionMatrix.projectionDone && animateStep) {
+      runAttentionMatrixProjectionSequence();
+    } else {
+      settleAttentionMatrixProjectionState();
+    }
+    return;
+  }
+
   if (!state.attentionMatrix.projectionDone) {
-    runAttentionMatrixProjectionSequence();
-  } else {
     settleAttentionMatrixProjectionState();
+  }
+  if (clamped === 4) {
+    if (!state.attentionMatrix.scoreCenteredDone && animateStep) {
+      runAttentionMatrixScoreCenterSequence();
+    } else {
+      settleAttentionMatrixScoreCenterState();
+    }
+    return;
+  }
+
+  if (!state.attentionMatrix.scoreCenteredDone) {
+    settleAttentionMatrixScoreCenterState();
+  }
+  if (clamped === 5) {
+    if (!state.attentionMatrix.scoreTransposedDone && animateStep) {
+      runAttentionMatrixScoreTransposeSequence();
+    } else {
+      settleAttentionMatrixScoreTransposeState();
+    }
+    return;
+  }
+
+  if (!state.attentionMatrix.scoreTransposedDone) {
+    settleAttentionMatrixScoreTransposeState();
+  }
+  if (!state.attentionMatrix.scoreMatrixDone && animateStep) {
+    runAttentionMatrixScoreMatrixSequence();
+  } else {
+    settleAttentionMatrixScoreMatrixState();
   }
 }
 
