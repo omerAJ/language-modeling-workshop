@@ -2269,6 +2269,28 @@
   .attn23-postscore-op {
     font-weight: 700;
   }
+  .attn23-postscore-softmax-op {
+    min-width: min(100%, 21rem);
+    display: grid;
+    gap: 0.14rem;
+    justify-items: center;
+    padding: 0.28rem 0.56rem;
+  }
+  .attn23-postscore-softmax-main,
+  .attn23-postscore-softmax-note {
+    display: block;
+    text-align: center;
+    line-height: 1.28;
+    white-space: normal;
+  }
+  .attn23-postscore-softmax-main {
+    font-weight: 700;
+    color: rgba(231,238,255,0.96);
+  }
+  .attn23-postscore-softmax-note {
+    font-size: 0.54rem;
+    color: rgba(199,212,244,0.86);
+  }
   .attn23-postscore-row-sum {
     color: rgba(193,215,255,0.96);
     border-color: rgba(var(--attn19-focus-rgb), 0.28);
@@ -2464,12 +2486,33 @@
   #slide-23.attn23-show-postscore-av .attn23-postscore-stage,
   #slide-23.attn23-show-postscore-output .attn23-postscore-stage {
     --attn23-postscore-main-w: clamp(14.6rem, 29vw, 16.2rem);
-    --attn23-postscore-vector-w: clamp(8.8rem, 18vw, 10.1rem);
-    width: min(100%, 52rem);
+    --attn23-postscore-vector-w: clamp(10rem, 21vw, 11.6rem);
+    width: min(100%, 54rem);
     grid-template-columns: max-content auto max-content auto max-content;
     gap: clamp(0.6rem, 1.5vw, 1rem);
-    align-items: center;
+    align-items: start;
     justify-content: center;
+  }
+  #slide-23.attn23-show-postscore-av .attn23-postscore-scale-op,
+  #slide-23.attn23-show-postscore-av .attn23-postscore-softmax-op,
+  #slide-23.attn23-show-postscore-av .attn23-postscore-row-sum,
+  #slide-23.attn23-show-postscore-output .attn23-postscore-scale-op,
+  #slide-23.attn23-show-postscore-output .attn23-postscore-softmax-op,
+  #slide-23.attn23-show-postscore-output .attn23-postscore-row-sum {
+    display: none;
+  }
+  #slide-23.attn23-show-postscore-av .attn23-postscore-main-wrap,
+  #slide-23.attn23-show-postscore-av .attn23-postscore-v-wrap,
+  #slide-23.attn23-show-postscore-output .attn23-postscore-main-wrap,
+  #slide-23.attn23-show-postscore-output .attn23-postscore-v-wrap,
+  #slide-23.attn23-show-postscore-output .attn23-postscore-o-wrap {
+    align-self: start;
+    align-content: start;
+  }
+  #slide-23.attn23-show-postscore-av .attn23-postscore-v-wrap,
+  #slide-23.attn23-show-postscore-output .attn23-postscore-v-wrap,
+  #slide-23.attn23-show-postscore-output .attn23-postscore-o-wrap {
+    margin-top: 0.56rem;
   }
   #slide-23.attn23-show-postscore-av .attn23-postscore-main-wrap,
   #slide-23.attn23-show-postscore-output .attn23-postscore-main-wrap {
@@ -2486,6 +2529,7 @@
   #slide-23.attn23-show-postscore-av .attn23-postscore-mul,
   #slide-23.attn23-show-postscore-output .attn23-postscore-mul {
     grid-column: 2;
+    align-self: center;
   }
   #slide-23.attn23-show-postscore-av .attn23-postscore-v-wrap,
   #slide-23.attn23-show-postscore-output .attn23-postscore-v-wrap {
@@ -2500,9 +2544,15 @@
   }
   #slide-23.attn23-show-postscore-output .attn23-postscore-equals {
     grid-column: 4;
+    align-self: center;
   }
   #slide-23.attn23-show-postscore-output .attn23-postscore-o-wrap {
     grid-column: 5;
+  }
+  #slide-23.attn23-show-postscore-av .attn23-postscore-v-wrap .attn19-vector,
+  #slide-23.attn23-show-postscore-output .attn23-postscore-v-wrap .attn19-vector,
+  #slide-23.attn23-show-postscore-output .attn23-postscore-o-wrap .attn19-vector {
+    height: 0.98rem;
   }
   #slide-23.attn23-show-postscore-output .attn23-postscore-caption {
     grid-column: 1 / -1;
@@ -2644,6 +2694,9 @@
       font-size: 0.5rem;
       padding: 0.14rem 0.34rem;
     }
+    .attn23-postscore-softmax-note {
+      font-size: 0.46rem;
+    }
     .attn23-postscore-mul,
     .attn23-postscore-equals {
       font-size: 0.9rem;
@@ -2770,7 +2823,13 @@
       width: min(100%, 19rem);
       grid-template-columns: 1fr;
       justify-items: center;
+      align-items: center;
       gap: 0.34rem;
+    }
+    #slide-23.attn23-show-postscore-av .attn23-postscore-v-wrap,
+    #slide-23.attn23-show-postscore-output .attn23-postscore-v-wrap,
+    #slide-23.attn23-show-postscore-output .attn23-postscore-o-wrap {
+      margin-top: 0.18rem;
     }
     #slide-23.attn23-show-postscore-av .attn23-postscore-main-wrap,
     #slide-23.attn23-show-postscore-av .attn23-postscore-mul,
@@ -2785,6 +2844,11 @@
     }
     .attn23-postscore-vector-shell {
       width: min(100%, 11rem);
+    }
+    #slide-23.attn23-show-postscore-av .attn23-postscore-v-wrap .attn19-vector,
+    #slide-23.attn23-show-postscore-output .attn23-postscore-v-wrap .attn19-vector,
+    #slide-23.attn23-show-postscore-output .attn23-postscore-o-wrap .attn19-vector {
+      height: 0.72rem;
     }
   }
 
@@ -4269,7 +4333,7 @@ const ATTN_MATRIX_TAKEAWAYS = [
   'Notice what appears in the blocked cells: <i>−∞</i>.<br>Why do we write negative infinity there instead of 0 or just removing the cell?<br>The next steps will make that clear when we center this matrix, scale it, and apply the rowwise softmax.',
   'Now focus on the masked score matrix itself.<br>We will operate on it row by row, because attention normalizes each query row independently.',
   'First scale the allowed scores by dividing by √d<sub>k</sub>.<br>The masked future positions stay at <i>−∞</i>, so they remain blocked.<br>This keeps the score magnitudes in a stable range before softmax.',
-  'Now apply softmax row by row.<br>Each row becomes an attention distribution over allowed tokens, and every <i>−∞</i> entry turns into 0 attention.<br>That is why the mask uses negative infinity.',
+  'Now apply softmax row by row.<br>softmax(z<sub>i</sub>)<sub>j</sub> = exp(z<sub>ij</sub>) / Σ<sub>k</sub> exp(z<sub>ik</sub>), so exp(−∞) = 0 and every masked future entry becomes 0 attention.<br>Each row becomes a valid attention distribution over the allowed tokens.',
   'Bring in the value matrix <i>V</i>.<br>The attention matrix <i>A</i> tells us how much of each value row to mix for every output row.',
   'Compute the weighted sum for the whole sequence: <i>O</i> = <i>A</i> × <i>V</i>.<br>Each output row is a weighted combination of value rows, using the attention weights from the matching row of <i>A</i>.'
 ];
@@ -7592,9 +7656,28 @@ function createAttentionMatrixPostScoreStage() {
   }));
   stage.appendChild(createEl('div', {
     className: 'attn23-postscore-op attn23-postscore-softmax-op',
-    id: 'attn23-postscore-softmax-op',
-    text: 'rowwise softmax'
-  }));
+    id: 'attn23-postscore-softmax-op'
+  }, [
+    createEl('span', {
+      className: 'attn23-postscore-softmax-main'
+    }, [
+      'softmax(z',
+      createEl('sub', { text: 'i' }),
+      ')',
+      createEl('sub', { text: 'j' }),
+      ' = exp(z',
+      createEl('sub', { text: 'ij' }),
+      ') / Σ',
+      createEl('sub', { text: 'k' }),
+      ' exp(z',
+      createEl('sub', { text: 'ik' }),
+      ')'
+    ]),
+    createEl('span', {
+      className: 'attn23-postscore-softmax-note',
+      text: 'exp(−∞) = 0  →  masked cells become 0.00'
+    })
+  ]));
   stage.appendChild(createEl('div', {
     className: 'attn23-postscore-row-sum',
     id: 'attn23-postscore-row-sum',
