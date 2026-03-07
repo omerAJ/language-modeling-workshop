@@ -2073,9 +2073,9 @@
     visibility: visible;
     transform: translateY(0);
   }
-  #slide-23.attn23-show-score-mode .attn23-source-zone,
-  #slide-23.attn23-show-score-mode .attn23-rail,
-  #slide-23.attn23-show-score-mode .attn23-proj-overlay {
+  #slide-23.attn23-score-cleanup-active .attn23-source-zone,
+  #slide-23.attn23-score-cleanup-active .attn23-rail,
+  #slide-23.attn23-score-cleanup-active .attn23-proj-overlay {
     opacity: 0;
     transform: translateY(-0.28rem) scale(0.985);
     pointer-events: none;
@@ -6946,10 +6946,25 @@ function setAttentionMatrixScoreKState(transposed) {
   if (dims) dims.textContent = transposed ? 'K^T ∈ R^(d_k × S)' : 'K ∈ R^(S × d_k)';
 }
 
+function setAttentionMatrixProjectionOutputVisible(proj, visible) {
+  const wrap = document.getElementById('attn23-proj-output-wrap-' + proj);
+  if (!wrap) return;
+  if (visible) {
+    wrap.style.removeProperty('opacity');
+    wrap.style.removeProperty('visibility');
+    wrap.style.removeProperty('pointer-events');
+    return;
+  }
+  wrap.style.setProperty('opacity', '0', 'important');
+  wrap.style.setProperty('visibility', 'hidden', 'important');
+  wrap.style.setProperty('pointer-events', 'none', 'important');
+}
+
 function syncAttentionMatrixScoreStageFromClasses() {
   const slide = document.getElementById('slide-23');
   if (!slide) return;
 
+  const cleanup = slide.classList.contains('attn23-score-cleanup-active');
   const mode = slide.classList.contains('attn23-show-score-mode');
   const operands = slide.classList.contains('attn23-show-score-operands');
   const transposed = slide.classList.contains('attn23-show-score-transposed');
@@ -6971,7 +6986,7 @@ function syncAttentionMatrixScoreStageFromClasses() {
   const kRowHeaders = document.getElementById('attn23-score-k-row-headers');
 
   if (scoreStage) {
-    scoreStage.style.setProperty('display', 'grid', 'important');
+    scoreStage.style.removeProperty('display');
     scoreStage.style.setProperty('opacity', mode ? '1' : '0', 'important');
     scoreStage.style.setProperty('visibility', mode ? 'visible' : 'hidden', 'important');
     scoreStage.style.setProperty('transform', mode ? 'translateY(0)' : 'translateY(0.24rem)', 'important');
@@ -6979,14 +6994,13 @@ function syncAttentionMatrixScoreStageFromClasses() {
 
   [sourceZone, rail, projOverlay].forEach((el) => {
     if (!el) return;
-    if (mode) {
-      el.style.setProperty('display', 'none', 'important');
+    el.style.removeProperty('display');
+    if (cleanup) {
       el.style.setProperty('opacity', '0', 'important');
       el.style.setProperty('visibility', 'hidden', 'important');
       el.style.setProperty('transform', 'translateY(-0.28rem) scale(0.985)', 'important');
       el.style.setProperty('pointer-events', 'none', 'important');
     } else {
-      el.style.removeProperty('display');
       el.style.removeProperty('opacity');
       el.style.removeProperty('visibility');
       el.style.removeProperty('transform');
@@ -6996,7 +7010,7 @@ function syncAttentionMatrixScoreStageFromClasses() {
 
   [qWrap, kWrap].forEach((el) => {
     if (!el) return;
-    el.style.setProperty('display', operands ? 'grid' : 'none', 'important');
+    el.style.removeProperty('display');
     el.style.setProperty('opacity', operands ? '1' : '0', 'important');
     el.style.setProperty('visibility', operands ? 'visible' : 'hidden', 'important');
     el.style.setProperty('transform', operands ? 'translateY(0)' : 'translateY(0.16rem)', 'important');
@@ -7004,14 +7018,14 @@ function syncAttentionMatrixScoreStageFromClasses() {
 
   [mul, equals].forEach((el) => {
     if (!el) return;
-    el.style.setProperty('display', formula ? 'block' : 'none', 'important');
+    el.style.removeProperty('display');
     el.style.setProperty('opacity', formula ? '1' : '0', 'important');
     el.style.setProperty('visibility', formula ? 'visible' : 'hidden', 'important');
     el.style.setProperty('transform', formula ? 'translateY(0)' : 'translateY(0.1rem)', 'important');
   });
 
   if (sWrap) {
-    sWrap.style.setProperty('display', matrix ? 'grid' : 'none', 'important');
+    sWrap.style.removeProperty('display');
     sWrap.style.setProperty('opacity', matrix ? '1' : '0', 'important');
     sWrap.style.setProperty('visibility', matrix ? 'visible' : 'hidden', 'important');
     sWrap.style.setProperty('transform', matrix ? 'translateY(0)' : 'translateY(0.16rem)', 'important');
@@ -7049,6 +7063,8 @@ function resetAttentionMatrixScoreVisuals() {
   syncAttentionMatrixScoreRows(0);
   setAttentionMatrixScoreKState(false);
   if (!slide) return;
+  ATTN_MATRIX_PROJS.forEach((proj) => setAttentionMatrixProjectionOutputVisible(proj, true));
+  slide.classList.remove('attn23-score-cleanup-active');
   slide.classList.remove('attn23-show-score-mode');
   slide.classList.remove('attn23-show-score-operands');
   slide.classList.remove('attn23-show-score-transposed');
@@ -7078,6 +7094,7 @@ function resetAttentionMatrixVisuals() {
   syncAttentionMatrixXSlots(0);
   syncAttentionMatrixScoreRows(0);
   if (!slide) return;
+  ATTN_MATRIX_PROJS.forEach((proj) => setAttentionMatrixProjectionOutputVisible(proj, true));
   slide.classList.remove('attn23-show-token-matrix');
   slide.classList.remove('attn23-show-x-matrix');
   slide.classList.remove('attn23-token-settled');
@@ -7086,6 +7103,7 @@ function resetAttentionMatrixVisuals() {
   slide.classList.remove('attn23-show-copies');
   slide.classList.remove('attn23-show-proj-matrices');
   slide.classList.remove('attn23-show-proj-outputs');
+  slide.classList.remove('attn23-score-cleanup-active');
   slide.classList.remove('attn23-show-score-mode');
   slide.classList.remove('attn23-show-score-operands');
   slide.classList.remove('attn23-show-score-transposed');
@@ -7118,6 +7136,7 @@ function settleAttentionMatrixTokenState() {
   syncAttentionMatrixXSlots(0);
   syncAttentionMatrixScoreRows(0);
   if (!slide) return;
+  ATTN_MATRIX_PROJS.forEach((proj) => setAttentionMatrixProjectionOutputVisible(proj, true));
   slide.classList.add('attn23-show-token-matrix');
   slide.classList.add('attn23-token-settled');
   slide.classList.remove('attn23-show-x-matrix');
@@ -7126,6 +7145,7 @@ function settleAttentionMatrixTokenState() {
   slide.classList.remove('attn23-show-copies');
   slide.classList.remove('attn23-show-proj-matrices');
   slide.classList.remove('attn23-show-proj-outputs');
+  slide.classList.remove('attn23-score-cleanup-active');
   slide.classList.remove('attn23-show-score-mode');
   slide.classList.remove('attn23-show-score-operands');
   slide.classList.remove('attn23-show-score-transposed');
@@ -7158,6 +7178,7 @@ function settleAttentionMatrixFullState() {
   syncAttentionMatrixXSlots(state.attentionMatrix.xVisibleCount);
   syncAttentionMatrixScoreRows(0);
   if (!slide) return;
+  ATTN_MATRIX_PROJS.forEach((proj) => setAttentionMatrixProjectionOutputVisible(proj, true));
   slide.classList.add('attn23-show-token-matrix');
   slide.classList.add('attn23-show-x-matrix');
   slide.classList.add('attn23-token-settled');
@@ -7166,6 +7187,7 @@ function settleAttentionMatrixFullState() {
   slide.classList.remove('attn23-show-copies');
   slide.classList.remove('attn23-show-proj-matrices');
   slide.classList.remove('attn23-show-proj-outputs');
+  slide.classList.remove('attn23-score-cleanup-active');
   slide.classList.remove('attn23-show-score-mode');
   slide.classList.remove('attn23-show-score-operands');
   slide.classList.remove('attn23-show-score-transposed');
@@ -7286,10 +7308,12 @@ function resetAttentionMatrixProjectionVisuals() {
   state.attentionMatrix.scoreVisible = false;
   state.attentionMatrix.scoreVisibleCount = 0;
   if (!slide) return;
+  ATTN_MATRIX_PROJS.forEach((proj) => setAttentionMatrixProjectionOutputVisible(proj, true));
   slide.classList.remove('attn23-show-projections');
   slide.classList.remove('attn23-show-copies');
   slide.classList.remove('attn23-show-proj-matrices');
   slide.classList.remove('attn23-show-proj-outputs');
+  slide.classList.remove('attn23-score-cleanup-active');
   slide.classList.remove('attn23-show-score-mode');
   slide.classList.remove('attn23-show-score-operands');
   slide.classList.remove('attn23-show-score-transposed');
@@ -7314,10 +7338,12 @@ function settleAttentionMatrixProjectionState() {
   state.attentionMatrix.scoreVisible = false;
   state.attentionMatrix.scoreVisibleCount = 0;
   if (!slide) return;
+  ATTN_MATRIX_PROJS.forEach((proj) => setAttentionMatrixProjectionOutputVisible(proj, true));
   slide.classList.add('attn23-show-projections');
   slide.classList.add('attn23-show-copies');
   slide.classList.add('attn23-show-proj-matrices');
   slide.classList.add('attn23-show-proj-outputs');
+  slide.classList.remove('attn23-score-cleanup-active');
   slide.classList.remove('attn23-show-score-mode');
   slide.classList.remove('attn23-show-score-operands');
   slide.classList.remove('attn23-show-score-transposed');
@@ -7393,6 +7419,10 @@ function createAttentionMatrixProjectionGhost(proj) {
   return ghost;
 }
 
+function createAttentionMatrixScoreTransportGhost(proj) {
+  return createAttentionMatrixProjectionGhost(proj);
+}
+
 function cloneAttentionMatrixFragment(node, extraClass) {
   if (!node) return null;
   const ghost = node.cloneNode(true);
@@ -7447,6 +7477,10 @@ function animateAttentionMatrixGhost(ghost, sourceEl, targetEl, durationMs, opti
   return true;
 }
 
+function runAttentionMatrixSharedElementMove(ghost, sourceEl, targetEl, durationMs, options = {}) {
+  return animateAttentionMatrixGhost(ghost, sourceEl, targetEl, durationMs, options);
+}
+
 function createAttentionMatrixTokenGhost(token) {
   const stage = document.getElementById('attn23-stage');
   const layer = document.getElementById('attn23-ghost-layer');
@@ -7484,12 +7518,13 @@ function createAttentionMatrixXGhost(token) {
 function runAttentionMatrixScoreCleanup() {
   const slide = document.getElementById('slide-23');
   if (!slide) return;
-  slide.classList.add('attn23-show-score-mode');
+  slide.classList.add('attn23-score-cleanup-active');
+  slide.classList.remove('attn23-show-score-mode');
   slide.classList.remove('attn23-show-score-operands');
   slide.classList.remove('attn23-show-score-transposed');
   slide.classList.remove('attn23-show-score-formula');
   slide.classList.remove('attn23-show-score-matrix');
-  state.attentionMatrix.scoreVisible = true;
+  state.attentionMatrix.scoreVisible = false;
   syncAttentionMatrixScoreStageFromClasses();
 }
 
@@ -7506,6 +7541,9 @@ function settleAttentionMatrixScoreCenterState() {
   syncAttentionMatrixScoreRows(0);
   setAttentionMatrixScoreKState(false);
   if (!slide) return;
+  setAttentionMatrixProjectionOutputVisible('q', false);
+  setAttentionMatrixProjectionOutputVisible('k', false);
+  slide.classList.add('attn23-score-cleanup-active');
   slide.classList.add('attn23-show-score-mode');
   slide.classList.add('attn23-show-score-operands');
   slide.classList.remove('attn23-show-score-transposed');
@@ -7526,6 +7564,9 @@ function settleAttentionMatrixScoreTransposeState() {
   syncAttentionMatrixScoreRows(0);
   setAttentionMatrixScoreKState(true);
   if (!slide) return;
+  setAttentionMatrixProjectionOutputVisible('q', false);
+  setAttentionMatrixProjectionOutputVisible('k', false);
+  slide.classList.add('attn23-score-cleanup-active');
   slide.classList.add('attn23-show-score-mode');
   slide.classList.add('attn23-show-score-operands');
   slide.classList.add('attn23-show-score-transposed');
@@ -7546,6 +7587,9 @@ function settleAttentionMatrixScoreMatrixState() {
   syncAttentionMatrixScoreRows(state.attentionMatrix.scoreVisibleCount);
   setAttentionMatrixScoreKState(true);
   if (!slide) return;
+  setAttentionMatrixProjectionOutputVisible('q', false);
+  setAttentionMatrixProjectionOutputVisible('k', false);
+  slide.classList.add('attn23-score-cleanup-active');
   slide.classList.add('attn23-show-score-mode');
   slide.classList.add('attn23-show-score-operands');
   slide.classList.add('attn23-show-score-transposed');
@@ -7568,6 +7612,9 @@ function runAttentionMatrixScoreCenterSequence() {
   state.attentionMatrix.scoreVisibleCount = 0;
   syncAttentionMatrixScoreRows(0);
   setAttentionMatrixScoreKState(false);
+  setAttentionMatrixProjectionOutputVisible('q', true);
+  setAttentionMatrixProjectionOutputVisible('k', true);
+  slide.classList.remove('attn23-score-cleanup-active');
   slide.classList.remove('attn23-show-score-mode');
   slide.classList.remove('attn23-show-score-operands');
   slide.classList.remove('attn23-show-score-transposed');
@@ -7579,53 +7626,63 @@ function runAttentionMatrixScoreCenterSequence() {
   const kSource = document.getElementById('attn23-proj-output-shell-k');
   const qTarget = document.getElementById('attn23-score-q-shell');
   const kTarget = document.getElementById('attn23-score-k-shell');
-  const qGhost = createAttentionMatrixProjectionGhost('q');
-  const kGhost = createAttentionMatrixProjectionGhost('k');
+  const qGhost = createAttentionMatrixScoreTransportGhost('q');
+  const kGhost = createAttentionMatrixScoreTransportGhost('k');
+  if (!qGhost || !kGhost || !qSource || !kSource || !qTarget || !kTarget) {
+    if (qGhost && qGhost.parentNode) qGhost.parentNode.removeChild(qGhost);
+    if (kGhost && kGhost.parentNode) kGhost.parentNode.removeChild(kGhost);
+    settleAttentionMatrixScoreCenterState();
+    return;
+  }
 
   runAttentionMatrixScoreCleanup();
+  setAttentionMatrixProjectionOutputVisible('q', false);
+  setAttentionMatrixProjectionOutputVisible('k', false);
 
+  const liftDelay = 24;
   const moveTimer = setTimeout(() => {
     if (state.attentionMatrix.step < 4) return;
-    if (qGhost && qSource && qTarget) {
-      animateAttentionMatrixGhost(
-        qGhost,
-        qSource,
-        qTarget,
-        ATTN_MATRIX_SCORE_CENTER_MS,
-        { rafStore: state.attentionMatrix.scoreRafIds, useGhostPosition: true }
-      );
+    const qMoved = runAttentionMatrixSharedElementMove(
+      qGhost,
+      qSource,
+      qTarget,
+      ATTN_MATRIX_SCORE_CENTER_MS,
+      { rafStore: state.attentionMatrix.scoreRafIds, useGhostPosition: true }
+    );
+    const kMoved = runAttentionMatrixSharedElementMove(
+      kGhost,
+      kSource,
+      kTarget,
+      ATTN_MATRIX_SCORE_CENTER_MS,
+      { rafStore: state.attentionMatrix.scoreRafIds, useGhostPosition: true }
+    );
+    if (!qMoved || !kMoved) {
+      settleAttentionMatrixScoreCenterState();
     }
-    if (kGhost && kSource && kTarget) {
-      animateAttentionMatrixGhost(
-        kGhost,
-        kSource,
-        kTarget,
-        ATTN_MATRIX_SCORE_CENTER_MS,
-        { rafStore: state.attentionMatrix.scoreRafIds, useGhostPosition: true }
-      );
-    }
-  }, ATTN_MATRIX_SCORE_CLEANUP_MS);
+  }, liftDelay);
   state.attentionMatrix.scoreTimers.push(moveTimer);
 
   const operandTimer = setTimeout(() => {
     if (state.attentionMatrix.step < 4) return;
+    slide.classList.add('attn23-show-score-mode');
     slide.classList.add('attn23-show-score-operands');
+    state.attentionMatrix.scoreVisible = true;
     syncAttentionMatrixScoreStageFromClasses();
-    if (qGhost) qGhost.style.opacity = '0';
-    if (kGhost) kGhost.style.opacity = '0';
-  }, ATTN_MATRIX_SCORE_CLEANUP_MS + ATTN_MATRIX_SCORE_CENTER_MS - 90);
+    qGhost.style.opacity = '0';
+    kGhost.style.opacity = '0';
+  }, liftDelay + ATTN_MATRIX_SCORE_CENTER_MS - 90);
   state.attentionMatrix.scoreTimers.push(operandTimer);
 
   const cleanupGhostTimer = setTimeout(() => {
     if (qGhost && qGhost.parentNode) qGhost.parentNode.removeChild(qGhost);
     if (kGhost && kGhost.parentNode) kGhost.parentNode.removeChild(kGhost);
-  }, ATTN_MATRIX_SCORE_CLEANUP_MS + ATTN_MATRIX_SCORE_CENTER_MS + ATTN_MATRIX_FADE_MS + 60);
+  }, liftDelay + ATTN_MATRIX_SCORE_CENTER_MS + ATTN_MATRIX_FADE_MS + 60);
   state.attentionMatrix.scoreTimers.push(cleanupGhostTimer);
 
   const settleTimer = setTimeout(() => {
     if (state.attentionMatrix.step < 4) return;
     settleAttentionMatrixScoreCenterState();
-  }, ATTN_MATRIX_SCORE_CLEANUP_MS + ATTN_MATRIX_SCORE_CENTER_MS + ATTN_MATRIX_FADE_MS + 80);
+  }, liftDelay + ATTN_MATRIX_SCORE_CENTER_MS + ATTN_MATRIX_FADE_MS + 80);
   state.attentionMatrix.scoreTimers.push(settleTimer);
 }
 
