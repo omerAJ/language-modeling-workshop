@@ -1081,13 +1081,13 @@ function renderAttentionStep4ScoreMode(step) {
   const useWeights = step >= 1;
 
   if (scoreLabel) {
-    setMathHTML(scoreLabel, useWeights ? 'Attention Weights \\(A\\)' : 'Scores \\(s\\)');
+    setMathHTML(scoreLabel, useWeights ? 'Attention Weights \\(\\mathbf{a}\\)' : 'Scores \\(\\mathbf{s}\\)');
   }
   if (scoreCaption) {
     if (useWeights) {
-      setMathHTML(scoreCaption, '\\(a_j = \\operatorname{softmax}(s_j / \\sqrt{d_k})\\)');
+      setMathHTML(scoreCaption, '\\(a_j = \\frac{\\exp(z_j)}{\\sum_{\\ell} \\exp(z_{\\ell})},\\; z_j = \\frac{s_j}{\\sqrt{d_k}}\\)');
     } else {
-      setMathHTML(scoreCaption, '\\(s_j = q_{\\mathrm{sat}} \\cdot k_j\\)');
+      setMathHTML(scoreCaption, '\\(s_j = q_{\\mathrm{sat}}^{\\mathsf{T}} k_j\\)');
     }
   }
 

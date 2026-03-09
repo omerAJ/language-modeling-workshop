@@ -665,7 +665,7 @@ function createAttentionMatrixPostScoreStage() {
   stage.appendChild(createEl('div', {
     className: 'attn23-postscore-op attn23-postscore-scale-op',
     id: 'attn23-postscore-scale-op',
-    html: '\\(/ \\sqrt{d_k}\\)'
+    html: inlineMath('\\frac{1}{\\sqrt{d_k}}')
   }));
   stage.appendChild(createEl('div', {
     className: 'attn23-postscore-op attn23-postscore-softmax-op',
@@ -673,7 +673,7 @@ function createAttentionMatrixPostScoreStage() {
   }, [
     createEl('span', {
       className: 'attn23-postscore-softmax-main',
-      html: inlineMath('\\operatorname{softmax}(z_i)_j = \\frac{\\exp(z_{ij})}{\\sum_k \\exp(z_{ik})}')
+      html: inlineMath('a_{ij} = \\frac{\\exp(z_{ij})}{\\sum_{\\ell=1}^{S} \\exp(z_{i\\ell})}')
     }),
     createEl('span', {
       className: 'attn23-postscore-softmax-note',
@@ -700,7 +700,7 @@ function createAttentionMatrixPostScoreStage() {
   stage.appendChild(createEl('div', {
     className: 'attn23-postscore-caption',
     id: 'attn23-postscore-caption',
-    html: inlineMath('o_i = \\sum_j a_{ij} v_j')
+    html: inlineMath('o_i = \\sum_{j=1}^{S} a_{ij} v_j')
   }));
   return stage;
 }

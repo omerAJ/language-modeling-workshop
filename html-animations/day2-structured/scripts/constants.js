@@ -162,10 +162,10 @@ const ATTN_QKV_SCORE_QUAL = {
 
 const ATTN_QKV_TAKEAWAYS = [
   'We start from embeddings \\(x_1, \\ldots, x_n\\).',
-  'Project each embedding into a key representation \\(k\\).',
-  'Also project into a value: \\(v = xW_V\\). This is what gets copied.',
-  'For the focus token, build a query representation \\(q_{\\mathrm{sat}}\\).',
-  'Compute pairwise scores: \\(s_j = q_{\\mathrm{sat}} \\cdot k_j\\).',
+  'Project each token embedding into a key vector: \\(k_j = x_j W_K\\).',
+  'Project each token embedding into a value vector: \\(v_j = x_j W_V\\). This is what gets copied forward.',
+  'For the focus token, build a query vector: \\(q_{\\mathrm{sat}} = x_{\\mathrm{sat}} W_Q\\).',
+  'Compute pairwise scores: \\(s_j = q_{\\mathrm{sat}}^{\\mathsf{T}} k_j\\).',
   'Scores are ready. We no longer need \\(Q\\) or \\(K\\) for the next step.'
 ];
 
@@ -202,8 +202,8 @@ const ATTN_STEP4_SCORE_QUAL = {
 };
 
 const ATTN_STEP4_TAKEAWAYS = [
-  'Start from Step 3 scores \\(s_j\\) for each token.',
-  'Convert scores into attention weights: \\(a_j = \\operatorname{softmax}(s_j / \\sqrt{d_k})\\).',
+  'Start from Step 3 scores \\(s_j = q_{\\mathrm{sat}}^{\\mathsf{T}} k_j\\) for each token.',
+  'Convert scores into scaled logits \\(z_j = \\frac{s_j}{\\sqrt{d_k}}\\), then normalize: \\(a_j = \\frac{\\exp(z_j)}{\\sum_{\\ell} \\exp(z_{\\ell})}\\).',
   'First multiplication: pair the first weight with its value vector and scale it.',
   'Now apply the remaining attention multiplications across the other tokens.',
   'Aggregate all weighted values: \\(o_{\\mathrm{sat}} = \\sum_j a_j v_j\\).',
@@ -250,8 +250,8 @@ const ATTN_MATRIX_TOKENS = ATTN_QKV_TOKENS.slice();
 
 const ATTN_MATRIX_TAKEAWAYS = [
   'Start from the same sequence: tokens plus their embedding rows.',
-  'First collect the sequence tokens into a compact token matrix T.',
-  'Then collect the embedding rows into the embedding matrix X.',
+  'First collect the sequence tokens into a compact token matrix \\(T\\).',
+  'Then collect the embedding rows into the embedding matrix \\(X\\).',
   'Now apply the same Step 1 projection to the whole matrix: \\(X\\) is copied into three branches and projected into \\(Q\\), \\(K\\), and \\(V\\).',
   'Bring \\(Q\\) and \\(K\\) to the center as the matrices used for score computation.',
   'Transpose \\(K\\) so the matrix dimensions line up for multiplication.',
@@ -260,8 +260,8 @@ const ATTN_MATRIX_TAKEAWAYS = [
   'The fix is a causal attention mask.<br>For every future token position, replace that score with \\(-\\infty\\) so it is blocked.<br>Only the current token and the tokens before it are allowed to remain.',
   'Notice what appears in the blocked cells: \\(-\\infty\\).<br>Why do we write negative infinity there instead of \\(0\\) or just removing the cell?<br>The next steps will make that clear when we center this matrix, scale it, and apply the row-wise softmax.',
   'Now focus on the masked score matrix itself.<br>We will operate on it row by row, because attention normalizes each query row independently.',
-  'First scale the allowed scores by dividing by \\(\\sqrt{d_k}\\).<br>The masked future positions stay at \\(-\\infty\\), so they remain blocked.<br>This keeps the score magnitudes in a stable range before softmax.',
-  'Now apply softmax row by row.<br>\\(\\operatorname{softmax}(z_i)_j = \\frac{\\exp(z_{ij})}{\\sum_k \\exp(z_{ik})}\\), so \\(\\exp(-\\infty) = 0\\) and every masked future entry becomes zero attention.<br>Each row becomes a valid attention distribution over the allowed tokens.',
+  'First scale the allowed scores: \\(z_{ij} = \\frac{s_{ij}}{\\sqrt{d_k}}\\).<br>The masked future positions stay at \\(-\\infty\\), so they remain blocked.<br>This keeps the score magnitudes in a stable range before softmax.',
+  'Now apply softmax row by row.<br>\\(a_{ij} = \\frac{\\exp(z_{ij})}{\\sum_{\\ell=1}^{S} \\exp(z_{i\\ell})}\\), so \\(\\exp(-\\infty) = 0\\) and every masked future entry becomes zero attention.<br>Each row becomes a valid attention distribution over the allowed tokens.',
   'Bring in the value matrix \\(V\\).<br>The attention matrix \\(A\\) tells us how much of each value row to mix for every output row.',
   'Compute the weighted sum for the whole sequence: \\(O = AV\\).<br>Each output row is a weighted combination of value rows, using the attention weights from the matching row of \\(A\\).'
 ];
@@ -409,12 +409,12 @@ const ATTN_P1_TAKEAWAYS = [
   'Embeddings are static \u2014 attention projects them into new roles',
   '\\(x_{\\mathrm{sat}}\\) is the static embedding for \\(\\mathrm{sat}\\) from the previous layer.',
   'Broadcast the same \\(x_{\\mathrm{sat}}\\) into three branch copies.',
-  'Apply the query projection matrix \\(W_Q\\).',
+  'Apply the query projection matrix \\(W_Q\\), giving \\(q_{\\mathrm{sat}} = x_{\\mathrm{sat}} W_Q\\).',
   'Query \\(q_{\\mathrm{sat}}\\): what information does \\(\\mathrm{sat}\\) need?',
-  'Apply the key projection matrix \\(W_K\\).',
+  'Apply the key projection matrix \\(W_K\\), giving \\(k_{\\mathrm{sat}} = x_{\\mathrm{sat}} W_K\\).',
   'Key \\(k_{\\mathrm{sat}}\\): what does \\(\\mathrm{sat}\\) offer to other tokens?',
-  'Apply the value projection matrix \\(W_V\\).',
-  'Next: use \\(q_{\\mathrm{sat}}\\) to score every \\(k_j\\), producing \\(s_j\\).'
+  'Apply the value projection matrix \\(W_V\\), giving \\(v_{\\mathrm{sat}} = x_{\\mathrm{sat}} W_V\\).',
+  'Next: use \\(q_{\\mathrm{sat}}\\) to score every \\(k_j\\), producing \\(s_j = q_{\\mathrm{sat}}^{\\mathsf{T}} k_j\\).'
 ];
 
 const ATTN_WGT_TOKENS = ATTN_QKV_TOKENS.slice();
@@ -426,9 +426,9 @@ const ATTN_WGT_D_K = ATTN_QKV_QUERY_VECTOR.length;
 const ATTN_WGT_MAX_STEP = 3;
 
 const ATTN_WGT_TAKEAWAYS = [
-  'Raw similarity scores between \\(q_{\\mathrm{sat}}\\) and each key \\(k_j\\).',
-  'Scale scores to keep values in a stable range before \\(\\operatorname{softmax}\\).',
-  '\\(\\operatorname{softmax}\\) converts scaled scores into normalized attention weights.',
+  'Raw similarity scores between \\(q_{\\mathrm{sat}}\\) and each key \\(k_j\\), producing \\(s_j = q_{\\mathrm{sat}}^{\\mathsf{T}} k_j\\).',
+  'Scale each score into \\(z_j = \\frac{s_j}{\\sqrt{d_k}}\\) to keep values in a stable range before \\(\\operatorname{softmax}\\).',
+  'Normalize row-wise: \\(a_j = \\frac{\\exp(z_j)}{\\sum_{\\ell} \\exp(z_{\\ell})}\\).',
   'These weights decide how much each value \\(v_j\\) contributes to the updated token.'
 ];
 

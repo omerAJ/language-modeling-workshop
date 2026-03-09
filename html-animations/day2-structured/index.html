@@ -1338,7 +1338,7 @@ l e a r n ing &lt;/w&gt;</div>
           <div class="attn19-row-labels" id="attn19-row-labels">
             <div class="attn19-row-label x" id="attn19-row-x-label">Embeddings (\(X\))</div>
             <div class="attn19-row-label q" id="attn19-row-q-label">Queries (\(Q\))</div>
-            <div class="attn19-row-label s" id="attn19-row-s-label">Scores (\(s\))</div>
+            <div class="attn19-row-label s" id="attn19-row-s-label">Scores (\(\mathbf{s}\))</div>
             <div class="attn19-row-label k" id="attn19-row-k-label">Keys (\(K\))</div>
             <div class="attn19-row-label v" id="attn19-row-v-label">Values (\(V\))</div>
           </div>
@@ -1347,7 +1347,7 @@ l e a r n ing &lt;/w&gt;</div>
       </div>
     </div>
 
-    <div class="attn19-score-caption">\(s_j = q_{\mathrm{sat}} \cdot k_j\)</div>
+    <div class="attn19-score-caption">\(s_j = q_{\mathrm{sat}}^{\mathsf{T}} k_j\)</div>
     <div class="attn19-takeaway" id="attn19-takeaway">We start from embeddings \(x_1, \ldots, x_n\).</div>
   </div>
 
@@ -1364,7 +1364,7 @@ l e a r n ing &lt;/w&gt;</div>
         <div class="attn21-workspace">
           <div class="attn21-pipeline">
             <div class="attn21-block attn21-block-s">
-              <div class="attn21-block-title">RAW SCORES \(S\)</div>
+              <div class="attn21-block-title">RAW SCORES \(\mathbf{s}\)</div>
               <div class="attn21-block-caption">for query token: <span id="attn21-query-token">sat</span></div>
               <div class="attn21-row-shell">
                 <div class="attn21-chip-grid attn21-row-raw" id="attn21-raw-row"></div>
@@ -1373,13 +1373,13 @@ l e a r n ing &lt;/w&gt;</div>
 
             <div class="attn21-link attn21-link-scale">
               <span class="attn21-link-arrow" aria-hidden="true"></span>
-              <div class="attn21-op attn21-op-scale">\(/ \sqrt{d_k}\)</div>
+              <div class="attn21-op attn21-op-scale">\(\frac{1}{\sqrt{d_k}}\)</div>
               <span class="attn21-link-arrow" aria-hidden="true"></span>
             </div>
 
             <div class="attn21-block attn21-block-z">
-              <div class="attn21-block-title">SCALED SCORES \(Z\)</div>
-              <div class="attn21-block-caption">\(z = s / \sqrt{d_k}\)</div>
+              <div class="attn21-block-title">SCALED SCORES \(\mathbf{z}\)</div>
+              <div class="attn21-block-caption">\(z_j = \frac{s_j}{\sqrt{d_k}}\)</div>
               <div class="attn21-row-shell">
                 <div class="attn21-chip-grid attn21-row-scaled" id="attn21-scaled-row"></div>
               </div>
@@ -1393,7 +1393,7 @@ l e a r n ing &lt;/w&gt;</div>
             </div>
 
             <div class="attn21-block attn21-block-weights">
-              <div class="attn21-block-title">ATTENTION WEIGHTS \(A\)</div>
+              <div class="attn21-block-title">ATTENTION WEIGHTS \(\mathbf{a}\)</div>
               <div class="attn21-weight-shell">
                 <div class="attn21-weight-cells" id="attn21-weight-row"></div>
                 <span class="attn21-weight-sweep" aria-hidden="true"></span>
@@ -1405,7 +1405,7 @@ l e a r n ing &lt;/w&gt;</div>
       </div>
     </div>
 
-    <div class="attn21-takeaway" id="attn21-takeaway">Raw similarity scores between \(q_{\mathrm{sat}}\) and each key \(k_j\).</div>
+    <div class="attn21-takeaway" id="attn21-takeaway">Raw similarity scores between \(q_{\mathrm{sat}}\) and each key \(k_j\), producing \(s_j = q_{\mathrm{sat}}^{\mathsf{T}} k_j\).</div>
   </div>
 
   <div class="slide" id="slide-22">
@@ -1480,7 +1480,7 @@ l e a r n ing &lt;/w&gt;</div>
           <div class="attn19-row-labels" id="attn22-row-labels">
             <div class="attn19-row-label x" id="attn22-row-x-label">Embeddings (\(X\))</div>
             <div class="attn19-row-label q" id="attn22-row-q-label">Queries (\(Q\))</div>
-            <div class="attn19-row-label s" id="attn22-row-s-label">Scores (\(s\))</div>
+            <div class="attn19-row-label s" id="attn22-row-s-label">Scores (\(\mathbf{s}\))</div>
             <div class="attn19-row-label k" id="attn22-row-k-label">Keys (\(K\))</div>
             <div class="attn19-row-label v" id="attn22-row-v-label">Values (\(V\))</div>
           </div>
@@ -1489,7 +1489,7 @@ l e a r n ing &lt;/w&gt;</div>
       </div>
     </div>
 
-    <div class="attn19-score-caption" id="attn22-score-caption">\(s_j = q_{\mathrm{sat}} \cdot k_j\)</div>
+    <div class="attn19-score-caption" id="attn22-score-caption">\(s_j = q_{\mathrm{sat}}^{\mathsf{T}} k_j\)</div>
     <div class="attn22-agg-wrap" id="attn22-agg-wrap" aria-live="polite">
       <div class="attn22-agg-formula" id="attn22-agg-formula"></div>
       <div class="attn22-agg-formula-residual" id="attn22-agg-formula-residual">\(y_{\mathrm{sat}} = x_{\mathrm{sat}} + o_{\mathrm{sat}}\)</div>
@@ -1498,7 +1498,7 @@ l e a r n ing &lt;/w&gt;</div>
         <div class="attn22-agg-output-vector" id="attn22-agg-output-vector"></div>
       </div>
     </div>
-    <div class="attn19-takeaway" id="attn22-takeaway">Start from Step 3 scores \(s_j\) for each token.</div>
+    <div class="attn19-takeaway" id="attn22-takeaway">Start from Step 3 scores \(s_j = q_{\mathrm{sat}}^{\mathsf{T}} k_j\) for each token.</div>
   </div>
 
   <div class="slide" id="slide-23">
@@ -1596,7 +1596,7 @@ l e a r n ing &lt;/w&gt;</div>
       </div>
     </div>
 
-    <div class="attn19-takeaway" id="attn24-takeaway">Multi-head attention runs several smaller attention mechanisms in parallel on different learned projections of the same embedding matrix X.</div>
+    <div class="attn19-takeaway" id="attn24-takeaway">Multi-head attention runs several smaller attention mechanisms in parallel on different learned projections of the same embedding matrix \(X\).</div>
   </div>
 
   <div class="slide" id="slide-25">

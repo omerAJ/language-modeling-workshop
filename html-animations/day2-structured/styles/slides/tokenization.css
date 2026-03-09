@@ -100,6 +100,28 @@
   .pair-chip strong {
     color: var(--accent);
   }
+
+  /* BPE walkthrough: each reveal should replace the previous overlay in place. */
+  .bpe-initial {
+    transition: opacity 0.35s ease;
+  }
+  .bpe-initial:has(~ .bpe-overlay.revealed) {
+    opacity: 0;
+    pointer-events: none;
+  }
+  .bpe-overlay.hidden-content.revealed:has(~ .bpe-overlay.hidden-content.revealed) {
+    opacity: 0 !important;
+    pointer-events: none;
+  }
+  .bpe-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    margin-top: 0;
+    background: var(--bg);
+  }
+
   .token-example {
     display: flex;
     flex-wrap: wrap;
@@ -157,4 +179,3 @@
     border: 1px solid var(--border);
     background: var(--surface2);
   }
-

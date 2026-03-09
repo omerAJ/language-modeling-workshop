@@ -280,9 +280,14 @@ Use:
 Examples:
 - use `\(Q\)`, not plain `Q` when it is a matrix symbol
 - use `\(x_{\mathrm{sat}}\)`, not `x<sub>sat</sub>`
-- use `\(\operatorname{softmax}(s_j / \sqrt{d_k})\)`, not mixed text plus HTML subscripts
+- use `\(z_j = \frac{s_j}{\sqrt{d_k}}\)`, not mixed text plus HTML subscripts
+- use `\(a_j = \frac{\exp(z_j)}{\sum_{\ell} \exp(z_{\ell})}\)` when you mean one attention weight explicitly
 
 This deck already uses MathJax. Keep notation consistent and let MathJax render it.
+
+Attention notation convention in this deck:
+- single-query slides use row/scalar notation such as `\(s_j\)`, `\(z_j\)`, and `\(a_j\)`
+- matrix-view slides use matrix notation such as `\(S\)`, `\(Z\)`, `\(A\)`, and `\(O\)`, with entries like `\(a_{ij}\)`
 
 ### 7. Keep the README in sync
 

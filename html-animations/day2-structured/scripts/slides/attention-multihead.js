@@ -214,7 +214,7 @@ function createAttentionMultiHeadAttentionBlock(head) {
     createEl('div', {
       className: 'attn24-head-attn-block-formula'
     }, createEl('span', {
-      html: inlineMath('\\operatorname{softmax}(QK^{\\mathsf{T}} / \\sqrt{d_h} + \\text{mask})\\,V')
+      html: inlineMath('\\operatorname{softmax}\\!\\left(\\frac{QK^{\\mathsf{T}}}{\\sqrt{d_h}} + M\\right)V')
     }))
   ]);
 }
