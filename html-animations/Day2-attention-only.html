@@ -21,8 +21,14 @@
     --text: #f0f1f4;
     --text-dim: #99a0b8;
     --accent: #7b9aff;
+    --accent-glow: rgba(123,154,255,0.28);
     --green: #5ae88e;
+    --green-glow: rgba(90,232,142,0.22);
     --purple: #b49dff;
+    --orange: #ffaa55;
+    --yellow: #ffd644;
+    --cyan: #33e0f5;
+    --arch-arrow-length: 1.2rem;
   }
 
   body {
@@ -189,6 +195,131 @@
     color: var(--text-dim);
     min-width: 3.75rem;
     text-align: center;
+  }
+
+  .arch-box {
+    padding: 0.45rem 1rem;
+    border-radius: 0.5rem;
+    font-size: 0.74rem;
+    font-weight: 600;
+    text-align: center;
+    min-width: 7.2rem;
+    border: 1.5px solid;
+    position: relative;
+    z-index: 1;
+  }
+  .arch-box.pos {
+    background: rgba(255,214,68,0.1);
+    border-color: rgba(255,214,68,0.35);
+    color: var(--yellow);
+  }
+  .arch-box.attn {
+    background: rgba(180,157,255,0.15);
+    border-color: rgba(180,157,255,0.45);
+    color: var(--purple);
+  }
+  .arch-arrow {
+    position: relative;
+    width: 0.9rem;
+    height: var(--arch-arrow-length);
+    margin: 0.05rem 0;
+    display: block;
+    color: transparent;
+    user-select: none;
+    overflow: visible;
+  }
+  .arch-arrow::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 0.26rem;
+    bottom: 0;
+    width: 1.5px;
+    transform: translateX(-50%);
+    background: rgba(153,160,184,0.85);
+  }
+  .arch-arrow::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 0;
+    width: 0.32rem;
+    height: 0.32rem;
+    border-left: 2px solid rgba(153,160,184,0.85);
+    border-top: 2px solid rgba(153,160,184,0.85);
+    transform: translateX(-50%) rotate(45deg);
+  }
+  .arch-plus {
+    width: 1.3rem;
+    height: 1.3rem;
+    min-width: 1.3rem;
+    min-height: 1.3rem;
+    flex: 0 0 1.3rem;
+    aspect-ratio: 1 / 1;
+    border-radius: 50%;
+    border: 1.5px solid var(--border);
+    background: var(--surface2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--text-dim);
+    margin: 0.1rem 0;
+    z-index: 1;
+  }
+  .pos-merge {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 0;
+  }
+  .pos-merge .arch-box.pos {
+    position: absolute;
+    top: 50%;
+    right: calc(100% + 1.2rem);
+    transform: translateY(-50%);
+    min-width: auto;
+    padding: 0.35rem 0.6rem;
+    font-size: 0.68rem;
+    white-space: nowrap;
+  }
+  .pos-side-arrow {
+    position: absolute;
+    top: 50%;
+    right: calc(100% + 0.45rem);
+    transform: translateY(-50%);
+    width: 0.7rem;
+    height: 0.5rem;
+    color: transparent;
+    font-size: 0;
+    line-height: 0;
+    padding: 0;
+    display: block;
+    pointer-events: none;
+  }
+  .pos-side-arrow::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0.18rem;
+    top: 50%;
+    height: 1.5px;
+    transform: translateY(-50%);
+    background: rgba(153,160,184,0.85);
+  }
+  .pos-side-arrow::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 50%;
+    width: 0.26rem;
+    height: 0.26rem;
+    border-top: 2px solid rgba(153,160,184,0.85);
+    border-right: 2px solid rgba(153,160,184,0.85);
+    transform: translateY(-50%) rotate(45deg);
   }
 
   .attn18-subtitle {
@@ -3360,6 +3491,449 @@
     opacity: 0.98;
   }
 
+  .attn25-stage {
+    position: relative;
+    min-height: clamp(24rem, 76vh, 34rem);
+    display: grid;
+    justify-items: center;
+    align-content: start;
+    gap: clamp(0.9rem, 2.2vh, 1.25rem);
+    padding-top: 0.88rem;
+  }
+  .attn25-context-row {
+    width: min(100%, 44rem);
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(0.72rem, 1.9vw, 1rem);
+    align-items: start;
+  }
+  .attn25-mini-panel {
+    position: relative;
+    display: grid;
+    justify-items: center;
+    align-content: start;
+    gap: 0.42rem;
+    min-height: 7rem;
+    padding: 0.8rem 0.82rem 0.9rem;
+    border-radius: 0.8rem;
+    border: 1px solid rgba(184,194,221,0.22);
+    background:
+      radial-gradient(circle at top, rgba(255,255,255,0.025), transparent 54%),
+      rgba(10,14,24,0.44);
+    transition: opacity 0.22s ease, transform 0.22s ease, border-color 0.22s ease;
+  }
+  .attn25-panel-title {
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(214,224,250,0.92);
+  }
+  .attn25-panel-note {
+    font-size: 0.5rem;
+    font-family: 'JetBrains Mono', monospace;
+    color: rgba(182,194,223,0.72);
+    text-align: center;
+  }
+  .attn25-rnn-flow,
+  .attn25-transformer-flow {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.34rem;
+  }
+  .attn25-rnn-flow {
+    flex-wrap: nowrap;
+  }
+  .attn25-transformer-flow {
+    flex-direction: column;
+    gap: 0.42rem;
+  }
+  .attn25-chip-inline {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.24rem;
+    flex-wrap: nowrap;
+  }
+  .attn25-chip-inline .attn19-token-chip {
+    min-width: 2.46rem;
+    padding: 0.22rem 0.3rem;
+    font-size: 0.58rem;
+  }
+  .attn25-rnn-arrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem;
+    color: rgba(203,214,240,0.74);
+    line-height: 1;
+  }
+  .attn25-transformer-panel .arch-box.attn,
+  .attn25-problem-attn .arch-box.attn,
+  .attn25-fix-attn-wrap .arch-box.attn {
+    min-width: 6.6rem;
+    padding-inline: 0.72rem;
+    font-size: 0.66rem;
+  }
+  .attn25-question-chip,
+  .attn25-shared-note {
+    min-height: 1.9rem;
+    padding: 0.34rem 0.78rem;
+    border-radius: 999px;
+    border: 1px solid rgba(184,194,221,0.22);
+    background: rgba(184,194,221,0.06);
+    color: rgba(219,229,255,0.94);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.56rem;
+    line-height: 1.35;
+    text-align: center;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(0.16rem);
+    transition: opacity 0.22s ease, transform 0.22s ease, visibility 0.22s ease;
+  }
+  .attn25-question-chip {
+    border-color: rgba(var(--attn19-focus-rgb), 0.42);
+    background: rgba(var(--attn19-focus-rgb), 0.12);
+  }
+  .attn25-problem-stage,
+  .attn25-fix-stage {
+    width: min(100%, 56rem);
+    transform: translateY(0.22rem);
+    transition: opacity 0.24s ease, transform 0.24s ease, visibility 0.24s ease;
+  }
+  .attn25-problem-stage {
+    display: grid;
+    gap: 0.8rem;
+    justify-items: center;
+    opacity: 0.16;
+  }
+  .attn25-fix-stage {
+    opacity: 0;
+    visibility: hidden;
+  }
+  .attn25-seq-top {
+    width: min(100%, 32rem);
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+    align-items: start;
+  }
+  .attn25-seq-strip {
+    display: grid;
+    justify-items: center;
+    gap: 0.36rem;
+  }
+  .attn25-seq-label {
+    font-size: 0.58rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(214,224,250,0.88);
+  }
+  .attn25-collapse-arrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.88rem;
+    color: rgba(203,214,240,0.68);
+    line-height: 1;
+  }
+  .attn25-problem-body {
+    width: min(100%, 36rem);
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 1rem;
+    align-items: center;
+  }
+  .attn25-bag-wrap {
+    display: grid;
+    gap: 0.28rem;
+    justify-items: stretch;
+  }
+  .attn25-bag-label {
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: rgba(214,224,250,0.92);
+  }
+  .attn25-bag-subtitle {
+    font-size: 0.5rem;
+    font-family: 'JetBrains Mono', monospace;
+    color: rgba(182,194,223,0.72);
+  }
+  .attn25-bag-shell,
+  .attn25-fix-input-shell {
+    position: relative;
+    width: 100%;
+    padding: 0.16rem;
+    border: 1px solid rgba(184,194,221,0.28);
+    border-radius: 0.5rem;
+    background: rgba(184,194,221,0.05);
+    overflow: hidden;
+  }
+  .attn25-bag-shell::before,
+  .attn25-fix-input-shell::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.02);
+    pointer-events: none;
+  }
+  .attn25-bag-slots,
+  .attn25-fix-input-slots {
+    display: grid;
+    gap: 0.14rem;
+  }
+  .attn25-bag-row,
+  .attn25-fix-row {
+    display: grid;
+    grid-template-columns: max-content minmax(0, 1fr);
+    align-items: center;
+    gap: 0.28rem;
+  }
+  .attn25-fix-row {
+    min-height: 1.14rem;
+  }
+  .attn25-bag-row .attn19-token-chip,
+  .attn25-fix-row .attn19-token-chip {
+    min-width: 2.7rem;
+    padding: 0.18rem 0.28rem;
+    font-size: 0.54rem;
+    border-radius: 0.36rem;
+  }
+  .attn25-bag-row-vector,
+  .attn25-fix-row-vector {
+    display: block;
+    width: 100%;
+  }
+  .attn25-bag-row .attn19-vector,
+  .attn25-fix-row .attn19-vector {
+    width: 100%;
+    height: 0.72rem;
+    border-radius: 0.26rem;
+  }
+  .attn25-bag-row[data-token="cat"] .attn19-token-chip,
+  .attn25-fix-row[data-token="cat"] .attn19-token-chip {
+    border-color: rgba(var(--attn19-focus-rgb), 0.58);
+    background: rgba(var(--attn19-focus-rgb), 0.12);
+  }
+  .attn25-bag-row[data-token="sat"] .attn19-token-chip,
+  .attn25-fix-row[data-token="sat"] .attn19-token-chip {
+    border-color: rgba(var(--attn19-source-rgb), 0.48);
+    background: rgba(var(--attn19-source-rgb), 0.08);
+  }
+  .attn25-bag-row[data-token="on"] .attn19-token-chip,
+  .attn25-fix-row[data-token="on"] .attn19-token-chip {
+    border-color: rgba(255,214,68,0.46);
+    background: rgba(255,214,68,0.08);
+  }
+  .attn25-bag-row[data-token="mat"] .attn19-token-chip,
+  .attn25-fix-row[data-token="mat"] .attn19-token-chip {
+    border-color: rgba(51,224,245,0.44);
+    background: rgba(51,224,245,0.08);
+  }
+  .attn25-note-row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.42rem;
+    min-height: 2rem;
+  }
+  #attn25-note-bag {
+    border-color: rgba(255,214,68,0.34);
+    background: rgba(255,214,68,0.1);
+    color: rgba(255,235,164,0.92);
+  }
+  #attn25-note-orderblind {
+    border-color: rgba(var(--attn19-focus-rgb), 0.36);
+    background: rgba(var(--attn19-focus-rgb), 0.12);
+  }
+  #attn25-note-formula {
+    border-color: rgba(255,214,68,0.38);
+    background: rgba(255,214,68,0.1);
+    color: rgba(255,235,164,0.92);
+  }
+  #attn25-note-diff {
+    border-color: rgba(var(--attn19-focus-rgb), 0.48);
+    background: rgba(var(--attn19-focus-rgb), 0.14);
+    color: rgba(225,233,255,0.98);
+  }
+  #attn25-note-saviour {
+    border-color: rgba(255,214,68,0.36);
+    background: rgba(90,232,142,0.1);
+    color: rgba(205,250,221,0.96);
+  }
+  .attn25-fix-stage {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+    align-items: start;
+  }
+  #attn25-fix-notes {
+    grid-column: 1 / -1;
+  }
+  .attn25-fix-card {
+    display: grid;
+    gap: 0.56rem;
+    padding: 0.84rem 0.88rem 0.94rem;
+    border-radius: 0.84rem;
+    border: 1px solid rgba(184,194,221,0.22);
+    background:
+      radial-gradient(circle at top, rgba(255,255,255,0.03), transparent 54%),
+      rgba(9,13,22,0.44);
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.015);
+  }
+  .attn25-fix-header {
+    display: grid;
+    gap: 0.22rem;
+    justify-items: center;
+    text-align: center;
+  }
+  .attn25-fix-flow {
+    display: grid;
+    grid-template-columns: 2.9rem 1.2rem minmax(0, 1fr) auto;
+    gap: 0.62rem;
+    align-items: start;
+  }
+  .attn25-pos-source {
+    display: grid;
+    justify-items: start;
+    width: max-content;
+  }
+  .attn25-pos-source .arch-box.pos {
+    min-width: 5rem;
+    padding-inline: 0.62rem;
+    font-size: 0.54rem;
+  }
+  .attn25-pos-col,
+  .attn25-plus-col {
+    display: grid;
+    gap: 0.14rem;
+    width: 100%;
+    align-content: start;
+    justify-items: center;
+  }
+  .attn25-pos-row,
+  .attn25-plus-row {
+    min-height: 1.14rem;
+    display: grid;
+    place-items: center;
+  }
+  .attn25-pos-row {
+    min-width: 2.7rem;
+    padding: 0.18rem 0.28rem;
+    border-radius: 0.36rem;
+    border: 1px solid rgba(184,194,221,0.22);
+    background: rgba(184,194,221,0.06);
+    color: rgba(206,216,241,0.78);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.54rem;
+  }
+  .attn25-plus-row .arch-plus {
+    width: 0.96rem;
+    height: 0.96rem;
+    min-width: 0.96rem;
+    min-height: 0.96rem;
+    flex-basis: 0.96rem;
+    font-size: 0.62rem;
+    border-width: 1px;
+  }
+  .attn25-fix-input-wrap {
+    display: grid;
+    min-width: 0;
+  }
+  .attn25-fix-attn-wrap {
+    display: grid;
+    justify-items: center;
+    align-self: start;
+    padding-top: 0.12rem;
+  }
+  .attn25-fix-row[data-compare-token="true"] .attn19-token-chip {
+    box-shadow: 0 0 0 0.08rem rgba(var(--attn19-focus-rgb), 0.2);
+  }
+  .attn25-fix-row[data-pos-index="1"] .attn19-vector {
+    border-color: rgba(var(--attn19-focus-rgb), 0.58);
+    background: rgba(var(--attn19-focus-rgb), 0.12);
+  }
+  .attn25-fix-row[data-pos-index="2"] .attn19-vector {
+    border-color: rgba(var(--attn19-source-rgb), 0.5);
+    background: rgba(var(--attn19-source-rgb), 0.1);
+  }
+  .attn25-fix-row[data-pos-index="3"] .attn19-vector {
+    border-color: rgba(255,214,68,0.5);
+    background: rgba(255,214,68,0.1);
+  }
+  .attn25-fix-row[data-pos-index="4"] .attn19-vector {
+    border-color: rgba(180,157,255,0.52);
+    background: rgba(180,157,255,0.12);
+  }
+  #slide-25 .attn25-transformer-panel,
+  #slide-25 .attn25-question-chip,
+  #slide-25 .attn25-problem-stage,
+  #slide-25 .attn25-fix-stage,
+  #slide-25 .attn25-shared-note {
+    pointer-events: none;
+  }
+  #slide-25 .attn25-transformer-panel {
+    opacity: 0.24;
+  }
+  #slide-25 .attn25-problem-stage,
+  #slide-25 .attn25-fix-stage {
+    opacity: 0.16;
+  }
+  #slide-25.attn25-show-question .attn25-transformer-panel {
+    opacity: 1;
+    transform: translateY(0);
+    border-color: rgba(var(--attn19-focus-rgb), 0.32);
+  }
+  #slide-25.attn25-show-question .attn25-question-chip {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+  #slide-25.attn25-show-problem .attn25-problem-stage {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+  #slide-25.attn25-show-problem #attn25-note-bag,
+  #slide-25.attn25-show-problem #attn25-note-orderblind {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+  #slide-25.attn25-show-fix .attn25-problem-stage {
+    opacity: 0.1;
+    transform: translateY(-0.1rem);
+  }
+  #slide-25.attn25-show-fix #attn25-note-bag,
+  #slide-25.attn25-show-fix #attn25-note-orderblind {
+    opacity: 0;
+    visibility: hidden;
+  }
+  #slide-25.attn25-show-fix .attn25-fix-stage,
+  #slide-25.attn25-show-fix #attn25-note-formula,
+  #slide-25.attn25-show-fix #attn25-note-diff,
+  #slide-25.attn25-show-fix #attn25-note-saviour {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+  #slide-25.attn25-show-fix .attn25-pos-row[data-pos-index="1"] {
+    border-color: rgba(var(--attn19-focus-rgb), 0.54);
+    background: rgba(var(--attn19-focus-rgb), 0.14);
+    color: rgba(225,233,255,0.96);
+  }
+  #slide-25.attn25-show-fix .attn25-pos-row[data-pos-index="4"] {
+    border-color: rgba(180,157,255,0.54);
+    background: rgba(180,157,255,0.14);
+    color: rgba(228,220,255,0.96);
+  }
+
   @keyframes attn23MaskPulse {
     0% {
       box-shadow: inset 0 0 0 1px rgba(255,183,108,0.14), 0 0 0 rgba(255,163,82,0);
@@ -3573,6 +4147,39 @@
     .attn24-combine-mul,
     .attn24-combine-equals {
       font-size: 0.9rem;
+    }
+    .attn25-context-row,
+    .attn25-seq-top,
+    .attn25-fix-stage {
+      grid-template-columns: 1fr;
+    }
+    .attn25-problem-body {
+      grid-template-columns: 1fr;
+      justify-items: center;
+    }
+    .attn25-fix-flow {
+      grid-template-columns: auto auto minmax(0, 1fr);
+      justify-items: stretch;
+      align-items: start;
+    }
+    .attn25-bag-wrap,
+    .attn25-fix-input-wrap {
+      width: min(100%, 16rem);
+    }
+    .attn25-pos-source {
+      justify-self: center;
+    }
+    .attn25-mini-panel {
+      min-height: 0;
+    }
+    .attn25-chip-inline {
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .attn25-fix-attn-wrap {
+      grid-column: 1 / -1;
+      width: 100%;
+      padding-top: 0;
     }
     .attn18-layout { margin-top: 0.72rem; }
     .attn18-stage {
@@ -5177,6 +5784,19 @@
     <div class="attn19-takeaway" id="attn24-takeaway">Multi-head attention runs several smaller attention mechanisms in parallel on different learned projections of the same embedding matrix X.</div>
   </div>
 
+  <div class="slide" id="slide-25">
+    <span class="section-tag">Input Representation</span>
+    <div class="badge concept">Concept</div>
+    <h2>Positional Embeddings</h2>
+    <p class="small-text attn19-subtitle">Transformers read all tokens together, so order must be injected explicitly</p>
+
+    <div class="attn19-layout">
+      <div class="card attn19-stage attn25-stage" id="attn25-stage"></div>
+    </div>
+
+    <div class="attn19-takeaway" id="attn25-takeaway">RNNs read tokens one at a time, so sequence order is naturally built into the computation.</div>
+  </div>
+
 </div>
 
 <div class="bottom-bar">
@@ -5417,6 +6037,17 @@ const ATTN_MHA_OUTPUT_ROWS = Object.fromEntries(
   ATTN_MHA_HEADS.map((head) => [head, computeAttentionMultiHeadOutputs(ATTN_MHA_ATTN_ROWS[head], ATTN_MHA_V_ROWS[head])])
 );
 
+const ATTN_POS_MAX_STEP = 3;
+const ATTN_POS_SEQ_A = ['cat', 'sat', 'on', 'mat'];
+const ATTN_POS_SEQ_B = ['mat', 'sat', 'on', 'cat'];
+const ATTN_POS_TAGS = ['p1', 'p2', 'p3', 'p4'];
+const ATTN_POS_TAKEAWAYS = [
+  'RNNs read tokens one at a time, so sequence order is naturally built into the computation.',
+  'Transformers process all token rows together. If everything enters attention at once, where does the sequence information come from?',
+  'Without positional embeddings, the model treats the sequence like a bag of tokens. Self-attention is order-blind: reordering the same token rows does not tell it what came first.',
+  'Positional embeddings fix this. Inject a different position signal pointwise into each token embedding before attention, so the model can tell first, second, third, and fourth apart.'
+];
+
 const ATTN_P1_TOKENS = ['cat', 'sat', 'on', 'the', 'mat'];
 const ATTN_P1_FOCUS = 'sat';
 const ATTN_P1_PROJS = ['q', 'k', 'v'];
@@ -5586,6 +6217,13 @@ const state = {
     concatDone: false,
     outputProjectionDone: false,
     combineVisible: false,
+    resizeBound: false
+  },
+  attentionPosition: {
+    initialized: false,
+    step: 0,
+    timers: [],
+    rafIds: [],
     resizeBound: false
   },
   attentionP1: {
@@ -12159,6 +12797,344 @@ function resetAttentionMultiHeadSlide() {
 }
 
 /* =====================================================
+   Slide-25 — Positional Encoding
+   ===================================================== */
+
+function createAttentionPositionMiniChip(token) {
+  return createEl('div', { className: 'attn19-token-chip', text: token });
+}
+
+function createAttentionPositionContextPanel(kind) {
+  if (kind === 'rnn') {
+    const panel = createEl('div', {
+      className: 'attn25-mini-panel attn25-rnn-panel',
+      id: 'attn25-rnn-panel'
+    });
+    panel.appendChild(createEl('div', {
+      className: 'attn25-panel-title',
+      text: 'RNN'
+    }));
+    const flow = createEl('div', { className: 'attn25-rnn-flow' });
+    ATTN_POS_SEQ_A.forEach((token, idx) => {
+      flow.appendChild(createAttentionPositionMiniChip(token));
+      if (idx < ATTN_POS_SEQ_A.length - 1) {
+        flow.appendChild(createEl('span', {
+          className: 'attn25-rnn-arrow',
+          text: '→'
+        }));
+      }
+    });
+    panel.appendChild(flow);
+    panel.appendChild(createEl('div', {
+      className: 'attn25-panel-note',
+      text: 'one token at a time'
+    }));
+    return panel;
+  }
+
+  const panel = createEl('div', {
+    className: 'attn25-mini-panel attn25-transformer-panel',
+    id: 'attn25-transformer-panel'
+  });
+  panel.appendChild(createEl('div', {
+    className: 'attn25-panel-title',
+    text: 'Transformer'
+  }));
+  const flow = createEl('div', { className: 'attn25-transformer-flow' });
+  const chips = createEl('div', { className: 'attn25-chip-inline' });
+  ATTN_POS_SEQ_A.forEach((token) => {
+    chips.appendChild(createAttentionPositionMiniChip(token));
+  });
+  flow.appendChild(chips);
+  flow.appendChild(createEl('div', {
+    className: 'arch-box attn',
+    text: 'Self-Attention'
+  }));
+  panel.appendChild(flow);
+  panel.appendChild(createEl('div', {
+    className: 'attn25-panel-note',
+    text: 'all tokens together'
+  }));
+  return panel;
+}
+
+function createAttentionPositionSeqStrip(kind) {
+  const tokens = kind === 'a' ? ATTN_POS_SEQ_A : ATTN_POS_SEQ_B;
+  return createEl('div', {
+    className: 'attn25-seq-strip',
+    id: 'attn25-seq-strip-' + kind
+  }, [
+    createEl('div', {
+      className: 'attn25-seq-label',
+      text: kind === 'a' ? 'Sequence A' : 'Sequence B'
+    }),
+    createEl('div', {
+      className: 'attn25-chip-inline'
+    }, tokens.map((token) => createAttentionPositionMiniChip(token))),
+    createEl('div', {
+      className: 'attn25-collapse-arrow',
+      id: 'attn25-collapse-arrow-' + kind,
+      text: '↓'
+    })
+  ]);
+}
+
+function createAttentionPositionBagRow(token, rowIndex) {
+  return createEl('div', {
+    className: 'attn25-bag-row',
+    id: 'attn25-bag-row-' + rowIndex,
+    dataset: { token }
+  }, [
+    createEl('div', { className: 'attn19-token-chip', text: token }),
+    createEl('div', {
+      className: 'attn25-bag-row-vector'
+    }, createAttentionSkeletonVectorRect('attn25-bag-vector-' + rowIndex, '', 4))
+  ]);
+}
+
+function createAttentionPositionProblemStage() {
+  const bagShell = createEl('div', {
+    className: 'attn25-bag-shell',
+    id: 'attn25-bag-shell'
+  });
+  bagShell.appendChild(createEl('div', {
+    className: 'attn25-bag-slots',
+    id: 'attn25-bag-slots'
+  }, ['cat', 'sat', 'on', 'mat'].map((token, rowIndex) => createAttentionPositionBagRow(token, rowIndex))));
+
+  return createEl('div', {
+    className: 'attn25-problem-stage',
+    id: 'attn25-problem-stage'
+  }, [
+    createEl('div', {
+      className: 'attn25-seq-top',
+      id: 'attn25-seq-top'
+    }, [
+      createAttentionPositionSeqStrip('a'),
+      createAttentionPositionSeqStrip('b')
+    ]),
+    createEl('div', {
+      className: 'attn25-problem-body',
+      id: 'attn25-problem-body'
+    }, [
+      createEl('div', {
+        className: 'attn25-bag-wrap',
+        id: 'attn25-bag-wrap'
+      }, [
+        createEl('div', {
+          className: 'attn25-bag-label',
+          id: 'attn25-bag-label',
+          text: 'Token Embeddings Only'
+        }),
+        createEl('div', {
+          className: 'attn25-bag-subtitle',
+          id: 'attn25-bag-subtitle',
+          text: 'same bag of token rows'
+        }),
+        bagShell
+      ]),
+      createEl('div', {
+        className: 'attn25-problem-attn',
+        id: 'attn25-problem-attn'
+      }, createEl('div', {
+        className: 'arch-box attn',
+        text: 'Self-Attention'
+      }))
+    ]),
+    createEl('div', {
+      className: 'attn25-note-row',
+      id: 'attn25-problem-notes'
+    }, [
+      createEl('div', {
+        className: 'attn25-shared-note',
+        id: 'attn25-note-bag',
+        text: 'same tokens + no positions = same bag'
+      }),
+      createEl('div', {
+        className: 'attn25-shared-note',
+        id: 'attn25-note-orderblind',
+        text: 'swap rows in → swap rows out'
+      })
+    ])
+  ]);
+}
+
+function createAttentionPositionFixRow(token, rowIndex, sequenceKind) {
+  return createEl('div', {
+    className: 'attn25-fix-row',
+    id: 'attn25-fix-row-' + sequenceKind + '-' + rowIndex,
+    dataset: {
+      token,
+      posIndex: String(rowIndex + 1),
+      compareToken: token === 'cat' || token === 'mat' ? 'true' : 'false'
+    }
+  }, [
+    createEl('div', { className: 'attn19-token-chip', text: token }),
+    createEl('div', {
+      className: 'attn25-fix-row-vector'
+    }, createAttentionSkeletonVectorRect('attn25-fix-vector-' + sequenceKind + '-' + rowIndex, '', 4))
+  ]);
+}
+
+function createAttentionPositionFixCard(kind) {
+  const tokens = kind === 'a' ? ATTN_POS_SEQ_A : ATTN_POS_SEQ_B;
+  return createEl('div', {
+    className: 'attn25-fix-card',
+    id: 'attn25-fix-card-' + kind,
+    dataset: { kind }
+  }, [
+    createEl('div', {
+      className: 'attn25-fix-header'
+    }, [
+      createEl('div', {
+        className: 'attn25-seq-label',
+        text: kind === 'a' ? 'Sequence A' : 'Sequence B'
+      }),
+      createEl('div', {
+        className: 'attn25-panel-note',
+        text: tokens.join(' ')
+      })
+    ]),
+    createEl('div', {
+      className: 'attn25-pos-source',
+      id: 'attn25-pos-source-' + kind
+    }, createEl('div', {
+      className: 'arch-box pos',
+      text: 'Positional Embeddings'
+    })),
+    createEl('div', {
+      className: 'attn25-fix-flow',
+      id: 'attn25-fix-flow-' + kind
+    }, [
+      createEl('div', {
+        className: 'attn25-pos-col',
+        id: 'attn25-pos-col-' + kind
+      }, ATTN_POS_TAGS.map((tag, rowIndex) => createEl('div', {
+        className: 'attn25-pos-row',
+        dataset: { posIndex: String(rowIndex + 1) },
+        text: tag
+      }))),
+      createEl('div', {
+        className: 'attn25-plus-col',
+        id: 'attn25-plus-col-' + kind
+      }, ATTN_POS_TAGS.map((_, rowIndex) => createEl('div', {
+        className: 'attn25-plus-row',
+        id: 'attn25-plus-row-' + kind + '-' + rowIndex
+      }, createEl('div', {
+        className: 'arch-plus',
+        text: '+'
+      })))),
+      createEl('div', {
+        className: 'attn25-fix-input-wrap',
+        id: 'attn25-fix-input-wrap-' + kind
+      }, createEl('div', {
+        className: 'attn25-fix-input-shell',
+        id: 'attn25-fix-input-shell-' + kind
+      }, createEl('div', {
+        className: 'attn25-fix-input-slots',
+        id: 'attn25-fix-input-slots-' + kind
+      }, tokens.map((token, rowIndex) => createAttentionPositionFixRow(token, rowIndex, kind))))),
+      createEl('div', {
+        className: 'attn25-fix-attn-wrap',
+        id: 'attn25-fix-attn-' + kind
+      }, createEl('div', {
+        className: 'arch-box attn',
+        text: 'Self-Attention'
+      }))
+    ])
+  ]);
+}
+
+function createAttentionPositionSharedNotes() {
+  return createEl('div', {
+    className: 'attn25-note-row',
+    id: 'attn25-fix-notes'
+  }, [
+    createEl('div', {
+      className: 'attn25-shared-note',
+      id: 'attn25-note-formula',
+      text: 'x′ᵢ = xᵢ + pᵢ'
+    }),
+    createEl('div', {
+      className: 'attn25-shared-note',
+      id: 'attn25-note-diff',
+      text: 'cat + p1 ≠ cat + p4'
+    }),
+    createEl('div', {
+      className: 'attn25-shared-note',
+      id: 'attn25-note-saviour',
+      text: 'Positional embeddings to the rescue'
+    })
+  ]);
+}
+
+function initAttentionPositionSlide() {
+  const slide = document.getElementById('slide-25');
+  const stage = document.getElementById('attn25-stage');
+  const takeaway = document.getElementById('attn25-takeaway');
+  if (!slide || !stage || !takeaway) return;
+
+  if (!state.attentionPosition.initialized) {
+    stage.innerHTML = '';
+    stage.appendChild(createEl('div', {
+      className: 'attn25-context-row',
+      id: 'attn25-context-row'
+    }, [
+      createAttentionPositionContextPanel('rnn'),
+      createAttentionPositionContextPanel('transformer')
+    ]));
+    stage.appendChild(createEl('div', {
+      className: 'attn25-question-chip',
+      id: 'attn25-question-chip',
+      text: 'Where is the sequence info?'
+    }));
+    stage.appendChild(createAttentionPositionProblemStage());
+    stage.appendChild(createEl('div', {
+      className: 'attn25-fix-stage',
+      id: 'attn25-fix-stage'
+    }, [
+      createAttentionPositionFixCard('a'),
+      createAttentionPositionFixCard('b'),
+      createAttentionPositionSharedNotes()
+    ]));
+    state.attentionPosition.initialized = true;
+  }
+
+  takeaway.innerHTML = ATTN_POS_TAKEAWAYS[state.attentionPosition.step] || ATTN_POS_TAKEAWAYS[0];
+}
+
+function setAttentionPositionStep(step) {
+  const slide = document.getElementById('slide-25');
+  const takeaway = document.getElementById('attn25-takeaway');
+  if (!slide || !takeaway) return;
+
+  const clamped = Math.max(0, Math.min(ATTN_POS_MAX_STEP, step));
+  state.attentionPosition.step = clamped;
+  takeaway.innerHTML = ATTN_POS_TAKEAWAYS[clamped] || ATTN_POS_TAKEAWAYS[0];
+
+  slide.classList.toggle('attn25-show-question', clamped >= 1);
+  slide.classList.toggle('attn25-show-problem', clamped >= 2);
+  slide.classList.toggle('attn25-show-fix', clamped >= 3);
+}
+
+function runAttentionPositionStep() {
+  if (!state.attentionPosition.initialized) initAttentionPositionSlide();
+  if (state.attentionPosition.step >= ATTN_POS_MAX_STEP) return false;
+  setAttentionPositionStep(state.attentionPosition.step + 1);
+  return true;
+}
+
+function resetAttentionPositionSlide() {
+  const slide = document.getElementById('slide-25');
+  if (!slide) return;
+  state.attentionPosition.timers.forEach((timerId) => clearTimeout(timerId));
+  state.attentionPosition.timers = [];
+  state.attentionPosition.rafIds.forEach((rafId) => cancelAnimationFrame(rafId));
+  state.attentionPosition.rafIds = [];
+  setAttentionPositionStep(0);
+}
+
+/* =====================================================
    Slide-19 (Step 1) — Q/K/V projection fan-out
    ===================================================== */
 
@@ -12591,6 +13567,7 @@ function resetSlideInteractions(slideEl) {
   if (slideEl.id === 'slide-22') resetAttentionStep4Slide();
   if (slideEl.id === 'slide-23') resetAttentionMatrixSlide();
   if (slideEl.id === 'slide-24') resetAttentionMultiHeadSlide();
+  if (slideEl.id === 'slide-25') resetAttentionPositionSlide();
 }
 
 function goToSlide(index) {
@@ -12640,6 +13617,10 @@ function goToSlide(index) {
     initAttentionMultiHeadSlide();
     setAttentionMultiHeadStep(0);
   }
+  if (activeSlide.id === 'slide-25') {
+    initAttentionPositionSlide();
+    setAttentionPositionStep(0);
+  }
 
   devLog('slide', activeSlide.id);
 }
@@ -12668,6 +13649,7 @@ function nextStep() {
   if (active.id === 'slide-22') return runAttentionStep4Step();
   if (active.id === 'slide-23') return runAttentionMatrixStep();
   if (active.id === 'slide-24') return runAttentionMultiHeadStep();
+  if (active.id === 'slide-25') return runAttentionPositionStep();
   return false;
 }
 
