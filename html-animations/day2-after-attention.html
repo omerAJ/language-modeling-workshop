@@ -1,0 +1,1137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Day 2 - After Attention</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html {
+    font-size: clamp(14px, calc(0.5vw + 0.55vh + 4px), 32px);
+  }
+
+  :root {
+    --bg: #0a0d14;
+    --surface: #161923;
+    --surface2: #1e2231;
+    --border: #2a2f42;
+    --text: #f0f1f4;
+    --text-dim: #99a0b8;
+    --accent: #7b9aff;
+    --accent-glow: rgba(123,154,255,0.28);
+    --green: #5ae88e;
+    --green-glow: rgba(90,232,142,0.22);
+    --purple: #b49dff;
+    --cyan: #33e0f5;
+    --arch-arrow-length: 1.2rem;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .slide-container {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .slide {
+    position: absolute;
+    inset: 0;
+    display: none;
+    flex-direction: column;
+    padding: 2.25rem 5vw 4.25rem;
+    overflow-y: auto;
+    animation: fadeSlideIn 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  .slide.active { display: flex; }
+
+  @keyframes fadeSlideIn {
+    from { opacity: 0; transform: translateY(1rem); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  h2 {
+    font-size: 1.7rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.75rem;
+  }
+
+  .small-text {
+    font-size: 0.88rem;
+    color: var(--text-dim);
+    line-height: 1.55;
+  }
+
+  .section-tag {
+    position: absolute;
+    top: 1.125rem;
+    left: 1.75rem;
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--text-dim);
+    opacity: 0.5;
+  }
+
+  .badge {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 0.25rem 0.75rem;
+    border-radius: 1.25rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .badge.concept {
+    background: rgba(180,157,255,0.18);
+    color: var(--purple);
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 0.875rem;
+    padding: 1.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: radial-gradient(ellipse at top left, rgba(123,154,255,0.05), transparent 60%);
+    pointer-events: none;
+  }
+
+  .deck-layout {
+    margin-top: 0.85rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .takeaway {
+    margin-top: 0.82rem;
+    border: 1px solid rgba(123,154,255,0.28);
+    border-radius: 0.58rem;
+    background: rgba(123,154,255,0.1);
+    display: block;
+    padding: 0.62rem 0.72rem;
+    font-size: 0.85rem;
+    color: #dbe4ff;
+    line-height: 1.45;
+    min-height: 3.95rem;
+  }
+
+  .bottom-bar {
+    height: 3.6rem;
+    border-top: 1px solid var(--border);
+    background: rgba(10,13,20,0.96);
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    padding: 0 1rem;
+    flex-shrink: 0;
+  }
+
+  .nav-btn {
+    background: var(--surface2);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 0.55rem;
+    padding: 0.58rem 0.9rem;
+    font: inherit;
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.18s ease;
+  }
+
+  .nav-btn.primary {
+    background: var(--accent);
+    color: #fff;
+    border-color: transparent;
+    box-shadow: 0 0 18px var(--accent-glow);
+  }
+
+  .nav-btn:disabled {
+    opacity: 0.4;
+    cursor: default;
+    box-shadow: none;
+  }
+
+  .progress-track {
+    flex: 1;
+    height: 0.18rem;
+    border-radius: 999px;
+    background: rgba(153,160,184,0.18);
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    width: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--green));
+  }
+
+  .slide-counter {
+    min-width: 3.2rem;
+    text-align: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--text-dim);
+  }
+
+  .arch-box {
+    padding: 0.45rem 1.25rem;
+    border-radius: 0.5rem;
+    font-size: 0.78rem;
+    font-weight: 600;
+    text-align: center;
+    min-width: 9rem;
+    border: 1.5px solid;
+    position: relative;
+    z-index: 1;
+  }
+
+  .arch-box.ffn {
+    background: rgba(51,224,245,0.12);
+    border-color: rgba(51,224,245,0.4);
+    color: var(--cyan);
+  }
+
+  .arch-arrow {
+    position: relative;
+    width: 0.9rem;
+    height: var(--arch-arrow-length);
+    margin: 0.05rem 0;
+    display: block;
+    overflow: visible;
+  }
+
+  .arch-arrow::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 0.26rem;
+    bottom: 0;
+    width: 1.5px;
+    transform: translateX(-50%);
+    background: rgba(153,160,184,0.85);
+  }
+
+  .arch-arrow::after {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 0;
+    width: 0.32rem;
+    height: 0.32rem;
+    border-left: 2px solid rgba(153,160,184,0.85);
+    border-top: 2px solid rgba(153,160,184,0.85);
+    transform: translateX(-50%) rotate(45deg);
+  }
+
+  .post-panel {
+    display: grid;
+    justify-items: center;
+    align-content: start;
+    gap: 0.16rem;
+  }
+
+  .post-panel-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.58rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-align: center;
+    color: rgba(214,224,250,0.9);
+  }
+
+  .post-panel-dims {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.42rem;
+    color: rgba(182,194,223,0.66);
+    letter-spacing: 0.04em;
+    text-align: center;
+  }
+
+  .post-formula-chip,
+  .post-note {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.54rem;
+    line-height: 1.35;
+    border-radius: 999px;
+    padding: 0.18rem 0.46rem;
+    white-space: nowrap;
+  }
+
+  .post-formula-chip {
+    border: 1px solid rgba(123,154,255,0.3);
+    background: rgba(123,154,255,0.1);
+    color: rgba(220,229,255,0.95);
+  }
+
+  .post-note {
+    border: 1px solid rgba(90,232,142,0.22);
+    background: rgba(90,232,142,0.08);
+    color: rgba(192,244,215,0.92);
+    white-space: normal;
+  }
+
+  .matrix-shell {
+    position: relative;
+    padding: 0.1rem;
+    border: 1px solid rgba(184,194,221,0.28);
+    border-radius: 0.46rem;
+    background: rgba(184,194,221,0.05);
+    overflow: hidden;
+  }
+
+  .matrix-shell::before,
+  .weight-shell::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.02);
+    pointer-events: none;
+  }
+
+  .matrix-shell.matrix-neutral {
+    background: rgba(184,194,221,0.05);
+    border-color: rgba(184,194,221,0.28);
+  }
+
+  .matrix-shell.matrix-focus {
+    background: rgba(123,154,255,0.08);
+    border-color: rgba(123,154,255,0.32);
+  }
+
+  .matrix-shell.matrix-result {
+    background: rgba(51,224,245,0.08);
+    border-color: rgba(51,224,245,0.3);
+  }
+
+  .matrix-slots {
+    display: grid;
+  }
+
+  .matrix-row {
+    min-height: 0;
+    padding: 0;
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 0.24s ease, transform 0.24s ease;
+  }
+
+  .matrix-row.is-hidden {
+    opacity: 0;
+    transform: translateY(0.16rem);
+  }
+
+  .matrix-row.is-active .matrix-vector {
+    border-color: rgba(123,154,255,0.72);
+    background: rgba(123,154,255,0.17);
+    box-shadow: 0 0 0 0.08rem rgba(123,154,255,0.18);
+  }
+
+  .matrix-row + .matrix-row .matrix-vector {
+    margin-top: -1px;
+  }
+
+  .matrix-vector {
+    position: relative;
+    height: var(--matrix-row-h, 0.86rem);
+    width: 100%;
+    border-radius: 0;
+    border: 1px solid rgba(184,194,221,0.4);
+    background: rgba(184,194,221,0.08);
+    overflow: hidden;
+    transition: border-color 0.22s ease, background 0.22s ease, box-shadow 0.22s ease;
+  }
+
+  .matrix-shell.matrix-focus .matrix-vector {
+    border-color: rgba(123,154,255,0.5);
+    background: rgba(123,154,255,0.12);
+  }
+
+  .matrix-shell.matrix-result .matrix-vector {
+    border-color: rgba(51,224,245,0.46);
+    background: rgba(51,224,245,0.11);
+  }
+
+  .matrix-row:first-child .matrix-vector {
+    border-top-left-radius: 0.24rem;
+    border-top-right-radius: 0.24rem;
+  }
+
+  .matrix-row:last-child .matrix-vector {
+    border-bottom-left-radius: 0.24rem;
+    border-bottom-right-radius: 0.24rem;
+  }
+
+  .matrix-divider {
+    position: absolute;
+    top: 0.08rem;
+    bottom: 0.08rem;
+    width: 1px;
+    background: rgba(201,212,240,0.38);
+  }
+
+  .weight-wrap {
+    display: grid;
+    justify-items: center;
+    gap: 0.08rem;
+  }
+
+  .weight-shell {
+    position: relative;
+    border: 1px solid rgba(184,194,221,0.28);
+    border-radius: 0.42rem;
+    background: rgba(184,194,221,0.05);
+    overflow: hidden;
+  }
+
+  .weight-grid {
+    position: absolute;
+    inset: 0;
+  }
+
+  .weight-grid-v,
+  .weight-grid-h {
+    position: absolute;
+    background: rgba(184,194,221,0.2);
+  }
+
+  .weight-grid-v {
+    top: 0;
+    bottom: 0;
+    width: 1px;
+  }
+
+  .weight-grid-h {
+    left: 0;
+    right: 0;
+    height: 1px;
+  }
+
+  .ffn-stage {
+    position: relative;
+    width: min(100%, 58rem);
+    min-height: clamp(18rem, 60vh, 26rem);
+    padding: 1rem 1.15rem 1.15rem;
+    border-color: rgba(123,154,255,0.34);
+    background:
+      radial-gradient(circle at 14% 14%, rgba(123,154,255,0.1), transparent 42%),
+      var(--surface);
+  }
+
+  .ffn-ghost-layer {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 6;
+    overflow: hidden;
+  }
+
+  .ffn-ghost {
+    position: absolute;
+    pointer-events: none;
+    transform-origin: center center;
+    opacity: 0.98;
+    will-change: transform, opacity;
+  }
+
+  .ffn-main-row {
+    position: relative;
+    z-index: 2;
+    display: grid;
+    grid-template-columns: minmax(0, 12rem) auto minmax(0, 12rem);
+    justify-content: center;
+    align-items: start;
+    gap: 1.2rem;
+  }
+
+  .ffn-input-wrap,
+  .ffn-output-wrap {
+    transition: opacity 0.24s ease, transform 0.24s ease;
+  }
+
+  .ffn-output-wrap {
+    opacity: 0.14;
+    transform: translateY(0.1rem);
+    filter: saturate(0.76);
+  }
+
+  .ffn-core-wrap {
+    display: grid;
+    justify-items: center;
+    align-content: center;
+    gap: 0.22rem;
+    padding-top: 0.35rem;
+  }
+
+  .ffn-core-wrap .arch-box.ffn {
+    min-width: 6.2rem;
+    padding: 0.35rem 0.85rem;
+  }
+
+  .ffn-formula-chip {
+    position: relative;
+    z-index: 2;
+    margin: 0.7rem auto 0;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(0.16rem);
+    transition: opacity 0.24s ease, transform 0.24s ease, visibility 0.24s ease;
+  }
+
+  .ffn-example-lane {
+    position: relative;
+    z-index: 2;
+    margin-top: 0.95rem;
+    display: grid;
+    grid-template-columns:
+      minmax(0, 6.1rem) auto
+      minmax(0, 4.9rem) auto
+      minmax(0, 6.6rem) auto
+      auto auto
+      minmax(0, 4.9rem) auto
+      minmax(0, 6.1rem);
+    align-items: center;
+    justify-content: center;
+    gap: 0.38rem;
+    opacity: 0.12;
+    transform: translateY(0.22rem);
+    filter: saturate(0.72);
+    transition: opacity 0.24s ease, transform 0.24s ease, filter 0.24s ease;
+  }
+
+  .ffn-example-panel {
+    opacity: 0.42;
+    transform: translateY(0.16rem);
+    transition: opacity 0.24s ease, transform 0.24s ease, filter 0.24s ease;
+  }
+
+  .ffn-step-arrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.76rem;
+    color: rgba(188,199,225,0.7);
+    opacity: 0.22;
+    transition: opacity 0.24s ease, transform 0.24s ease;
+  }
+
+  .ffn-hidden-row .matrix-vector {
+    border-color: rgba(180,157,255,0.5);
+    background: rgba(180,157,255,0.11);
+  }
+
+  .ffn-note {
+    position: relative;
+    z-index: 2;
+    margin: 0.72rem auto 0;
+    max-width: 24rem;
+    text-align: center;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(0.16rem);
+    transition: opacity 0.24s ease, transform 0.24s ease, visibility 0.24s ease;
+  }
+
+  .ffn-copy-target-hidden {
+    opacity: 0;
+  }
+
+  #ffn-input-shell .matrix-row:not([data-row="0"]) .matrix-vector,
+  #ffn-output-shell .matrix-row:not([data-row="0"]) .matrix-vector {
+    transition: opacity 0.24s ease, filter 0.24s ease, border-color 0.24s ease, background 0.24s ease, box-shadow 0.24s ease;
+  }
+
+  #ffn-example-source-shell .matrix-vector,
+  #ffn-example-hidden-shell .matrix-vector,
+  #ffn-example-output-shell .matrix-vector {
+    transition: border-color 0.24s ease, background 0.24s ease, box-shadow 0.24s ease, opacity 0.24s ease;
+  }
+
+  .ffn-stage.ffn-show-example #ffn-input-shell .matrix-row[data-row="0"] .matrix-vector {
+    border-color: rgba(123,154,255,0.7);
+    background: rgba(123,154,255,0.16);
+    box-shadow: 0 0 0 0.08rem rgba(123,154,255,0.22);
+  }
+
+  .ffn-stage.ffn-show-example #ffn-input-shell .matrix-row:not([data-row="0"]) .matrix-vector {
+    opacity: 0.42;
+    filter: saturate(0.72);
+  }
+
+  .ffn-stage.ffn-show-example .ffn-example-lane {
+    opacity: 1;
+    transform: translateY(0);
+    filter: none;
+  }
+
+  .ffn-stage.ffn-show-example .ffn-formula-chip {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  .ffn-stage.ffn-show-example .ffn-step-arrow {
+    opacity: 0.82;
+  }
+
+  .ffn-stage.ffn-show-example .ffn-example-panel,
+  .ffn-stage.ffn-show-example #ffn-gelu-example {
+    opacity: 1;
+    transform: translateY(0);
+    filter: none;
+  }
+
+  .ffn-stage.ffn-show-example .ffn-output-wrap {
+    opacity: 0.42;
+    transform: translateY(0);
+    filter: saturate(0.82);
+  }
+
+  .ffn-stage.ffn-show-full .ffn-example-lane {
+    opacity: 0.34;
+    filter: saturate(0.7);
+  }
+
+  .ffn-stage.ffn-show-full .ffn-output-wrap {
+    opacity: 1;
+    transform: translateY(0);
+    filter: none;
+  }
+
+  .ffn-stage.ffn-show-full #ffn-input-wrap {
+    opacity: 0.82;
+  }
+
+  .ffn-stage.ffn-show-full #ffn-core-wrap {
+    filter: drop-shadow(0 0 0.55rem rgba(123,154,255,0.12));
+  }
+
+  .ffn-stage.ffn-show-full .ffn-note {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  .ffn-stage.ffn-show-full #ffn-example-output-shell .matrix-vector {
+    border-color: rgba(51,224,245,0.34);
+    box-shadow: none;
+  }
+
+  @media (max-width: 56rem) {
+    .slide {
+      padding: 1.5rem 1.25rem 4rem;
+    }
+
+    .ffn-stage {
+      min-height: clamp(18rem, 62vh, 24rem);
+      padding: 0.95rem 0.82rem 1rem;
+    }
+
+    .ffn-main-row {
+      grid-template-columns: 1fr;
+      gap: 0.85rem;
+      justify-items: center;
+    }
+
+    .ffn-example-lane {
+      grid-template-columns: 1fr;
+      justify-items: center;
+      gap: 0.28rem;
+      margin-top: 0.8rem;
+    }
+
+    .ffn-step-arrow {
+      transform: rotate(90deg);
+    }
+
+    .bottom-bar {
+      gap: 0.55rem;
+      padding: 0 0.7rem;
+    }
+
+    .nav-btn {
+      padding: 0.52rem 0.72rem;
+      font-size: 0.72rem;
+    }
+  }
+
+  @media (max-width: 44rem) {
+    .slide {
+      padding: 1.3rem 1rem 4rem;
+    }
+
+    .takeaway {
+      font-size: 0.78rem;
+      padding: 0.56rem 0.62rem;
+      min-height: 4.4rem;
+    }
+
+    .ffn-stage {
+      min-height: clamp(17rem, 62vh, 23rem);
+    }
+
+    #ffn-input-shell,
+    #ffn-output-shell {
+      width: 9.2rem !important;
+    }
+
+    .ffn-core-wrap .arch-box.ffn {
+      min-width: 5.4rem;
+    }
+  }
+</style>
+</head>
+<body>
+<div class="slide-container">
+  <div class="slide active" id="slide-ffn">
+    <span class="section-tag">Transformer Block</span>
+    <div class="badge concept">Mechanism</div>
+    <h2>Feed-Forward Network (FFN)</h2>
+    <p class="small-text">Unlike attention, the FFN is applied independently to each token row</p>
+    <div class="deck-layout">
+      <div class="card ffn-stage" id="ffn-stage">
+        <div class="ffn-ghost-layer" id="ffn-ghost-layer"></div>
+        <div class="ffn-main-row" id="ffn-main-row">
+          <div class="post-panel ffn-input-wrap" id="ffn-input-wrap"></div>
+          <div class="ffn-core-wrap" id="ffn-core-wrap"></div>
+          <div class="post-panel ffn-output-wrap" id="ffn-output-wrap"></div>
+        </div>
+        <div class="post-formula-chip ffn-formula-chip" id="ffn-formula-chip">FFN(h<sub>i</sub>) = W<sub>2</sub>(GELU(W<sub>1</sub>h<sub>i</sub>))</div>
+        <div class="ffn-example-lane" id="ffn-example-lane"></div>
+        <div class="post-note ffn-note" id="ffn-note">The same W<sub>1</sub>, GELU, and W<sub>2</sub> are reused for every token row.</div>
+      </div>
+    </div>
+    <div class="takeaway" id="ffn-takeaway"></div>
+  </div>
+</div>
+
+<div class="bottom-bar">
+  <button class="nav-btn" id="btnPrev" disabled>&larr; Back</button>
+  <button class="nav-btn" id="btnSkip" disabled>Skip Slide &rarr;</button>
+  <div class="progress-track">
+    <div class="progress-fill" id="progressFill"></div>
+  </div>
+  <span class="slide-counter" id="slideCounter">1 / 1</span>
+  <button class="nav-btn primary" id="btnNext">Next &rarr;</button>
+</div>
+
+<script>
+const TOKENS = ['cat', 'sat', 'on', 'the', 'mat'];
+const D_MODEL = 4;
+const D_FF = 6;
+
+const TAKEAWAYS = [
+  'After attention, the next big step is the feed-forward network. Unlike attention, the FFN is applied independently to each token row.',
+  'Take one token row from the top. The FFN first projects it up to a higher-dimensional hidden space, applies a nonlinearity, and then projects it back down.',
+  'Now apply that same FFN to every token row in parallel. The rows do not interact here: each token is transformed independently by the same learned network.'
+];
+
+const state = {
+  ffn: {
+    initialized: false,
+    step: 0,
+    timers: [],
+    rafIds: []
+  },
+  ui: {}
+};
+
+function createEl(tag, options = {}) {
+  const el = document.createElement(tag);
+  if (options.className) el.className = options.className;
+  if (options.id) el.id = options.id;
+  if (options.text != null) el.textContent = options.text;
+  if (options.html != null) el.innerHTML = options.html;
+  if (options.dataset) {
+    Object.keys(options.dataset).forEach((key) => {
+      el.dataset[key] = options.dataset[key];
+    });
+  }
+  return el;
+}
+
+function clearTimers(bucket) {
+  bucket.timers.forEach((id) => clearTimeout(id));
+  bucket.rafIds.forEach((id) => cancelAnimationFrame(id));
+  bucket.timers = [];
+  bucket.rafIds = [];
+}
+
+function createPanel(labelHtml, dimsHtml, shellNode, extraClass = '') {
+  const wrap = createEl('div', { className: 'post-panel' + (extraClass ? ' ' + extraClass : '') });
+  wrap.appendChild(createEl('div', { className: 'post-panel-label', html: labelHtml }));
+  if (dimsHtml) wrap.appendChild(createEl('div', { className: 'post-panel-dims', html: dimsHtml }));
+  wrap.appendChild(shellNode);
+  return wrap;
+}
+
+function createStructuralMatrix(id, rows, cols, options = {}) {
+  const shell = createEl('div', {
+    id,
+    className: 'matrix-shell ' + (options.shellClass || 'matrix-neutral')
+  });
+  shell.style.width = options.width || '11rem';
+  if (options.rowHeight) shell.style.setProperty('--matrix-row-h', options.rowHeight);
+  const slots = createEl('div', { className: 'matrix-slots' });
+  for (let row = 0; row < rows; row += 1) {
+    const rowEl = createEl('div', {
+      className: 'matrix-row' + ((options.hiddenRows || []).includes(row) ? ' is-hidden' : ''),
+      id: id + '-row-' + row,
+      dataset: { row: String(row) }
+    });
+    const vector = createEl('div', { className: 'matrix-vector', id: id + '-vec-' + row });
+    for (let i = 1; i < cols; i += 1) {
+      const divider = createEl('span', { className: 'matrix-divider' });
+      divider.style.left = (i / cols * 100).toFixed(2) + '%';
+      vector.appendChild(divider);
+    }
+    rowEl.appendChild(vector);
+    slots.appendChild(rowEl);
+  }
+  shell.appendChild(slots);
+  return shell;
+}
+
+function createSymbolicWeightMatrix(id, rows, cols, options = {}) {
+  const wrap = createEl('div', { className: 'weight-wrap', id: id + '-wrap' });
+  const shell = createEl('div', { className: 'weight-shell', id });
+  shell.style.width = options.width || '4.8rem';
+  shell.style.height = options.height || '3rem';
+  const grid = createEl('div', { className: 'weight-grid' });
+  for (let c = 1; c < cols; c += 1) {
+    const v = createEl('span', { className: 'weight-grid-v' });
+    v.style.left = (c / cols * 100).toFixed(2) + '%';
+    grid.appendChild(v);
+  }
+  for (let r = 1; r < rows; r += 1) {
+    const h = createEl('span', { className: 'weight-grid-h' });
+    h.style.top = (r / rows * 100).toFixed(2) + '%';
+    grid.appendChild(h);
+  }
+  shell.appendChild(grid);
+  wrap.appendChild(shell);
+  return wrap;
+}
+
+function createOperatorBox(id, label, className) {
+  return createEl('div', { id, className: 'arch-box ' + className, text: label });
+}
+
+function createExampleRow(id, cols, options = {}) {
+  return createStructuralMatrix(id, 1, cols, {
+    width: options.width || '5.8rem',
+    rowHeight: options.rowHeight || '0.9rem',
+    shellClass: options.shellClass || 'matrix-neutral',
+    hiddenRows: options.hidden ? [0] : []
+  });
+}
+
+function createStepArrow() {
+  return createEl('div', { className: 'ffn-step-arrow', html: '&rarr;' });
+}
+
+function setRowVisibility(shellId, visibleCount) {
+  const rows = document.querySelectorAll('#' + shellId + ' .matrix-row');
+  rows.forEach((row, index) => {
+    row.classList.toggle('is-hidden', index >= visibleCount);
+  });
+}
+
+function clearActiveRows(shellId) {
+  const rows = document.querySelectorAll('#' + shellId + ' .matrix-row');
+  rows.forEach((row) => row.classList.remove('is-active'));
+}
+
+function setActiveRow(shellId, rowIndex) {
+  clearActiveRows(shellId);
+  const row = document.querySelector('#' + shellId + ' .matrix-row[data-row="' + rowIndex + '"]');
+  if (row) row.classList.add('is-active');
+}
+
+function createGhostFromElement(sourceEl) {
+  const stage = document.getElementById('ffn-stage');
+  const layer = document.getElementById('ffn-ghost-layer');
+  if (!sourceEl || !stage || !layer) return null;
+  const stageRect = stage.getBoundingClientRect();
+  const sourceRect = sourceEl.getBoundingClientRect();
+  const ghost = sourceEl.cloneNode(true);
+  ghost.classList.add('ffn-ghost');
+  ghost.style.left = (sourceRect.left - stageRect.left).toFixed(2) + 'px';
+  ghost.style.top = (sourceRect.top - stageRect.top).toFixed(2) + 'px';
+  ghost.style.width = sourceRect.width.toFixed(2) + 'px';
+  ghost.style.height = sourceRect.height.toFixed(2) + 'px';
+  layer.appendChild(ghost);
+  return ghost;
+}
+
+function animateGhostToTarget(ghost, targetEl, durationMs) {
+  const stage = document.getElementById('ffn-stage');
+  if (!ghost || !targetEl || !stage) return;
+  const stageRect = stage.getBoundingClientRect();
+  const ghostLeft = parseFloat(ghost.style.left);
+  const ghostTop = parseFloat(ghost.style.top);
+  const targetRect = targetEl.getBoundingClientRect();
+  const dx = targetRect.left - stageRect.left - ghostLeft;
+  const dy = targetRect.top - stageRect.top - ghostTop;
+  const sx = targetRect.width / Math.max(parseFloat(ghost.style.width), 1);
+  const sy = targetRect.height / Math.max(parseFloat(ghost.style.height), 1);
+  ghost.style.transition = 'transform ' + durationMs + 'ms cubic-bezier(0.2, 0.75, 0.3, 1), opacity 160ms ease';
+  requestAnimationFrame(() => {
+    ghost.style.transform = 'translate(' + dx.toFixed(2) + 'px,' + dy.toFixed(2) + 'px) scale(' + sx.toFixed(3) + ',' + sy.toFixed(3) + ')';
+  });
+}
+
+function buildFfnSlide() {
+  if (state.ffn.initialized) return;
+
+  const inputWrap = document.getElementById('ffn-input-wrap');
+  const outputWrap = document.getElementById('ffn-output-wrap');
+  const coreWrap = document.getElementById('ffn-core-wrap');
+  const exampleLane = document.getElementById('ffn-example-lane');
+
+  inputWrap.appendChild(
+    createPanel('Input to FFN', 'S × d', createStructuralMatrix('ffn-input-shell', TOKENS.length, D_MODEL, {
+      width: '11rem',
+      shellClass: 'matrix-neutral'
+    }))
+  );
+
+  outputWrap.appendChild(
+    createPanel('FFN Output', 'S × d', createStructuralMatrix('ffn-output-shell', TOKENS.length, D_MODEL, {
+      width: '11rem',
+      shellClass: 'matrix-result',
+      hiddenRows: [0, 1, 2, 3, 4]
+    }))
+  );
+
+  const w1Panel = createPanel('W<sub>1</sub>', '4 × 6', createSymbolicWeightMatrix('ffn-main-w1', D_MODEL, D_FF, {
+    width: '5.1rem',
+    height: '2.8rem'
+  }));
+  const geluBox = createOperatorBox('ffn-gelu-main', 'GELU', 'ffn');
+  geluBox.style.minWidth = '5.2rem';
+  geluBox.style.padding = '0.34rem 0.78rem';
+  const w2Panel = createPanel('W<sub>2</sub>', '6 × 4', createSymbolicWeightMatrix('ffn-main-w2', D_FF, D_MODEL, {
+    width: '3.9rem',
+    height: '3.5rem'
+  }));
+
+  coreWrap.appendChild(w1Panel);
+  coreWrap.appendChild(createEl('div', { className: 'arch-arrow' }));
+  coreWrap.appendChild(geluBox);
+  coreWrap.appendChild(createEl('div', { className: 'arch-arrow' }));
+  coreWrap.appendChild(w2Panel);
+
+  const sourceExamplePanel = createPanel('Top token row', '', createExampleRow('ffn-example-source-shell', D_MODEL, {
+    width: '5.8rem',
+    shellClass: 'matrix-focus'
+  }), 'ffn-example-panel');
+  sourceExamplePanel.id = 'ffn-example-source-panel';
+  exampleLane.appendChild(sourceExamplePanel);
+  exampleLane.appendChild(createStepArrow());
+  const w1ExamplePanel = createPanel('W<sub>1</sub>', '4 × 6', createSymbolicWeightMatrix('ffn-example-w1', D_MODEL, D_FF, {
+    width: '4.4rem',
+    height: '2.5rem'
+  }), 'ffn-example-panel');
+  w1ExamplePanel.id = 'ffn-example-w1-panel';
+  exampleLane.appendChild(w1ExamplePanel);
+  exampleLane.appendChild(createStepArrow());
+  const hiddenExamplePanel = createPanel('Expanded row', '', createExampleRow('ffn-example-hidden-shell', D_FF, {
+    width: '6.5rem',
+    shellClass: 'matrix-focus'
+  }), 'ffn-example-panel ffn-hidden-row');
+  hiddenExamplePanel.id = 'ffn-example-hidden-panel';
+  exampleLane.appendChild(hiddenExamplePanel);
+  exampleLane.appendChild(createStepArrow());
+  const geluExample = createOperatorBox('ffn-gelu-example', 'GELU', 'ffn');
+  geluExample.classList.add('ffn-example-panel');
+  geluExample.style.minWidth = '4.9rem';
+  geluExample.style.padding = '0.3rem 0.7rem';
+  exampleLane.appendChild(geluExample);
+  exampleLane.appendChild(createStepArrow());
+  const w2ExamplePanel = createPanel('W<sub>2</sub>', '6 × 4', createSymbolicWeightMatrix('ffn-example-w2', D_FF, D_MODEL, {
+    width: '4.2rem',
+    height: '3rem'
+  }), 'ffn-example-panel');
+  w2ExamplePanel.id = 'ffn-example-w2-panel';
+  exampleLane.appendChild(w2ExamplePanel);
+  exampleLane.appendChild(createStepArrow());
+  const outputExamplePanel = createPanel('Transformed row', '', createExampleRow('ffn-example-output-shell', D_MODEL, {
+    width: '5.8rem',
+    shellClass: 'matrix-result',
+    hidden: true
+  }), 'ffn-example-panel');
+  outputExamplePanel.id = 'ffn-example-output-panel';
+  exampleLane.appendChild(outputExamplePanel);
+
+  state.ffn.initialized = true;
+}
+
+function syncTakeaway() {
+  document.getElementById('ffn-takeaway').innerHTML = TAKEAWAYS[state.ffn.step];
+}
+
+function syncButtons() {
+  const prev = document.getElementById('btnPrev');
+  const next = document.getElementById('btnNext');
+  const skip = document.getElementById('btnSkip');
+  prev.disabled = state.ffn.step <= 0;
+  next.disabled = state.ffn.step >= 2;
+  skip.disabled = true;
+}
+
+function setFfnStep(step) {
+  buildFfnSlide();
+  const stage = document.getElementById('ffn-stage');
+  const clamped = Math.max(0, Math.min(2, step));
+  state.ffn.step = clamped;
+  stage.classList.toggle('ffn-show-example', clamped >= 1);
+  stage.classList.toggle('ffn-show-full', clamped >= 2);
+  setRowVisibility('ffn-output-shell', clamped === 0 ? 0 : clamped === 1 ? 1 : TOKENS.length);
+  setRowVisibility('ffn-example-output-shell', clamped >= 1 ? 1 : 0);
+  const exampleSourceVec = document.querySelector('#ffn-example-source-shell .matrix-vector');
+  if (exampleSourceVec) exampleSourceVec.classList.remove('ffn-copy-target-hidden');
+  clearActiveRows('ffn-input-shell');
+  clearActiveRows('ffn-output-shell');
+  if (clamped === 1) {
+    setActiveRow('ffn-input-shell', 0);
+    setActiveRow('ffn-output-shell', 0);
+  }
+  syncTakeaway();
+  syncButtons();
+}
+
+function runFfnStep() {
+  buildFfnSlide();
+  clearTimers(state.ffn);
+
+  if (state.ffn.step === 0) {
+    const sourceVec = document.querySelector('#ffn-input-shell-row-0 .matrix-vector');
+    const targetVec = document.querySelector('#ffn-example-source-shell .matrix-vector');
+    const ghost = createGhostFromElement(sourceVec);
+    setFfnStep(1);
+    if (targetVec) targetVec.classList.add('ffn-copy-target-hidden');
+    if (ghost && targetVec) {
+      animateGhostToTarget(ghost, targetVec, 360);
+      const timerId = setTimeout(() => {
+        targetVec.classList.remove('ffn-copy-target-hidden');
+        ghost.style.opacity = '0';
+        setTimeout(() => ghost.remove(), 180);
+      }, 360);
+      state.ffn.timers.push(timerId);
+    }
+    return true;
+  }
+
+  if (state.ffn.step === 1) {
+    setFfnStep(2);
+    setRowVisibility('ffn-output-shell', 1);
+    setActiveRow('ffn-input-shell', 0);
+    setActiveRow('ffn-output-shell', 0);
+    TOKENS.slice(1).forEach((_, index) => {
+      const rowIndex = index + 1;
+      const timerId = setTimeout(() => {
+        setRowVisibility('ffn-output-shell', rowIndex + 1);
+        setActiveRow('ffn-input-shell', rowIndex);
+        setActiveRow('ffn-output-shell', rowIndex);
+        if (rowIndex === TOKENS.length - 1) {
+          const settleTimer = setTimeout(() => {
+            clearActiveRows('ffn-input-shell');
+            clearActiveRows('ffn-output-shell');
+          }, 220);
+          state.ffn.timers.push(settleTimer);
+        }
+      }, rowIndex * 90);
+      state.ffn.timers.push(timerId);
+    });
+    return true;
+  }
+
+  return false;
+}
+
+function resetFfnSlide() {
+  clearTimers(state.ffn);
+  const layer = document.getElementById('ffn-ghost-layer');
+  if (layer) layer.innerHTML = '';
+  setFfnStep(0);
+}
+
+function refreshSlides() {
+  document.getElementById('slideCounter').textContent = '1 / 1';
+  document.getElementById('progressFill').style.width = '100%';
+}
+
+function getInitialStepFromLocation() {
+  try {
+    const url = new URL(window.location.href);
+    const raw = url.searchParams.get('step');
+    if (raw == null) return null;
+    const parsed = Number(raw);
+    return Number.isFinite(parsed) ? parsed : null;
+  } catch (err) {
+    return null;
+  }
+}
+
+function initUi() {
+  state.ui.prev = document.getElementById('btnPrev');
+  state.ui.next = document.getElementById('btnNext');
+  state.ui.skip = document.getElementById('btnSkip');
+
+  state.ui.prev.addEventListener('click', () => {
+    if (state.ffn.step > 0) setFfnStep(state.ffn.step - 1);
+  });
+
+  state.ui.next.addEventListener('click', () => {
+    runFfnStep();
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'ArrowRight' || event.key === ' ') {
+      event.preventDefault();
+      runFfnStep();
+    } else if (event.key === 'ArrowLeft') {
+      event.preventDefault();
+      if (state.ffn.step > 0) setFfnStep(state.ffn.step - 1);
+    }
+  });
+}
+
+buildFfnSlide();
+initUi();
+refreshSlides();
+const initialStep = getInitialStepFromLocation();
+if (initialStep == null) {
+  resetFfnSlide();
+} else {
+  setFfnStep(initialStep);
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,163 @@
+  .embed-table {
+    display: grid;
+    gap: 0.6rem;
+    margin-top: 0.65rem;
+  }
+  .matrix-shape-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    color: #d5dcf7;
+    margin-top: 0.55rem;
+    margin-bottom: 0.05rem;
+  }
+  .embed-row {
+    display: grid;
+    grid-template-columns: 8.2rem 1fr;
+    gap: 0.6rem;
+    align-items: center;
+  }
+  .embed-row.selected-row {
+    padding: 0.3rem 0.35rem;
+    border-radius: 0.52rem;
+    border: 1px solid rgba(123,154,255,0.34);
+    background: rgba(123,154,255,0.08);
+  }
+  .embed-row.matrix-ellipsis-row {
+    opacity: 0.58;
+  }
+  .embed-key {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    color: #d8e0ff;
+    border: 1px solid rgba(123,154,255,0.42);
+    background: rgba(123,154,255,0.12);
+    border-radius: 0.45rem;
+    padding: 0.32rem 0.45rem;
+    text-align: center;
+  }
+  .embed-key.dim {
+    color: #afbadf;
+    border-color: rgba(123,154,255,0.26);
+    background: rgba(123,154,255,0.06);
+  }
+  .vec-chip-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+  }
+  .vec-chip {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.73rem;
+    color: #d9ffe7;
+    border: 1px solid rgba(90,232,142,0.45);
+    background: rgba(90,232,142,0.12);
+    border-radius: 0.4rem;
+    padding: 0.24rem 0.38rem;
+  }
+  .vec-chip.dim {
+    color: #b7c3e8;
+    border-color: rgba(123,154,255,0.24);
+    background: rgba(123,154,255,0.08);
+  }
+  .vec-chip.token-label {
+    color: #fff1b9;
+    border-color: rgba(255,214,68,0.48);
+    background: rgba(255,214,68,0.18);
+  }
+  .projection-card {
+    border-color: rgba(123,154,255,0.34);
+    background:
+      radial-gradient(circle at 15% 12%, rgba(123,154,255,0.1), transparent 40%),
+      radial-gradient(circle at 85% 85%, rgba(180,157,255,0.08), transparent 45%),
+      var(--surface);
+  }
+  .projection-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.35rem;
+  }
+  .lens-btn {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    border: 1px solid var(--border);
+    border-radius: 0.5rem;
+    padding: 0.4rem 0.68rem;
+    background: var(--surface2);
+    color: #dbe3ff;
+    cursor: pointer;
+    transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease;
+  }
+  .lens-btn:hover {
+    border-color: rgba(123,154,255,0.6);
+    background: rgba(123,154,255,0.14);
+    transform: translateY(-1px);
+  }
+  .lens-btn.active {
+    border-color: rgba(90,232,142,0.6);
+    background: rgba(90,232,142,0.18);
+    color: #d7ffe8;
+  }
+  .projection-stage {
+    margin-top: 0.7rem;
+    border: 1px solid rgba(123,154,255,0.3);
+    border-radius: 0.75rem;
+    background:
+      linear-gradient(0deg, rgba(123,154,255,0.06) 1px, transparent 1px) 0 0 / 1.65rem 1.65rem,
+      linear-gradient(90deg, rgba(123,154,255,0.06) 1px, transparent 1px) 0 0 / 1.65rem 1.65rem,
+      rgba(13,18,30,0.9);
+    min-height: 15rem;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    position: relative;
+  }
+  .projection-canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+  .projection-readout {
+    margin-top: 0.7rem;
+    padding: 0.65rem 0.72rem;
+    border-radius: 0.58rem;
+    border: 1px solid rgba(123,154,255,0.28);
+    background: rgba(123,154,255,0.1);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+  .projection-readout.updating {
+    opacity: 0.68;
+    transform: translateY(2px);
+  }
+  .projection-neighbors {
+    display: flex;
+    gap: 0.42rem;
+    flex-wrap: wrap;
+    margin-top: 0.5rem;
+  }
+  .neighbor-chip {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    border: 1px solid rgba(90,232,142,0.45);
+    border-radius: 0.42rem;
+    padding: 0.23rem 0.42rem;
+    color: #d7ffe8;
+    background: rgba(90,232,142,0.12);
+  }
+  .projection-note {
+    margin-top: 0.6rem;
+    font-size: 0.84rem;
+    color: #d1d8f4;
+    line-height: 1.5;
+  }
+  .math-note {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.76rem;
+    color: #d7deff;
+    padding: 0.48rem 0.56rem;
+    border-radius: 0.5rem;
+    border: 1px solid rgba(123,154,255,0.34);
+    background: rgba(123,154,255,0.1);
+    margin-top: 0.55rem;
+  }

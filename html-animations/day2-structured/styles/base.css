@@ -1,0 +1,165 @@
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html {
+    font-size: clamp(14px, calc(0.5vw + 0.55vh + 4px), 32px);
+  }
+
+  :root {
+    --bg: #0a0d14;
+    --surface: #161923;
+    --surface2: #1e2231;
+    --border: #2a2f42;
+    --text: #f0f1f4;
+    --text-dim: #99a0b8;
+    --accent: #7b9aff;
+    --accent-glow: rgba(123,154,255,0.28);
+    --green: #5ae88e;
+    --green-glow: rgba(90,232,142,0.22);
+    --red: #ff7b7b;
+    --orange: #ffaa55;
+    --purple: #b49dff;
+    --yellow: #ffd644;
+    --cyan: #33e0f5;
+    --pink: #ff82c4;
+    --arch-arrow-length: 1.2rem;
+    --arch-arrow-length-detail: 0.95rem;
+  }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', sans-serif;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .slide-container {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .slide {
+    position: absolute;
+    inset: 0;
+    display: none;
+    flex-direction: column;
+    padding: 2.25rem 5vw 4.25rem;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+    animation: fadeSlideIn 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  .slide.active { display: flex; }
+
+  .slide.centered {
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
+
+  @keyframes fadeSlideIn {
+    from { opacity: 0; transform: translateY(1rem); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 48rem) {
+    .slide { padding: 1.5rem 1.25rem 4rem; }
+  }
+
+  h1 {
+    font-size: 2.8rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.12;
+    background: linear-gradient(135deg, var(--accent) 0%, var(--purple) 60%, var(--pink) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  h1.large { font-size: 3.5rem; }
+
+  h2 {
+    font-size: 1.7rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.75rem;
+  }
+
+  h3 {
+    font-size: 1.15rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+
+  .subtitle {
+    font-size: 1.2rem;
+    color: var(--text-dim);
+    margin-top: 0.5rem;
+    line-height: 1.5;
+  }
+
+  .small-text {
+    font-size: 0.88rem;
+    color: var(--text-dim);
+    line-height: 1.55;
+  }
+
+  .tiny {
+    font-size: 0.78rem;
+    color: var(--text-dim);
+  }
+
+  .spacer { height: 1.25rem; }
+  .spacer-sm { height: 0.75rem; }
+  .spacer-lg { height: 2rem; }
+
+  .gradient-line {
+    width: 12.5rem;
+    height: 0.125rem;
+    border-radius: 999px;
+    background: linear-gradient(90deg, transparent, var(--accent), var(--purple), transparent);
+  }
+
+  .section-tag {
+    position: absolute;
+    top: 1.125rem;
+    left: 1.75rem;
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--text-dim);
+    opacity: 0.5;
+  }
+
+  .badge {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 0.25rem 0.75rem;
+    border-radius: 1.25rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .badge.day1 { background: rgba(123,154,255,0.18); color: var(--accent); }
+  .badge.day2 { background: rgba(123,154,255,0.18); color: var(--accent); }
+  .badge.activity { background: rgba(90,232,142,0.18); color: var(--green); }
+  .badge.concept { background: rgba(180,157,255,0.18); color: var(--purple); }
+  .badge.discussion { background: rgba(255,170,85,0.18); color: var(--orange); }
+
+  .hl        { color: var(--accent); font-weight: 600; }
+  .hl-green  { color: var(--green);  font-weight: 600; }
+  .hl-red    { color: var(--red);    font-weight: 600; }
+  .hl-orange { color: var(--orange); font-weight: 600; }
+  .hl-purple { color: var(--purple); font-weight: 600; }
+  .hl-cyan   { color: var(--cyan);   font-weight: 600; }
+
