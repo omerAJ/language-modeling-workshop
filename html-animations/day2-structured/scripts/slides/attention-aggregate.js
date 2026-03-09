@@ -79,12 +79,12 @@ function setAttentionStep4ValueLabelForToken(token, mode = 'base') {
   const label = document.getElementById('attn22-v-label-' + token);
   if (!label) return;
   if (mode === 'aggregate' && token === ATTN_STEP4_MERGE_TARGET) {
-    label.innerHTML = 'o<sub>sat</sub>';
+    setMathHTML(label, formatTokenMath('o', ATTN_STEP4_MERGE_TARGET));
   } else if (mode === 'weighted') {
     const weight = ATTN_STEP4_WEIGHT_BY_TOKEN[token] || 0;
-    label.innerHTML = formatWeightValue(weight) + ' &times; v<sub>' + token + '</sub>';
+    setMathHTML(label, inlineMath(formatWeightValue(weight) + ' \\cdot ' + formatMathSubscript('v', token)));
   } else {
-    label.innerHTML = 'v<sub>' + token + '</sub>';
+    setMathHTML(label, formatTokenMath('v', token));
   }
 }
 
@@ -117,7 +117,7 @@ function setAttentionStep4AllXVectorsBase() {
     setAttentionStep4XVectorForToken(token, ATTN_QKV_X_VECTORS[token] || [], formatVectorValue);
     const xLabel = document.getElementById('attn22-x-label-' + token);
     if (!xLabel) return;
-    xLabel.innerHTML = 'x<sub>' + token + '</sub>';
+    setMathHTML(xLabel, formatTokenMath('x', token));
   });
 }
 
@@ -129,10 +129,10 @@ function setAttentionStep4SatXLabel(mode = 'base') {
   const label = document.getElementById('attn22-x-label-' + ATTN_STEP4_FOCUS);
   if (!label) return;
   if (mode === 'residual') {
-    label.innerHTML = 'y<sub>sat</sub>';
+    setMathHTML(label, formatTokenMath('y', ATTN_STEP4_FOCUS));
     return;
   }
-  label.innerHTML = 'x<sub>sat</sub>';
+  setMathHTML(label, formatTokenMath('x', ATTN_STEP4_FOCUS));
 }
 
 function setAttentionStep4SatAggregateValues(values) {
@@ -720,10 +720,11 @@ function renderAttentionStep4AggregationBase() {
         className: 'attn22-agg-term',
         id: 'attn22-agg-term-' + token
       });
-      term.innerHTML = prefix + formatWeightValue(weight) + '&times;v<sub>' + token + '</sub>';
+      term.innerHTML = inlineMath(prefix + formatWeightValue(weight) + ' \\cdot ' + formatMathSubscript('v', token));
       formula.appendChild(term);
     });
     formula.dataset.rendered = '1';
+    typesetMath(formula);
   }
 }
 
@@ -736,7 +737,9 @@ function renderAttentionStep4PanelMode(mode = 'aggregation') {
   const useResidual = mode === 'residual';
   const values = useResidual ? ATTN_STEP4_RESIDUAL_OUTPUT_VECTOR : ATTN_STEP4_AGG_VECTOR;
   wrap.classList.toggle('attn22-agg-mode-residual', useResidual);
-  outputLabel.innerHTML = useResidual ? 'y<sub>sat</sub> ≈' : 'o<sub>sat</sub> ≈';
+  setMathHTML(outputLabel, useResidual
+    ? inlineMath(formatMathSubscript('y', ATTN_STEP4_FOCUS) + ' \\approx')
+    : inlineMath(formatMathSubscript('o', ATTN_STEP4_FOCUS) + ' \\approx'));
   outputVector.innerHTML = '';
   values.forEach((value) => {
     outputVector.appendChild(createEl('span', {
@@ -1078,13 +1081,13 @@ function renderAttentionStep4ScoreMode(step) {
   const useWeights = step >= 1;
 
   if (scoreLabel) {
-    scoreLabel.textContent = useWeights ? 'Attention Weights (A)' : 'Scores (s)';
+    setMathHTML(scoreLabel, useWeights ? 'Attention Weights \\(A\\)' : 'Scores \\(s\\)');
   }
   if (scoreCaption) {
     if (useWeights) {
-      scoreCaption.innerHTML = 'a<sub>j</sub> = softmax(s<sub>j</sub> / √d<sub>k</sub>)';
+      setMathHTML(scoreCaption, '\\(a_j = \\operatorname{softmax}(s_j / \\sqrt{d_k})\\)');
     } else {
-      scoreCaption.innerHTML = 's<sub>j</sub> = q<sub>sat</sub> · k<sub>j</sub>';
+      setMathHTML(scoreCaption, '\\(s_j = q_{\\mathrm{sat}} \\cdot k_j\\)');
     }
   }
 
@@ -1114,7 +1117,7 @@ function setAttentionStep4Step(step) {
   slide.classList.toggle('attn22-show-aggregate', clamped >= 4);
   slide.classList.toggle('attn22-show-residual', clamped >= 5);
   if (clamped < 4) slide.classList.remove('attn22-show-merged');
-  takeaway.innerHTML = ATTN_STEP4_TAKEAWAYS[clamped] || ATTN_STEP4_TAKEAWAYS[0];
+  setMathHTML(takeaway, ATTN_STEP4_TAKEAWAYS[clamped] || ATTN_STEP4_TAKEAWAYS[0]);
   renderAttentionStep4ScoreMode(clamped);
   renderAttentionStep4PanelMode(clamped >= 5 ? 'residual' : 'aggregation');
 
@@ -1263,7 +1266,10 @@ function initAttentionStep4Slide() {
   renderAttentionStep4ScoreMode(state.attentionStep4.step);
 
   const takeaway = document.getElementById('attn22-takeaway');
-  if (takeaway) takeaway.innerHTML = ATTN_STEP4_TAKEAWAYS[state.attentionStep4.step] || ATTN_STEP4_TAKEAWAYS[0];
+  if (takeaway) setMathHTML(takeaway, ATTN_STEP4_TAKEAWAYS[state.attentionStep4.step] || ATTN_STEP4_TAKEAWAYS[0]);
+  typesetMath(slide).then(() => {
+    updateAttentionStep4Overlay();
+  });
   updateAttentionStep4Overlay();
   if (state.attentionStep4.step >= 4 && state.attentionStep4.compareDone) {
     syncAttentionStep4CompareVisuals(state.attentionStep4.compareVisibleCount);

@@ -80,7 +80,7 @@ function createAttentionMatrixMiniX(proj) {
   });
   wrap.appendChild(createEl('div', {
     className: 'attn23-mini-x-label',
-    text: 'X'
+    html: inlineMath('X')
   }));
   const shell = createEl('div', {
     className: 'attn23-mini-x-shell',
@@ -132,11 +132,9 @@ function createAttentionMatrixProjectionMatrix(proj) {
   cluster.appendChild(shell);
   cluster.appendChild(createEl('div', {
     className: 'attn19p1-matrix-label',
-    id: 'attn23-proj-matrix-label-' + proj
-  }, [
-    'W',
-    createEl('sub', { text: proj.toUpperCase() })
-  ]));
+    id: 'attn23-proj-matrix-label-' + proj,
+    html: inlineMath('W_' + proj.toUpperCase())
+  }));
   return cluster;
 }
 
@@ -163,7 +161,7 @@ function createAttentionMatrixProjectionOutput(proj) {
     className: 'attn23-proj-output-label',
     id: 'attn23-proj-output-label-' + proj,
     dataset: { proj },
-    text: ATTN_MATRIX_OUTPUT_LABELS[proj]
+    html: inlineMath(ATTN_MATRIX_OUTPUT_LABELS[proj])
   }));
   const shell = createEl('div', {
     className: 'attn23-proj-output-shell',
@@ -228,12 +226,12 @@ function createAttentionMatrixScoreQMatrix() {
   wrap.appendChild(createEl('div', {
     className: 'attn23-score-matrix-label',
     id: 'attn23-score-q-label',
-    text: 'Q'
+    html: inlineMath('Q')
   }));
   wrap.appendChild(createEl('div', {
     className: 'attn23-score-dims',
     id: 'attn23-score-q-dims',
-    text: 'Q ∈ R^(S × d_k)'
+    html: inlineMath('Q \\in \\mathbb{R}^{S \\times d_k}')
   }));
 
   const layout = createEl('div', {
@@ -274,12 +272,12 @@ function createAttentionMatrixScoreKTransposeMatrix() {
   wrap.appendChild(createEl('div', {
     className: 'attn23-score-matrix-label',
     id: 'attn23-score-k-label',
-    text: 'K'
+    html: inlineMath('K')
   }));
   wrap.appendChild(createEl('div', {
     className: 'attn23-score-dims',
     id: 'attn23-score-k-dims',
-    text: 'K ∈ R^(S × d_k)'
+    html: inlineMath('K \\in \\mathbb{R}^{S \\times d_k}')
   }));
 
   const stage = createEl('div', {
@@ -376,12 +374,12 @@ function createAttentionMatrixScoreMatrix() {
   wrap.appendChild(createEl('div', {
     className: 'attn23-score-matrix-label',
     id: 'attn23-score-s-label',
-    text: 'Raw Scores (S)'
+    html: 'Raw Scores \\(S\\)'
   }));
   wrap.appendChild(createEl('div', {
     className: 'attn23-score-dims',
     id: 'attn23-score-s-dims',
-    text: 'S ∈ R^(S × S)'
+    html: inlineMath('S \\in \\mathbb{R}^{S \\times S}')
   }));
 
   const layout = createEl('div', {
@@ -504,12 +502,12 @@ function createAttentionMatrixPostScoreMainMatrix() {
   wrap.appendChild(createEl('div', {
     className: 'attn23-score-matrix-label attn23-postscore-main-label',
     id: 'attn23-postscore-main-label',
-    text: 'Masked Scores (S)'
+    html: 'Masked Scores \\(S\\)'
   }));
   wrap.appendChild(createEl('div', {
     className: 'attn23-score-dims attn23-postscore-main-dims',
     id: 'attn23-postscore-main-dims',
-    text: 'S ∈ R^(S × S)'
+    html: inlineMath('S \\in \\mathbb{R}^{S \\times S}')
   }));
 
   const layout = createEl('div', {
@@ -592,12 +590,12 @@ function createAttentionMatrixPostScoreValueMatrix() {
   wrap.appendChild(createEl('div', {
     className: 'attn23-score-matrix-label attn23-postscore-v-label',
     id: 'attn23-postscore-v-label',
-    text: 'Value Matrix (V)'
+    html: 'Value Matrix \\(V\\)'
   }));
   wrap.appendChild(createEl('div', {
     className: 'attn23-score-dims',
     id: 'attn23-postscore-v-dims',
-    text: 'V ∈ R^(S × d_v)'
+    html: inlineMath('V \\in \\mathbb{R}^{S \\times d_v}')
   }));
   const shell = createEl('div', {
     className: 'attn23-postscore-vector-shell',
@@ -628,12 +626,12 @@ function createAttentionMatrixPostScoreOutputMatrix() {
   wrap.appendChild(createEl('div', {
     className: 'attn23-score-matrix-label attn23-postscore-o-label',
     id: 'attn23-postscore-o-label',
-    text: 'Output Matrix (O)'
+    html: 'Output Matrix \\(O\\)'
   }));
   wrap.appendChild(createEl('div', {
     className: 'attn23-score-dims',
     id: 'attn23-postscore-o-dims',
-    text: 'O ∈ R^(S × d_v)'
+    html: inlineMath('O \\in \\mathbb{R}^{S \\times d_v}')
   }));
   const shell = createEl('div', {
     className: 'attn23-postscore-vector-shell',
@@ -667,36 +665,25 @@ function createAttentionMatrixPostScoreStage() {
   stage.appendChild(createEl('div', {
     className: 'attn23-postscore-op attn23-postscore-scale-op',
     id: 'attn23-postscore-scale-op',
-    text: '÷ √d_k'
+    html: '\\(/ \\sqrt{d_k}\\)'
   }));
   stage.appendChild(createEl('div', {
     className: 'attn23-postscore-op attn23-postscore-softmax-op',
     id: 'attn23-postscore-softmax-op'
   }, [
     createEl('span', {
-      className: 'attn23-postscore-softmax-main'
-    }, [
-      'softmax(z',
-      createEl('sub', { text: 'i' }),
-      ')',
-      createEl('sub', { text: 'j' }),
-      ' = exp(z',
-      createEl('sub', { text: 'ij' }),
-      ') / Σ',
-      createEl('sub', { text: 'k' }),
-      ' exp(z',
-      createEl('sub', { text: 'ik' }),
-      ')'
-    ]),
+      className: 'attn23-postscore-softmax-main',
+      html: inlineMath('\\operatorname{softmax}(z_i)_j = \\frac{\\exp(z_{ij})}{\\sum_k \\exp(z_{ik})}')
+    }),
     createEl('span', {
       className: 'attn23-postscore-softmax-note',
-      text: 'exp(−∞) = 0  →  masked cells become 0.00'
+      html: '\\(\\exp(-\\infty) = 0\\) and masked cells become \\(0\\).'
     })
   ]));
   stage.appendChild(createEl('div', {
     className: 'attn23-postscore-row-sum',
     id: 'attn23-postscore-row-sum',
-    text: 'each row sums to 1'
+    html: inlineMath('\\sum_j a_{ij} = 1')
   }));
   stage.appendChild(createEl('div', {
     className: 'attn23-postscore-mul',
@@ -712,17 +699,9 @@ function createAttentionMatrixPostScoreStage() {
   stage.appendChild(createAttentionMatrixPostScoreOutputMatrix());
   stage.appendChild(createEl('div', {
     className: 'attn23-postscore-caption',
-    id: 'attn23-postscore-caption'
-  }, [
-    'o',
-    createEl('sub', { text: 'i' }),
-    ' = Σ',
-    createEl('sub', { text: 'j' }),
-    ' a',
-    createEl('sub', { text: 'ij' }),
-    ' · v',
-    createEl('sub', { text: 'j' })
-  ]));
+    id: 'attn23-postscore-caption',
+    html: inlineMath('o_i = \\sum_j a_{ij} v_j')
+  }));
   return stage;
 }
 
@@ -866,14 +845,14 @@ function syncAttentionMatrixPostScoreMatrix(mode = state.attentionMatrix.postSco
   const dims = document.getElementById('attn23-postscore-main-dims');
   const processed = Math.max(0, Math.min(ATTN_MATRIX_SCORE_TOKENS.length, state.attentionMatrix.postScoreVisibleCount));
   if (label) {
-    label.textContent = mode === 'attention'
-      ? 'Attention Matrix (A)'
-      : (mode === 'scaled' ? 'Scaled Scores (Z)' : 'Masked Scores (S)');
+    setMathHTML(label, mode === 'attention'
+      ? 'Attention Matrix \\(A\\)'
+      : (mode === 'scaled' ? 'Scaled Scores \\(Z\\)' : 'Masked Scores \\(S\\)'));
   }
   if (dims) {
-    dims.textContent = mode === 'attention'
-      ? 'A ∈ R^(S × S)'
-      : ((mode === 'scaled') ? 'Z ∈ R^(S × S)' : 'S ∈ R^(S × S)');
+    setMathHTML(dims, inlineMath(mode === 'attention'
+      ? 'A \\in \\mathbb{R}^{S \\times S}'
+      : ((mode === 'scaled') ? 'Z \\in \\mathbb{R}^{S \\times S}' : 'S \\in \\mathbb{R}^{S \\times S}')));
   }
 
   ATTN_MATRIX_SCORE_TOKENS.forEach((rowToken, rowIdx) => {
@@ -1011,8 +990,8 @@ function syncAttentionMatrixPostScoreStageFromClasses() {
 function setAttentionMatrixScoreKState(transposed) {
   const label = document.getElementById('attn23-score-k-label');
   const dims = document.getElementById('attn23-score-k-dims');
-  if (label) label.textContent = transposed ? 'K^T' : 'K';
-  if (dims) dims.textContent = transposed ? 'K^T ∈ R^(d_k × S)' : 'K ∈ R^(S × d_k)';
+  if (label) setMathHTML(label, inlineMath(transposed ? 'K^{\\mathsf{T}}' : 'K'));
+  if (dims) setMathHTML(dims, inlineMath(transposed ? 'K^{\\mathsf{T}} \\in \\mathbb{R}^{d_k \\times S}' : 'K \\in \\mathbb{R}^{S \\times d_k}'));
 }
 
 function setAttentionMatrixProjectionOutputVisible(proj, visible) {
@@ -2588,7 +2567,8 @@ function initAttentionMatrixSlide() {
   }
 
   const takeaway = document.getElementById('attn23-takeaway');
-  if (takeaway) takeaway.innerHTML = ATTN_MATRIX_TAKEAWAYS[state.attentionMatrix.step] || ATTN_MATRIX_TAKEAWAYS[0];
+  if (takeaway) setMathHTML(takeaway, ATTN_MATRIX_TAKEAWAYS[state.attentionMatrix.step] || ATTN_MATRIX_TAKEAWAYS[0]);
+  typesetMath(slide);
 
   if (state.attentionMatrix.step >= 14) {
     settleAttentionMatrixOutputState();
@@ -2631,7 +2611,7 @@ function setAttentionMatrixStep(step) {
   const prevStep = state.attentionMatrix.step;
   const clamped = Math.max(0, Math.min(ATTN_MATRIX_MAX_STEP, step));
   state.attentionMatrix.step = clamped;
-  takeaway.innerHTML = ATTN_MATRIX_TAKEAWAYS[clamped] || ATTN_MATRIX_TAKEAWAYS[0];
+  setMathHTML(takeaway, ATTN_MATRIX_TAKEAWAYS[clamped] || ATTN_MATRIX_TAKEAWAYS[0]);
   const animateStep = clamped === prevStep + 1;
 
   if (clamped < 3) {

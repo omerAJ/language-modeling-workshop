@@ -1,3 +1,15 @@
+function formatMathToken(token) {
+  return '\\mathrm{' + String(token) + '}';
+}
+
+function formatMathSubscript(base, sub) {
+  return base + '_{' + formatMathToken(sub) + '}';
+}
+
+function formatTokenMath(base, token) {
+  return inlineMath(formatMathSubscript(base, token));
+}
+
 function createAttentionQkvVectorRect(vectorId, extraClass = '', values = null) {
   return createVectorRect({
     id: vectorId,
@@ -8,18 +20,16 @@ function createAttentionQkvVectorRect(vectorId, extraClass = '', values = null) 
 }
 
 function createMathSubLabel(base, sub, className) {
-  return createEl('span', { className }, [
-    base,
-    createEl('sub', { text: sub })
-  ]);
+  return createEl('span', {
+    className,
+    html: formatTokenMath(base, sub)
+  });
 }
 
 function createMathQTransposeK() {
-  return createEl('span', null, [
-    'q',
-    createEl('sup', { text: 'T' }),
-    'k'
-  ]);
+  return createEl('span', {
+    html: inlineMath('q^{\\mathsf{T}}k')
+  });
 }
 
 function createAttentionStep4VectorRect(vectorId, extraClass = '', values = null) {

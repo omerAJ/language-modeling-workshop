@@ -15,6 +15,14 @@ function addTrackedListener(target, type, handler, options) {
   state.dev.listenerCounts[type] = (state.dev.listenerCounts[type] || 0) + 1;
 }
 
+function inlineMath(tex) {
+  return '\\(' + tex + '\\)';
+}
+
+function displayMath(tex) {
+  return '\\[' + tex + '\\]';
+}
+
 function setAttrs(el, attrs) {
   if (!attrs) return el;
   Object.keys(attrs).forEach((key) => {
@@ -168,4 +176,3 @@ function cacheUiReferences() {
   state.ui.slideCounter = $('#slideCounter');
   state.ui.progressFill = $('#progressFill');
 }
-

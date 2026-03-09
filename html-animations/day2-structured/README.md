@@ -192,6 +192,7 @@ Examples:
 - rename a heading
 - rewrite a paragraph
 - add a new card to a static slide
+- write equations, symbols, dimensions, or formula-like labels using LaTeX with MathJax delimiters such as `\(...\)` or `\[...\]`
 
 ### Change colors, spacing, alignment, typography, animation styling
 
@@ -267,6 +268,35 @@ That is acceptable as long as:
 - JS stays split
 - slide ownership is clear
 
+### 6. Write math as LaTeX
+
+If something is mathematically meaningful, write it as LaTeX rather than ad hoc HTML formatting.
+
+Use:
+- `\(...\)` for inline math in `index.html`
+- `\[...\]` for display equations in `index.html`
+- `setMathHTML(...)` or `setMathText(...)` for dynamic math inserted by JS
+
+Examples:
+- use `\(Q\)`, not plain `Q` when it is a matrix symbol
+- use `\(x_{\mathrm{sat}}\)`, not `x<sub>sat</sub>`
+- use `\(\operatorname{softmax}(s_j / \sqrt{d_k})\)`, not mixed text plus HTML subscripts
+
+This deck already uses MathJax. Keep notation consistent and let MathJax render it.
+
+### 7. Keep the README in sync
+
+If you make a significant change that affects how someone edits, navigates, or understands this deck, update this README in the same pass.
+
+That includes changes like:
+- adding or removing slides
+- changing the file structure
+- moving logic between files
+- changing interaction ownership
+- changing presentation flow in a way that affects the editing map
+
+Keep the README streamlined, concise, and accurate.
+
 ## Common Tasks
 
 ### Edit only slide copy
@@ -292,7 +322,7 @@ That is acceptable as long as:
 5. Add any constants in `scripts/constants.js`
 6. Register the slide in `scripts/core/slide-registry.js`
 7. Add the script include to `index.html`
-8. Update this README if the architecture changes
+8. Update this README if the architecture, slide map, editing flow, or file ownership changed
 
 ### Change the slide order
 

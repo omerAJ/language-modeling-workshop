@@ -161,12 +161,12 @@ const ATTN_QKV_SCORE_QUAL = {
 };
 
 const ATTN_QKV_TAKEAWAYS = [
-  'We start from embeddings <i>x</i><sub>1</sub>…<i>x</i><sub>n</sub>',
-  'Project each embedding into a key representation (<i>k</i>)',
-  'Also project into a value: <i>v</i> = <i>x</i>W<sub>V</sub> (this is what gets copied)',
-  'For the focus token, build a query representation (<i>q</i><sub>sat</sub>)',
-  'Compute pairwise scores: <i>s</i><sub>j</sub> = <i>q</i><sub>sat</sub> · <i>k</i><sub>j</sub>',
-  'Scores are ready — we no longer need Q or K for the next step.'
+  'We start from embeddings \\(x_1, \\ldots, x_n\\).',
+  'Project each embedding into a key representation \\(k\\).',
+  'Also project into a value: \\(v = xW_V\\). This is what gets copied.',
+  'For the focus token, build a query representation \\(q_{\\mathrm{sat}}\\).',
+  'Compute pairwise scores: \\(s_j = q_{\\mathrm{sat}} \\cdot k_j\\).',
+  'Scores are ready. We no longer need \\(Q\\) or \\(K\\) for the next step.'
 ];
 
 const ATTN_QKV_COMPARE_DRAW_MS = 360;
@@ -202,12 +202,12 @@ const ATTN_STEP4_SCORE_QUAL = {
 };
 
 const ATTN_STEP4_TAKEAWAYS = [
-  'Start from Step 3 scores <i>s</i><sub>j</sub> for each token.',
-  'Convert scores into attention weights: <i>a</i><sub>j</sub> = softmax(<i>s</i><sub>j</sub>/√<i>d</i><sub>k</sub>).',
+  'Start from Step 3 scores \\(s_j\\) for each token.',
+  'Convert scores into attention weights: \\(a_j = \\operatorname{softmax}(s_j / \\sqrt{d_k})\\).',
   'First multiplication: pair the first weight with its value vector and scale it.',
   'Now apply the remaining attention multiplications across the other tokens.',
-  'Aggregate all weighted values: <i>o</i><sub>sat</sub> = Σ <i>a</i><sub>j</sub><i>v</i><sub>j</sub>.',
-  'Residual addition: <i>y</i><sub>sat</sub> = <i>x</i><sub>sat</sub> + <i>o</i><sub>sat</sub>.'
+  'Aggregate all weighted values: \\(o_{\\mathrm{sat}} = \\sum_j a_j v_j\\).',
+  'Residual addition: \\(y_{\\mathrm{sat}} = x_{\\mathrm{sat}} + o_{\\mathrm{sat}}\\).'
 ];
 
 const ATTN_STEP4_COMPARE_DRAW_MS = 360;
@@ -252,18 +252,18 @@ const ATTN_MATRIX_TAKEAWAYS = [
   'Start from the same sequence: tokens plus their embedding rows.',
   'First collect the sequence tokens into a compact token matrix T.',
   'Then collect the embedding rows into the embedding matrix X.',
-  'Now apply the same Step 1 projection to the whole matrix: X is copied into three branches and projected into Q, K, and V.',
-  'Bring Q and K to the center as the matrices used for score computation.',
-  'Transpose K so the matrix dimensions line up for multiplication.',
-  'Compute raw attention scores for the whole sequence: S = QK^T.',
-  'Without a mask, earlier tokens can attend to later tokens.<br><i>cat</i> could use information from <i>sat</i>, <i>on</i>, <i>the</i>, and <i>mat</i> before those tokens should exist.<br>That leaks future information and breaks left-to-right generation.',
-  'The fix is a causal attention mask.<br>For every future token position, replace that score with <i>−∞</i> so it is blocked.<br>Only the current token and the tokens before it are allowed to remain.',
-  'Notice what appears in the blocked cells: <i>−∞</i>.<br>Why do we write negative infinity there instead of 0 or just removing the cell?<br>The next steps will make that clear when we center this matrix, scale it, and apply the rowwise softmax.',
+  'Now apply the same Step 1 projection to the whole matrix: \\(X\\) is copied into three branches and projected into \\(Q\\), \\(K\\), and \\(V\\).',
+  'Bring \\(Q\\) and \\(K\\) to the center as the matrices used for score computation.',
+  'Transpose \\(K\\) so the matrix dimensions line up for multiplication.',
+  'Compute raw attention scores for the whole sequence: \\(S = QK^{\\mathsf{T}}\\).',
+  'Without a mask, earlier tokens can attend to later tokens.<br>\\(\\mathrm{cat}\\) could use information from \\(\\mathrm{sat}\\), \\(\\mathrm{on}\\), \\(\\mathrm{the}\\), and \\(\\mathrm{mat}\\) before those tokens should exist.<br>That leaks future information and breaks left-to-right generation.',
+  'The fix is a causal attention mask.<br>For every future token position, replace that score with \\(-\\infty\\) so it is blocked.<br>Only the current token and the tokens before it are allowed to remain.',
+  'Notice what appears in the blocked cells: \\(-\\infty\\).<br>Why do we write negative infinity there instead of \\(0\\) or just removing the cell?<br>The next steps will make that clear when we center this matrix, scale it, and apply the row-wise softmax.',
   'Now focus on the masked score matrix itself.<br>We will operate on it row by row, because attention normalizes each query row independently.',
-  'First scale the allowed scores by dividing by √d<sub>k</sub>.<br>The masked future positions stay at <i>−∞</i>, so they remain blocked.<br>This keeps the score magnitudes in a stable range before softmax.',
-  'Now apply softmax row by row.<br>softmax(z<sub>i</sub>)<sub>j</sub> = exp(z<sub>ij</sub>) / Σ<sub>k</sub> exp(z<sub>ik</sub>), so exp(−∞) = 0 and every masked future entry becomes 0 attention.<br>Each row becomes a valid attention distribution over the allowed tokens.',
-  'Bring in the value matrix <i>V</i>.<br>The attention matrix <i>A</i> tells us how much of each value row to mix for every output row.',
-  'Compute the weighted sum for the whole sequence: <i>O</i> = <i>A</i> × <i>V</i>.<br>Each output row is a weighted combination of value rows, using the attention weights from the matching row of <i>A</i>.'
+  'First scale the allowed scores by dividing by \\(\\sqrt{d_k}\\).<br>The masked future positions stay at \\(-\\infty\\), so they remain blocked.<br>This keeps the score magnitudes in a stable range before softmax.',
+  'Now apply softmax row by row.<br>\\(\\operatorname{softmax}(z_i)_j = \\frac{\\exp(z_{ij})}{\\sum_k \\exp(z_{ik})}\\), so \\(\\exp(-\\infty) = 0\\) and every masked future entry becomes zero attention.<br>Each row becomes a valid attention distribution over the allowed tokens.',
+  'Bring in the value matrix \\(V\\).<br>The attention matrix \\(A\\) tells us how much of each value row to mix for every output row.',
+  'Compute the weighted sum for the whole sequence: \\(O = AV\\).<br>Each output row is a weighted combination of value rows, using the attention weights from the matching row of \\(A\\).'
 ];
 
 const ATTN_MATRIX_MAX_STEP = 14;
@@ -331,13 +331,13 @@ const ATTN_MATRIX_OUTPUT_ROW_STAGGER_MS = 140;
 const ATTN_MATRIX_OUTPUT_ROW_MS = 240;
 
 const ATTN_MHA_TAKEAWAYS = [
-  'Multi-head attention runs several smaller attention mechanisms in parallel on different learned projections of the same embedding matrix X.',
-  'Split the same embedding matrix X into two parallel heads. Both heads see the full sequence, but each head will work in its own smaller learned subspace.',
-  'Each head applies its own learned projection matrices W_Q, W_K, and W_V to the same X, producing different head-specific Q, K, and V.',
+  'Multi-head attention runs several smaller attention mechanisms in parallel on different learned projections of the same embedding matrix \\(X\\).',
+  'Split the same embedding matrix \\(X\\) into two parallel heads. Both heads see the full sequence, but each head will work in its own smaller learned subspace.',
+  'Each head applies its own learned projection matrices \\(W_Q\\), \\(W_K\\), and \\(W_V\\) to the same \\(X\\), producing different head-specific \\(Q\\), \\(K\\), and \\(V\\).',
   'Each head now runs its own masked attention mechanism in parallel. Because the heads use different learned projections, they can focus on different relationships or features in the same sequence.',
   'Instead of one attention-based summary, the model now has multiple context representations, one per head.',
   'Bring the head outputs together and concatenate them side by side. This combines the separate head-specific context representations into one wider sequence matrix.',
-  'Apply the output projection W_O to mix the concatenated head information back into one shared representation. This is the final multi-head attention output.'
+  'Apply the output projection \\(W_O\\) to mix the concatenated head information back into one shared representation. This is the final multi-head attention output.'
 ];
 
 const ATTN_MHA_TOKENS = ATTN_MATRIX_TOKENS.slice();
@@ -407,14 +407,14 @@ const ATTN_P1_MAX_STEP = 8;
 
 const ATTN_P1_TAKEAWAYS = [
   'Embeddings are static \u2014 attention projects them into new roles',
-  '<i>x</i><sub>sat</sub> is sat\u2019s static embedding from the previous layer',
-  'Broadcast the same <i>x</i><sub>sat</sub> into three branch copies',
-  'Apply the query projection matrix <i>W</i><sub>Q</sub>',
-  'Query <i>q</i><sub>sat</sub>: what information does sat need?',
-  'Apply the key projection matrix <i>W</i><sub>K</sub>',
-  'Key <i>k</i><sub>sat</sub>: what sat offers to other tokens',
-  'Apply the value projection matrix <i>W</i><sub>V</sub>',
-  'Next: use q_sat to score every k_j (q \u00b7 k \u2192 s)'
+  '\\(x_{\\mathrm{sat}}\\) is the static embedding for \\(\\mathrm{sat}\\) from the previous layer.',
+  'Broadcast the same \\(x_{\\mathrm{sat}}\\) into three branch copies.',
+  'Apply the query projection matrix \\(W_Q\\).',
+  'Query \\(q_{\\mathrm{sat}}\\): what information does \\(\\mathrm{sat}\\) need?',
+  'Apply the key projection matrix \\(W_K\\).',
+  'Key \\(k_{\\mathrm{sat}}\\): what does \\(\\mathrm{sat}\\) offer to other tokens?',
+  'Apply the value projection matrix \\(W_V\\).',
+  'Next: use \\(q_{\\mathrm{sat}}\\) to score every \\(k_j\\), producing \\(s_j\\).'
 ];
 
 const ATTN_WGT_TOKENS = ATTN_QKV_TOKENS.slice();
@@ -426,10 +426,10 @@ const ATTN_WGT_D_K = ATTN_QKV_QUERY_VECTOR.length;
 const ATTN_WGT_MAX_STEP = 3;
 
 const ATTN_WGT_TAKEAWAYS = [
-  'Raw similarity scores between q_sat and each key k_j.',
-  'Scale scores to keep values in a stable range before softmax.',
-  'Softmax converts scaled scores into normalized attention weights.',
-  'These weights decide how much each value v_j contributes to the updated token.'
+  'Raw similarity scores between \\(q_{\\mathrm{sat}}\\) and each key \\(k_j\\).',
+  'Scale scores to keep values in a stable range before \\(\\operatorname{softmax}\\).',
+  '\\(\\operatorname{softmax}\\) converts scaled scores into normalized attention weights.',
+  'These weights decide how much each value \\(v_j\\) contributes to the updated token.'
 ];
 
 let ATTN_MATRIX_ATTN_ROWS;

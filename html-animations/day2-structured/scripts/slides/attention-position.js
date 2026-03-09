@@ -210,7 +210,7 @@ function createAttentionPositionFixCard(kind) {
       }, ATTN_POS_TAGS.map((tag, rowIndex) => createEl('div', {
         className: 'attn25-pos-row',
         dataset: { posIndex: String(rowIndex + 1) },
-        text: tag
+        html: inlineMath('p_' + (rowIndex + 1))
       }))),
       createEl('div', {
         className: 'attn25-plus-col',
@@ -251,12 +251,12 @@ function createAttentionPositionSharedNotes() {
     createEl('div', {
       className: 'attn25-shared-note',
       id: 'attn25-note-formula',
-      text: 'x′ᵢ = xᵢ + pᵢ'
+      html: inlineMath("x'_i = x_i + p_i")
     }),
     createEl('div', {
       className: 'attn25-shared-note',
       id: 'attn25-note-diff',
-      text: 'cat + p1 ≠ cat + p4'
+      html: inlineMath('\\mathrm{cat} + p_1 \\neq \\mathrm{cat} + p_4')
     }),
     createEl('div', {
       className: 'attn25-shared-note',
@@ -299,6 +299,7 @@ function initAttentionPositionSlide() {
   }
 
   takeaway.innerHTML = ATTN_POS_TAKEAWAYS[state.attentionPosition.step] || ATTN_POS_TAKEAWAYS[0];
+  typesetMath(slide);
 }
 
 function setAttentionPositionStep(step) {

@@ -27,7 +27,7 @@ function createAttentionTokenPrimitive(token) {
   }, [
     createEl('span', {
       className: 'attn18-vector-label',
-      text: 'x_' + token
+      html: formatTokenMath('x', token)
     }),
     createAttentionVectorRect('attn18-vector-' + token)
   ]);
@@ -37,7 +37,7 @@ function createAttentionTokenPrimitive(token) {
     const updatedWrap = createEl('div', { className: 'attn18-update-wrap' }, [
       createEl('span', {
         className: 'attn18-vector-label prime',
-        text: 'x_sat\''
+        html: inlineMath("x'_{\\mathrm{sat}}")
       }),
       createAttentionVectorRect('attn18-vector-sat-prime')
     ]);
@@ -344,6 +344,9 @@ function initAttentionIntroSlide() {
 
   const takeaway = document.getElementById('attn18-takeaway');
   if (takeaway) takeaway.textContent = ATTN_INTRO_FOOTER;
+  typesetMath(slide).then(() => {
+    updateAttentionIntroOverlay();
+  });
   updateAttentionIntroOverlay();
   syncAttentionIntroFlowVisuals(getAttentionIntroFlowCount(state.attentionIntro.step));
 }

@@ -23,12 +23,12 @@ function createAttentionMultiHeadSourceMatrix() {
   panel.appendChild(createEl('div', {
     className: 'attn24-source-label',
     id: 'attn24-source-label',
-    text: 'Embedding Matrix (X)'
+    html: 'Embedding Matrix \\(X\\)'
   }));
   panel.appendChild(createEl('div', {
     className: 'attn24-source-meta',
     id: 'attn24-source-meta',
-    text: 'X ∈ R^(S × d)'
+    html: inlineMath('X \\in \\mathbb{R}^{S \\times d}')
   }));
   const shell = createEl('div', {
     className: 'attn24-source-shell',
@@ -59,7 +59,7 @@ function createAttentionMultiHeadMiniX(head) {
   });
   wrap.appendChild(createEl('div', {
     className: 'attn24-head-mini-x-label',
-    text: 'X'
+    html: inlineMath('X')
   }));
   const shell = createEl('div', {
     className: 'attn24-head-mini-x-shell',
@@ -91,7 +91,7 @@ function createAttentionMultiHeadQkvMatrix(head, proj) {
   });
   wrap.appendChild(createEl('div', {
     className: 'attn24-head-qkv-label',
-    text: proj.toUpperCase()
+    html: inlineMath(proj.toUpperCase())
   }));
   const shell = createEl('div', {
     className: 'attn24-head-qkv-shell',
@@ -143,14 +143,13 @@ function createAttentionMultiHeadWMatrix(head, proj) {
   wrap.appendChild(createEl('div', {
     className: 'attn24-head-w-label',
     id: 'attn24-head-w-label-' + proj + '-' + head
-  }, [
-    'W',
-    createEl('sub', { text: proj.toUpperCase() })
-  ]));
+  }, createEl('span', {
+    html: inlineMath('W_' + proj.toUpperCase())
+  })));
   wrap.appendChild(createEl('div', {
     className: 'attn24-head-w-dims',
     id: 'attn24-head-w-dims-' + proj + '-' + head,
-    text: '4 × 2'
+    html: inlineMath('4 \\times 2')
   }));
   return wrap;
 }
@@ -214,13 +213,9 @@ function createAttentionMultiHeadAttentionBlock(head) {
     }),
     createEl('div', {
       className: 'attn24-head-attn-block-formula'
-    }, [
-      'softmax(QK',
-      createEl('sup', { text: 'T' }),
-      ' / √d',
-      createEl('sub', { text: 'h' }),
-      ' + mask) · V'
-    ])
+    }, createEl('span', {
+      html: inlineMath('\\operatorname{softmax}(QK^{\\mathsf{T}} / \\sqrt{d_h} + \\text{mask})\\,V')
+    }))
   ]);
 }
 
@@ -231,11 +226,9 @@ function createAttentionMultiHeadOutputMatrix(head) {
   });
   const headIndex = head === 'h1' ? '1' : '2';
   wrap.appendChild(createEl('div', {
-    className: 'attn24-head-output-label'
-  }, [
-    'O',
-    createEl('sup', { text: headIndex })
-  ]));
+    className: 'attn24-head-output-label',
+    html: inlineMath('O^{(' + headIndex + ')}')
+  }));
   const shell = createEl('div', {
     className: 'attn24-head-output-shell',
     id: 'attn24-head-output-shell-' + head
@@ -284,7 +277,7 @@ function createAttentionMultiHeadConcatMatrix() {
   wrap.appendChild(createEl('div', {
     className: 'attn24-concat-dims',
     id: 'attn24-concat-dims',
-    text: 'Concat(O^(1), O^(2)) ∈ R^(S × d)'
+    html: inlineMath('\\operatorname{Concat}(O^{(1)}, O^{(2)}) \\in \\mathbb{R}^{S \\times d}')
   }));
   const shell = createEl('div', {
     className: 'attn24-concat-shell',
@@ -318,14 +311,13 @@ function createAttentionMultiHeadWoMatrix() {
   wrap.appendChild(createEl('div', {
     className: 'attn24-wo-label',
     id: 'attn24-wo-label'
-  }, [
-    'W',
-    createEl('sub', { text: 'O' })
-  ]));
+  }, createEl('span', {
+    html: inlineMath('W_O')
+  })));
   wrap.appendChild(createEl('div', {
     className: 'attn24-wo-dims',
     id: 'attn24-wo-dims',
-    text: '4 × 4'
+    html: inlineMath('4 \\times 4')
   }));
   const shell = createEl('div', {
     className: 'attn24-wo-shell',
@@ -363,7 +355,7 @@ function createAttentionMultiHeadFinalOutputMatrix() {
   wrap.appendChild(createEl('div', {
     className: 'attn24-mha-output-dims',
     id: 'attn24-mha-output-dims',
-    text: 'O ∈ R^(S × d)'
+    html: inlineMath('O \\in \\mathbb{R}^{S \\times d}')
   }));
   const shell = createEl('div', {
     className: 'attn24-mha-output-shell',
@@ -1081,7 +1073,8 @@ function initAttentionMultiHeadSlide() {
   }
 
   const takeaway = document.getElementById('attn24-takeaway');
-  if (takeaway) takeaway.innerHTML = ATTN_MHA_TAKEAWAYS[state.attentionMultiHead.step] || ATTN_MHA_TAKEAWAYS[0];
+  if (takeaway) setMathHTML(takeaway, ATTN_MHA_TAKEAWAYS[state.attentionMultiHead.step] || ATTN_MHA_TAKEAWAYS[0]);
+  typesetMath(slide);
 
   if (state.attentionMultiHead.step >= 6) {
     settleAttentionMultiHeadOutputProjectionState();
@@ -1108,7 +1101,7 @@ function setAttentionMultiHeadStep(step) {
   const prevStep = state.attentionMultiHead.step;
   const clamped = Math.max(0, Math.min(ATTN_MHA_MAX_STEP, step));
   state.attentionMultiHead.step = clamped;
-  takeaway.innerHTML = ATTN_MHA_TAKEAWAYS[clamped] || ATTN_MHA_TAKEAWAYS[0];
+  setMathHTML(takeaway, ATTN_MHA_TAKEAWAYS[clamped] || ATTN_MHA_TAKEAWAYS[0]);
   const animateStep = clamped === prevStep + 1;
 
   if (clamped === 0) {

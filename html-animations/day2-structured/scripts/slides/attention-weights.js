@@ -79,13 +79,13 @@ function initAttentionWeightsSlide() {
     });
 
     const sum = ATTN_WGT_WEIGHTS.reduce((acc, value) => acc + value, 0);
-    sumChip.innerHTML = '\u03a3 a<sub>j</sub> = ' + sum.toFixed(2);
+    setMathHTML(sumChip, '\\(\\sum_j a_j = ' + sum.toFixed(2) + '\\)');
 
     state.attentionWeights.initialized = true;
   }
 
   const takeaway = document.getElementById('attn21-takeaway');
-  if (takeaway) takeaway.textContent = ATTN_WGT_TAKEAWAYS[state.attentionWeights.step] || ATTN_WGT_TAKEAWAYS[0];
+  if (takeaway) setMathHTML(takeaway, ATTN_WGT_TAKEAWAYS[state.attentionWeights.step] || ATTN_WGT_TAKEAWAYS[0]);
 }
 
 function setAttentionWeightsStep(step) {
@@ -99,7 +99,7 @@ function setAttentionWeightsStep(step) {
   slide.classList.toggle('attn21-show-scale', clamped >= 1);
   slide.classList.toggle('attn21-show-softmax', clamped >= 2);
   slide.classList.toggle('attn21-show-final', clamped >= 3);
-  if (takeaway) takeaway.textContent = ATTN_WGT_TAKEAWAYS[clamped] || ATTN_WGT_TAKEAWAYS[0];
+  if (takeaway) setMathHTML(takeaway, ATTN_WGT_TAKEAWAYS[clamped] || ATTN_WGT_TAKEAWAYS[0]);
 }
 
 function runAttentionWeightsStep() {

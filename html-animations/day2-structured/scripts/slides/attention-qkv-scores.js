@@ -336,7 +336,7 @@ function setAttentionQkvStep(step) {
   slide.classList.toggle('attn19-show-scores', clamped >= 4);
   slide.classList.toggle('attn19-show-compare', clamped === 4);
   slide.classList.toggle('attn19-cleanup-qk', cleanupQk);
-  takeaway.innerHTML = ATTN_QKV_TAKEAWAYS[clamped] || ATTN_QKV_TAKEAWAYS[0];
+  setMathHTML(takeaway, ATTN_QKV_TAKEAWAYS[clamped] || ATTN_QKV_TAKEAWAYS[0]);
 
   if (clamped !== 4) {
     clearAttentionQkvCompareTimers();
@@ -412,7 +412,10 @@ function initAttentionQkvSlide() {
   }
 
   const takeaway = document.getElementById('attn19-takeaway');
-  if (takeaway) takeaway.innerHTML = ATTN_QKV_TAKEAWAYS[state.attentionQkv.step] || ATTN_QKV_TAKEAWAYS[0];
+  if (takeaway) setMathHTML(takeaway, ATTN_QKV_TAKEAWAYS[state.attentionQkv.step] || ATTN_QKV_TAKEAWAYS[0]);
+  typesetMath(slide).then(() => {
+    updateAttentionQkvOverlay();
+  });
   updateAttentionQkvOverlay();
   if (state.attentionQkv.step >= 4 && state.attentionQkv.compareDone) {
     syncAttentionQkvCompareVisuals(state.attentionQkv.compareVisibleCount);

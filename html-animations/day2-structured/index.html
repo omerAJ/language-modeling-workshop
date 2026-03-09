@@ -429,8 +429,8 @@ Refactor Notes (Zero-Regression):
       <div class="card tradeoff-card" style="border-color: rgba(255,123,123,0.3);">
         <h3 style="color:var(--red);">Why it is not the default</h3>
         <ul class="pc-list bad">
-          <li>Sequences become 5–10× longer.</li>
-          <li>Transformer self-attention is O(n²) in sequence length — 5× longer = 25× more compute.</li>
+          <li>Sequences become \(5\text{–}10\times\) longer.</li>
+          <li>Transformer self-attention is \(O(n^2)\) in sequence length, so \(5\times\) longer means roughly \(25\times\) more compute.</li>
           <li>The model spends capacity reassembling words from letters on every forward pass.</li>
         </ul>
       </div>
@@ -1016,7 +1016,7 @@ l e a r n ing &lt;/w&gt;</div>
         <div class="matrix-shape-label">Full table: \(E \in \mathbb{R}^{|V| \times d_{\text{model}}}\)</div>
         <div class="embed-table">
           <div class="embed-row matrix-ellipsis-row">
-            <span class="embed-key dim">E[0, :]</span>
+            <span class="embed-key dim">\(E[0,:]\)</span>
             <div class="vec-chip-group">
               <span class="vec-chip dim">+0.03</span><span class="vec-chip dim">-0.11</span><span class="vec-chip dim">+0.07</span><span class="vec-chip dim">...</span>
             </div>
@@ -1028,19 +1028,19 @@ l e a r n ing &lt;/w&gt;</div>
             </div>
           </div>
           <div class="embed-row selected-row">
-            <span class="embed-key">E[812, :]</span>
+            <span class="embed-key">\(E[812,:]\)</span>
             <div class="vec-chip-group">
               <span class="vec-chip token-label">"river"</span><span class="vec-chip">+0.14</span><span class="vec-chip">-0.77</span><span class="vec-chip">+0.32</span><span class="vec-chip">...</span>
             </div>
           </div>
           <div class="embed-row selected-row">
-            <span class="embed-key">E[1452, :]</span>
+            <span class="embed-key">\(E[1452,:]\)</span>
             <div class="vec-chip-group">
               <span class="vec-chip token-label">"bank"</span><span class="vec-chip">+0.11</span><span class="vec-chip">-0.70</span><span class="vec-chip">+0.28</span><span class="vec-chip">...</span>
             </div>
           </div>
           <div class="embed-row selected-row">
-            <span class="embed-key">E[5021, :]</span>
+            <span class="embed-key">\(E[5021,:]\)</span>
             <div class="vec-chip-group">
               <span class="vec-chip token-label">"loan"</span><span class="vec-chip">-0.62</span><span class="vec-chip">+0.04</span><span class="vec-chip">+0.80</span><span class="vec-chip">...</span>
             </div>
@@ -1052,7 +1052,7 @@ l e a r n ing &lt;/w&gt;</div>
             </div>
           </div>
           <div class="embed-row matrix-ellipsis-row">
-            <span class="embed-key dim">E[|V|-1, :]</span>
+            <span class="embed-key dim">\(E[|V|-1,:]\)</span>
             <div class="vec-chip-group">
               <span class="vec-chip dim">-0.09</span><span class="vec-chip dim">+0.41</span><span class="vec-chip dim">-0.28</span><span class="vec-chip dim">...</span>
             </div>
@@ -1064,12 +1064,8 @@ l e a r n ing &lt;/w&gt;</div>
         <div class="math">\[
           E \in \mathbb{R}^{|V|\times d_{\text{model}}}
         \]</div>
-        <div class="id-seq" style="margin-top:0.55rem; white-space:pre-wrap; word-break:break-word;">Example (GPT-2 small):
-|V| = 50,257,  d_model = 768
-params in E = 50,257 × 768 = 38,597,376</div>
-        <div class="id-seq" style="margin-top:0.5rem; white-space:pre-wrap; word-break:break-word;">Selected sequence:
-["river", "bank", "loan"] → [812, 1452, 5021]
-→ [E[812,:], E[1452,:], E[5021,:]]</div>
+        <div class="id-seq" style="margin-top:0.55rem; white-space:pre-wrap; word-break:break-word;">Example (GPT-2 small):<br>\(|V| = 50{,}257,\quad d_{\text{model}} = 768\)<br>\(\lvert E \rvert = 50{,}257 \times 768 = 38{,}597{,}376\)</div>
+        <div class="id-seq" style="margin-top:0.5rem; white-space:pre-wrap; word-break:break-word;">Selected sequence:<br>\([\text{river}, \text{bank}, \text{loan}] \mapsto [812, 1452, 5021]\)<br>\(\mapsto [E[812,:], E[1452,:], E[5021,:]]\)</div>
         <p class="tiny" style="margin-top:0.5rem;">Token IDs shown here are illustrative; exact values depend on the tokenizer vocabulary.</p>
       </div>
     </div>
@@ -1225,8 +1221,8 @@ params in E = 50,257 × 768 = 38,597,376</div>
   <div class="slide" id="slide-19">
     <span class="section-tag">Attention</span>
     <div class="badge concept">Mechanism</div>
-    <h2>Step 1 — Project into Q/K/V roles</h2>
-    <p class="small-text attn19-subtitle">Project embeddings into Q/K/V subspaces</p>
+    <h2>Step 1 — Project into \(Q\), \(K\), and \(V\) roles</h2>
+    <p class="small-text attn19-subtitle">Project embeddings into \(Q\), \(K\), and \(V\) subspaces</p>
 
     <div class="attn19-layout attn19p1-layout">
       <div class="card attn19-stage attn19p1-stage" id="attn19p1-stage">
@@ -1254,7 +1250,7 @@ params in E = 50,257 × 768 = 38,597,376</div>
         <div class="attn19p1-content">
           <div class="attn19p1-source-row">
             <div class="attn19p1-source-wrap" id="attn19p1-source-wrap">
-              <span class="attn19p1-src-label">x<sub>sat</sub></span>
+              <span class="attn19p1-src-label">\(x_{\mathrm{sat}}\)</span>
               <div class="attn19p1-x-vector" id="attn19p1-x-sat">
                 <span class="attn19p1-vec-divider" style="left:25%"></span>
                 <span class="attn19p1-vec-divider" style="left:50%"></span>
@@ -1275,7 +1271,7 @@ params in E = 50,257 × 768 = 38,597,376</div>
     <span class="section-tag">Attention</span>
     <div class="badge concept">Mechanism</div>
     <h2>Step 2 — Compute scores</h2>
-    <p class="small-text attn19-subtitle">Compare q<sub>sat</sub> against every key k<sub>j</sub></p>
+    <p class="small-text attn19-subtitle">Compare \(q_{\mathrm{sat}}\) against every key \(k_j\)</p>
 
     <div class="attn19-layout">
       <div class="card attn19-stage" id="attn19-stage">
@@ -1328,7 +1324,7 @@ params in E = 50,257 × 768 = 38,597,376</div>
 
         <div class="attn19-q-callout" id="attn19-q-callout">
           <div class="attn19-vector-wrap attn19-vector-wrap-q">
-            <span class="attn19-vector-label attn19-vector-label-q">q<sub>sat</sub></span>
+            <span class="attn19-vector-label attn19-vector-label-q">\(q_{\mathrm{sat}}\)</span>
             <div class="attn19-vector attn19-vector-q" id="attn19-q-sat">
               <span class="attn19-vector-divider" style="left:25%"></span>
               <span class="attn19-vector-divider" style="left:50%"></span>
@@ -1340,26 +1336,26 @@ params in E = 50,257 × 768 = 38,597,376</div>
 
         <div class="attn19-frame">
           <div class="attn19-row-labels" id="attn19-row-labels">
-            <div class="attn19-row-label x" id="attn19-row-x-label">Embeddings (X)</div>
-            <div class="attn19-row-label q" id="attn19-row-q-label">Queries (Q)</div>
-            <div class="attn19-row-label s" id="attn19-row-s-label">Scores (s)</div>
-            <div class="attn19-row-label k" id="attn19-row-k-label">Keys (K)</div>
-            <div class="attn19-row-label v" id="attn19-row-v-label">Values (V)</div>
+            <div class="attn19-row-label x" id="attn19-row-x-label">Embeddings (\(X\))</div>
+            <div class="attn19-row-label q" id="attn19-row-q-label">Queries (\(Q\))</div>
+            <div class="attn19-row-label s" id="attn19-row-s-label">Scores (\(s\))</div>
+            <div class="attn19-row-label k" id="attn19-row-k-label">Keys (\(K\))</div>
+            <div class="attn19-row-label v" id="attn19-row-v-label">Values (\(V\))</div>
           </div>
           <div class="attn19-cols" id="attn19-cols"></div>
         </div>
       </div>
     </div>
 
-    <div class="attn19-score-caption">s<sub>j</sub> = q<sub>sat</sub> · k<sub>j</sub></div>
-    <div class="attn19-takeaway" id="attn19-takeaway">We start from embeddings <i>x</i><sub>1</sub>…<i>x</i><sub>n</sub></div>
+    <div class="attn19-score-caption">\(s_j = q_{\mathrm{sat}} \cdot k_j\)</div>
+    <div class="attn19-takeaway" id="attn19-takeaway">We start from embeddings \(x_1, \ldots, x_n\).</div>
   </div>
 
   <div class="slide" id="slide-21">
     <span class="section-tag">Attention</span>
     <div class="badge concept">Mechanism</div>
     <h2>Step 3 — From scores to attention weights</h2>
-    <p class="small-text attn19-subtitle">Normalize → Softmax → Weights</p>
+    <p class="small-text attn19-subtitle">Normalize \(\rightarrow\) \(\operatorname{softmax}\) \(\rightarrow\) weights</p>
 
     <div class="attn21-layout">
       <div class="card attn19-stage attn21-stage" id="attn21-stage">
@@ -1368,7 +1364,7 @@ params in E = 50,257 × 768 = 38,597,376</div>
         <div class="attn21-workspace">
           <div class="attn21-pipeline">
             <div class="attn21-block attn21-block-s">
-              <div class="attn21-block-title">RAW SCORES (S)</div>
+              <div class="attn21-block-title">RAW SCORES \(S\)</div>
               <div class="attn21-block-caption">for query token: <span id="attn21-query-token">sat</span></div>
               <div class="attn21-row-shell">
                 <div class="attn21-chip-grid attn21-row-raw" id="attn21-raw-row"></div>
@@ -1377,46 +1373,46 @@ params in E = 50,257 × 768 = 38,597,376</div>
 
             <div class="attn21-link attn21-link-scale">
               <span class="attn21-link-arrow" aria-hidden="true"></span>
-              <div class="attn21-op attn21-op-scale">÷ √d<sub>k</sub></div>
+              <div class="attn21-op attn21-op-scale">\(/ \sqrt{d_k}\)</div>
               <span class="attn21-link-arrow" aria-hidden="true"></span>
             </div>
 
             <div class="attn21-block attn21-block-z">
-              <div class="attn21-block-title">SCALED SCORES (Z)</div>
-              <div class="attn21-block-caption">z = s / √d<sub>k</sub></div>
+              <div class="attn21-block-title">SCALED SCORES \(Z\)</div>
+              <div class="attn21-block-caption">\(z = s / \sqrt{d_k}\)</div>
               <div class="attn21-row-shell">
                 <div class="attn21-chip-grid attn21-row-scaled" id="attn21-scaled-row"></div>
               </div>
-              <div class="attn21-scale-note">√d<sub>k</sub> prevents overly large dot-products</div>
+              <div class="attn21-scale-note">\(\sqrt{d_k}\) prevents overly large dot products</div>
             </div>
 
             <div class="attn21-link attn21-link-softmax">
               <span class="attn21-link-arrow" aria-hidden="true"></span>
-              <div class="attn21-op attn21-op-softmax">softmax</div>
+              <div class="attn21-op attn21-op-softmax">\(\operatorname{softmax}\)</div>
               <span class="attn21-link-arrow" aria-hidden="true"></span>
             </div>
 
             <div class="attn21-block attn21-block-weights">
-              <div class="attn21-block-title">ATTENTION WEIGHTS (A)</div>
+              <div class="attn21-block-title">ATTENTION WEIGHTS \(A\)</div>
               <div class="attn21-weight-shell">
                 <div class="attn21-weight-cells" id="attn21-weight-row"></div>
                 <span class="attn21-weight-sweep" aria-hidden="true"></span>
               </div>
-              <div class="attn21-sum" id="attn21-sum-chip">Σ a<sub>j</sub> = --</div>
+              <div class="attn21-sum" id="attn21-sum-chip">\(\sum_j a_j = \text{--}\)</div>
             </div>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="attn21-takeaway" id="attn21-takeaway">Raw similarity scores between q_sat and each key k_j.</div>
+    <div class="attn21-takeaway" id="attn21-takeaway">Raw similarity scores between \(q_{\mathrm{sat}}\) and each key \(k_j\).</div>
   </div>
 
   <div class="slide" id="slide-22">
     <span class="section-tag">Attention</span>
     <div class="badge concept">Mechanism</div>
     <h2>Step 4 — Aggregate values and add residual</h2>
-    <p class="small-text attn19-subtitle">Mix value vectors with attention weights, then add back x<sub>sat</sub></p>
+    <p class="small-text attn19-subtitle">Mix value vectors with attention weights, then add back \(x_{\mathrm{sat}}\)</p>
 
     <div class="attn19-layout">
       <div class="card attn19-stage" id="attn22-stage">
@@ -1470,7 +1466,7 @@ params in E = 50,257 × 768 = 38,597,376</div>
 
         <div class="attn19-q-callout" id="attn22-q-callout">
           <div class="attn19-vector-wrap attn19-vector-wrap-q">
-            <span class="attn19-vector-label attn19-vector-label-q">q<sub>sat</sub></span>
+            <span class="attn19-vector-label attn19-vector-label-q">\(q_{\mathrm{sat}}\)</span>
             <div class="attn19-vector attn19-vector-q" id="attn22-q-sat">
               <span class="attn19-vector-divider" style="left:25%"></span>
               <span class="attn19-vector-divider" style="left:50%"></span>
@@ -1482,34 +1478,34 @@ params in E = 50,257 × 768 = 38,597,376</div>
 
         <div class="attn19-frame" id="attn22-frame">
           <div class="attn19-row-labels" id="attn22-row-labels">
-            <div class="attn19-row-label x" id="attn22-row-x-label">Embeddings (X)</div>
-            <div class="attn19-row-label q" id="attn22-row-q-label">Queries (Q)</div>
-            <div class="attn19-row-label s" id="attn22-row-s-label">Scores (s)</div>
-            <div class="attn19-row-label k" id="attn22-row-k-label">Keys (K)</div>
-            <div class="attn19-row-label v" id="attn22-row-v-label">Values (V)</div>
+            <div class="attn19-row-label x" id="attn22-row-x-label">Embeddings (\(X\))</div>
+            <div class="attn19-row-label q" id="attn22-row-q-label">Queries (\(Q\))</div>
+            <div class="attn19-row-label s" id="attn22-row-s-label">Scores (\(s\))</div>
+            <div class="attn19-row-label k" id="attn22-row-k-label">Keys (\(K\))</div>
+            <div class="attn19-row-label v" id="attn22-row-v-label">Values (\(V\))</div>
           </div>
           <div class="attn19-cols" id="attn22-cols"></div>
         </div>
       </div>
     </div>
 
-    <div class="attn19-score-caption" id="attn22-score-caption">s<sub>j</sub> = q<sub>sat</sub> · k<sub>j</sub></div>
+    <div class="attn19-score-caption" id="attn22-score-caption">\(s_j = q_{\mathrm{sat}} \cdot k_j\)</div>
     <div class="attn22-agg-wrap" id="attn22-agg-wrap" aria-live="polite">
       <div class="attn22-agg-formula" id="attn22-agg-formula"></div>
-      <div class="attn22-agg-formula-residual" id="attn22-agg-formula-residual">y<sub>sat</sub> = x<sub>sat</sub> + o<sub>sat</sub></div>
+      <div class="attn22-agg-formula-residual" id="attn22-agg-formula-residual">\(y_{\mathrm{sat}} = x_{\mathrm{sat}} + o_{\mathrm{sat}}\)</div>
       <div class="attn22-agg-output" id="attn22-agg-output">
-        <span class="attn22-agg-output-label" id="attn22-agg-output-label">o<sub>sat</sub> ≈</span>
+        <span class="attn22-agg-output-label" id="attn22-agg-output-label">\(o_{\mathrm{sat}} \approx\)</span>
         <div class="attn22-agg-output-vector" id="attn22-agg-output-vector"></div>
       </div>
     </div>
-    <div class="attn19-takeaway" id="attn22-takeaway">Start from Step 3 scores <i>s</i><sub>j</sub> for each token.</div>
+    <div class="attn19-takeaway" id="attn22-takeaway">Start from Step 3 scores \(s_j\) for each token.</div>
   </div>
 
   <div class="slide" id="slide-23">
     <span class="section-tag">Attention</span>
     <div class="badge concept">Mechanism</div>
     <h2>Matrix View of Attention</h2>
-    <p class="small-text attn19-subtitle">Stack tokens, project X into Q/K/V, compute scores, mask the future, then normalize and mix values</p>
+    <p class="small-text attn19-subtitle">Stack tokens, project \(X\) into \(Q\), \(K\), and \(V\), compute scores, mask the future, then normalize and mix values</p>
 
     <div class="attn19-layout">
       <div class="card attn19-stage attn23-stage" id="attn23-stage">
@@ -1537,7 +1533,7 @@ params in E = 50,257 × 768 = 38,597,376</div>
         <div class="attn23-rail" id="attn23-rail">
           <div class="attn23-col attn23-col-token" id="attn23-col-token">
             <div class="attn23-col-head">
-              <div class="attn23-col-label" id="attn23-token-label">Token Matrix (T)</div>
+              <div class="attn23-col-label" id="attn23-token-label">Token Matrix \(T\)</div>
             </div>
             <div class="attn23-shell attn23-token-shell" id="attn23-token-shell">
               <div class="attn23-slots attn23-token-slots" id="attn23-token-slots"></div>
@@ -1545,8 +1541,8 @@ params in E = 50,257 × 768 = 38,597,376</div>
           </div>
           <div class="attn23-col attn23-col-x" id="attn23-col-x">
             <div class="attn23-col-head">
-              <div class="attn23-col-label" id="attn23-x-label">Embedding Matrix (X)</div>
-              <div class="attn23-col-meta" id="attn23-x-dims">X ∈ R^(S × d)</div>
+              <div class="attn23-col-label" id="attn23-x-label">Embedding Matrix \(X\)</div>
+              <div class="attn23-col-meta" id="attn23-x-dims">\(X \in \mathbb{R}^{S \times d}\)</div>
             </div>
             <div class="attn23-shell attn23-x-shell" id="attn23-x-shell">
               <div class="attn23-slots attn23-x-slots" id="attn23-x-slots"></div>
@@ -1574,7 +1570,7 @@ params in E = 50,257 × 768 = 38,597,376</div>
     <span class="section-tag">Attention</span>
     <div class="badge concept">Mechanism</div>
     <h2>Multi-Head Attention</h2>
-    <p class="small-text attn19-subtitle">Run parallel attention heads on different learned projections of X, then combine them back together</p>
+    <p class="small-text attn19-subtitle">Run parallel attention heads on different learned projections of \(X\), then combine them back together</p>
 
     <div class="attn19-layout">
       <div class="card attn19-stage attn24-stage" id="attn24-stage">

@@ -26,17 +26,17 @@ function initAttentionP1Slide() {
     projRow.innerHTML = '';
     ATTN_P1_PROJS.forEach((proj) => {
       const col = createEl('div', { className: 'attn19p1-proj-col', dataset: { proj } });
-      const matrixLabel = createEl('div', { className: 'attn19p1-matrix-label' }, [
-        'W',
-        createEl('sub', { text: proj.toUpperCase() })
-      ]);
+      const matrixLabel = createEl('div', {
+        className: 'attn19p1-matrix-label',
+        html: inlineMath('W_' + proj.toUpperCase())
+      });
 
       const mulRow = createEl('div', { className: 'attn19p1-mul-row' });
       mulRow.appendChild(createEl('div', { className: 'attn19p1-mini-x-wrap' }, [
-        createEl('span', { className: 'attn19p1-mini-x-label' }, [
-          'x',
-          createEl('sub', { text: ATTN_P1_FOCUS })
-        ]),
+        createEl('span', {
+          className: 'attn19p1-mini-x-label',
+          html: formatTokenMath('x', ATTN_P1_FOCUS)
+        }),
         createVectorRect({
           id: 'attn19p1-mini-x-' + proj,
           baseClass: 'attn19p1-mini-x-vector',
@@ -66,10 +66,10 @@ function initAttentionP1Slide() {
       col.appendChild(mulRow);
 
       const vWrap = createEl('div', { className: 'attn19p1-vector-wrap attn19p1-output-wrap' });
-      const label = createEl('span', { className: 'attn19p1-vec-label' }, [
-        proj,
-        createEl('sub', { text: ATTN_P1_FOCUS })
-      ]);
+      const label = createEl('span', {
+        className: 'attn19p1-vec-label',
+        html: formatTokenMath(proj, ATTN_P1_FOCUS)
+      });
       const vec = createEl('div', {
         className: 'attn19p1-proj-vector',
         id: 'attn19p1-vec-' + proj
@@ -109,7 +109,10 @@ function initAttentionP1Slide() {
   }
 
   const takeaway = document.getElementById('attn19p1-takeaway');
-  if (takeaway) takeaway.innerHTML = ATTN_P1_TAKEAWAYS[state.attentionP1.step] || ATTN_P1_TAKEAWAYS[0];
+  if (takeaway) setMathHTML(takeaway, ATTN_P1_TAKEAWAYS[state.attentionP1.step] || ATTN_P1_TAKEAWAYS[0]);
+  typesetMath(slide).then(() => {
+    updateAttentionP1Overlay();
+  });
   updateAttentionP1Overlay();
 }
 
@@ -240,7 +243,7 @@ function setAttentionP1Step(step) {
   slide.classList.toggle('attn19p1-show-k-output', clamped >= 6);
   slide.classList.toggle('attn19p1-show-v-matrix', clamped >= 7);
   slide.classList.toggle('attn19p1-show-v-output', clamped >= 8);
-  takeaway.innerHTML = ATTN_P1_TAKEAWAYS[clamped] || ATTN_P1_TAKEAWAYS[0];
+  setMathHTML(takeaway, ATTN_P1_TAKEAWAYS[clamped] || ATTN_P1_TAKEAWAYS[0]);
 
   updateAttentionP1Overlay();
   requestAnimationFrame(updateAttentionP1Overlay);
