@@ -87,6 +87,8 @@ http://127.0.0.1:8123/day2-structured/index.html
   - slide 24 only
 - `styles/slides/attention-position.css`
   - slide 25 only
+- `styles/slides/ffn.css`
+  - slide 26 only
 
 ### Shared runtime
 
@@ -160,6 +162,8 @@ The slide IDs are part of the code contract and are used by JavaScript.
   - multi-head attention
 - `slide-25`
   - positional embeddings
+- `slide-26`
+  - feed-forward network (FFN), taught as one static role view plus three concise reveals
 
 If you are trying to find a slide quickly, search `id="slide-23"` or whatever slide ID you need inside `index.html`.
 
@@ -180,6 +184,9 @@ This means:
 - static slide copy lives in `index.html`
 - interactive behavior lives in the matching `scripts/slides/*.js`
 - the registration for that behavior lives in `scripts/core/slide-registry.js`
+
+Note:
+- `slide-26` is a markup-only reveal slide that uses `.hidden-content.autostep`; it opens with the FFN's role in the block and then reveals row-wise operation, internal structure, and a sequence-level batched matrix view, with no dedicated JS module
 
 ## Where To Edit What
 

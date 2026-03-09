@@ -24,6 +24,7 @@ Refactor Notes (Zero-Regression):
 <link rel="stylesheet" href="./styles/slides/attention-matrix.css">
 <link rel="stylesheet" href="./styles/slides/attention-multihead.css">
 <link rel="stylesheet" href="./styles/slides/attention-position.css">
+<link rel="stylesheet" href="./styles/slides/ffn.css">
 <script>
   window.MathJax = {
     tex: {
@@ -1612,6 +1613,211 @@ l e a r n ing &lt;/w&gt;</div>
     <div class="attn19-takeaway" id="attn25-takeaway">RNNs read tokens one at a time, so sequence order is naturally built into the computation.</div>
   </div>
 
+  <div class="slide" id="slide-26">
+    <span class="section-tag">Transformer Block</span>
+    <div class="badge concept">Mechanism</div>
+    <h2>Feed-Forward Network (FFN)</h2>
+    <p class="small-text">A position-wise MLP applied after attention</p>
+
+    <div class="ffn26-layout">
+      <div class="card ffn26-stage">
+        <div class="ffn26-section ffn26-role-section">
+          <div class="ffn26-kicker">Position in the Transformer</div>
+          <div class="ffn26-role-flow">
+            <div class="ffn26-role-box attn">Attention</div>
+            <div class="ffn26-flow-arrow" aria-hidden="true">→</div>
+            <div class="ffn26-role-box ffn">FFN</div>
+          </div>
+          <div class="ffn26-role-captions">
+            <div class="ffn26-role-note"><strong>Attention</strong> mixes information across tokens</div>
+            <div class="ffn26-role-note"><strong>FFN</strong> transforms each token individually</div>
+          </div>
+        </div>
+
+        <div class="hidden-content autostep ffn26-rowwise-block">
+          <div class="ffn26-section">
+            <div class="ffn26-kicker">Row-wise operation</div>
+            <div class="ffn26-rowwise-grid">
+              <div class="ffn26-matrix-card">
+                <div class="ffn26-mini-head">Token embedding matrix</div>
+                <div class="ffn26-mini-dims">\(S \times d_{\text{model}}\)</div>
+                <div class="ffn26-matrix-rows">
+                  <div class="ffn26-matrix-row">
+                    <div class="ffn26-matrix-label">\(h_1\)</div>
+                    <div class="ffn26-matrix-bar">
+                      <span class="ffn26-matrix-divider" style="left:25%"></span>
+                      <span class="ffn26-matrix-divider" style="left:50%"></span>
+                      <span class="ffn26-matrix-divider" style="left:75%"></span>
+                    </div>
+                  </div>
+                  <div class="ffn26-matrix-row">
+                    <div class="ffn26-matrix-label">\(h_2\)</div>
+                    <div class="ffn26-matrix-bar">
+                      <span class="ffn26-matrix-divider" style="left:25%"></span>
+                      <span class="ffn26-matrix-divider" style="left:50%"></span>
+                      <span class="ffn26-matrix-divider" style="left:75%"></span>
+                    </div>
+                  </div>
+                  <div class="ffn26-matrix-row is-focus">
+                    <div class="ffn26-matrix-label">\(h_i\)</div>
+                    <div class="ffn26-matrix-bar">
+                      <span class="ffn26-matrix-divider" style="left:25%"></span>
+                      <span class="ffn26-matrix-divider" style="left:50%"></span>
+                      <span class="ffn26-matrix-divider" style="left:75%"></span>
+                    </div>
+                  </div>
+                  <div class="ffn26-matrix-row">
+                    <div class="ffn26-matrix-label">\(\vdots\)</div>
+                    <div class="ffn26-matrix-bar is-faint">
+                      <span class="ffn26-matrix-divider" style="left:25%"></span>
+                      <span class="ffn26-matrix-divider" style="left:50%"></span>
+                      <span class="ffn26-matrix-divider" style="left:75%"></span>
+                    </div>
+                  </div>
+                  <div class="ffn26-matrix-row">
+                    <div class="ffn26-matrix-label">\(h_S\)</div>
+                    <div class="ffn26-matrix-bar">
+                      <span class="ffn26-matrix-divider" style="left:25%"></span>
+                      <span class="ffn26-matrix-divider" style="left:50%"></span>
+                      <span class="ffn26-matrix-divider" style="left:75%"></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="ffn26-flow-arrow ffn26-rowwise-arrow" aria-hidden="true">→</div>
+              <div class="ffn26-focus-chip">\(\mathrm{FFN}(h_i)\)</div>
+            </div>
+            <div class="ffn26-caption">Same network applied independently to every token.</div>
+          </div>
+        </div>
+
+        <div class="hidden-content autostep ffn26-structure-block">
+          <div class="ffn26-section">
+            <div class="ffn26-kicker">Internal structure</div>
+            <div class="ffn26-mlp-flow">
+              <div class="ffn26-mlp-chip">\(h_i\)</div>
+              <div class="ffn26-flow-arrow" aria-hidden="true">→</div>
+              <div class="ffn26-op-card">
+                <span class="ffn26-op-title">Linear</span>
+                <span class="ffn26-op-dims">\(d_{\text{model}} \rightarrow d_{\text{ff}}\)</span>
+              </div>
+              <div class="ffn26-flow-arrow" aria-hidden="true">→</div>
+              <div class="ffn26-op-card ffn26-op-gelu">
+                <span class="ffn26-op-title">GELU</span>
+              </div>
+              <div class="ffn26-flow-arrow" aria-hidden="true">→</div>
+              <div class="ffn26-op-card">
+                <span class="ffn26-op-title">Linear</span>
+                <span class="ffn26-op-dims">\(d_{\text{ff}} \rightarrow d_{\text{model}}\)</span>
+              </div>
+            </div>
+            <div class="ffn26-equation">\(\mathrm{FFN}(h_i) = W_2\,\mathrm{GELU}(W_1 h_i)\)</div>
+            <div class="ffn26-caption">Expand → nonlinearity → compress.</div>
+          </div>
+        </div>
+
+        <div class="hidden-content autostep ffn26-parallel-block">
+          <div class="ffn26-section">
+            <div class="ffn26-kicker">Parallel processing</div>
+            <div class="ffn26-batch-grid">
+              <div class="ffn26-matrix-card ffn26-batch-card">
+                <div class="ffn26-mini-dims">\(H \in \mathbb{R}^{S \times d_{\text{model}}}\)</div>
+                <div class="ffn26-matrix-rows">
+                  <div class="ffn26-matrix-row">
+                    <div class="ffn26-matrix-label">\(h_1\)</div>
+                    <div class="ffn26-matrix-bar">
+                      <span class="ffn26-matrix-divider" style="left: 25%;"></span>
+                      <span class="ffn26-matrix-divider" style="left: 50%;"></span>
+                      <span class="ffn26-matrix-divider" style="left: 75%;"></span>
+                    </div>
+                  </div>
+                  <div class="ffn26-matrix-row">
+                    <div class="ffn26-matrix-label">\(h_2\)</div>
+                    <div class="ffn26-matrix-bar">
+                      <span class="ffn26-matrix-divider" style="left: 25%;"></span>
+                      <span class="ffn26-matrix-divider" style="left: 50%;"></span>
+                      <span class="ffn26-matrix-divider" style="left: 75%;"></span>
+                    </div>
+                  </div>
+                  <div class="ffn26-matrix-row">
+                    <div class="ffn26-matrix-label">\(h_3\)</div>
+                    <div class="ffn26-matrix-bar">
+                      <span class="ffn26-matrix-divider" style="left: 25%;"></span>
+                      <span class="ffn26-matrix-divider" style="left: 50%;"></span>
+                      <span class="ffn26-matrix-divider" style="left: 75%;"></span>
+                    </div>
+                  </div>
+                  <div class="ffn26-matrix-row">
+                    <div class="ffn26-matrix-label">\(\vdots\)</div>
+                    <div class="ffn26-matrix-bar is-faint">
+                      <span class="ffn26-matrix-divider" style="left: 25%;"></span>
+                      <span class="ffn26-matrix-divider" style="left: 50%;"></span>
+                      <span class="ffn26-matrix-divider" style="left: 75%;"></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="ffn26-batch-flow">
+                <div class="ffn26-batch-pipeline">
+                  <div class="ffn26-batch-op">
+                    <div class="ffn26-batch-op-title">\(\times W_1\)</div>
+                    <div class="ffn26-batch-op-dims">\(d_{\text{model}} \rightarrow d_{\text{ff}}\)</div>
+                  </div>
+                  <span class="ffn26-flow-arrow" aria-hidden="true">→</span>
+                  <div class="ffn26-batch-op ffn26-batch-op-gelu">\(\mathrm{GELU}\)</div>
+                  <span class="ffn26-flow-arrow" aria-hidden="true">→</span>
+                  <div class="ffn26-batch-op">
+                    <div class="ffn26-batch-op-title">\(\times W_2\)</div>
+                    <div class="ffn26-batch-op-dims">\(d_{\text{ff}} \rightarrow d_{\text{model}}\)</div>
+                  </div>
+                </div>
+              </div>
+              <div class="ffn26-matrix-card ffn26-batch-card is-output">
+                <div class="ffn26-mini-dims">\(H' \in \mathbb{R}^{S \times d_{\text{model}}}\)</div>
+                <div class="ffn26-matrix-rows">
+                  <div class="ffn26-matrix-row">
+                    <div class="ffn26-matrix-label">\(h_1'\)</div>
+                    <div class="ffn26-matrix-bar">
+                      <span class="ffn26-matrix-divider" style="left: 25%;"></span>
+                      <span class="ffn26-matrix-divider" style="left: 50%;"></span>
+                      <span class="ffn26-matrix-divider" style="left: 75%;"></span>
+                    </div>
+                  </div>
+                  <div class="ffn26-matrix-row">
+                    <div class="ffn26-matrix-label">\(h_2'\)</div>
+                    <div class="ffn26-matrix-bar">
+                      <span class="ffn26-matrix-divider" style="left: 25%;"></span>
+                      <span class="ffn26-matrix-divider" style="left: 50%;"></span>
+                      <span class="ffn26-matrix-divider" style="left: 75%;"></span>
+                    </div>
+                  </div>
+                  <div class="ffn26-matrix-row">
+                    <div class="ffn26-matrix-label">\(h_3'\)</div>
+                    <div class="ffn26-matrix-bar">
+                      <span class="ffn26-matrix-divider" style="left: 25%;"></span>
+                      <span class="ffn26-matrix-divider" style="left: 50%;"></span>
+                      <span class="ffn26-matrix-divider" style="left: 75%;"></span>
+                    </div>
+                  </div>
+                  <div class="ffn26-matrix-row">
+                    <div class="ffn26-matrix-label">\(\vdots\)</div>
+                    <div class="ffn26-matrix-bar is-faint">
+                      <span class="ffn26-matrix-divider" style="left: 25%;"></span>
+                      <span class="ffn26-matrix-divider" style="left: 50%;"></span>
+                      <span class="ffn26-matrix-divider" style="left: 75%;"></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ffn26-takeaway">Attention mixes tokens; the FFN performs a nonlinear transformation on each token independently.</div>
+  </div>
+
 </div>
 
 <div class="bottom-bar">
@@ -1620,7 +1826,7 @@ l e a r n ing &lt;/w&gt;</div>
   <div class="progress-track">
     <div class="progress-fill" id="progressFill" style="width:0%"></div>
   </div>
-  <span class="slide-counter" id="slideCounter">1 / 25</span>
+  <span class="slide-counter" id="slideCounter">1 / 26</span>
   <button class="nav-btn primary" id="btnNext">Next &rarr;</button>
 </div>
 
