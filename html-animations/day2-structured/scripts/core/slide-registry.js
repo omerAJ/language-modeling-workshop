@@ -25,16 +25,64 @@ function defineSlides() {
         initAttentionIntroSlide();
         setAttentionIntroStep(0);
       },
-      step: (slideEl) => runAttentionIntroStep(slideEl),
+      step: () => runAttentionIntroStep(),
       reset: () => resetAttentionIntroSlide()
     }),
     'slide-19': createSlideDescriptor('slide-19', {
       init: () => {
+        initAttentionP1Slide();
+        setAttentionP1Step(0);
+      },
+      step: () => runAttentionP1Step(),
+      reset: () => resetAttentionP1Slide()
+    }),
+    'slide-20': createSlideDescriptor('slide-20', {
+      init: () => {
         initAttentionQkvSlide();
         setAttentionQkvStep(0);
       },
-      step: (slideEl) => runAttentionQkvStep(slideEl),
+      step: () => runAttentionQkvStep(),
       reset: () => resetAttentionQkvSlide()
+    }),
+    'slide-21': createSlideDescriptor('slide-21', {
+      init: () => {
+        initAttentionWeightsSlide();
+        setAttentionWeightsStep(0);
+      },
+      step: () => runAttentionWeightsStep(),
+      reset: () => resetAttentionWeightsSlide()
+    }),
+    'slide-22': createSlideDescriptor('slide-22', {
+      init: () => {
+        initAttentionStep4Slide();
+        setAttentionStep4Step(0);
+      },
+      step: () => runAttentionStep4Step(),
+      reset: () => resetAttentionStep4Slide()
+    }),
+    'slide-23': createSlideDescriptor('slide-23', {
+      init: () => {
+        initAttentionMatrixSlide();
+        setAttentionMatrixStep(0);
+      },
+      step: () => runAttentionMatrixStep(),
+      reset: () => resetAttentionMatrixSlide()
+    }),
+    'slide-24': createSlideDescriptor('slide-24', {
+      init: () => {
+        initAttentionMultiHeadSlide();
+        setAttentionMultiHeadStep(0);
+      },
+      step: () => runAttentionMultiHeadStep(),
+      reset: () => resetAttentionMultiHeadSlide()
+    }),
+    'slide-25': createSlideDescriptor('slide-25', {
+      init: () => {
+        initAttentionPositionSlide();
+        setAttentionPositionStep(0);
+      },
+      step: () => runAttentionPositionStep(),
+      reset: () => resetAttentionPositionSlide()
     })
   };
 

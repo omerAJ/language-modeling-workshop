@@ -93,6 +93,11 @@ function runAutoStep(slideEl) {
   return true;
 }
 
+function nextWithInteractions() {
+  if (nextStep()) return;
+  nextSlide();
+}
+
 function runProjectionLensStep(slideEl) {
   if (!slideEl || slideEl.id !== 'slide-16' || !projectionState.initialized) return false;
 

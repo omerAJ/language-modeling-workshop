@@ -16,6 +16,14 @@ Refactor Notes (Zero-Regression):
 <link rel="stylesheet" href="./styles/slides/tokenization.css">
 <link rel="stylesheet" href="./styles/slides/embeddings.css">
 <link rel="stylesheet" href="./styles/slides/attention.css">
+<link rel="stylesheet" href="./styles/slides/attention-aggregate.css">
+<link rel="stylesheet" href="./styles/slides/attention-matrix.css">
+<link rel="stylesheet" href="./styles/slides/attention-multihead.css">
+<link rel="stylesheet" href="./styles/slides/attention-position.css">
+<link rel="stylesheet" href="./styles/slides/attention-aggregate.css">
+<link rel="stylesheet" href="./styles/slides/attention-matrix.css">
+<link rel="stylesheet" href="./styles/slides/attention-multihead.css">
+<link rel="stylesheet" href="./styles/slides/attention-position.css">
 <script>
   window.MathJax = {
     tex: {
@@ -1214,12 +1222,60 @@ params in E = 50,257 × 768 = 38,597,376</div>
     <div class="attn18-takeaway" id="attn18-takeaway">Next: how does sat decide which tokens matter — and what to copy from them?</div>
   </div>
 
-  <!-- ═══════ SLIDE 19 — ATTENTION Q/K/V + SCORES ═══════ -->
   <div class="slide" id="slide-19">
     <span class="section-tag">Attention</span>
     <div class="badge concept">Mechanism</div>
-    <h2>Attention</h2>
-    <p class="small-text attn19-subtitle">Step 1: project embeddings into Q/K/V subspaces</p>
+    <h2>Step 1 — Project into Q/K/V roles</h2>
+    <p class="small-text attn19-subtitle">Project embeddings into Q/K/V subspaces</p>
+
+    <div class="attn19-layout attn19p1-layout">
+      <div class="card attn19-stage attn19p1-stage" id="attn19p1-stage">
+        <svg class="attn19p1-overlay" id="attn19p1-overlay" aria-hidden="true">
+          <defs>
+            <marker id="attn19p1-arr-marker" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto" markerUnits="userSpaceOnUse">
+              <path d="M0,0 L8,4 L0,8 z" fill="rgba(123,154,255,0.82)"></path>
+            </marker>
+          </defs>
+          <line id="attn19p1-line-source" class="attn19p1-arrow-line" marker-end="url(#attn19p1-arr-marker)"></line>
+          <line id="attn19p1-line-bus-trunk" class="attn19p1-bus-line"></line>
+          <line id="attn19p1-line-bus-main" class="attn19p1-bus-line"></line>
+          <circle id="attn19p1-copy-node" class="attn19p1-copy-node"></circle>
+          <text id="attn19p1-copy-label" class="attn19p1-copy-label">×3</text>
+          <line id="attn19p1-line-q" class="attn19p1-arrow-line" marker-end="url(#attn19p1-arr-marker)"></line>
+          <line id="attn19p1-line-k" class="attn19p1-arrow-line" marker-end="url(#attn19p1-arr-marker)"></line>
+          <line id="attn19p1-line-v" class="attn19p1-arrow-line" marker-end="url(#attn19p1-arr-marker)"></line>
+        </svg>
+
+        <div class="attn19p1-token-frame">
+          <div class="attn19p1-token-gutter" aria-hidden="true"></div>
+          <div class="attn19-cols attn19p1-cols" id="attn19p1-cols"></div>
+        </div>
+
+        <div class="attn19p1-content">
+          <div class="attn19p1-source-row">
+            <div class="attn19p1-source-wrap" id="attn19p1-source-wrap">
+              <span class="attn19p1-src-label">x<sub>sat</sub></span>
+              <div class="attn19p1-x-vector" id="attn19p1-x-sat">
+                <span class="attn19p1-vec-divider" style="left:25%"></span>
+                <span class="attn19p1-vec-divider" style="left:50%"></span>
+                <span class="attn19p1-vec-divider" style="left:75%"></span>
+              </div>
+            </div>
+          </div>
+          <div class="attn19p1-arrow-gap"></div>
+          <div class="attn19p1-proj-row" id="attn19p1-proj-row"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="attn19p1-takeaway" id="attn19p1-takeaway">Embeddings are static — attention projects them into new roles</div>
+  </div>
+
+  <div class="slide" id="slide-20">
+    <span class="section-tag">Attention</span>
+    <div class="badge concept">Mechanism</div>
+    <h2>Step 2 — Compute scores</h2>
+    <p class="small-text attn19-subtitle">Compare q<sub>sat</sub> against every key k<sub>j</sub></p>
 
     <div class="attn19-layout">
       <div class="card attn19-stage" id="attn19-stage">
@@ -1233,30 +1289,46 @@ params in E = 50,257 × 768 = 38,597,376</div>
             <line id="attn19-q-link" class="attn19-q-link-line" marker-end="url(#attn19-arrow-focus)"></line>
           </g>
           <g id="attn19-compare-group" class="attn19-overlay-group">
-            <path id="attn19-compare-path-cat" class="attn19-compare-line"></path>
-            <polygon id="attn19-compare-head-cat" class="attn19-compare-head"></polygon>
-            <circle id="attn19-compare-dot-cat" class="attn19-compare-dot"></circle>
-            <path id="attn19-compare-path-sat" class="attn19-compare-line"></path>
-            <polygon id="attn19-compare-head-sat" class="attn19-compare-head"></polygon>
-            <circle id="attn19-compare-dot-sat" class="attn19-compare-dot"></circle>
-            <path id="attn19-compare-path-on" class="attn19-compare-line"></path>
-            <polygon id="attn19-compare-head-on" class="attn19-compare-head"></polygon>
-            <circle id="attn19-compare-dot-on" class="attn19-compare-dot"></circle>
-            <path id="attn19-compare-path-the" class="attn19-compare-line"></path>
-            <polygon id="attn19-compare-head-the" class="attn19-compare-head"></polygon>
-            <circle id="attn19-compare-dot-the" class="attn19-compare-dot"></circle>
-            <path id="attn19-compare-path-mat" class="attn19-compare-line"></path>
-            <polygon id="attn19-compare-head-mat" class="attn19-compare-head"></polygon>
-            <circle id="attn19-compare-dot-mat" class="attn19-compare-dot"></circle>
-            <text id="attn19-score-caption" class="attn19-overlay-label">scores: how well q_sat matches each k_j</text>
-            <text id="attn19-score-footnote" class="attn19-overlay-label footnote">score_j = similarity(q_sat, k_j)</text>
+            <path id="attn19-op-q-path-cat" class="attn19-compare-line q-input"></path>
+            <polygon id="attn19-op-q-head-cat" class="attn19-compare-head q-input"></polygon>
+            <path id="attn19-op-k-path-cat" class="attn19-compare-line q-input"></path>
+            <polygon id="attn19-op-k-head-cat" class="attn19-compare-head q-input"></polygon>
+            <path id="attn19-op-out-path-cat" class="attn19-compare-line out"></path>
+            <polygon id="attn19-op-out-head-cat" class="attn19-compare-head out"></polygon>
+
+            <path id="attn19-op-q-path-sat" class="attn19-compare-line q-input"></path>
+            <polygon id="attn19-op-q-head-sat" class="attn19-compare-head q-input"></polygon>
+            <path id="attn19-op-k-path-sat" class="attn19-compare-line q-input"></path>
+            <polygon id="attn19-op-k-head-sat" class="attn19-compare-head q-input"></polygon>
+            <path id="attn19-op-out-path-sat" class="attn19-compare-line out"></path>
+            <polygon id="attn19-op-out-head-sat" class="attn19-compare-head out"></polygon>
+
+            <path id="attn19-op-q-path-on" class="attn19-compare-line q-input"></path>
+            <polygon id="attn19-op-q-head-on" class="attn19-compare-head q-input"></polygon>
+            <path id="attn19-op-k-path-on" class="attn19-compare-line q-input"></path>
+            <polygon id="attn19-op-k-head-on" class="attn19-compare-head q-input"></polygon>
+            <path id="attn19-op-out-path-on" class="attn19-compare-line out"></path>
+            <polygon id="attn19-op-out-head-on" class="attn19-compare-head out"></polygon>
+
+            <path id="attn19-op-q-path-the" class="attn19-compare-line q-input"></path>
+            <polygon id="attn19-op-q-head-the" class="attn19-compare-head q-input"></polygon>
+            <path id="attn19-op-k-path-the" class="attn19-compare-line q-input"></path>
+            <polygon id="attn19-op-k-head-the" class="attn19-compare-head q-input"></polygon>
+            <path id="attn19-op-out-path-the" class="attn19-compare-line out"></path>
+            <polygon id="attn19-op-out-head-the" class="attn19-compare-head out"></polygon>
+
+            <path id="attn19-op-q-path-mat" class="attn19-compare-line q-input"></path>
+            <polygon id="attn19-op-q-head-mat" class="attn19-compare-head q-input"></polygon>
+            <path id="attn19-op-k-path-mat" class="attn19-compare-line q-input"></path>
+            <polygon id="attn19-op-k-head-mat" class="attn19-compare-head q-input"></polygon>
+            <path id="attn19-op-out-path-mat" class="attn19-compare-line out"></path>
+            <polygon id="attn19-op-out-head-mat" class="attn19-compare-head out"></polygon>
           </g>
         </svg>
 
         <div class="attn19-q-callout" id="attn19-q-callout">
-          <div class="attn19-q-title">Query (Q)</div>
           <div class="attn19-vector-wrap attn19-vector-wrap-q">
-            <span class="attn19-vector-label attn19-vector-label-q">q_sat</span>
+            <span class="attn19-vector-label attn19-vector-label-q">q<sub>sat</sub></span>
             <div class="attn19-vector attn19-vector-q" id="attn19-q-sat">
               <span class="attn19-vector-divider" style="left:25%"></span>
               <span class="attn19-vector-divider" style="left:50%"></span>
@@ -1267,19 +1339,281 @@ params in E = 50,257 × 768 = 38,597,376</div>
         </div>
 
         <div class="attn19-frame">
-          <div class="attn19-row-labels">
-            <div class="attn19-row-label x">Embeddings (X)</div>
+          <div class="attn19-row-labels" id="attn19-row-labels">
+            <div class="attn19-row-label x" id="attn19-row-x-label">Embeddings (X)</div>
+            <div class="attn19-row-label q" id="attn19-row-q-label">Queries (Q)</div>
+            <div class="attn19-row-label s" id="attn19-row-s-label">Scores (s)</div>
             <div class="attn19-row-label k" id="attn19-row-k-label">Keys (K)</div>
             <div class="attn19-row-label v" id="attn19-row-v-label">Values (V)</div>
           </div>
           <div class="attn19-cols" id="attn19-cols"></div>
-          <div class="attn19-proj-hint wk" id="attn19-label-wk">× W_K</div>
-          <div class="attn19-proj-hint wv" id="attn19-label-wv">× W_V</div>
         </div>
       </div>
     </div>
 
-    <div class="attn19-takeaway" id="attn19-takeaway">We start from embeddings x₁…xₙ</div>
+    <div class="attn19-score-caption">s<sub>j</sub> = q<sub>sat</sub> · k<sub>j</sub></div>
+    <div class="attn19-takeaway" id="attn19-takeaway">We start from embeddings <i>x</i><sub>1</sub>…<i>x</i><sub>n</sub></div>
+  </div>
+
+  <div class="slide" id="slide-21">
+    <span class="section-tag">Attention</span>
+    <div class="badge concept">Mechanism</div>
+    <h2>Step 3 — From scores to attention weights</h2>
+    <p class="small-text attn19-subtitle">Normalize → Softmax → Weights</p>
+
+    <div class="attn21-layout">
+      <div class="card attn19-stage attn21-stage" id="attn21-stage">
+        <div class="attn21-token-row" id="attn21-token-row"></div>
+
+        <div class="attn21-workspace">
+          <div class="attn21-pipeline">
+            <div class="attn21-block attn21-block-s">
+              <div class="attn21-block-title">RAW SCORES (S)</div>
+              <div class="attn21-block-caption">for query token: <span id="attn21-query-token">sat</span></div>
+              <div class="attn21-row-shell">
+                <div class="attn21-chip-grid attn21-row-raw" id="attn21-raw-row"></div>
+              </div>
+            </div>
+
+            <div class="attn21-link attn21-link-scale">
+              <span class="attn21-link-arrow" aria-hidden="true"></span>
+              <div class="attn21-op attn21-op-scale">÷ √d<sub>k</sub></div>
+              <span class="attn21-link-arrow" aria-hidden="true"></span>
+            </div>
+
+            <div class="attn21-block attn21-block-z">
+              <div class="attn21-block-title">SCALED SCORES (Z)</div>
+              <div class="attn21-block-caption">z = s / √d<sub>k</sub></div>
+              <div class="attn21-row-shell">
+                <div class="attn21-chip-grid attn21-row-scaled" id="attn21-scaled-row"></div>
+              </div>
+              <div class="attn21-scale-note">√d<sub>k</sub> prevents overly large dot-products</div>
+            </div>
+
+            <div class="attn21-link attn21-link-softmax">
+              <span class="attn21-link-arrow" aria-hidden="true"></span>
+              <div class="attn21-op attn21-op-softmax">softmax</div>
+              <span class="attn21-link-arrow" aria-hidden="true"></span>
+            </div>
+
+            <div class="attn21-block attn21-block-weights">
+              <div class="attn21-block-title">ATTENTION WEIGHTS (A)</div>
+              <div class="attn21-weight-shell">
+                <div class="attn21-weight-cells" id="attn21-weight-row"></div>
+                <span class="attn21-weight-sweep" aria-hidden="true"></span>
+              </div>
+              <div class="attn21-sum" id="attn21-sum-chip">Σ a<sub>j</sub> = --</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="attn21-takeaway" id="attn21-takeaway">Raw similarity scores between q_sat and each key k_j.</div>
+  </div>
+
+  <div class="slide" id="slide-22">
+    <span class="section-tag">Attention</span>
+    <div class="badge concept">Mechanism</div>
+    <h2>Step 4 — Aggregate values and add residual</h2>
+    <p class="small-text attn19-subtitle">Mix value vectors with attention weights, then add back x<sub>sat</sub></p>
+
+    <div class="attn19-layout">
+      <div class="card attn19-stage" id="attn22-stage">
+        <svg class="attn19-overlay" id="attn22-overlay" aria-hidden="true">
+          <defs>
+            <marker id="attn22-arrow-focus" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto" markerUnits="userSpaceOnUse">
+              <path d="M0,0 L8,4 L0,8 z" fill="rgba(123,154,255,0.94)"></path>
+            </marker>
+          </defs>
+          <g id="attn22-q-group" class="attn19-overlay-group">
+            <line id="attn22-q-link" class="attn19-q-link-line" marker-end="url(#attn22-arrow-focus)"></line>
+          </g>
+          <g id="attn22-compare-group" class="attn19-overlay-group">
+            <path id="attn22-op-q-path-cat" class="attn19-compare-line q-input"></path>
+            <polygon id="attn22-op-q-head-cat" class="attn19-compare-head q-input"></polygon>
+            <path id="attn22-op-k-path-cat" class="attn19-compare-line q-input"></path>
+            <polygon id="attn22-op-k-head-cat" class="attn19-compare-head q-input"></polygon>
+            <path id="attn22-op-out-path-cat" class="attn19-compare-line out"></path>
+            <polygon id="attn22-op-out-head-cat" class="attn19-compare-head out"></polygon>
+
+            <path id="attn22-op-q-path-sat" class="attn19-compare-line q-input"></path>
+            <polygon id="attn22-op-q-head-sat" class="attn19-compare-head q-input"></polygon>
+            <path id="attn22-op-k-path-sat" class="attn19-compare-line q-input"></path>
+            <polygon id="attn22-op-k-head-sat" class="attn19-compare-head q-input"></polygon>
+            <path id="attn22-op-out-path-sat" class="attn19-compare-line out"></path>
+            <polygon id="attn22-op-out-head-sat" class="attn19-compare-head out"></polygon>
+
+            <path id="attn22-op-q-path-on" class="attn19-compare-line q-input"></path>
+            <polygon id="attn22-op-q-head-on" class="attn19-compare-head q-input"></polygon>
+            <path id="attn22-op-k-path-on" class="attn19-compare-line q-input"></path>
+            <polygon id="attn22-op-k-head-on" class="attn19-compare-head q-input"></polygon>
+            <path id="attn22-op-out-path-on" class="attn19-compare-line out"></path>
+            <polygon id="attn22-op-out-head-on" class="attn19-compare-head out"></polygon>
+
+            <path id="attn22-op-q-path-the" class="attn19-compare-line q-input"></path>
+            <polygon id="attn22-op-q-head-the" class="attn19-compare-head q-input"></polygon>
+            <path id="attn22-op-k-path-the" class="attn19-compare-line q-input"></path>
+            <polygon id="attn22-op-k-head-the" class="attn19-compare-head q-input"></polygon>
+            <path id="attn22-op-out-path-the" class="attn19-compare-line out"></path>
+            <polygon id="attn22-op-out-head-the" class="attn19-compare-head out"></polygon>
+
+            <path id="attn22-op-q-path-mat" class="attn19-compare-line q-input"></path>
+            <polygon id="attn22-op-q-head-mat" class="attn19-compare-head q-input"></polygon>
+            <path id="attn22-op-k-path-mat" class="attn19-compare-line q-input"></path>
+            <polygon id="attn22-op-k-head-mat" class="attn19-compare-head q-input"></polygon>
+            <path id="attn22-op-out-path-mat" class="attn19-compare-line out"></path>
+            <polygon id="attn22-op-out-head-mat" class="attn19-compare-head out"></polygon>
+          </g>
+        </svg>
+        <div class="attn22-merge-layer" id="attn22-merge-layer" aria-hidden="true"></div>
+
+        <div class="attn19-q-callout" id="attn22-q-callout">
+          <div class="attn19-vector-wrap attn19-vector-wrap-q">
+            <span class="attn19-vector-label attn19-vector-label-q">q<sub>sat</sub></span>
+            <div class="attn19-vector attn19-vector-q" id="attn22-q-sat">
+              <span class="attn19-vector-divider" style="left:25%"></span>
+              <span class="attn19-vector-divider" style="left:50%"></span>
+              <span class="attn19-vector-divider" style="left:75%"></span>
+            </div>
+          </div>
+          <div class="attn19-q-hint">who sat?</div>
+        </div>
+
+        <div class="attn19-frame" id="attn22-frame">
+          <div class="attn19-row-labels" id="attn22-row-labels">
+            <div class="attn19-row-label x" id="attn22-row-x-label">Embeddings (X)</div>
+            <div class="attn19-row-label q" id="attn22-row-q-label">Queries (Q)</div>
+            <div class="attn19-row-label s" id="attn22-row-s-label">Scores (s)</div>
+            <div class="attn19-row-label k" id="attn22-row-k-label">Keys (K)</div>
+            <div class="attn19-row-label v" id="attn22-row-v-label">Values (V)</div>
+          </div>
+          <div class="attn19-cols" id="attn22-cols"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="attn19-score-caption" id="attn22-score-caption">s<sub>j</sub> = q<sub>sat</sub> · k<sub>j</sub></div>
+    <div class="attn22-agg-wrap" id="attn22-agg-wrap" aria-live="polite">
+      <div class="attn22-agg-formula" id="attn22-agg-formula"></div>
+      <div class="attn22-agg-formula-residual" id="attn22-agg-formula-residual">y<sub>sat</sub> = x<sub>sat</sub> + o<sub>sat</sub></div>
+      <div class="attn22-agg-output" id="attn22-agg-output">
+        <span class="attn22-agg-output-label" id="attn22-agg-output-label">o<sub>sat</sub> ≈</span>
+        <div class="attn22-agg-output-vector" id="attn22-agg-output-vector"></div>
+      </div>
+    </div>
+    <div class="attn19-takeaway" id="attn22-takeaway">Start from Step 3 scores <i>s</i><sub>j</sub> for each token.</div>
+  </div>
+
+  <div class="slide" id="slide-23">
+    <span class="section-tag">Attention</span>
+    <div class="badge concept">Mechanism</div>
+    <h2>Matrix View of Attention</h2>
+    <p class="small-text attn19-subtitle">Stack tokens, project X into Q/K/V, compute scores, mask the future, then normalize and mix values</p>
+
+    <div class="attn19-layout">
+      <div class="card attn19-stage attn23-stage" id="attn23-stage">
+        <div class="attn23-ghost-layer" id="attn23-ghost-layer" aria-hidden="true"></div>
+        <svg class="attn23-proj-overlay" id="attn23-proj-overlay" aria-hidden="true">
+          <defs>
+            <marker id="attn23-proj-arr-marker" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto" markerUnits="userSpaceOnUse">
+              <path d="M0,0 L8,4 L0,8 Z" fill="rgba(123,154,255,0.92)"></path>
+            </marker>
+          </defs>
+          <line id="attn23-proj-line-source" class="attn23-proj-line" marker-end="url(#attn23-proj-arr-marker)"></line>
+          <line id="attn23-proj-line-bus-trunk" class="attn23-proj-bus-line"></line>
+          <line id="attn23-proj-line-bus-main" class="attn23-proj-bus-line"></line>
+          <circle id="attn23-proj-copy-node" class="attn23-proj-copy-node"></circle>
+          <text id="attn23-proj-copy-label" class="attn23-proj-copy-label">×3</text>
+          <line id="attn23-proj-line-q" class="attn23-proj-line" marker-end="url(#attn23-proj-arr-marker)"></line>
+          <line id="attn23-proj-line-k" class="attn23-proj-line" marker-end="url(#attn23-proj-arr-marker)"></line>
+          <line id="attn23-proj-line-v" class="attn23-proj-line" marker-end="url(#attn23-proj-arr-marker)"></line>
+        </svg>
+
+        <div class="attn23-source-zone">
+          <div class="attn23-source-row" id="attn23-source-row"></div>
+        </div>
+
+        <div class="attn23-rail" id="attn23-rail">
+          <div class="attn23-col attn23-col-token" id="attn23-col-token">
+            <div class="attn23-col-head">
+              <div class="attn23-col-label" id="attn23-token-label">Token Matrix (T)</div>
+            </div>
+            <div class="attn23-shell attn23-token-shell" id="attn23-token-shell">
+              <div class="attn23-slots attn23-token-slots" id="attn23-token-slots"></div>
+            </div>
+          </div>
+          <div class="attn23-col attn23-col-x" id="attn23-col-x">
+            <div class="attn23-col-head">
+              <div class="attn23-col-label" id="attn23-x-label">Embedding Matrix (X)</div>
+              <div class="attn23-col-meta" id="attn23-x-dims">X ∈ R^(S × d)</div>
+            </div>
+            <div class="attn23-shell attn23-x-shell" id="attn23-x-shell">
+              <div class="attn23-slots attn23-x-slots" id="attn23-x-slots"></div>
+            </div>
+          </div>
+          <div class="attn23-col attn23-col-proj" id="attn23-col-proj">
+            <div class="attn23-col-head">
+              <div class="attn23-col-label" id="attn23-proj-label">Projected Matrices</div>
+            </div>
+            <div class="attn23-proj-stage" id="attn23-proj-stage">
+              <div class="attn23-proj-source-row" id="attn23-proj-source-row" aria-hidden="true"></div>
+              <div class="attn23-proj-arrow-gap" id="attn23-proj-arrow-gap" aria-hidden="true"></div>
+              <div class="attn23-proj-row" id="attn23-proj-row"></div>
+            </div>
+          </div>
+        </div>
+        <div class="attn23-score-stage" id="attn23-score-stage"></div>
+      </div>
+    </div>
+
+    <div class="attn19-takeaway" id="attn23-takeaway">Start from the same sequence: tokens plus their embedding rows.</div>
+  </div>
+
+  <div class="slide" id="slide-24">
+    <span class="section-tag">Attention</span>
+    <div class="badge concept">Mechanism</div>
+    <h2>Multi-Head Attention</h2>
+    <p class="small-text attn19-subtitle">Run parallel attention heads on different learned projections of X, then combine them back together</p>
+
+    <div class="attn19-layout">
+      <div class="card attn19-stage attn24-stage" id="attn24-stage">
+        <div class="attn24-ghost-layer" id="attn24-ghost-layer" aria-hidden="true"></div>
+        <svg class="attn24-overlay" id="attn24-overlay" aria-hidden="true">
+          <defs>
+            <marker id="attn24-arr-marker" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto" markerUnits="userSpaceOnUse">
+              <path d="M0,0 L8,4 L0,8 Z" fill="rgba(123,154,255,0.92)"></path>
+            </marker>
+          </defs>
+          <line id="attn24-line-source" class="attn24-overlay-line" marker-end="url(#attn24-arr-marker)"></line>
+          <line id="attn24-line-bus-trunk" class="attn24-overlay-bus"></line>
+          <line id="attn24-line-bus-main" class="attn24-overlay-bus"></line>
+          <circle id="attn24-copy-node" class="attn24-copy-node"></circle>
+          <text id="attn24-copy-label" class="attn24-copy-label">×2</text>
+          <line id="attn24-line-h1" class="attn24-overlay-line" marker-end="url(#attn24-arr-marker)"></line>
+          <line id="attn24-line-h2" class="attn24-overlay-line" marker-end="url(#attn24-arr-marker)"></line>
+        </svg>
+
+        <div class="attn24-source-wrap" id="attn24-source-wrap"></div>
+        <div class="attn24-head-grid" id="attn24-head-grid"></div>
+        <div class="attn24-combine-stage" id="attn24-combine-stage"></div>
+      </div>
+    </div>
+
+    <div class="attn19-takeaway" id="attn24-takeaway">Multi-head attention runs several smaller attention mechanisms in parallel on different learned projections of the same embedding matrix X.</div>
+  </div>
+
+  <div class="slide" id="slide-25">
+    <span class="section-tag">Input Representation</span>
+    <div class="badge concept">Concept</div>
+    <h2>Positional Embeddings</h2>
+    <p class="small-text attn19-subtitle">Transformers read all tokens together, so order must be injected explicitly</p>
+
+    <div class="attn19-layout">
+      <div class="card attn19-stage attn25-stage" id="attn25-stage"></div>
+    </div>
+
+    <div class="attn19-takeaway" id="attn25-takeaway">RNNs read tokens one at a time, so sequence order is naturally built into the computation.</div>
   </div>
 
 </div>
@@ -1290,7 +1624,7 @@ params in E = 50,257 × 768 = 38,597,376</div>
   <div class="progress-track">
     <div class="progress-fill" id="progressFill" style="width:0%"></div>
   </div>
-  <span class="slide-counter" id="slideCounter">1 / 18</span>
+  <span class="slide-counter" id="slideCounter">1 / 25</span>
   <button class="nav-btn primary" id="btnNext">Next &rarr;</button>
 </div>
 
@@ -1298,11 +1632,19 @@ params in E = 50,257 × 768 = 38,597,376</div>
 <script src="./scripts/state.js"></script>
 <script src="./scripts/utils/dev.js"></script>
 <script src="./scripts/utils/dom.js"></script>
+<script src="./scripts/utils/attention-math.js"></script>
+<script src="./scripts/slides/attention-shared.js"></script>
 <script src="./scripts/core/slide-registry.js"></script>
 <script src="./scripts/core/math.js"></script>
 <script src="./scripts/core/navigation.js"></script>
 <script src="./scripts/slides/attention-intro.js"></script>
-<script src="./scripts/slides/attention-qkv.js"></script>
+<script src="./scripts/slides/attention-p1.js"></script>
+<script src="./scripts/slides/attention-qkv-scores.js"></script>
+<script src="./scripts/slides/attention-weights.js"></script>
+<script src="./scripts/slides/attention-aggregate.js"></script>
+<script src="./scripts/slides/attention-matrix.js"></script>
+<script src="./scripts/slides/attention-multihead.js"></script>
+<script src="./scripts/slides/attention-position.js"></script>
 <script src="./scripts/slides/projection.js"></script>
 <script src="./scripts/app.js"></script>
 </body>

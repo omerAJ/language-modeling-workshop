@@ -27,18 +27,110 @@ const state = {
   attentionIntro: {
     initialized: false,
     step: 0,
-    resizeBound: false,
     overlayTimer: null,
-    flowTimers: []
+    flowTimers: [],
+    resizeBound: false
+  },
+  attentionP1: {
+    initialized: false,
+    step: 0,
+    overlayTimer: null,
+    resizeBound: false
   },
   attentionQkv: {
     initialized: false,
     step: 0,
-    resizeBound: false,
     overlayTimer: null,
     compareTimers: [],
     compareDone: false,
-    compareVisibleCount: 0
+    compareVisibleCount: 0,
+    resizeBound: false
+  },
+  attentionWeights: {
+    initialized: false,
+    step: 0
+  },
+  attentionStep4: {
+    initialized: false,
+    step: 0,
+    overlayTimer: null,
+    compareTimers: [],
+    compareDone: false,
+    compareVisibleCount: 0,
+    pairTimers: [],
+    pairRafIds: [],
+    firstPairDone: false,
+    pairingDone: false,
+    pairVisibleCount: 0,
+    aggTimers: [],
+    aggDone: false,
+    aggTermsVisibleCount: 0,
+    aggCollapsed: false,
+    mergeTimers: [],
+    mergeRafIds: [],
+    mergeDone: false,
+    mergeVisibleCount: 0,
+    residualTimers: [],
+    residualRafIds: [],
+    residualDone: false,
+    resizeBound: false
+  },
+  attentionMatrix: {
+    initialized: false,
+    step: 0,
+    timers: [],
+    rafIds: [],
+    tokenMatrixDone: false,
+    xMatrixDone: false,
+    tokenVisibleCount: 0,
+    xVisibleCount: 0,
+    projectionDone: false,
+    projectionVisible: false,
+    projectionTimers: [],
+    projectionRafIds: [],
+    scoreCenteredDone: false,
+    scoreTransposedDone: false,
+    scoreMatrixDone: false,
+    scoreVisible: false,
+    scoreVisibleCount: 0,
+    maskProblemDone: false,
+    maskAppliedDone: false,
+    maskQuestionDone: false,
+    maskVisibleCount: 0,
+    maskMode: 'none',
+    postScoreCenteredDone: false,
+    scaledMatrixDone: false,
+    attentionMatrixDone: false,
+    valueMatrixVisibleDone: false,
+    outputMatrixDone: false,
+    postScoreMode: 'none',
+    postScoreVisibleCount: 0,
+    outputVisibleCount: 0,
+    scoreTimers: [],
+    scoreRafIds: [],
+    resizeBound: false
+  },
+  attentionMultiHead: {
+    initialized: false,
+    step: 0,
+    timers: [],
+    rafIds: [],
+    splitDone: false,
+    projDone: false,
+    attnDone: false,
+    outputDone: false,
+    outputVisibleCount: 0,
+    concatDone: false,
+    outputProjectionDone: false,
+    combineVisible: false,
+    resizeBound: false
+  },
+  attentionPosition: {
+    initialized: false,
+    step: 0,
+    timers: [],
+    rafIds: [],
+    resizeBound: false
   },
   registry: {
     order: [],
@@ -53,5 +145,10 @@ const state = {
 
 const projectionState = state.projection;
 const attentionIntroState = state.attentionIntro;
+const attentionP1State = state.attentionP1;
 const attentionQkvState = state.attentionQkv;
-
+const attentionWeightsState = state.attentionWeights;
+const attentionStep4State = state.attentionStep4;
+const attentionMatrixState = state.attentionMatrix;
+const attentionMultiHeadState = state.attentionMultiHead;
+const attentionPositionState = state.attentionPosition;

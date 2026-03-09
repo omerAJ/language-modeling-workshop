@@ -1,8 +1,3 @@
-function nextWithInteractions() {
-  if (nextStep()) return;
-  nextSlide();
-}
-
 function cloneLensState(lensKey) {
   const source = LENS_STATES[lensKey];
   const out = {};

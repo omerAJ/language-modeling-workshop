@@ -48,8 +48,8 @@ function createAttentionTokenPrimitive(token) {
 }
 
 function clearAttentionIntroFlowTimers() {
-  attentionIntroState.flowTimers.forEach((timerId) => clearTimeout(timerId));
-  attentionIntroState.flowTimers = [];
+  state.attentionIntro.flowTimers.forEach((timerId) => clearTimeout(timerId));
+  state.attentionIntro.flowTimers = [];
 }
 
 function hideAttentionIntroFlowArrow(path, head) {
@@ -64,7 +64,7 @@ function getAttentionIntroFlowCount(step) {
   return Math.max(0, Math.min(ATTN_INTRO_FLOW_SOURCES.length, step - 2));
 }
 
-function syncAttentionIntroFlowVisuals(visibleCount = getAttentionIntroFlowCount(attentionIntroState.step)) {
+function syncAttentionIntroFlowVisuals(visibleCount = getAttentionIntroFlowCount(state.attentionIntro.step)) {
   ATTN_INTRO_FLOW_SOURCES.forEach((token, idx) => {
     const path = document.getElementById('attn18-flow-path-' + token);
     const head = document.getElementById('attn18-flow-head-' + token);
@@ -101,7 +101,7 @@ function animateAttentionIntroFlowArrow(token) {
       if (flowMicroMat) flowMicroMat.style.opacity = '1';
     }
   }, Math.max(ATTN_INTRO_FLOW_ANIM_MS - 70, 120));
-  attentionIntroState.flowTimers.push(headTimer);
+  state.attentionIntro.flowTimers.push(headTimer);
 }
 
 function updateAttentionIntroOverlay() {
@@ -283,14 +283,14 @@ function setAttentionIntroStep(step) {
   const takeaway = document.getElementById('attn18-takeaway');
   if (!slide || !takeaway) return;
 
-  const prevStep = attentionIntroState.step;
+  const prevStep = state.attentionIntro.step;
   const clamped = Math.max(0, Math.min(ATTN_INTRO_MAX_STEP, step));
   const prevFlowCount = getAttentionIntroFlowCount(prevStep);
   const nextFlowCount = getAttentionIntroFlowCount(clamped);
 
   clearAttentionIntroFlowTimers();
 
-  attentionIntroState.step = clamped;
+  state.attentionIntro.step = clamped;
   slide.classList.toggle('attn18-show-vectors', clamped >= 1);
   slide.classList.toggle('attn18-show-focus', clamped >= 2);
   slide.classList.toggle('attn18-show-flow', clamped >= 3);
@@ -311,10 +311,10 @@ function setAttentionIntroStep(step) {
   }
 
   requestAnimationFrame(updateAttentionIntroOverlay);
-  if (attentionIntroState.overlayTimer) clearTimeout(attentionIntroState.overlayTimer);
-  attentionIntroState.overlayTimer = setTimeout(() => {
+  if (state.attentionIntro.overlayTimer) clearTimeout(state.attentionIntro.overlayTimer);
+  state.attentionIntro.overlayTimer = setTimeout(() => {
     updateAttentionIntroOverlay();
-    attentionIntroState.overlayTimer = null;
+    state.attentionIntro.overlayTimer = null;
   }, 260);
 }
 
@@ -323,47 +323,45 @@ function initAttentionIntroSlide() {
   const tokenBand = document.getElementById('attn18-token-band');
   if (!slide || !tokenBand) return;
 
-  if (!attentionIntroState.initialized) {
+  if (!state.attentionIntro.initialized) {
     tokenBand.innerHTML = '';
     ATTN_INTRO_TOKENS.forEach((token) => {
       tokenBand.appendChild(createAttentionTokenPrimitive(token));
     });
 
-    if (!attentionIntroState.resizeBound) {
+    if (!state.attentionIntro.resizeBound) {
       addTrackedListener(window, 'resize', () => {
-        if (!attentionIntroState.initialized) return;
+        if (!state.attentionIntro.initialized) return;
         clearAttentionIntroFlowTimers();
         updateAttentionIntroOverlay();
-        syncAttentionIntroFlowVisuals(getAttentionIntroFlowCount(attentionIntroState.step));
+        syncAttentionIntroFlowVisuals(getAttentionIntroFlowCount(state.attentionIntro.step));
       });
-      attentionIntroState.resizeBound = true;
+      state.attentionIntro.resizeBound = true;
     }
 
-    attentionIntroState.initialized = true;
+    state.attentionIntro.initialized = true;
   }
 
   const takeaway = document.getElementById('attn18-takeaway');
   if (takeaway) takeaway.textContent = ATTN_INTRO_FOOTER;
   updateAttentionIntroOverlay();
-  syncAttentionIntroFlowVisuals(getAttentionIntroFlowCount(attentionIntroState.step));
+  syncAttentionIntroFlowVisuals(getAttentionIntroFlowCount(state.attentionIntro.step));
 }
 
-function runAttentionIntroStep(slideEl) {
-  if (!slideEl || slideEl.id !== 'slide-18') return false;
-  if (!attentionIntroState.initialized) initAttentionIntroSlide();
-  if (attentionIntroState.step >= ATTN_INTRO_MAX_STEP) return false;
-  setAttentionIntroStep(attentionIntroState.step + 1);
+function runAttentionIntroStep() {
+  if (!state.attentionIntro.initialized) initAttentionIntroSlide();
+  if (state.attentionIntro.step >= ATTN_INTRO_MAX_STEP) return false;
+  setAttentionIntroStep(state.attentionIntro.step + 1);
   return true;
 }
 
 function resetAttentionIntroSlide() {
   const slide = document.getElementById('slide-18');
   if (!slide) return;
-  if (attentionIntroState.overlayTimer) {
-    clearTimeout(attentionIntroState.overlayTimer);
-    attentionIntroState.overlayTimer = null;
+  if (state.attentionIntro.overlayTimer) {
+    clearTimeout(state.attentionIntro.overlayTimer);
+    state.attentionIntro.overlayTimer = null;
   }
   clearAttentionIntroFlowTimers();
   setAttentionIntroStep(0);
 }
-

@@ -81,19 +81,38 @@ function svgEl(tag, attrs, children) {
   return el;
 }
 
+function populateVectorRect(vectorEl, values, dividerClass) {
+  if (!vectorEl) return;
+  const dims = Array.isArray(values) && values.length ? values.length : 4;
+
+  if (Array.isArray(values) && values.length) {
+    const valuesWrap = createEl('div', { className: 'attn19-vector-values' });
+    values.forEach((value) => {
+      valuesWrap.appendChild(createEl('span', {
+        className: 'attn19-vector-value',
+        text: formatVectorValue(value)
+      }));
+    });
+    valuesWrap.style.gridTemplateColumns = 'repeat(' + dims + ', minmax(0, 1fr))';
+    vectorEl.appendChild(valuesWrap);
+  }
+
+  for (let i = 1; i < dims; i += 1) {
+    vectorEl.appendChild(createEl('span', {
+      className: dividerClass,
+      style: {
+        left: ((i / dims) * 100) + '%'
+      }
+    }));
+  }
+}
+
 function createVectorRect(config) {
   const vector = createEl('div', {
     className: config.baseClass,
     id: config.id
   });
-  for (let i = 1; i <= 3; i += 1) {
-    vector.appendChild(createEl('span', {
-      className: config.dividerClass,
-      style: {
-        left: (i * 25) + '%'
-      }
-    }));
-  }
+  populateVectorRect(vector, config.values, config.dividerClass);
   return vector;
 }
 
