@@ -85,10 +85,14 @@ http://127.0.0.1:8123/day2-structured/index.html
   - slide 23 only
 - `styles/slides/attention-multihead.css`
   - slide 24 only
-- `styles/slides/attention-position.css`
-  - slide 25 only
-- `styles/slides/ffn.css`
-  - slide 26 only
+- `styles/slides/position-story.css`
+  - slides 25-27: order problem, position signal, and why the sum still works
+- `styles/slides/ffn-story.css`
+  - slides 28-29: why FFN comes after attention and FFN as a neural network
+- `styles/slides/block-mechanics.css`
+  - slides 30-33: residual stream, LayerNorm, GPT block, stack view
+- `styles/slides/output-head.css`
+  - slides 34-36 only
 
 ### Shared runtime
 
@@ -129,8 +133,22 @@ http://127.0.0.1:8123/day2-structured/index.html
   - slide 23
 - `scripts/slides/attention-multihead.js`
   - slide 24
-- `scripts/slides/attention-position.js`
+- `scripts/slides/order-problem.js`
   - slide 25
+- `scripts/slides/position-signal.js`
+  - slide 26
+- `scripts/slides/position-superposition.js`
+  - slide 27
+- `scripts/slides/ffn-rowwise.js`
+  - slide 28
+- `scripts/slides/ffn-internals.js`
+  - slide 29
+- `scripts/slides/residual-stream.js`
+  - slide 30
+- `scripts/slides/layernorm.js`
+  - slide 31
+- `scripts/slides/gpt-block.js`
+  - slide 32
 - `scripts/slides/attention-shared.js`
   - shared attention DOM/vector helpers reused by multiple attention slides
 
@@ -161,9 +179,30 @@ The slide IDs are part of the code contract and are used by JavaScript.
 - `slide-24`
   - multi-head attention
 - `slide-25`
-  - positional embeddings
+  - order problem: attention alone is still blind to sequence order
 - `slide-26`
-  - feed-forward network (FFN), taught as one static role view plus three concise reveals
+  - add position before attention using \(x_i + p_i\), showing that the same token in a different slot becomes a different input row
+  - final technical payoff: these position-aware rows are what the next attention layer projects into Q/K/V
+- `slide-27`
+  - why the sum still works: compositional reuse, linear readout, and why exact inversion is not required
+- `slide-28`
+  - why FFN comes after attention: the same MLP transforms each token row independently
+- `slide-29`
+  - inside one FFN as a neural network: expand to d_ff, apply GELU, project back to d_model
+- `slide-30`
+  - residual stream as the persistent write target of attention and FFN
+- `slide-31`
+  - LayerNorm as row-wise preparation in a GPT-style pre-norm block
+- `slide-32`
+  - full GPT block composition: LN -> attention -> add -> LN -> FFN -> add
+- `slide-33`
+  - same shape, better representation across layers
+- `slide-34`
+  - final row to logits through the LM head
+- `slide-35`
+  - attention softmax vs vocabulary softmax
+- `slide-36`
+  - decoding loop: choose, append, run again
 
 If you are trying to find a slide quickly, search `id="slide-23"` or whatever slide ID you need inside `index.html`.
 
@@ -186,7 +225,8 @@ This means:
 - the registration for that behavior lives in `scripts/core/slide-registry.js`
 
 Note:
-- `slide-26` is a markup-only reveal slide that uses `.hidden-content.autostep`; it opens with the FFN's role in the block and then reveals row-wise operation, internal structure, and a sequence-level batched matrix view, with no dedicated JS module
+- slides `25`, `26`, `27`, `28`, `29`, `30`, `31`, and `32` are interactive class-toggled slides with dedicated JS modules
+- slides `33`, `34`, `35`, and `36` are markup-driven reveal slides that use `.hidden-content.autostep` plus CSS `:has(...)` selectors
 
 ## Where To Edit What
 
@@ -357,12 +397,13 @@ Check:
 - next/back/skip navigation
 - keyboard navigation
 - slide 16 lens switching
-- slides 18-25 stepping behavior
+- slides 18-32 stepping behavior
+- slides 33-36 autostep reveals
 - restart behavior on the last slide
 
-### Attention step counts
+### Interactive step counts
 
-If attention interactions feel wrong, these are the expected step counts:
+If a slide advances early or gets stuck, these are the expected interactive step counts:
 - slide 18 -> 8 steps
 - slide 19 -> 8 steps
 - slide 20 -> 5 steps
@@ -370,7 +411,20 @@ If attention interactions feel wrong, these are the expected step counts:
 - slide 22 -> 5 steps
 - slide 23 -> 14 steps
 - slide 24 -> 6 steps
-- slide 25 -> 3 steps
+- slide 25 -> 4 steps
+- slide 26 -> 5 steps
+- slide 27 -> 4 steps
+- slide 28 -> 4 steps
+- slide 29 -> 5 steps
+- slide 30 -> 5 steps
+- slide 31 -> 4 steps
+- slide 32 -> 5 steps
+
+Markup-only reveal counts for the redesigned tail:
+- slide 33 -> 3 reveals
+- slide 34 -> 4 reveals
+- slide 35 -> 3 reveals
+- slide 36 -> 4 reveals
 
 If a slide advances early or gets stuck, its `set...Step()` and `run...Step()` functions are the first places to inspect.
 

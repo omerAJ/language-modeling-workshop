@@ -78,11 +78,67 @@ function defineSlides() {
     }),
     'slide-25': createSlideDescriptor('slide-25', {
       init: () => {
-        initAttentionPositionSlide();
-        setAttentionPositionStep(0);
+        initOrderProblemSlide();
+        setOrderProblemStep(0);
       },
-      step: () => runAttentionPositionStep(),
-      reset: () => resetAttentionPositionSlide()
+      step: () => runOrderProblemStep(),
+      reset: () => resetOrderProblemSlide()
+    }),
+    'slide-26': createSlideDescriptor('slide-26', {
+      init: () => {
+        initPositionSignalSlide();
+        setPositionSignalStep(0);
+      },
+      step: () => runPositionSignalStep(),
+      reset: () => resetPositionSignalSlide()
+    }),
+    'slide-27': createSlideDescriptor('slide-27', {
+      init: () => {
+        initPositionSuperpositionSlide();
+        setPositionSuperpositionStep(0);
+      },
+      step: () => runPositionSuperpositionStep(),
+      reset: () => resetPositionSuperpositionSlide()
+    }),
+    'slide-28': createSlideDescriptor('slide-28', {
+      init: () => {
+        initFfnRowwiseSlide();
+        setFfnRowwiseStep(0);
+      },
+      step: () => runFfnRowwiseStep(),
+      reset: () => resetFfnRowwiseSlide()
+    }),
+    'slide-29': createSlideDescriptor('slide-29', {
+      init: () => {
+        initFfnInternalsSlide();
+        setFfnInternalsStep(0);
+      },
+      step: () => runFfnInternalsStep(),
+      reset: () => resetFfnInternalsSlide()
+    }),
+    'slide-30': createSlideDescriptor('slide-30', {
+      init: () => {
+        initResidualStreamSlide();
+        setResidualStreamStep(0);
+      },
+      step: () => runResidualStreamStep(),
+      reset: () => resetResidualStreamSlide()
+    }),
+    'slide-31': createSlideDescriptor('slide-31', {
+      init: () => {
+        initLayerNormStorySlide();
+        setLayerNormStoryStep(0);
+      },
+      step: () => runLayerNormStoryStep(),
+      reset: () => resetLayerNormStorySlide()
+    }),
+    'slide-32': createSlideDescriptor('slide-32', {
+      init: () => {
+        initGptBlockSlide();
+        setGptBlockStep(0);
+      },
+      step: () => runGptBlockStep(),
+      reset: () => resetGptBlockSlide()
     })
   };
 

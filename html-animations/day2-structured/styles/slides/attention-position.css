@@ -54,6 +54,14 @@
   
 }
 
+.attn25-context-line {
+    width: min(100%, 44rem);
+    margin: 0.78rem auto 0;
+    text-align: center;
+    color: rgba(214,224,250,0.78);
+    line-height: 1.45;
+}
+
 .attn25-rnn-flow,
   .attn25-transformer-flow {
     width: 100%;

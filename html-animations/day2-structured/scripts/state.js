@@ -132,6 +132,38 @@ const state = {
     rafIds: [],
     resizeBound: false
   },
+  orderProblem: {
+    initialized: false,
+    step: 0
+  },
+  positionSignal: {
+    initialized: false,
+    step: 0
+  },
+  positionSuperposition: {
+    initialized: false,
+    step: 0
+  },
+  ffnRowwise: {
+    initialized: false,
+    step: 0
+  },
+  ffnInternals: {
+    initialized: false,
+    step: 0
+  },
+  residualStream: {
+    initialized: false,
+    step: 0
+  },
+  layerNormStory: {
+    initialized: false,
+    step: 0
+  },
+  gptBlock: {
+    initialized: false,
+    step: 0
+  },
   registry: {
     order: [],
     byId: {}
@@ -152,3 +184,11 @@ const attentionStep4State = state.attentionStep4;
 const attentionMatrixState = state.attentionMatrix;
 const attentionMultiHeadState = state.attentionMultiHead;
 const attentionPositionState = state.attentionPosition;
+const orderProblemState = state.orderProblem;
+const positionSignalState = state.positionSignal;
+const positionSuperpositionState = state.positionSuperposition;
+const ffnRowwiseState = state.ffnRowwise;
+const ffnInternalsState = state.ffnInternals;
+const residualStreamState = state.residualStream;
+const layerNormStoryState = state.layerNormStory;
+const gptBlockState = state.gptBlock;
