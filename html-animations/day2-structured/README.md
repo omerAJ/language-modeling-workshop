@@ -1,448 +1,248 @@
 # Day 2 Structured Deck
 
-This folder is the maintainable version of the Day 2 presentation.
-
-It combines:
-- the pre-attention material from `Day2.html`
-- the full attention continuation from `Day2-attention-only.html`
-
-The original source files are intentionally left untouched. Future edits should happen here unless you explicitly want to change the raw source decks.
-
-## Purpose
-
-This deck is still a static HTML presentation, but it is no longer a single giant file with all CSS and JS inline.
-
-The structure is:
-- `index.html` holds the slide markup and script/style includes
-- `styles/` holds global deck styling plus topic-specific slide styling
-- `scripts/` holds shared runtime, state, data, and slide-specific interactivity
-
-The main goal is maintainability:
-- easier to find the code for one topic
-- easier to change one interactive slide without touching unrelated logic
-- easier to onboard a new editor
-
-## Canonical Sources
-
-These files are reference material only:
-- `../Day2.html`
-- `../Day2-attention-only.html`
-
-This folder is the working deck:
-- `./index.html`
-
-If you are making future Day 2 changes, treat `day2-structured/` as the canonical version.
+The working version of the Day 2 presentation. `../Day2.html` and `../Day2-attention-only.html` are reference only — make all future changes here.
 
 ## Quick Start
 
-Open directly:
-- `day2-structured/index.html`
-
-For normal manual editing, opening the HTML file directly is enough.
-
-For browser automation or iframe-based validation, use a local server:
+Open `day2-structured/index.html` directly in a browser. For local server (needed for some browser automation):
 
 ```bash
-cd /home/maincoder/Documents/inside-LLM/manimations/html-animations
 python3 -m http.server 8123
+# http://127.0.0.1:8123/day2-structured/index.html
 ```
 
-Then open:
-
-```text
-http://127.0.0.1:8123/day2-structured/index.html
-```
-
-## Folder Layout
+## File Layout
 
 ### Entry point
+- `index.html` — all slide markup, ordered CSS/JS includes
 
-- `index.html`
-  - Contains all slide HTML.
-  - Contains the ordered stylesheet and script includes.
-  - If you want to change wording, headings, badges, or the raw slide markup, this is the first file to edit.
+### Styles
+- `styles/tokens.css` — design tokens: typography, spacing, radius, semantic color variables
+- `styles/base.css` — CSS variables, type rules, resets, utility classes
+- `styles/layout.css` — slide container, cards, grids, callouts, nav bar
+- `styles/components.css` — arch diagram, residual bypass, token visuals
 
-### Shared styles
+Slide-specific (one file per topic):
+- `styles/slides/tokenization.css` — slides 4–13
+- `styles/slides/embeddings.css` — slides 14–17
+- `styles/slides/attention.css` — slides 18–21
+- `styles/slides/attention-aggregate.css` — slide 22
+- `styles/slides/attention-matrix.css` — slide 23
+- `styles/slides/attention-multihead.css` — slide 24
+- `styles/slides/attention-position.css` — slide 25
+- `styles/slides/position-story.css` — slides 25–27
+- `styles/slides/ffn.css` — slide 28
+- `styles/slides/ffn-story.css` — slides 28–29
+- `styles/slides/block-mechanics.css` — slides 30–32
+- `styles/slides/block-output.css` — slide 33
+- `styles/slides/output-head.css` — slides 34–36
 
-- `styles/base.css`
-  - global variables, type rules, resets, shared primitives
-- `styles/layout.css`
-  - slide container, slide sizing, progress bar, navigation bar
-- `styles/components.css`
-  - reusable cards, badges, callouts, grids, utility components
+### Scripts (shared)
+- `scripts/constants.js` — static data, labels, timings, vector tables
+- `scripts/state.js` — mutable runtime state
+- `scripts/utils/dom.js` — DOM helpers (`createEl`, `createVectorRect`, etc.)
+- `scripts/utils/attention-math.js` — dot products, softmax, derived attention tables
+- `scripts/utils/dev.js` — debug snapshots and startup checks
+- `scripts/core/slide-registry.js` — maps slide IDs to init/step/reset handlers
+- `scripts/core/navigation.js` — `goToSlide`, `nextWithInteractions`, reveal stepping
+- `scripts/core/math.js` — MathJax typesetting helper
+- `scripts/app.js` — bootstraps deck, binds input events
 
-### Topic styles
-
-- `styles/slides/tokenization.css`
-  - tokenization and BPE slides
-- `styles/slides/embeddings.css`
-  - embeddings, geometry, projection visuals
-- `styles/slides/attention.css`
-  - shared attention styling for slides 18-21 plus shared `attn19-*` scaffolding
-- `styles/slides/attention-aggregate.css`
-  - slide 22 only
-- `styles/slides/attention-matrix.css`
-  - slide 23 only
-- `styles/slides/attention-multihead.css`
-  - slide 24 only
-- `styles/slides/position-story.css`
-  - slides 25-27: order problem, position signal, and why the sum still works
-- `styles/slides/ffn-story.css`
-  - slides 28-29: why FFN comes after attention and FFN as a neural network
-- `styles/slides/block-mechanics.css`
-  - slides 30-33: residual stream, LayerNorm, GPT block, stack view
-- `styles/slides/output-head.css`
-  - slides 34-36 only
-
-### Shared runtime
-
-- `scripts/constants.js`
-  - static data, labels, timings, vector tables, slide constants
-- `scripts/state.js`
-  - mutable runtime state for navigation and interactive slides
-- `scripts/utils/dom.js`
-  - DOM helpers such as `createEl`, `createVectorRect`, listener helpers
-- `scripts/utils/dev.js`
-  - debug snapshots and startup checks
-- `scripts/utils/attention-math.js`
-  - dot products, softmax, formatting helpers, and derived attention tables
-- `scripts/core/slide-registry.js`
-  - maps slide IDs to their init/step/reset handlers
-- `scripts/core/navigation.js`
-  - `goToSlide`, `nextWithInteractions`, hidden-content stepping, deck navigation
-- `scripts/core/math.js`
-  - MathJax typesetting helper
-- `scripts/app.js`
-  - bootstraps the deck and binds input events
-
-### Slide-specific runtime
-
-- `scripts/slides/projection.js`
-  - slide 16 projection interaction
-- `scripts/slides/attention-intro.js`
-  - slide 18
-- `scripts/slides/attention-p1.js`
-  - slide 19
-- `scripts/slides/attention-qkv-scores.js`
-  - slide 20
-- `scripts/slides/attention-weights.js`
-  - slide 21
-- `scripts/slides/attention-aggregate.js`
-  - slide 22
-- `scripts/slides/attention-matrix.js`
-  - slide 23
-- `scripts/slides/attention-multihead.js`
-  - slide 24
-- `scripts/slides/order-problem.js`
-  - slide 25
-- `scripts/slides/position-signal.js`
-  - slide 26
-- `scripts/slides/position-superposition.js`
-  - slide 27
-- `scripts/slides/ffn-rowwise.js`
-  - slide 28
-- `scripts/slides/ffn-internals.js`
-  - slide 29
-- `scripts/slides/residual-stream.js`
-  - slide 30
-- `scripts/slides/layernorm.js`
-  - slide 31
-- `scripts/slides/gpt-block.js`
-  - slide 32
-- `scripts/slides/attention-shared.js`
-  - shared attention DOM/vector helpers reused by multiple attention slides
+### Scripts (slide-specific)
+- `scripts/slides/projection.js` — slide 16
+- `scripts/slides/attention-intro.js` — slide 18
+- `scripts/slides/attention-p1.js` — slide 19
+- `scripts/slides/attention-qkv-scores.js` — slide 20
+- `scripts/slides/attention-weights.js` — slide 21
+- `scripts/slides/attention-aggregate.js` — slide 22
+- `scripts/slides/attention-matrix.js` — slide 23
+- `scripts/slides/attention-multihead.js` — slide 24
+- `scripts/slides/order-problem.js` — slide 25
+- `scripts/slides/position-signal.js` — slide 26
+- `scripts/slides/position-superposition.js` — slide 27
+- `scripts/slides/ffn-rowwise.js` — slide 28
+- `scripts/slides/ffn-internals.js` — slide 29
+- `scripts/slides/residual-stream.js` — slide 30
+- `scripts/slides/layernorm.js` — slide 31
+- `scripts/slides/gpt-block.js` — slide 32
+- `scripts/slides/attention-shared.js` — shared attention DOM/vector helpers
 
 ## Slide Map
 
-The slide IDs are part of the code contract and are used by JavaScript.
+Slide IDs are part of the code contract. To jump to one: search `id="slide-23"` in `index.html`.
 
-- `slide-0` to `slide-14`
-  - tokenization and embedding build-up
-- `slide-15`
-  - intentionally absent
-- `slide-16`
-  - embedding projection interaction
-- `slide-17`
-  - bridge into attention
-- `slide-18`
-  - attention intro: tokens update each other
-- `slide-19`
-  - Step 1: project into Q/K/V roles
-- `slide-20`
-  - Step 2: compute scores
-- `slide-21`
-  - Step 3: scores to weights
-- `slide-22`
-  - Step 4: aggregate values and add residual
-- `slide-23`
-  - matrix view of attention
-- `slide-24`
-  - multi-head attention
-- `slide-25`
-  - order problem: attention alone is still blind to sequence order
-- `slide-26`
-  - add position before attention using \(x_i + p_i\), showing that the same token in a different slot becomes a different input row
-  - final technical payoff: these position-aware rows are what the next attention layer projects into Q/K/V
-- `slide-27`
-  - why the sum still works: compositional reuse, linear readout, and why exact inversion is not required
-- `slide-28`
-  - why FFN comes after attention: the same MLP transforms each token row independently
-- `slide-29`
-  - inside one FFN as a neural network: expand to d_ff, apply GELU, project back to d_model
-- `slide-30`
-  - residual stream as the persistent write target of attention and FFN
-- `slide-31`
-  - LayerNorm as row-wise preparation in a GPT-style pre-norm block
-- `slide-32`
-  - full GPT block composition: LN -> attention -> add -> LN -> FFN -> add
-- `slide-33`
-  - same shape, better representation across layers
-- `slide-34`
-  - final row to logits through the LM head
-- `slide-35`
-  - attention softmax vs vocabulary softmax
-- `slide-36`
-  - decoding loop: choose, append, run again
-
-If you are trying to find a slide quickly, search `id="slide-23"` or whatever slide ID you need inside `index.html`.
-
-## How The Deck Works
-
-At load time:
-1. `app.js` caches UI references and calls `refreshSlides()`.
-2. `refreshSlides()` collects all `.slide` elements from `index.html`.
-3. `slide-registry.js` attaches optional handlers to interactive slides.
-4. `goToSlide(0)` activates the first slide.
-
-For interactive slides:
-- each registered slide can define `init`, `step`, and `reset`
-- `nextWithInteractions()` tries the slide's `step()` first
-- if the slide does not consume the action, normal slide navigation continues
-
-This means:
-- static slide copy lives in `index.html`
-- interactive behavior lives in the matching `scripts/slides/*.js`
-- the registration for that behavior lives in `scripts/core/slide-registry.js`
-
-Note:
-- slides `25`, `26`, `27`, `28`, `29`, `30`, `31`, and `32` are interactive class-toggled slides with dedicated JS modules
-- slides `33`, `34`, `35`, and `36` are markup-driven reveal slides that use `.hidden-content.autostep` plus CSS `:has(...)` selectors
+| ID | Content |
+|---|---|
+| 0–14 | Tokenization and embedding build-up |
+| 15 | Intentionally absent |
+| 16 | Embedding projection (interactive) |
+| 17 | Bridge into attention |
+| 18 | Attention intro: tokens update each other |
+| 19 | Step 1: project into Q/K/V |
+| 20 | Step 2: compute scores |
+| 21 | Step 3: scores to weights |
+| 22 | Step 4: aggregate values + residual |
+| 23 | Matrix view of attention |
+| 24 | Multi-head attention |
+| 25 | Order problem: attention is position-blind |
+| 26 | Add position: \(x_i + p_i\) before attention |
+| 27 | Why the sum still works |
+| 28 | Why FFN comes after attention |
+| 29 | Inside one FFN: expand → GELU → project |
+| 30 | Residual stream |
+| 31 | LayerNorm in a pre-norm block |
+| 32 | Full GPT block: LN → attn → add → LN → FFN → add |
+| 33 | Same shape, better representation across layers |
+| 34 | Final row to logits via LM head |
+| 35 | Attention softmax vs vocabulary softmax |
+| 36 | Decoding loop |
 
 ## Where To Edit What
 
-### Change text, headings, badges, or markup
+| Goal | Edit |
+|---|---|
+| Text, headings, markup | `index.html` |
+| Global look (colors, spacing, type) | `styles/tokens.css`, `styles/base.css`, `styles/layout.css` |
+| Per-topic look | `styles/slides/<topic>.css` |
+| Interaction steps / animation logic | `scripts/slides/<slide>.js` |
+| Vectors, labels, timings | `scripts/constants.js` |
+| Derived attention values | `scripts/utils/attention-math.js` |
 
-Edit:
-- `index.html`
+## Reusable Components
 
-Examples:
-- rename a heading
-- rewrite a paragraph
-- add a new card to a static slide
-- write equations, symbols, dimensions, or formula-like labels using LaTeX with MathJax delimiters such as `\(...\)` or `\[...\]`
+Before writing new CSS, check whether an existing component covers it. All of these are defined in `styles/layout.css` or `styles/components.css` and ready to use in `index.html`.
 
-### Change colors, spacing, alignment, typography, animation styling
+### Layout
+```html
+<div class="grid-2"> … </div>   <!-- 2-column grid -->
+<div class="grid-3"> … </div>   <!-- 3-column grid -->
+<div class="card"> … </div>     <!-- surface card with border -->
+```
 
-Edit the relevant CSS file under:
-- `styles/`
+### Callouts
+```html
+<div class="callout info">    <span class="icon">ℹ️</span> <span>…</span> </div>
+<div class="callout warn">    <span class="icon">⚠️</span> <span>…</span> </div>
+<div class="callout success"> <span class="icon">✅</span> <span>…</span> </div>
+<div class="callout question"><span class="icon">🤔</span> <span>…</span> </div>
+```
 
-Rule of thumb:
-- global look -> `base.css`, `layout.css`, `components.css`
-- topic-specific look -> `styles/slides/*`
+### Badges
+```html
+<div class="badge day2">Day 2</div>
+<div class="badge concept">Concept</div>
+<div class="badge activity">Activity</div>
+<div class="badge discussion">Discussion</div>
+```
 
-### Change interaction steps or animation logic
+### Numbered list
+```html
+<ul class="obj-list">
+  <li data-num="1">First point</li>
+  <li data-num="2">Second point</li>
+</ul>
+```
 
-Edit the relevant slide module under:
-- `scripts/slides/*`
+### Flow diagram
+```html
+<div class="flow">
+  <div class="flow-box">Input</div>
+  <div class="flow-box">Process</div>
+  <div class="flow-box">Output</div>
+</div>
+```
+Arrows between boxes are added automatically via CSS.
 
-Examples:
-- change which step reveals which element
-- alter timing for score comparisons
-- change how slide 23 transitions between matrix states
+### Token pills
+```html
+<div class="token-example">
+  <span class="token-pill">word</span>         <!-- default gray -->
+  <span class="token-pill main">key</span>     <!-- blue -->
+  <span class="token-pill reuse">sub</span>    <!-- green -->
+  <span class="token-pill flex">full</span>    <!-- orange -->
+</div>
+```
 
-### Change vectors, labels, timings, or derived attention values
+### Highlights (inline)
+```html
+<span class="hl">blue</span>  <span class="hl-green">green</span>
+<span class="hl-orange">orange</span>  <span class="hl-purple">purple</span>
+<span class="hl-red">red</span>  <span class="hl-cyan">cyan</span>
+```
 
-Edit:
-- `scripts/constants.js`
-- `scripts/utils/attention-math.js`
+### Utility classes (from `styles/base.css`)
+```
+.mt-1 / .mt-2 / .mt-3 / .mt-4       margin-top (sp-1 … sp-4)
+.mb-2 / .mb-3                         margin-bottom
+.gap-1 / .gap-2 / .gap-3 / .gap-4    gap (sp-1 … sp-4)
+.text-sm / .text-xs                   font-size (fs-sm / fs-xs)
+.mono                                 JetBrains Mono font
+.small-text                           dim secondary text (fs-sm)
+.tiny                                 dim secondary text (fs-xs)
+```
 
-Use `constants.js` for raw input data and timing constants.
-Use `attention-math.js` for computed tables or math derived from those constants.
+### Progressive reveal (autostep)
+Click/spacebar reveals hidden elements one at a time:
+```html
+<div class="hidden-content autostep">…revealed on first press…</div>
+<div class="hidden-content autostep">…revealed on second press…</div>
+```
+Navigation calls `classList.add('revealed')` then `'settled'` on each in DOM order. No JS needed for static reveals — JS is only required for animated/stateful slides.
 
-## Important Conventions
+## Design System
 
-### 1. DOM IDs and classes are API
+All visual tokens live in `styles/tokens.css`. Always use these — never hardcode raw rem values or rgba colors.
 
-The JS relies heavily on exact selectors such as:
-- `slide-23`
-- `attn19-cols`
-- `attn22-agg-wrap`
-- `attn24-head-grid`
+- **Typography:** `--fs-2xl` (2.8rem) → `--fs-xl` → `--fs-lg` → `--fs-base` (1.05rem) → `--fs-sm` → `--fs-xs` → `--fs-2xs` (0.72rem, diagram label floor)
+- **Spacing:** `--sp-1` (0.25rem) → `--sp-2` → `--sp-3` → `--sp-4` (1.25rem) → `--sp-5` → `--sp-6`
+- **Radius:** `--radius-sm` (0.375rem) · `--radius-md` (0.625rem) · `--radius-lg` (1rem) · `--radius-full`
+- **Color pairs:** `--accent-bg` / `--accent-border`, same pattern for `green`, `red`, `orange`, `purple`, `cyan`, `yellow`
+- **Palette:** `--accent` (blue) · `--green` · `--red` · `--orange` · `--purple` · `--yellow` · `--cyan` · `--pink`
 
-Do not casually rename IDs or classes without updating all dependent JS and CSS.
+## Conventions
 
-### 2. `state` is shared runtime, not slide content
+**IDs and classes are API.** JS queries exact selectors like `attn19-cols`, `attn22-agg-wrap`, `attn24-head-grid`. Never rename them without updating all dependent JS and CSS.
 
-`scripts/state.js` stores the live runtime state for navigation and interactive slides.
+**Interactive slides must be registered.** Creating a module file is not enough — add `init`/`step`/`reset` handlers to `scripts/core/slide-registry.js`.
 
-Do not put static content in `state`.
-Use it for:
-- current step index
-- timer IDs
-- animation flags
-- initialization guards
+**Write math as LaTeX.** Use `\(...\)` for inline, `\[...\]` for display equations. For JS-inserted math use `setMathHTML()`/`setMathText()`. Never use `<sub>` or ad hoc HTML for mathematical notation.
 
-### 3. Constants first, derived math second
+Attention notation convention: single-query slides use `\(s_j\)`, `\(z_j\)`, `\(a_j\)`; matrix-view slides use `\(S\)`, `\(Z\)`, `\(A\)`, `\(O\)`.
 
-`constants.js` contains source data and placeholders for derived attention values.
-`attention-math.js` computes the derived tables after constants load.
-
-If you change vector values or dimensions, check both files.
-
-### 4. Interactive slides must be registered
-
-Adding a module file is not enough.
-If a slide needs `init`, `step`, or `reset`, add it in:
-- `scripts/core/slide-registry.js`
-
-### 5. `index.html` is still the markup source of truth
-
-There is no HTML partial system yet.
-All slide markup still lives in one file.
-
-That is acceptable as long as:
-- CSS stays split
-- JS stays split
-- slide ownership is clear
-
-### 6. Write math as LaTeX
-
-If something is mathematically meaningful, write it as LaTeX rather than ad hoc HTML formatting.
-
-Use:
-- `\(...\)` for inline math in `index.html`
-- `\[...\]` for display equations in `index.html`
-- `setMathHTML(...)` or `setMathText(...)` for dynamic math inserted by JS
-
-Examples:
-- use `\(Q\)`, not plain `Q` when it is a matrix symbol
-- use `\(x_{\mathrm{sat}}\)`, not `x<sub>sat</sub>`
-- use `\(z_j = \frac{s_j}{\sqrt{d_k}}\)`, not mixed text plus HTML subscripts
-- use `\(a_j = \frac{\exp(z_j)}{\sum_{\ell} \exp(z_{\ell})}\)` when you mean one attention weight explicitly
-
-This deck already uses MathJax. Keep notation consistent and let MathJax render it.
-
-Attention notation convention in this deck:
-- single-query slides use row/scalar notation such as `\(s_j\)`, `\(z_j\)`, and `\(a_j\)`
-- matrix-view slides use matrix notation such as `\(S\)`, `\(Z\)`, `\(A\)`, and `\(O\)`, with entries like `\(a_{ij}\)`
-
-### 7. Keep the README in sync
-
-If you make a significant change that affects how someone edits, navigates, or understands this deck, update this README in the same pass.
-
-That includes changes like:
-- adding or removing slides
-- changing the file structure
-- moving logic between files
-- changing interaction ownership
-- changing presentation flow in a way that affects the editing map
-
-Keep the README streamlined, concise, and accurate.
-
-## Common Tasks
-
-### Edit only slide copy
-
-1. Open `index.html`
-2. Find the slide ID
-3. Change the text
-4. Reload the page
-
-### Tweak one interactive slide
-
-1. Find the slide ID in `index.html`
-2. Find the matching module in `scripts/slides/`
-3. Find the matching style file in `styles/slides/`
-4. If you changed step logic, verify the step count still feels right
-
-### Add a new interactive slide
-
-1. Add the markup to `index.html`
-2. Add any styles in the appropriate CSS file
-3. Create a new slide module under `scripts/slides/` if needed
-4. Add any new state in `scripts/state.js`
-5. Add any constants in `scripts/constants.js`
-6. Register the slide in `scripts/core/slide-registry.js`
-7. Add the script include to `index.html`
-8. Update this README if the architecture, slide map, editing flow, or file ownership changed
-
-### Change the slide order
-
-1. Reorder the HTML in `index.html`
-2. Check `slide-registry.js`
-3. Check any code that references slide IDs directly
-4. If `DEV` checks matter to you, update `scripts/utils/dev.js`
+**`state.js` is runtime only.** Use it for step index, timer IDs, animation flags — never for slide content.
 
 ## Validation
 
-### Syntax check all JS
-
 ```bash
+# JS syntax check
 find day2-structured/scripts -type f -name '*.js' -print0 | xargs -0 -n1 node --check
 ```
 
-### Manual smoke test
+Manual smoke test: navigation (next/back/skip/keyboard), slide 16 lens switching, slides 18–32 stepping, slides 33–36 autostep reveals.
 
-Check:
-- next/back/skip navigation
-- keyboard navigation
-- slide 16 lens switching
-- slides 18-32 stepping behavior
-- slides 33-36 autostep reveals
-- restart behavior on the last slide
+Expected step counts:
 
-### Interactive step counts
+| Slide | Steps | Slide | Steps |
+|---|---|---|---|
+| 18 | 8 | 25 | 4 |
+| 19 | 8 | 26 | 5 |
+| 20 | 5 | 27 | 4 |
+| 21 | 3 | 28 | 4 |
+| 22 | 5 | 29 | 5 |
+| 23 | 14 | 30 | 5 |
+| 24 | 6 | 31 | 4 |
+| — | — | 32 | 5 |
 
-If a slide advances early or gets stuck, these are the expected interactive step counts:
-- slide 18 -> 8 steps
-- slide 19 -> 8 steps
-- slide 20 -> 5 steps
-- slide 21 -> 3 steps
-- slide 22 -> 5 steps
-- slide 23 -> 14 steps
-- slide 24 -> 6 steps
-- slide 25 -> 4 steps
-- slide 26 -> 5 steps
-- slide 27 -> 4 steps
-- slide 28 -> 4 steps
-- slide 29 -> 5 steps
-- slide 30 -> 5 steps
-- slide 31 -> 4 steps
-- slide 32 -> 5 steps
+Autostep reveals: slide 33 → 3, slide 34 → 4, slide 35 → 3, slide 36 → 4.
 
-Markup-only reveal counts for the redesigned tail:
-- slide 33 -> 3 reveals
-- slide 34 -> 4 reveals
-- slide 35 -> 3 reveals
-- slide 36 -> 4 reveals
+If a slide gets stuck, inspect its `set...Step()` and `run...Step()` functions first.
 
-If a slide advances early or gets stuck, its `set...Step()` and `run...Step()` functions are the first places to inspect.
+## Adding a New Interactive Slide
 
-## Known Caveats
-
-- The deck numbering intentionally skips `slide-15`.
-- `index.html` still contains all slide markup in one place.
-- Some browser automation is easier over `http://127.0.0.1` than `file://` because iframes and scripted inspection are more reliable on a local server.
-
-## Recommended Editing Order For New Contributors
-
-If you are new to this deck, read files in this order:
-1. `index.html`
-2. `scripts/core/slide-registry.js`
-3. `scripts/core/navigation.js`
-4. the specific slide module you want to change
-5. the matching CSS file
-6. `scripts/constants.js`
-7. `scripts/utils/attention-math.js` if the slide uses computed values
-
-That path gives the fastest mental model of how the presentation is assembled.
+1. Add markup to `index.html`
+2. Add styles to `styles/slides/<topic>.css` (reuse components above before writing new CSS)
+3. Create `scripts/slides/<name>.js` with `init`, `step`, `reset`
+4. Register it in `scripts/core/slide-registry.js`
+5. Add the `<script>` include to `index.html`
+6. Add any new state to `scripts/state.js`, constants to `scripts/constants.js`
+7. Update this README
