@@ -33,9 +33,8 @@ Slide-specific (one file per topic):
 - `styles/slides/position-story.css` — slides 25–27
 - `styles/slides/ffn.css` — slide 28
 - `styles/slides/ffn-story.css` — slides 28–29
-- `styles/slides/block-mechanics.css` — slides 30–32
-- `styles/slides/block-output.css` — slide 33
-- `styles/slides/output-head.css` — slides 34–36
+- `styles/slides/block-mechanics.css` — slides 30–31 (also defines `.block30-takeaway` used on 30–33)
+- `styles/slides/output-head.css` — slides 32–33
 
 ### Scripts (shared)
 - `scripts/constants.js` — static data, labels, timings, vector tables
@@ -62,9 +61,7 @@ Slide-specific (one file per topic):
 - `scripts/slides/position-superposition.js` — slide 27
 - `scripts/slides/ffn-rowwise.js` — slide 28
 - `scripts/slides/ffn-internals.js` — slide 29
-- `scripts/slides/residual-stream.js` — slide 30
-- `scripts/slides/layernorm.js` — slide 31
-- `scripts/slides/gpt-block.js` — slide 32
+- `scripts/slides/gpt-block.js` — slide 30
 - `scripts/slides/attention-shared.js` — shared attention DOM/vector helpers
 
 ## Slide Map
@@ -89,13 +86,10 @@ Slide IDs are part of the code contract. To jump to one: search `id="slide-23"` 
 | 27 | Why the sum still works |
 | 28 | Why FFN comes after attention |
 | 29 | Inside one FFN: expand → GELU → project |
-| 30 | Residual stream |
-| 31 | LayerNorm in a pre-norm block |
-| 32 | Full GPT block: LN → attn → add → LN → FFN → add |
-| 33 | Same shape, better representation across layers |
-| 34 | Final row to logits via LM head |
-| 35 | Attention softmax vs vocabulary softmax |
-| 36 | Decoding loop |
+| 30 | The block — walk through the slide-3 diagram now that every piece is understood |
+| 31 | Stack the block L times — same shape, richer representation |
+| 32 | Reading the prediction: LM head, logits, vocab softmax |
+| 33 | Generate, append, repeat: autoregressive loop + decoding strategies |
 
 ## Where To Edit What
 
@@ -218,7 +212,7 @@ Attention notation convention: single-query slides use `\(s_j\)`, `\(z_j\)`, `\(
 find day2-structured/scripts -type f -name '*.js' -print0 | xargs -0 -n1 node --check
 ```
 
-Manual smoke test: navigation (next/back/skip/keyboard), slide 16 lens switching, slides 18–32 stepping, slides 33–36 autostep reveals.
+Manual smoke test: navigation (next/back/skip/keyboard), slide 16 lens switching, slides 18–30 stepping, slides 31–33 autostep reveals.
 
 Expected step counts:
 
@@ -230,10 +224,9 @@ Expected step counts:
 | 21 | 3 | 28 | 4 |
 | 22 | 5 | 29 | 5 |
 | 23 | 14 | 30 | 5 |
-| 24 | 6 | 31 | 4 |
-| — | — | 32 | 5 |
+| 24 | 6 | — | — |
 
-Autostep reveals: slide 33 → 3, slide 34 → 4, slide 35 → 3, slide 36 → 4.
+Autostep reveals: slide 31 → 3, slide 32 → 3, slide 33 → 3.
 
 If a slide gets stuck, inspect its `set...Step()` and `run...Step()` functions first.
 

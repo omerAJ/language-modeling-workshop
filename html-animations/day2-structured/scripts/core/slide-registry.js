@@ -117,26 +117,7 @@ function defineSlides() {
       reset: () => resetFfnInternalsSlide()
     }),
     'slide-30': createSlideDescriptor('slide-30', {
-      init: () => {
-        initResidualStreamSlide();
-        setResidualStreamStep(0);
-      },
-      step: () => runResidualStreamStep(),
-      reset: () => resetResidualStreamSlide()
-    }),
-    'slide-31': createSlideDescriptor('slide-31', {
-      init: () => {
-        initLayerNormStorySlide();
-        setLayerNormStoryStep(0);
-      },
-      step: () => runLayerNormStoryStep(),
-      reset: () => resetLayerNormStorySlide()
-    }),
-    'slide-32': createSlideDescriptor('slide-32', {
-      init: () => {
-        initGptBlockSlide();
-        setGptBlockStep(0);
-      },
+      init: () => initGptBlockSlide(),
       step: () => runGptBlockStep(),
       reset: () => resetGptBlockSlide()
     })

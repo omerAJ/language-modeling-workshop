@@ -25,7 +25,6 @@ Refactor Notes (Zero-Regression):
 <link rel="stylesheet" href="./styles/slides/ffn.css">
 <link rel="stylesheet" href="./styles/slides/ffn-story.css">
 <link rel="stylesheet" href="./styles/slides/block-mechanics.css">
-<link rel="stylesheet" href="./styles/slides/block-output.css">
 <link rel="stylesheet" href="./styles/slides/output-head.css">
 <script>
   window.MathJax = {
@@ -2265,309 +2264,135 @@ l e a r n ing &lt;/w&gt;</div>
 
   <div class="slide" id="slide-30">
     <span class="section-tag">Transformer Block</span>
-    <div class="badge concept">Mechanism</div>
-    <h2>The Residual Stream Is The Main Highway</h2>
-    <p class="small-text">Attention and the FFN both write updates into one persistent sequence representation.</p>
+    <div class="badge concept">Synthesis</div>
+    <h2>The Block &#8212; Now You Know What&#8217;s Inside</h2>
+    <p class="small-text">You saw this diagram on slide 3. Let&#8217;s walk through it again &#8212; this time you know what every box does.</p>
 
-    <div class="story-layout">
-      <div class="card story-stage resid30-stage" id="resid30-stage">
-        <div class="resid30-branch resid30-branch-attn">
-          <div class="resid30-branch-label">attention update</div>
-          <div class="resid30-ops">
-            <div class="resid30-op-pill is-ln">\(\mathrm{LN}(R^{(\ell)})\)</div>
-            <div class="resid30-op-arrow">→</div>
-            <div class="arch-box attn">MHA</div>
-            <div class="resid30-op-arrow">→</div>
-            <div class="resid30-op-pill">\(W_O\)</div>
+    <div class="block30-layout">
+      <div class="block30-diagram">
+        <div class="block30-recall-tag">same diagram as slide 3</div>
+        <div class="arch-stack block30-arch">
+          <span class="arch-label block30-io-label">Block Output \(R^{(\ell+1)}\)</span>
+          <div class="arch-arrow">&#8593;</div>
+          <div class="residual-group block30-ffn-group">
+            <div class="bypass"></div>
+            <div class="arch-plus block30-plus-ffn">+</div>
+            <div class="arch-arrow">&#8593;</div>
+            <div class="arch-box ffn block30-ffn-box">Feed-Forward Network</div>
+            <div class="arch-arrow">&#8593;</div>
+            <div class="arch-box norm block30-ln-ffn">LayerNorm</div>
           </div>
-          <div class="resid30-packet resid30-packet-attn">\(\Delta_{\mathrm{attn}}\)</div>
-        </div>
-
-        <div class="resid30-stream">
-          <div class="resid30-stream-chip is-input">\(R^{(\ell)}\)</div>
-          <div class="resid30-stream-line"></div>
-          <div class="arch-plus resid30-plus resid30-plus-attn">+</div>
-          <div class="resid30-stream-chip resid30-stream-chip-mid">\(R_{\mathrm{mid}}\)</div>
-          <div class="resid30-stream-line"></div>
-          <div class="arch-plus resid30-plus resid30-plus-ffn">+</div>
-          <div class="resid30-stream-chip resid30-stream-chip-out">\(R^{(\ell+1)}\)</div>
-        </div>
-
-        <div class="resid30-branch resid30-branch-ffn">
-          <div class="resid30-branch-label">FFN update</div>
-          <div class="resid30-ops">
-            <div class="resid30-op-pill is-ln">\(\mathrm{LN}(R_{\mathrm{mid}})\)</div>
-            <div class="resid30-op-arrow">→</div>
-            <div class="arch-box ffn">FFN</div>
+          <div class="arch-arrow">&#8593;</div>
+          <div class="residual-group block30-attn-group">
+            <div class="bypass"></div>
+            <div class="arch-plus block30-plus-attn">+</div>
+            <div class="arch-arrow">&#8593;</div>
+            <div class="arch-box attn block30-attn-box">Multi-Head Attention</div>
+            <div class="arch-arrow">&#8593;</div>
+            <div class="arch-box norm block30-ln-attn">LayerNorm</div>
           </div>
-          <div class="resid30-packet resid30-packet-ffn">\(\Delta_{\mathrm{ffn}}\)</div>
+          <div class="arch-arrow">&#8593;</div>
+          <span class="arch-label block30-io-label">Block Input \(R^{(\ell)}\)</span>
         </div>
+      </div>
 
-        <div class="resid30-equations">
-          <div class="resid30-equation">\(R_{\mathrm{mid}} = R^{(\ell)} + \Delta_{\mathrm{attn}}\)</div>
-          <div class="resid30-equation">\(R^{(\ell+1)} = R_{\mathrm{mid}} + \Delta_{\mathrm{ffn}}\)</div>
+      <div class="block30-panel">
+        <div class="block30-note block30-note-ln">
+          <div class="block30-note-head">LayerNorm</div>
+          <div class="block30-note-body">Each row of the residual stream may have a very different scale. LN normalizes every row independently before the sublayer sees it.</div>
+        </div>
+        <div class="block30-note block30-note-attn">
+          <div class="block30-note-head">Multi-Head Attention</div>
+          <div class="block30-note-body">Token-to-token mixing. Each token attends to all earlier tokens and gathers relevant context.</div>
+        </div>
+        <div class="block30-note block30-note-add">
+          <div class="block30-note-head">Residual Add (+)</div>
+          <div class="block30-note-body">Attention computes a small update \(\Delta_{\mathrm{attn}}\) and adds it back. The stream persists &#8212; neither sublayer rewrites it.</div>
+        </div>
+        <div class="block30-note block30-note-ffn">
+          <div class="block30-note-head">Feed-Forward Network</div>
+          <div class="block30-note-body">Row-wise transformation. The same two-layer MLP applied independently to every token&#8217;s updated row.</div>
+        </div>
+        <div class="block30-note block30-note-eq">
+          <div class="block30-note-head">Compact form</div>
+          <div class="block30-equations">
+            <div class="block30-equation">\(R_{\mathrm{mid}} = R^{(\ell)} + \mathrm{MHA}(\mathrm{LN}(R^{(\ell)}))\)</div>
+            <div class="block30-equation">\(R^{(\ell+1)} = R_{\mathrm{mid}} + \mathrm{FFN}(\mathrm{LN}(R_{\mathrm{mid}}))\)</div>
+          </div>
         </div>
       </div>
     </div>
 
-    <div class="story-takeaway" id="resid30-takeaway">The residual stream persists; sublayers compute updates and write them back.</div>
+    <div class="block30-takeaway" id="block30-takeaway">Attention and FFN both write updates into a shared residual stream &#8212; neither one replaces it.</div>
   </div>
 
   <div class="slide" id="slide-31">
-    <span class="section-tag">Transformer Block</span>
-    <div class="badge concept">Mechanism</div>
-    <h2>LayerNorm Prepares Each Row</h2>
-    <p class="small-text">In this GPT-style block, LayerNorm prepares each row before it goes into a specialist sublayer.</p>
+    <span class="section-tag">Model Depth</span>
+    <div class="badge concept">Concept</div>
+    <h2>Stack the Block \(L\) Times</h2>
+    <p class="small-text">The same GPT block repeats \(L\) times. The shape stays \(S \times d_{\mathrm{model}}\) throughout &#8212; the representation gets richer with each pass.</p>
 
-    <div class="story-layout">
-      <div class="card story-stage ln31-stage" id="ln31-stage">
-        <div class="ln31-question">Would the same sublayer behave predictably on both of these rows?</div>
-        <div class="ln31-main">
-          <section class="ln31-column ln31-column-left">
-            <div class="ln31-column-title">before LayerNorm</div>
-            <div class="ln31-row-card is-large">
-              <div class="ln31-row-label">row A</div>
-              <div class="ln31-bars">
-                <span style="height:88%"></span>
-                <span style="height:72%"></span>
-                <span style="height:94%"></span>
-                <span style="height:82%"></span>
-                <span style="height:64%"></span>
-                <span style="height:90%"></span>
-                <span style="height:74%"></span>
-                <span style="height:86%"></span>
-              </div>
-              <div class="ln31-mean-line"></div>
-            </div>
-            <div class="ln31-row-card is-small">
-              <div class="ln31-row-label">row B</div>
-              <div class="ln31-bars">
-                <span style="height:18%"></span>
-                <span style="height:26%"></span>
-                <span style="height:20%"></span>
-                <span style="height:14%"></span>
-                <span style="height:22%"></span>
-                <span style="height:16%"></span>
-                <span style="height:28%"></span>
-                <span style="height:18%"></span>
-              </div>
-              <div class="ln31-mean-line"></div>
-            </div>
-          </section>
+    <div class="stack31-layout">
+      <div class="stack31-chain">
+        <div class="arch-label stack31-io-label">\(R^{(0)}\) &#8212; token + position embeddings &nbsp; \(S \times d_{\mathrm{model}}\)</div>
+        <div class="arch-arrow">&#8593;</div>
+        <div class="arch-box block">GPT Block 1</div>
+        <div class="arch-arrow">&#8593;</div>
+        <div class="arch-box block">GPT Block 2</div>
+        <div class="arch-arrow">&#8593;</div>
+        <div class="arch-dots">&#8942;</div>
+        <div class="arch-arrow">&#8593;</div>
+        <div class="arch-box block">GPT Block L</div>
+        <div class="arch-arrow">&#8593;</div>
+        <div class="arch-label stack31-io-label">\(R^{(L)}\) &#8212; next-token-ready context &nbsp; \(S \times d_{\mathrm{model}}\)</div>
+      </div>
 
-          <section class="ln31-center">
-            <div class="arch-box norm ln31-box">LayerNorm</div>
-            <div class="ln31-footnote tiny">This deck teaches GPT-style pre-norm.</div>
-          </section>
-
-          <section class="ln31-column ln31-column-right">
-            <div class="ln31-column-title">after LayerNorm</div>
-            <div class="ln31-row-card is-normalized is-row-a">
-              <div class="ln31-row-label">row A</div>
-              <div class="ln31-bars">
-                <span style="height:40%"></span>
-                <span style="height:55%"></span>
-                <span style="height:68%"></span>
-                <span style="height:50%"></span>
-                <span style="height:34%"></span>
-                <span style="height:60%"></span>
-                <span style="height:46%"></span>
-                <span style="height:52%"></span>
-              </div>
-              <div class="ln31-mean-line is-centered"></div>
-            </div>
-            <div class="ln31-row-card is-normalized is-row-b">
-              <div class="ln31-row-label">row B</div>
-              <div class="ln31-bars">
-                <span style="height:38%"></span>
-                <span style="height:54%"></span>
-                <span style="height:44%"></span>
-                <span style="height:32%"></span>
-                <span style="height:50%"></span>
-                <span style="height:36%"></span>
-                <span style="height:58%"></span>
-                <span style="height:40%"></span>
-              </div>
-              <div class="ln31-mean-line is-centered"></div>
-            </div>
-            <div class="ln31-done-strip">done independently for each row</div>
-            <div class="ln31-targets">
-              <div class="arch-box attn">Attention</div>
-              <div class="arch-box ffn">FFN</div>
-            </div>
-          </section>
+      <div class="stack31-notes">
+        <div class="hidden-content autostep stack31-depth-reveal">
+          <div class="stack31-note-strip">
+            <div class="stack31-note-row"><span class="hl">Early layers</span> &#8212; local patterns: syntax, adjacent tokens, common phrases</div>
+            <div class="stack31-note-row"><span class="hl-purple">Middle layers</span> &#8212; longer range: co-references, subject-verb agreement, clause structure</div>
+            <div class="stack31-note-row"><span class="hl-green">Late layers</span> &#8212; semantics, world knowledge, next-token prediction readiness</div>
+            <div class="tiny mt-2">Rough intuition &#8212; not strict layer boundaries.</div>
+          </div>
+        </div>
+        <div class="hidden-content autostep stack31-scale-reveal">
+          <div class="callout info">
+            <span class="icon">&#x1F4D6;</span>
+            <span>GPT-3: <strong>L = 96</strong> blocks, \(d_{\mathrm{model}} = 12{,}288\). GPT-2 small: L = 12, \(d_{\mathrm{model}} = 768\). Same structure &#8212; different depth.</span>
+          </div>
+        </div>
+        <div class="hidden-content autostep stack31-insight-reveal">
+          <div class="callout success">
+            <span class="icon">&#x2705;</span>
+            <span>The vector doesn&#8217;t grow &#8212; it stays \(S \times d_{\mathrm{model}}\) at every layer. The <em>representation</em> gets more useful, not larger.</span>
+          </div>
         </div>
       </div>
     </div>
 
-    <div class="story-takeaway" id="ln31-takeaway">LayerNorm is a per-row preparation step, not another token-mixing step.</div>
+    <div class="block30-takeaway">The stack refines meaning without changing the sequence shape.</div>
   </div>
 
   <div class="slide" id="slide-32">
-    <span class="section-tag">Transformer Block</span>
-    <div class="badge concept">Composition</div>
-    <h2>One GPT Block, End To End</h2>
-    <p class="small-text">Now recombine the pieces in the actual order they run.</p>
-
-    <div class="story-layout">
-      <div class="card story-stage block32-stage" id="block32-stage">
-        <div class="block32-main">
-          <section class="block32-panel block32-input">
-            <div class="block32-panel-title">input stream</div>
-            <div class="block32-panel-note">already includes position information</div>
-            <div class="block32-matrix">
-              <div class="block32-row"><span class="attn19-token-chip">cat</span><div class="story-vector is-8 token-cat"></div></div>
-              <div class="block32-row is-focus"><span class="attn19-token-chip">sat</span><div class="story-vector is-8 token-sat"></div></div>
-              <div class="block32-row"><span class="attn19-token-chip">on</span><div class="story-vector is-8 token-on"></div></div>
-              <div class="block32-row"><span class="attn19-token-chip">the</span><div class="story-vector is-8 token-the"></div></div>
-              <div class="block32-row"><span class="attn19-token-chip">mat</span><div class="story-vector is-8 token-mat"></div></div>
-            </div>
-          </section>
-
-          <section class="block32-panel block32-center">
-            <div class="block32-branch block32-branch-attn">
-              <div class="arch-box norm">LayerNorm</div>
-              <div class="block32-arrow">→</div>
-              <div class="arch-box attn">
-                <span>Multi-Head Attention</span>
-                <span class="block32-mini-arrows">↔ ↘ ↖</span>
-              </div>
-              <div class="block32-arrow">→</div>
-              <div class="block32-op-pill">\(W_O\)</div>
-              <div class="block32-packet block32-packet-attn">\(\Delta_{\mathrm{attn}}\)</div>
-            </div>
-
-            <div class="block32-stream">
-              <div class="block32-stream-chip">\(R^{(\ell)}\)</div>
-              <div class="block32-stream-line"></div>
-              <div class="arch-plus block32-plus block32-plus-attn">+</div>
-              <div class="block32-stream-chip block32-stream-chip-mid">\(R_{\mathrm{mid}}\)</div>
-              <div class="block32-stream-line"></div>
-              <div class="arch-plus block32-plus block32-plus-ffn">+</div>
-              <div class="block32-stream-chip block32-stream-chip-out">\(R_{\mathrm{out}}\)</div>
-            </div>
-
-            <div class="block32-branch block32-branch-ffn">
-              <div class="arch-box norm">LayerNorm</div>
-              <div class="block32-arrow">→</div>
-              <div class="arch-box ffn">
-                <span>FFN</span>
-                <span class="block32-mini-ffn">expand · gate · compress</span>
-              </div>
-              <div class="block32-packet block32-packet-ffn">\(\Delta_{\mathrm{ffn}}\)</div>
-            </div>
-          </section>
-
-          <section class="block32-panel block32-output">
-            <div class="block32-panel-title">output stream</div>
-            <div class="block32-panel-note">same shape, richer context</div>
-            <div class="block32-matrix">
-              <div class="block32-row"><span>\(h_1\)</span><div class="story-vector is-8 token-cat is-output"></div></div>
-              <div class="block32-row is-focus"><span>\(h_2\)</span><div class="story-vector is-8 token-sat is-output"></div></div>
-              <div class="block32-row"><span>\(h_3\)</span><div class="story-vector is-8 token-on is-output"></div></div>
-              <div class="block32-row"><span>\(h_4\)</span><div class="story-vector is-8 token-the is-output"></div></div>
-              <div class="block32-row"><span>\(h_5\)</span><div class="story-vector is-8 token-mat is-output"></div></div>
-            </div>
-          </section>
-        </div>
-
-        <div class="block32-equations">
-          <div class="block32-equation">\(R_{\mathrm{mid}} = R + \mathrm{MHA}(\mathrm{LN}(R))\)</div>
-          <div class="block32-equation">\(R_{\mathrm{out}} = R_{\mathrm{mid}} + \mathrm{FFN}(\mathrm{LN}(R_{\mathrm{mid}}))\)</div>
-        </div>
-
-        <div class="block32-summary">communicate across tokens → write update → compute locally → write update</div>
-      </div>
-    </div>
-
-    <div class="story-takeaway" id="block32-takeaway">A GPT block updates one shared residual stream with two sublayer writes: attention, then FFN.</div>
-  </div>
-
-  <div class="slide" id="slide-33">
-    <span class="section-tag">Model Stack</span>
-    <div class="badge concept">Concept</div>
-    <h2>Same Shape, Better Representation</h2>
-    <p class="small-text">Layer by layer, the model keeps the same dimensions and changes the meaning of the rows.</p>
-
-    <div class="story-layout">
-      <div class="card story-stage stack33-stage">
-        <div class="stack33-question">Does the vector get bigger, or just more useful?</div>
-
-        <div class="stack33-chain">
-          <div class="stack33-layer">
-            <div class="stack33-layer-title">\(H^{(0)}\)</div>
-            <div class="stack33-layer-dims">\(S \times d_{\mathrm{model}}\)</div>
-            <div class="stack33-bars">
-              <div class="stack33-bar"></div>
-              <div class="stack33-bar is-focus"></div>
-              <div class="stack33-bar"></div>
-            </div>
-            <div class="stack33-tag">token + position</div>
-          </div>
-          <div class="stack33-arrow">→</div>
-          <div class="stack33-layer">
-            <div class="stack33-layer-title">\(H^{(1)}\)</div>
-            <div class="stack33-layer-dims">\(S \times d_{\mathrm{model}}\)</div>
-            <div class="stack33-bars">
-              <div class="stack33-bar"></div>
-              <div class="stack33-bar is-focus is-strong"></div>
-              <div class="stack33-bar"></div>
-            </div>
-            <div class="stack33-tag">local relations</div>
-          </div>
-          <div class="stack33-arrow">→</div>
-          <div class="stack33-layer">
-            <div class="stack33-layer-title">\(H^{(2)}\)</div>
-            <div class="stack33-layer-dims">\(S \times d_{\mathrm{model}}\)</div>
-            <div class="stack33-bars">
-              <div class="stack33-bar"></div>
-              <div class="stack33-bar is-focus is-stronger"></div>
-              <div class="stack33-bar"></div>
-            </div>
-            <div class="stack33-tag">richer syntax / semantics</div>
-          </div>
-          <div class="stack33-arrow">→</div>
-          <div class="stack33-layer">
-            <div class="stack33-layer-title">\(H^{(L)}\)</div>
-            <div class="stack33-layer-dims">\(S \times d_{\mathrm{model}}\)</div>
-            <div class="stack33-bars">
-              <div class="stack33-bar"></div>
-              <div class="stack33-bar is-focus is-strongest"></div>
-              <div class="stack33-bar"></div>
-            </div>
-            <div class="stack33-tag">next-token-ready context</div>
-          </div>
-        </div>
-
-        <div class="hidden-content autostep stack33-tags-reveal"></div>
-        <div class="hidden-content autostep stack33-focus-reveal"></div>
-        <div class="hidden-content autostep stack33-note-reveal">
-          <div class="stack33-note">The geometry stays \(S \times d_{\mathrm{model}}\). The representation gets more useful, not longer.</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="story-takeaway">The stack refines meaning without changing the sequence shape.</div>
-  </div>
-
-  <div class="slide" id="slide-34">
     <span class="section-tag">Output Head</span>
     <div class="badge concept">Mechanism</div>
-    <h2>From Final Row To Logits</h2>
-    <p class="small-text">Use the last position&rsquo;s row to score every vocabulary token.</p>
+    <h2>Reading the Prediction</h2>
+    <p class="small-text">After \(L\) blocks you have \(R^{(L)}\). To predict the next token, read the last row and score the vocabulary.</p>
 
-    <div class="head-layout">
-      <div class="card head-stage logits34-stage">
-        <div class="head-prompt-row">
+    <div class="pred32-layout">
+      <div class="card pred32-stage">
+        <div class="pred32-prompt-row">
           <span class="attn19-token-chip">cat</span>
           <span class="attn19-token-chip">sat</span>
           <span class="attn19-token-chip">on</span>
           <span class="attn19-token-chip is-focus">the</span>
+          <span class="pred32-next-label">&#8594; predict next</span>
         </div>
 
-        <div class="logits34-main">
-          <div class="head-matrix-card">
-            <div class="head-card-title">\(H^{(L)} \in \mathbb{R}^{S \times d_{\mathrm{model}}}\)</div>
+        <div class="pred32-flow">
+          <div class="pred32-matrix-card">
+            <div class="head-card-title">\(R^{(L)} \in \mathbb{R}^{S \times d_{\mathrm{model}}}\)</div>
             <div class="head-matrix">
               <div class="head-row"><span>\(h_1\)</span><div class="head-bar"></div></div>
               <div class="head-row"><span>\(h_2\)</span><div class="head-bar"></div></div>
@@ -2576,107 +2401,21 @@ l e a r n ing &lt;/w&gt;</div>
             </div>
           </div>
 
-          <div class="logits34-extract-card">
-            <div class="head-card-title">extract final row</div>
-            <div class="logits34-extract-chip">\(h_t^{(L)}\)</div>
-            <div class="story-vector is-8 token-the is-output"></div>
+          <div class="pred32-step pred32-step-extract">
+            <div class="pred32-step-label">extract last row</div>
+            <div class="pred32-extract-chip">\(h_t^{(L)}\)</div>
+            <div class="pred32-extract-note">every block was building this vector</div>
           </div>
 
-          <div class="head-head-card">
-            <div class="head-card-title">LM Head</div>
-            <div class="head-head-formula">\(W_U \in \mathbb{R}^{|V| \times d_{\mathrm{model}}}\)</div>
+          <div class="pred32-step pred32-step-head">
+            <div class="pred32-step-label">LM Head</div>
+            <div class="pred32-formula">\(\ell_t = W_U h_t^{(L)}\)</div>
+            <div class="pred32-dims">\(W_U \in \mathbb{R}^{|V| \times d_{\mathrm{model}}}\)</div>
+            <div class="pred32-tying-note">In most models \(W_U = W_E^\top\)</div>
           </div>
 
-          <div class="head-logit-card">
-            <div class="head-card-title">logits \(\ell_t\)</div>
-            <div class="head-logit-bars">
-              <div class="head-logit-item"><span class="head-logit-label">mat</span><div class="head-logit-bar" style="height:78%"></div></div>
-              <div class="head-logit-item"><span class="head-logit-label">rug</span><div class="head-logit-bar" style="height:54%"></div></div>
-              <div class="head-logit-item"><span class="head-logit-label">.</span><div class="head-logit-bar" style="height:42%"></div></div>
-              <div class="head-logit-item"><span class="head-logit-label">cat</span><div class="head-logit-bar" style="height:24%"></div></div>
-              <div class="head-logit-item"><span class="head-logit-label">sat</span><div class="head-logit-bar" style="height:16%"></div></div>
-            </div>
-          </div>
-        </div>
-
-        <div class="hidden-content autostep logits34-focus-reveal">
-          <div class="head-note-strip">All the earlier layers were building the final row \(h_t^{(L)}\).</div>
-        </div>
-        <div class="hidden-content autostep logits34-extract-reveal"></div>
-        <div class="hidden-content autostep logits34-output-reveal"></div>
-        <div class="hidden-content autostep logits34-formula-reveal">
-          <div class="head-formula-strip">\(\ell_t = W_U h_t^{(L)}\)</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="head-takeaway">The model turns the final position&rsquo;s hidden row into one score for every vocabulary token.</div>
-  </div>
-
-  <div class="slide" id="slide-35">
-    <span class="section-tag">Output Distribution</span>
-    <div class="badge concept">Comparison</div>
-    <h2>Two Softmaxes, Two Different Axes</h2>
-    <p class="small-text">The same math word appears twice, but it normalizes over different things.</p>
-
-    <div class="head-layout">
-      <div class="card head-stage softmax35-stage">
-        <div class="softmax35-question">Softmax over what?</div>
-
-        <div class="softmax35-main">
-          <section class="softmax35-card softmax35-card-attn">
-            <div class="head-card-title">attention softmax</div>
-            <div class="softmax35-query-row">
-              <span class="attn19-token-chip is-focus">sat</span>
-              <span class="softmax35-arrow">→</span>
-              <div class="softmax35-position-bars">
-                <div class="softmax35-bar-item"><span>cat</span><div class="softmax35-bar" style="height:74%"></div></div>
-                <div class="softmax35-bar-item"><span>sat</span><div class="softmax35-bar" style="height:46%"></div></div>
-                <div class="softmax35-bar-item"><span>on</span><div class="softmax35-bar" style="height:34%"></div></div>
-                <div class="softmax35-bar-item"><span>the</span><div class="softmax35-bar" style="height:18%"></div></div>
-              </div>
-            </div>
-            <div class="softmax35-brace softmax35-brace-attn">normalize across positions in the sequence</div>
-          </section>
-
-          <section class="softmax35-card softmax35-card-vocab">
-            <div class="head-card-title">vocabulary softmax</div>
-            <div class="softmax35-vocab-bars">
-              <div class="softmax35-bar-item"><span>mat</span><div class="softmax35-bar is-vocab" style="height:82%"></div><strong>42%</strong></div>
-              <div class="softmax35-bar-item"><span>rug</span><div class="softmax35-bar is-vocab" style="height:58%"></div><strong>24%</strong></div>
-              <div class="softmax35-bar-item"><span>.</span><div class="softmax35-bar is-vocab" style="height:44%"></div><strong>16%</strong></div>
-              <div class="softmax35-bar-item"><span>cat</span><div class="softmax35-bar is-vocab" style="height:30%"></div><strong>11%</strong></div>
-              <div class="softmax35-bar-item"><span>sat</span><div class="softmax35-bar is-vocab" style="height:22%"></div><strong>7%</strong></div>
-            </div>
-            <div class="softmax35-brace softmax35-brace-vocab">normalize across tokens in the vocabulary</div>
-          </section>
-        </div>
-
-        <div class="hidden-content autostep softmax35-attn-reveal"></div>
-        <div class="hidden-content autostep softmax35-vocab-reveal"></div>
-        <div class="hidden-content autostep softmax35-formula-reveal">
-          <div class="softmax35-formulas">
-            <div>\(a = \operatorname{softmax}(qK^{\mathsf{T}})\)</div>
-            <div>\(p(x_{t+1}\mid x_{\le t}) = \operatorname{softmax}(\ell_t)\)</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div class="head-takeaway">Attention softmax chooses where to read from; vocabulary softmax chooses what token to emit.</div>
-  </div>
-
-  <div class="slide" id="slide-36">
-    <span class="section-tag">Decoding</span>
-    <div class="badge concept">Concept</div>
-    <h2>Decode, Append, Repeat</h2>
-    <p class="small-text">Decoding changes how we choose from the same next-token distribution, then loops the forward pass.</p>
-
-    <div class="head-layout">
-      <div class="card head-stage decode36-stage">
-        <div class="decode36-top">
-          <div class="decode36-dist-card">
-            <div class="head-card-title">next-token distribution</div>
+          <div class="pred32-step pred32-step-logits">
+            <div class="pred32-step-label">softmax &#8594; probabilities</div>
             <div class="head-logit-bars">
               <div class="head-logit-item"><span class="head-logit-label">mat</span><div class="head-logit-bar is-prob" style="height:82%"></div><strong>42%</strong></div>
               <div class="head-logit-item"><span class="head-logit-label">rug</span><div class="head-logit-bar is-prob" style="height:58%"></div><strong>24%</strong></div>
@@ -2684,47 +2423,85 @@ l e a r n ing &lt;/w&gt;</div>
               <div class="head-logit-item"><span class="head-logit-label">cat</span><div class="head-logit-bar is-prob" style="height:30%"></div><strong>11%</strong></div>
               <div class="head-logit-item"><span class="head-logit-label">sat</span><div class="head-logit-bar is-prob" style="height:22%"></div><strong>7%</strong></div>
             </div>
-          </div>
-
-          <div class="decode36-policy-grid">
-            <div class="decode36-policy decode36-policy-greedy">
-              <div class="decode36-policy-title">Greedy</div>
-              <div class="decode36-policy-body">pick the highest probability token</div>
-            </div>
-            <div class="decode36-policy decode36-policy-temp">
-              <div class="decode36-policy-title">Temperature</div>
-              <div class="decode36-policy-body">sharpen or flatten before sampling</div>
-            </div>
-            <div class="decode36-policy decode36-policy-topk">
-              <div class="decode36-policy-title">Top-k / Top-p</div>
-              <div class="decode36-policy-body">restrict candidates, then sample</div>
-            </div>
+            <div class="pred32-vocab-note">over \(|V|\) tokens &#8212; different from attention softmax (which normalizes over positions)</div>
           </div>
         </div>
 
-        <div class="decode36-bottom">
-          <div class="decode36-seq">
+        <div class="hidden-content autostep pred32-extract-reveal"></div>
+        <div class="hidden-content autostep pred32-head-reveal"></div>
+        <div class="hidden-content autostep pred32-logit-reveal"></div>
+      </div>
+    </div>
+
+    <div class="block30-takeaway">The LM head turns one hidden vector into a probability distribution over the entire vocabulary.</div>
+  </div>
+
+  <div class="slide" id="slide-33">
+    <span class="section-tag">Generation</span>
+    <div class="badge concept">Concept</div>
+    <h2>Generate, Append, Repeat</h2>
+    <p class="small-text">The model predicts one token at a time. Generation is an autoregressive loop: predict, append to context, run again.</p>
+
+    <div class="gen33-layout">
+      <div class="card gen33-stage">
+        <div class="gen33-loop-row">
+          <div class="gen33-ctx">
             <span class="attn19-token-chip">cat</span>
             <span class="attn19-token-chip">sat</span>
             <span class="attn19-token-chip">on</span>
             <span class="attn19-token-chip">the</span>
-            <span class="attn19-token-chip decode36-choice-chip">mat</span>
           </div>
-          <div class="decode36-loop">
-            <div class="decode36-loop-arrow">↺</div>
-            <div class="decode36-loop-model">run the forward pass again on the longer sequence</div>
+          <div class="gen33-loop-arrow">&#8594;</div>
+          <div class="gen33-fwd-label">forward pass</div>
+          <div class="gen33-loop-arrow">&#8594;</div>
+          <div class="gen33-dist">
+            <div class="gen33-dist-bar" style="height:78%"><span>mat 42%</span></div>
+            <div class="gen33-dist-bar" style="height:54%"><span>rug 24%</span></div>
+            <div class="gen33-dist-bar gen33-bar-dim" style="height:40%"><span>&#8230;</span></div>
           </div>
-          <div class="decode36-summary">position → communicate → compute → score → choose → repeat</div>
+          <div class="gen33-loop-arrow">&#8594;</div>
+          <div class="gen33-pick-label">pick</div>
+          <div class="gen33-loop-arrow">&#8594;</div>
+          <span class="attn19-token-chip gen33-new-token">mat</span>
+          <div class="gen33-back-arrow">&#x21A9; append &amp; repeat</div>
         </div>
 
-        <div class="hidden-content autostep decode36-greedy-reveal"></div>
-        <div class="hidden-content autostep decode36-alt-reveal"></div>
-        <div class="hidden-content autostep decode36-append-reveal"></div>
-        <div class="hidden-content autostep decode36-loop-reveal"></div>
+        <div class="hidden-content autostep gen33-strategies-reveal">
+          <div class="gen33-strategies">
+            <div class="gen33-strategy">
+              <div class="gen33-strategy-title">Greedy</div>
+              <div class="gen33-strategy-body">Always pick the top token. Deterministic, but tends to produce repetitive outputs for long sequences.</div>
+              <div class="gen33-strategy-formula">\(x_{t+1} = \arg\max_v\, p_v\)</div>
+            </div>
+            <div class="gen33-strategy">
+              <div class="gen33-strategy-title">Temperature \(T\)</div>
+              <div class="gen33-strategy-body">Divide logits by \(T\) before softmax. \(T \to 0\) approaches greedy; \(T > 1\) flattens the distribution for more varied outputs.</div>
+              <div class="gen33-strategy-formula">\(p_v \propto \exp(\ell_v / T)\)</div>
+            </div>
+            <div class="gen33-strategy">
+              <div class="gen33-strategy-title">Top-\(p\) (Nucleus)</div>
+              <div class="gen33-strategy-body">Keep only the smallest set of tokens whose cumulative probability reaches \(p\). Sample from that set &#8212; adapts to each distribution.</div>
+              <div class="gen33-strategy-formula">sample from \(\{v : \sum p_{v'} \ge p\}\)</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="hidden-content autostep gen33-question-reveal">
+          <div class="callout question">
+            <span class="icon">&#x1F914;</span>
+            <span>For code generation, low or high temperature? What about brainstorming new research directions?</span>
+          </div>
+        </div>
+
+        <div class="hidden-content autostep gen33-recap-reveal">
+          <div class="gen33-recap">
+            embed &#8594; position &#8594; <span class="hl-purple">[LN &#8594; attn &#8594; add &#8594; LN &#8594; FFN &#8594; add] &#215; L</span> &#8594; LM head &#8594; <span class="hl-green">decode</span>
+          </div>
+        </div>
       </div>
     </div>
 
-    <div class="head-takeaway">Generation is autoregressive: choose one next token, append it, and run the model again.</div>
+    <div class="block30-takeaway">Generation is autoregressive: predict one token, append it, repeat the forward pass.</div>
   </div>
 
 </div>
@@ -2735,7 +2512,7 @@ l e a r n ing &lt;/w&gt;</div>
   <div class="progress-track">
     <div class="progress-fill" id="progressFill" style="width:0%"></div>
   </div>
-  <span class="slide-counter" id="slideCounter">1 / 36</span>
+  <span class="slide-counter" id="slideCounter">1 / 33</span>
   <button class="nav-btn primary" id="btnNext">Next &rarr;</button>
 </div>
 
@@ -2760,8 +2537,6 @@ l e a r n ing &lt;/w&gt;</div>
 <script src="./scripts/slides/position-superposition.js"></script>
 <script src="./scripts/slides/ffn-rowwise.js"></script>
 <script src="./scripts/slides/ffn-internals.js"></script>
-<script src="./scripts/slides/residual-stream.js"></script>
-<script src="./scripts/slides/layernorm.js"></script>
 <script src="./scripts/slides/gpt-block.js"></script>
 <script src="./scripts/slides/projection.js"></script>
 <script src="./scripts/app.js"></script>

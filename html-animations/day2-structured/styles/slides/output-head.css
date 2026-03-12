@@ -1,66 +1,47 @@
-/* Slides 34-36: logits, softmax comparison, and decoding. */
+/* Slides 32–33: prediction (LM head) and generation (decoding loop). */
 
-.head-layout {
-  margin-top: 0.88rem;
-  display: flex;
-  justify-content: center;
+/* ── Slide 32: Reading the prediction ── */
+
+.pred32-layout {
+  margin-top: var(--sp-3);
 }
 
-.head-stage {
-  width: min(100%, 60rem);
-  min-height: clamp(19rem, 58vh, 27rem);
-  padding: 1rem 1.05rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.74rem;
-  background:
-    radial-gradient(circle at 82% 12%, rgba(90, 232, 142, 0.08), transparent 34%),
-    var(--surface);
+.pred32-stage {
+  padding: var(--sp-4);
+  display: grid;
+  gap: var(--sp-3);
 }
 
-.head-takeaway {
-  width: min(100%, 56rem);
-  margin: 0.82rem auto 0;
-  padding: 0.62rem 0.78rem;
-  border-radius: var(--radius-md);
-  border: 1px solid rgba(123, 154, 255, 0.28);
-  background: rgba(123, 154, 255, 0.1);
-  color: #dbe4ff;
-  font-size: var(--fs-xs);
-  line-height: 1.45;
-}
-
-.head-prompt-row {
+.pred32-prompt-row {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.38rem;
+  gap: var(--sp-2);
   flex-wrap: wrap;
 }
 
-.head-prompt-row .attn19-token-chip.is-focus,
-.decode36-choice-chip {
-  border-color: rgba(90, 232, 142, 0.32);
-  background: rgba(90, 232, 142, 0.14);
-  color: #caf8db;
+.pred32-next-label {
+  font-size: var(--fs-xs);
+  color: var(--text-dim);
+  font-style: italic;
 }
 
-.head-matrix-card,
-.head-head-card,
-.head-logit-card,
-.logits34-extract-card,
-.softmax35-card,
-.decode36-dist-card,
-.decode36-policy {
+.pred32-flow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) repeat(3, minmax(0, 1fr));
+  gap: var(--sp-3);
+  align-items: stretch;
+}
+
+.pred32-matrix-card {
   border-radius: var(--radius-md);
-  border: 1px solid rgba(123, 154, 255, 0.18);
-  background: rgba(18, 24, 40, 0.46);
-  padding: 0.76rem 0.82rem;
-  transition: opacity 0.24s ease, transform 0.24s ease, border-color 0.24s ease, box-shadow 0.24s ease;
+  border: 1px solid var(--border);
+  background: var(--surface2);
+  padding: var(--sp-3);
 }
 
-.head-card-title,
-.decode36-policy-title {
+/* reuse head-* classes from old output-head for matrix/logit visuals */
+.head-card-title {
   font-size: var(--fs-2xs);
   font-weight: 700;
   letter-spacing: 0.05em;
@@ -70,7 +51,7 @@
 }
 
 .head-matrix {
-  margin-top: 0.5rem;
+  margin-top: var(--sp-2);
   display: grid;
   gap: 0.3rem;
 }
@@ -78,7 +59,7 @@
 .head-row {
   display: grid;
   grid-template-columns: max-content minmax(0, 1fr);
-  gap: 0.42rem;
+  gap: var(--sp-2);
   align-items: center;
   color: rgba(220, 230, 252, 0.92);
 }
@@ -91,299 +72,278 @@
 .head-bar {
   height: 0.88rem;
   border-radius: var(--radius-sm);
-  border: 1px solid rgba(123, 154, 255, 0.28);
-  background:
-    repeating-linear-gradient(
-      90deg,
-      rgba(255, 255, 255, 0.02) 0,
-      rgba(255, 255, 255, 0.02) calc(12.5% - 1px),
-      rgba(10, 13, 20, 0.28) calc(12.5% - 1px),
-      rgba(10, 13, 20, 0.28) 12.5%
-    ),
-    rgba(123, 154, 255, 0.1);
-  transition: border-color 0.24s ease, box-shadow 0.24s ease, background 0.24s ease;
+  border: 1px solid var(--accent-border);
+  background: var(--accent-bg);
+  transition: border-color 0.24s ease, box-shadow 0.24s ease;
 }
 
 .head-row.is-focus .head-bar {
   border-color: rgba(90, 232, 142, 0.34);
-  background:
-    repeating-linear-gradient(
-      90deg,
-      rgba(255, 255, 255, 0.02) 0,
-      rgba(255, 255, 255, 0.02) calc(12.5% - 1px),
-      rgba(10, 13, 20, 0.28) calc(12.5% - 1px),
-      rgba(10, 13, 20, 0.28) 12.5%
-    ),
-    rgba(90, 232, 142, 0.12);
+  background: rgba(90, 232, 142, 0.12);
 }
 
-.head-head-formula {
-  font-size: var(--fs-2xs);
-  font-family: 'JetBrains Mono', monospace;
-  text-align: center;
-  color: rgba(220, 230, 252, 0.86);
-}
-
-.head-logit-bars,
-.softmax35-position-bars,
-.softmax35-vocab-bars {
-  margin-top: 0.5rem;
+.head-logit-bars {
+  margin-top: var(--sp-2);
   display: flex;
   align-items: end;
   justify-content: center;
-  gap: 0.42rem;
-  min-height: 8.1rem;
+  gap: var(--sp-2);
+  min-height: 7rem;
 }
 
-.head-logit-item,
-.softmax35-bar-item {
+.head-logit-item {
   display: grid;
   justify-items: center;
   gap: 0.28rem;
 }
 
-.head-logit-label,
-.softmax35-bar-item span {
+.head-logit-label {
   font-size: var(--fs-2xs);
   color: rgba(214, 224, 250, 0.9);
 }
 
-.head-logit-item strong,
-.softmax35-bar-item strong {
+.head-logit-item strong {
   font-size: var(--fs-2xs);
   color: rgba(220, 230, 252, 0.9);
 }
 
-.head-logit-bar,
-.softmax35-bar {
+.head-logit-bar {
   width: 1.08rem;
   border-radius: var(--radius-sm) 0.34rem 0.16rem 0.16rem;
   background: linear-gradient(180deg, rgba(185, 196, 224, 0.96), rgba(101, 116, 156, 0.72));
 }
 
-.head-logit-bar.is-prob,
-.softmax35-bar.is-vocab {
+.head-logit-bar.is-prob {
   background: linear-gradient(180deg, rgba(90, 232, 142, 0.94), rgba(59, 170, 102, 0.8));
 }
 
-.head-note-strip,
-.head-formula-strip,
-.softmax35-question,
-.decode36-summary {
-  align-self: center;
-  padding: 0.38rem 0.74rem;
-  border-radius: 999px;
-  border: 1px solid rgba(123, 154, 255, 0.24);
-  background: rgba(123, 154, 255, 0.08);
-  color: #dbe6ff;
+.pred32-step {
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  background: var(--surface2);
+  padding: var(--sp-3);
+  display: grid;
+  gap: var(--sp-2);
+  align-content: start;
+  opacity: 0.22;
+  transform: translateY(0.18rem);
+  transition: opacity 0.28s ease, transform 0.28s ease, border-color 0.28s ease;
+}
+
+.pred32-step-label {
   font-size: var(--fs-2xs);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: rgba(214, 224, 250, 0.9);
   text-align: center;
 }
 
-.logits34-main {
-  display: grid;
-  grid-template-columns: minmax(0, 14rem) minmax(0, 10rem) minmax(0, 10rem) minmax(0, 13rem);
-  gap: 0.72rem;
-  align-items: stretch;
-}
-
-.logits34-stage .logits34-extract-reveal,
-.logits34-stage .logits34-output-reveal,
-.softmax35-stage .softmax35-attn-reveal,
-.softmax35-stage .softmax35-vocab-reveal,
-.decode36-stage .hidden-content {
-  display: none;
-}
-
-.logits34-extract-card,
-.head-head-card,
-.head-logit-card {
-  opacity: 0.24;
-  transform: translateY(0.14rem);
-}
-
-.logits34-extract-card {
-  display: grid;
-  gap: 0.36rem;
-  align-content: center;
-  justify-items: center;
-}
-
-.logits34-extract-chip {
-  padding: 0.28rem 0.56rem;
-  border-radius: 999px;
+.pred32-extract-chip {
+  align-self: center;
+  justify-self: center;
+  padding: 0.28rem 0.6rem;
+  border-radius: var(--radius-full);
   border: 1px solid rgba(90, 232, 142, 0.28);
   background: rgba(90, 232, 142, 0.1);
   color: #d4f6df;
+  font-size: var(--fs-xs);
+}
+
+.pred32-extract-note {
   font-size: var(--fs-2xs);
+  color: var(--text-dim);
+  text-align: center;
 }
 
-.head-head-card {
-  display: grid;
-  align-content: center;
-  gap: 0.32rem;
-}
-
-#slide-34:has(.logits34-focus-reveal.revealed) .head-row.is-focus .head-bar {
-  box-shadow: 0 0 0 0.08rem rgba(90, 232, 142, 0.12);
-}
-
-#slide-34:has(.logits34-extract-reveal.revealed) .logits34-extract-card,
-#slide-34:has(.logits34-output-reveal.revealed) .head-head-card,
-#slide-34:has(.logits34-output-reveal.revealed) .head-logit-card,
-#slide-34:has(.logits34-formula-reveal.revealed) .head-formula-strip {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.softmax35-stage {
-  background:
-    radial-gradient(circle at 18% 12%, rgba(180, 157, 255, 0.08), transparent 32%),
-    var(--surface);
-}
-
-.softmax35-main {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.8rem;
-  align-items: stretch;
-}
-
-.softmax35-query-row {
-  display: grid;
-  justify-items: center;
-  gap: 0.32rem;
-}
-
-.softmax35-arrow {
-  color: rgba(188, 199, 225, 0.72);
+.pred32-formula {
   font-size: var(--fs-sm);
-}
-
-.softmax35-card-vocab {
-  opacity: 0.24;
-  transform: translateY(0.14rem);
-}
-
-.softmax35-brace {
-  margin-top: 0.52rem;
-  padding-top: 0.38rem;
-  border-top: 2px solid rgba(184, 194, 221, 0.24);
-  color: rgba(220, 230, 252, 0.86);
-  font-size: var(--fs-2xs);
-  text-align: center;
-  opacity: 0;
-  transform: translateY(0.14rem);
-  transition: opacity 0.22s ease, transform 0.22s ease;
-}
-
-.softmax35-formulas {
-  display: grid;
-  gap: 0.36rem;
-  justify-items: center;
   color: #e1ebff;
-  font-size: var(--fs-2xs);
+  text-align: center;
 }
 
-#slide-35:has(.softmax35-attn-reveal.revealed) .softmax35-brace-attn,
-#slide-35:has(.softmax35-vocab-reveal.revealed) .softmax35-card-vocab,
-#slide-35:has(.softmax35-vocab-reveal.revealed) .softmax35-brace-vocab,
-#slide-35:has(.softmax35-formula-reveal.revealed) .softmax35-formulas {
+.pred32-dims {
+  font-size: var(--fs-2xs);
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--text-dim);
+  text-align: center;
+}
+
+.pred32-tying-note {
+  font-size: var(--fs-2xs);
+  color: var(--text-dim);
+  text-align: center;
+  font-style: italic;
+}
+
+.pred32-vocab-note {
+  font-size: var(--fs-2xs);
+  color: var(--text-dim);
+  line-height: 1.4;
+  text-align: center;
+}
+
+.pred32-stage .pred32-extract-reveal,
+.pred32-stage .pred32-head-reveal,
+.pred32-stage .pred32-logit-reveal {
+  display: none;
+}
+
+.pred32-stage:has(.pred32-extract-reveal.revealed) .pred32-step-extract {
   opacity: 1;
   transform: translateY(0);
+  border-color: rgba(90, 232, 142, 0.28);
 }
 
-.decode36-stage {
-  background:
-    radial-gradient(circle at 82% 12%, rgba(255, 214, 68, 0.08), transparent 32%),
-    var(--surface);
+.pred32-stage:has(.pred32-head-reveal.revealed) .pred32-step-head {
+  opacity: 1;
+  transform: translateY(0);
+  border-color: var(--accent-border);
 }
 
-.decode36-top {
+.pred32-stage:has(.pred32-logit-reveal.revealed) .pred32-step-logits {
+  opacity: 1;
+  transform: translateY(0);
+  border-color: rgba(90, 232, 142, 0.28);
+}
+
+/* ── Slide 33: Generate, append, repeat ── */
+
+.gen33-layout {
+  margin-top: var(--sp-3);
+}
+
+.gen33-stage {
+  padding: var(--sp-4);
   display: grid;
-  grid-template-columns: minmax(0, 13rem) minmax(0, 1fr);
-  gap: 0.8rem;
-  align-items: start;
+  gap: var(--sp-3);
 }
 
-.decode36-policy-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0.48rem;
-}
-
-.decode36-policy {
-  opacity: 0.22;
-  transform: translateY(0.14rem);
-}
-
-.decode36-policy-body {
-  margin-top: 0.32rem;
-  font-size: var(--fs-2xs);
-  line-height: 1.45;
-  color: rgba(220, 230, 252, 0.88);
-  text-align: center;
-}
-
-.decode36-bottom {
-  display: grid;
-  gap: 0.56rem;
-  justify-items: center;
-}
-
-.decode36-seq,
-.decode36-loop {
-  opacity: 0;
-  transform: translateY(0.16rem);
-  transition: opacity 0.24s ease, transform 0.24s ease;
-}
-
-.decode36-seq {
+.gen33-loop-row {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 0.38rem;
+  gap: var(--sp-3);
+  flex-wrap: wrap;
+  padding: var(--sp-3) 0;
+}
+
+.gen33-ctx {
+  display: flex;
+  gap: var(--sp-1);
   flex-wrap: wrap;
 }
 
-.decode36-loop {
-  display: grid;
-  justify-items: center;
-  gap: 0.18rem;
+.gen33-loop-arrow {
+  color: var(--text-dim);
+  font-size: var(--fs-base);
 }
 
-.decode36-loop-arrow {
-  font-size: 1.2rem;
-  color: rgba(255, 214, 68, 0.84);
+.gen33-fwd-label,
+.gen33-pick-label {
+  font-size: var(--fs-xs);
+  color: var(--text-dim);
+  font-style: italic;
 }
 
-.decode36-loop-model {
+.gen33-dist {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.22rem;
+  height: 3.5rem;
+}
+
+.gen33-dist-bar {
+  width: 2.4rem;
+  border-radius: var(--radius-sm) var(--radius-sm) 0.1rem 0.1rem;
+  background: linear-gradient(180deg, rgba(90, 232, 142, 0.88), rgba(59, 170, 102, 0.72));
+  display: flex;
+  align-items: flex-start;
+  padding-top: 0.18rem;
+  justify-content: center;
+}
+
+.gen33-dist-bar span {
   font-size: var(--fs-2xs);
-  color: #ffe9a7;
+  color: rgba(10, 13, 20, 0.85);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.gen33-dist-bar.gen33-bar-dim {
+  background: linear-gradient(180deg, rgba(153, 160, 184, 0.5), rgba(120, 130, 162, 0.36));
+}
+
+.gen33-new-token {
+  border-color: rgba(90, 232, 142, 0.32);
+  background: rgba(90, 232, 142, 0.14);
+  color: #caf8db;
+}
+
+.gen33-back-arrow {
+  font-size: var(--fs-xs);
+  color: var(--yellow);
+  font-style: italic;
+}
+
+.gen33-strategies {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--sp-3);
+}
+
+.gen33-strategy {
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  background: var(--surface2);
+  padding: var(--sp-3);
+  display: grid;
+  gap: var(--sp-2);
+}
+
+.gen33-strategy-title {
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  color: var(--text);
+}
+
+.gen33-strategy-body {
+  font-size: var(--fs-sm);
+  color: var(--text-dim);
+  line-height: 1.5;
+}
+
+.gen33-strategy-formula {
+  font-size: var(--fs-2xs);
+  color: rgba(214, 224, 250, 0.78);
+  font-family: 'JetBrains Mono', monospace;
+  padding: 0.28rem 0.5rem;
+  border-radius: var(--radius-sm);
+  background: rgba(123, 154, 255, 0.06);
   text-align: center;
 }
 
-.decode36-summary {
-  opacity: 0;
-  transform: translateY(0.16rem);
-  transition: opacity 0.24s ease, transform 0.24s ease;
+.gen33-recap {
+  padding: var(--sp-3) var(--sp-4);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--purple-border);
+  background: var(--purple-bg);
+  color: #e8e0ff;
+  font-size: var(--fs-sm);
+  line-height: 1.6;
+  text-align: center;
 }
 
-#slide-36:has(.decode36-greedy-reveal.revealed) .decode36-policy-greedy,
-#slide-36:has(.decode36-alt-reveal.revealed) .decode36-policy-temp,
-#slide-36:has(.decode36-alt-reveal.revealed) .decode36-policy-topk,
-#slide-36:has(.decode36-append-reveal.revealed) .decode36-seq,
-#slide-36:has(.decode36-loop-reveal.revealed) .decode36-loop,
-#slide-36:has(.decode36-loop-reveal.revealed) .decode36-summary {
-  opacity: 1;
-  transform: translateY(0);
-}
+@media (max-width: 60rem) {
+  .pred32-flow {
+    grid-template-columns: 1fr;
+  }
 
-@media (max-width: 70rem) {
-  .logits34-main,
-  .softmax35-main,
-  .decode36-top,
-  .decode36-policy-grid {
-    grid-template-columns: minmax(0, 1fr);
+  .gen33-strategies {
+    grid-template-columns: 1fr;
+  }
+
+  .gen33-loop-row {
+    gap: var(--sp-2);
   }
 }

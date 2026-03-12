@@ -1,42 +1,40 @@
-const BLOCK32_MAX_STEP = 5;
-const BLOCK32_CLASSES = [
-  'block32-show-position',
-  'block32-show-attn',
-  'block32-show-ffn',
-  'block32-show-equations',
-  'block32-show-summary'
+const BLOCK30_MAX_STEP = 5;
+const BLOCK30_CLASSES = [
+  'block30-show-ln',
+  'block30-show-attn',
+  'block30-show-add',
+  'block30-show-ffn',
+  'block30-show-eq'
 ];
-const BLOCK32_TAKEAWAYS = [
-  'A GPT block updates one shared residual stream with two sublayer writes: attention, then FFN.',
-  'The stream entering the block already includes position information.',
-  'The first write comes from multi-head attention operating on normalized rows.',
-  'The second write comes from the FFN operating on the updated stream.',
-  'Once both writes are visible, the compact equations line up with the visual story.',
-  'This is the whole block in order: normalize, attend, add, normalize, FFN, add.'
+const BLOCK30_TAKEAWAYS = [
+  'Attention and FFN both write updates into a shared residual stream \u2014 neither one replaces it.',
+  'LayerNorm normalizes every row independently before the sublayer sees it.',
+  'Multi-head attention gathers context across tokens and produces a small update \\(\\Delta_{\\mathrm{attn}}\\).',
+  'The residual add (+) writes that update back into the stream. The original information is preserved.',
+  'The FFN transforms each row independently, then a second residual add writes \\(\\Delta_{\\mathrm{ffn}}\\).',
+  '\\(R_{\\mathrm{mid}} = R^{(\\ell)} + \\mathrm{MHA}(\\mathrm{LN}(R^{(\\ell)}))\\) &nbsp; \\(R^{(\\ell+1)} = R_{\\mathrm{mid}} + \\mathrm{FFN}(\\mathrm{LN}(R_{\\mathrm{mid}}))\\)'
 ];
 
 function setGptBlockStep(step) {
-  const slide = document.getElementById('slide-32');
-  const takeaway = document.getElementById('block32-takeaway');
+  const slide = document.getElementById('slide-30');
+  const takeaway = document.getElementById('block30-takeaway');
   if (!slide || !takeaway) return;
 
-  const clamped = Math.max(0, Math.min(BLOCK32_MAX_STEP, step));
+  const clamped = Math.max(0, Math.min(BLOCK30_MAX_STEP, step));
   gptBlockState.step = clamped;
-  BLOCK32_CLASSES.forEach((className, idx) => {
+  BLOCK30_CLASSES.forEach((className, idx) => {
     slide.classList.toggle(className, clamped >= idx + 1);
   });
-  takeaway.innerHTML = BLOCK32_TAKEAWAYS[clamped] || BLOCK32_TAKEAWAYS[0];
-  typesetMath(slide);
+  takeaway.innerHTML = BLOCK30_TAKEAWAYS[clamped] || BLOCK30_TAKEAWAYS[0];
 }
 
 function initGptBlockSlide() {
-  gptBlockState.initialized = true;
   setGptBlockStep(gptBlockState.step || 0);
+  typesetMath(document.getElementById('slide-30'));
 }
 
 function runGptBlockStep() {
-  if (!gptBlockState.initialized) initGptBlockSlide();
-  if (gptBlockState.step >= BLOCK32_MAX_STEP) return false;
+  if (gptBlockState.step >= BLOCK30_MAX_STEP) return false;
   setGptBlockStep(gptBlockState.step + 1);
   return true;
 }

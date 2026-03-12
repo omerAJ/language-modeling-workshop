@@ -152,14 +152,6 @@ const state = {
     initialized: false,
     step: 0
   },
-  residualStream: {
-    initialized: false,
-    step: 0
-  },
-  layerNormStory: {
-    initialized: false,
-    step: 0
-  },
   gptBlock: {
     initialized: false,
     step: 0
@@ -189,6 +181,4 @@ const positionSignalState = state.positionSignal;
 const positionSuperpositionState = state.positionSuperposition;
 const ffnRowwiseState = state.ffnRowwise;
 const ffnInternalsState = state.ffnInternals;
-const residualStreamState = state.residualStream;
-const layerNormStoryState = state.layerNormStory;
 const gptBlockState = state.gptBlock;
