@@ -29,7 +29,7 @@
 
 .block27-kicker,
 .stack28-kicker {
-  font-size: 0.58rem;
+  font-size: var(--fs-2xs);
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -48,7 +48,7 @@
   justify-items: center;
   gap: 0.14rem;
   padding: 0.58rem 0.72rem;
-  border-radius: 0.72rem;
+  border-radius: var(--radius-md);
   border: 1px solid rgba(123, 154, 255, 0.18);
   background: rgba(18, 24, 40, 0.46);
   transition: opacity 0.22s ease, transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
@@ -61,12 +61,12 @@
 }
 
 .block27-stream-symbol {
-  font-size: 0.78rem;
+  font-size: var(--fs-2xs);
   color: #e5ecff;
 }
 
 .block27-stream-meta {
-  font-size: 0.52rem;
+  font-size: var(--fs-2xs);
   font-family: 'JetBrains Mono', monospace;
   color: rgba(166, 178, 208, 0.82);
   text-align: center;
@@ -85,14 +85,14 @@
 
 .block27-branch {
   border: 1px solid rgba(123, 154, 255, 0.16);
-  border-radius: 0.72rem;
+  border-radius: var(--radius-md);
   background: rgba(18, 24, 40, 0.44);
   padding: 0.74rem 0.8rem;
 }
 
 .block27-branch-label {
   margin-bottom: 0.48rem;
-  font-size: 0.62rem;
+  font-size: var(--fs-2xs);
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
@@ -110,9 +110,9 @@
 .block27-pill,
 .block27-box,
 .block27-merge-tag {
-  border-radius: 0.62rem;
+  border-radius: var(--radius-md);
   padding: 0.44rem 0.72rem;
-  font-size: 0.72rem;
+  font-size: var(--fs-2xs);
   line-height: 1.3;
   text-align: center;
   border: 1px solid rgba(123, 154, 255, 0.22);
@@ -145,12 +145,12 @@
 }
 
 .block27-merge-tag {
-  font-size: 0.66rem;
+  font-size: var(--fs-2xs);
   border-style: dashed;
 }
 
 .block27-arrow {
-  font-size: 0.96rem;
+  font-size: var(--fs-sm);
   color: rgba(188, 199, 225, 0.78);
   line-height: 1;
 }
@@ -162,13 +162,13 @@
 }
 
 .block27-equation {
-  border-radius: 0.62rem;
+  border-radius: var(--radius-md);
   border: 1px solid rgba(123, 154, 255, 0.2);
   background: rgba(123, 154, 255, 0.08);
   padding: 0.48rem 0.64rem;
   text-align: center;
   color: #e1ebff;
-  font-size: 0.78rem;
+  font-size: var(--fs-2xs);
 }
 
 #slide-27:has(.block27-attn-reveal.revealed) .block27-plus-attn,
@@ -192,11 +192,11 @@
   width: min(100%, 56rem);
   margin: 0.82rem auto 0;
   padding: 0.62rem 0.72rem;
-  border-radius: 0.58rem;
+  border-radius: var(--radius-md);
   border: 1px solid rgba(123, 154, 255, 0.28);
   background: rgba(123, 154, 255, 0.1);
   color: #dbe4ff;
-  font-size: 0.85rem;
+  font-size: var(--fs-xs);
   line-height: 1.45;
 }
 
@@ -209,7 +209,7 @@
 }
 
 .stack28-matrix-card {
-  border-radius: 0.72rem;
+  border-radius: var(--radius-md);
   border: 1px solid rgba(123, 154, 255, 0.18);
   background: rgba(18, 24, 40, 0.44);
   padding: 0.68rem 0.72rem;
@@ -232,7 +232,7 @@
 
 .stack28-matrix-head,
 .stack28-layer-label {
-  font-size: 0.58rem;
+  font-size: var(--fs-2xs);
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
@@ -241,7 +241,7 @@
 }
 
 .stack28-matrix-dims {
-  font-size: 0.52rem;
+  font-size: var(--fs-2xs);
   font-family: 'JetBrains Mono', monospace;
   color: rgba(166, 178, 208, 0.82);
   text-align: center;
@@ -256,7 +256,7 @@
 .stack28-matrix-bar {
   position: relative;
   height: 0.8rem;
-  border-radius: 0.34rem;
+  border-radius: var(--radius-sm);
   border: 1px solid rgba(123, 154, 255, 0.28);
   background: rgba(123, 154, 255, 0.1);
   overflow: hidden;
@@ -287,34 +287,34 @@
 
 .stack28-block-card,
 .stack28-block-mini {
-  border-radius: 0.66rem;
+  border-radius: var(--radius-md);
   border: 1px solid rgba(180, 157, 255, 0.26);
   background: rgba(180, 157, 255, 0.1);
   color: #e3dbff;
   text-align: center;
-  font-size: 0.72rem;
+  font-size: var(--fs-2xs);
   font-weight: 700;
   padding: 0.56rem 0.78rem;
 }
 
 .stack28-block-mini {
   padding: 0.48rem 0.58rem;
-  font-size: 0.66rem;
+  font-size: var(--fs-2xs);
 }
 
 .stack28-arrow {
-  font-size: 0.98rem;
+  font-size: var(--fs-sm);
   color: rgba(188, 199, 225, 0.76);
 }
 
 .stack28-note-strip {
-  border-radius: 0.62rem;
+  border-radius: var(--radius-md);
   border: 1px solid rgba(123, 154, 255, 0.18);
   background: rgba(123, 154, 255, 0.08);
   padding: 0.52rem 0.66rem;
   text-align: center;
   color: #dbe4ff;
-  font-size: 0.72rem;
+  font-size: var(--fs-2xs);
   line-height: 1.45;
 }
 
@@ -328,7 +328,7 @@
 
 .stack28-layer {
   min-width: 6.2rem;
-  border-radius: 0.68rem;
+  border-radius: var(--radius-md);
   border: 1px solid rgba(123, 154, 255, 0.16);
   background: rgba(18, 24, 40, 0.42);
   padding: 0.54rem 0.58rem;
@@ -355,7 +355,7 @@
 .stack28-equation {
   text-align: center;
   color: #e1ebff;
-  font-size: 0.74rem;
+  font-size: var(--fs-2xs);
 }
 
 @media (max-width: 56rem) {
@@ -384,7 +384,7 @@
 @media (max-width: 40rem) {
   .block27-equation,
   .stack28-equation {
-    font-size: 0.68rem;
+    font-size: var(--fs-2xs);
   }
 
   .block27-takeaway,

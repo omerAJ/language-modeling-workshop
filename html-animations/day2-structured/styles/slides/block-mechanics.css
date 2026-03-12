@@ -39,7 +39,7 @@
 .ln31-column-title,
 .stack33-layer-title,
 .stack33-layer-dims {
-  font-size: 0.58rem;
+  font-size: var(--fs-2xs);
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
@@ -58,11 +58,11 @@
 .resid30-op-pill,
 .block32-op-pill {
   padding: 0.42rem 0.68rem;
-  border-radius: 0.62rem;
+  border-radius: var(--radius-md);
   border: 1px solid rgba(123, 154, 255, 0.22);
   background: rgba(123, 154, 255, 0.08);
   color: #dbe6ff;
-  font-size: 0.72rem;
+  font-size: var(--fs-2xs);
 }
 
 .resid30-op-pill.is-ln {
@@ -74,7 +74,7 @@
 .resid30-op-arrow,
 .block32-arrow {
   color: rgba(188, 199, 225, 0.76);
-  font-size: 0.96rem;
+  font-size: var(--fs-sm);
   line-height: 1;
 }
 
@@ -82,7 +82,7 @@
 .block32-packet {
   padding: 0.28rem 0.56rem;
   border-radius: 999px;
-  font-size: 0.68rem;
+  font-size: var(--fs-2xs);
   font-family: 'JetBrains Mono', monospace;
   opacity: 0;
   transform: translateY(-0.24rem);
@@ -117,7 +117,7 @@
   place-items: center;
   min-height: 3rem;
   padding: 0.5rem 0.68rem;
-  border-radius: 0.72rem;
+  border-radius: var(--radius-md);
   border: 1px solid rgba(123, 154, 255, 0.18);
   background: rgba(18, 24, 40, 0.46);
   color: #e5ecff;
@@ -157,12 +157,12 @@
 .resid30-equation,
 .block32-equation {
   padding: 0.46rem 0.64rem;
-  border-radius: 0.62rem;
+  border-radius: var(--radius-md);
   border: 1px solid rgba(123, 154, 255, 0.2);
   background: rgba(123, 154, 255, 0.08);
   text-align: center;
   color: #e1ebff;
-  font-size: 0.78rem;
+  font-size: var(--fs-2xs);
 }
 
 #slide-30.resid30-show-attn .resid30-branch-attn,
@@ -223,14 +223,14 @@
 
 .ln31-row-card {
   position: relative;
-  border-radius: 0.72rem;
+  border-radius: var(--radius-md);
   border: 1px solid rgba(123, 154, 255, 0.18);
   background: rgba(18, 24, 40, 0.46);
   padding: 0.68rem 0.76rem 0.9rem;
 }
 
 .ln31-row-label {
-  font-size: 0.62rem;
+  font-size: var(--fs-2xs);
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
@@ -295,7 +295,7 @@
   border: 1px solid rgba(90, 232, 142, 0.24);
   background: rgba(90, 232, 142, 0.08);
   color: #d9f7e4;
-  font-size: 0.62rem;
+  font-size: var(--fs-2xs);
 }
 
 .ln31-targets {
@@ -340,7 +340,7 @@
 }
 
 .block32-panel {
-  border-radius: 0.72rem;
+  border-radius: var(--radius-md);
   border: 1px solid rgba(123, 154, 255, 0.18);
   background: rgba(18, 24, 40, 0.46);
   padding: 0.72rem 0.78rem;
@@ -349,7 +349,7 @@
 }
 
 .block32-panel-note {
-  font-size: 0.54rem;
+  font-size: var(--fs-2xs);
   color: rgba(184, 194, 221, 0.82);
   opacity: 0.3;
   transition: opacity 0.22s ease;
@@ -369,7 +369,7 @@
 
 .block32-output .block32-row > span {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 0.66rem;
+  font-size: var(--fs-2xs);
   color: rgba(220, 230, 252, 0.92);
 }
 
@@ -392,7 +392,7 @@
 .block32-mini-ffn {
   display: block;
   margin-top: 0.12rem;
-  font-size: 0.58rem;
+  font-size: var(--fs-2xs);
   color: rgba(214, 224, 250, 0.78);
 }
 
@@ -403,7 +403,7 @@
   border: 1px solid rgba(123, 154, 255, 0.24);
   background: rgba(123, 154, 255, 0.08);
   color: #dbe6ff;
-  font-size: 0.72rem;
+  font-size: var(--fs-2xs);
   opacity: 0;
   transform: translateY(0.18rem);
   transition: opacity 0.24s ease, transform 0.24s ease;
@@ -461,7 +461,7 @@
 }
 
 .stack33-layer {
-  border-radius: 0.72rem;
+  border-radius: var(--radius-md);
   border: 1px solid rgba(123, 154, 255, 0.18);
   background: rgba(18, 24, 40, 0.46);
   padding: 0.68rem 0.72rem;
@@ -470,7 +470,7 @@
 }
 
 .stack33-layer-dims {
-  font-size: 0.52rem;
+  font-size: var(--fs-2xs);
   color: rgba(184, 194, 221, 0.82);
 }
 
@@ -481,7 +481,7 @@
 
 .stack33-bar {
   height: 0.88rem;
-  border-radius: 0.34rem;
+  border-radius: var(--radius-sm);
   border: 1px solid rgba(123, 154, 255, 0.28);
   background: rgba(123, 154, 255, 0.1);
   transition: transform 0.24s ease, border-color 0.24s ease, box-shadow 0.24s ease, background 0.24s ease;
@@ -502,7 +502,7 @@
   border: 1px solid rgba(184, 194, 221, 0.22);
   background: rgba(184, 194, 221, 0.06);
   color: #dbe6ff;
-  font-size: 0.58rem;
+  font-size: var(--fs-2xs);
   text-align: center;
   opacity: 0;
   transform: translateY(0.16rem);
@@ -517,11 +517,11 @@
 
 .stack33-note {
   padding: 0.46rem 0.72rem;
-  border-radius: 0.62rem;
+  border-radius: var(--radius-md);
   border: 1px solid rgba(123, 154, 255, 0.22);
   background: rgba(123, 154, 255, 0.08);
   color: #dbe6ff;
-  font-size: 0.78rem;
+  font-size: var(--fs-2xs);
   text-align: center;
 }
 

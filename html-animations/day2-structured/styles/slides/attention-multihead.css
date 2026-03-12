@@ -13,16 +13,16 @@
     --attn24-wo-w: clamp(3rem, 6.4vw, 3.5rem);
     --attn24-wo-h: clamp(3rem, 6.4vw, 3.5rem);
     --attn24-combine-gap: clamp(0.56rem, 1.4vw, 0.86rem);
-    --attn24-struct-row-h: 0.62rem;
-    --attn24-output-row-h: 0.82rem;
+    --attn24-struct-row-h: 0.82rem;
+    --attn24-output-row-h: 1rem;
     position: relative;
-    min-height: clamp(25rem, 76vh, 35rem);
+    min-height: clamp(28rem, 76vh, 38rem);
     display: grid;
     justify-items: center;
     align-content: start;
     gap: clamp(0.9rem, 2.4vh, 1.3rem);
-    padding-top: 0.92rem;
-  
+    padding-top: var(--fs-sm);
+
 }
 
 .attn24-ghost-layer,
@@ -30,20 +30,20 @@
     position: absolute;
     inset: 0;
     pointer-events: none;
-  
+
 }
 
 .attn24-ghost-layer {
     z-index: 4;
     overflow: hidden;
-  
+
 }
 
 .attn24-overlay {
     z-index: 2;
     opacity: 0;
     transition: opacity 0.22s ease;
-  
+
 }
 
 .attn24-overlay-line,
@@ -54,33 +54,33 @@
     stroke-linecap: round;
     opacity: 0;
     transition: opacity 0.22s ease;
-  
+
 }
 
 .attn24-overlay-bus {
     stroke: rgba(var(--attn19-focus-rgb), 0.42);
     stroke-width: 0.98;
-  
+
 }
 
 .attn24-copy-node {
-    fill: rgba(123,154,255,0.18);
-    stroke: rgba(123,154,255,0.7);
+    fill: var(--accent-bg);
+    stroke: var(--accent-border);
     stroke-width: 1;
     opacity: 0;
     transition: opacity 0.22s ease;
-  
+
 }
 
 .attn24-copy-label {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 0.5rem;
+    font-size: var(--fs-2xs);
     fill: rgba(211,223,255,0.94);
     text-anchor: middle;
     dominant-baseline: middle;
     opacity: 0;
     transition: opacity 0.22s ease;
-  
+
 }
 
 #slide-24.attn24-show-split .attn24-overlay,
@@ -89,7 +89,7 @@
   #slide-24.attn24-show-split .attn24-copy-node,
   #slide-24.attn24-show-split .attn24-copy-label {
     opacity: 1;
-  
+
 }
 
 .attn24-source-panel {
@@ -100,36 +100,36 @@
     transition: opacity 0.24s ease, transform 0.24s ease;
     position: relative;
     z-index: 1;
-  
+
 }
 
 .attn24-source-wrap,
   .attn24-head-grid {
     transition: opacity 0.24s ease, transform 0.24s ease;
-  
+
 }
 
 .attn24-source-label {
-    font-size: 0.6rem;
+    font-size: var(--fs-2xs);
     font-weight: 700;
     letter-spacing: 0.08em;
     text-transform: uppercase;
     color: rgba(214,224,250,0.88);
     text-align: center;
-  
+
 }
 
 .attn24-source-meta {
-    font-size: 0.46rem;
+    font-size: var(--fs-2xs);
     font-family: 'JetBrains Mono', monospace;
     color: rgba(182,194,223,0.68);
-  
+
 }
 
 .attn24-source-meta sup,
   .attn24-source-meta sub {
     font-size: 0.78em;
-  
+
 }
 
 .attn24-source-shell,
@@ -138,16 +138,16 @@
   .attn24-head-output-shell {
     position: relative;
     border: 1px solid rgba(184,194,221,0.28);
-    border-radius: 0.42rem;
+    border-radius: var(--radius-sm);
     background: rgba(184,194,221,0.05);
     overflow: hidden;
-  
+
 }
 
 .attn24-source-shell {
     width: 100%;
     padding: 0.16rem 0.22rem;
-  
+
 }
 
 .attn24-source-shell::before,
@@ -160,41 +160,41 @@
     border-radius: inherit;
     pointer-events: none;
     box-shadow: inset 0 0 0 1px rgba(255,255,255,0.02);
-  
+
 }
 
 .attn24-matrix-slots {
     display: grid;
-  
+
 }
 
 .attn24-matrix-row {
     min-height: 0;
     padding: 0;
-  
+
 }
 
 .attn24-matrix-row .attn19-vector-wrap {
     display: block;
     width: 100%;
     min-height: 0;
-  
+
 }
 
 .attn24-matrix-row .attn19-vector {
     width: 100%;
     border-radius: 0;
-  
+
 }
 
 .attn24-matrix-row + .attn24-matrix-row .attn19-vector {
     margin-top: -1px;
-  
+
 }
 
 .attn24-source-row .attn19-vector {
-    height: 0.92rem;
-  
+    height: var(--fs-sm);
+
 }
 
 .attn24-source-row:first-child .attn19-vector,
@@ -203,9 +203,9 @@
   .attn24-head-output-row:first-child .attn19-vector,
   .attn24-concat-row:first-child .attn19-vector,
   .attn24-mha-output-row:first-child .attn19-vector {
-    border-top-left-radius: 0.24rem;
-    border-top-right-radius: 0.24rem;
-  
+    border-top-left-radius: var(--sp-1);
+    border-top-right-radius: var(--sp-1);
+
 }
 
 .attn24-source-row:last-child .attn19-vector,
@@ -214,9 +214,9 @@
   .attn24-head-output-row:last-child .attn19-vector,
   .attn24-concat-row:last-child .attn19-vector,
   .attn24-mha-output-row:last-child .attn19-vector {
-    border-bottom-left-radius: 0.24rem;
-    border-bottom-right-radius: 0.24rem;
-  
+    border-bottom-left-radius: var(--sp-1);
+    border-bottom-right-radius: var(--sp-1);
+
 }
 
 .attn24-head-grid {
@@ -227,34 +227,34 @@
     align-items: start;
     position: relative;
     z-index: 1;
-  
+
 }
 
 .attn24-head-card {
     --attn24-head-rgb: var(--attn19-focus-rgb);
-    min-height: 18.8rem;
+    min-height: 20.8rem;
     display: grid;
     align-content: start;
     gap: 0.56rem;
-    padding: 0.72rem 0.78rem 0.82rem;
-    border-radius: 0.74rem;
+    padding: var(--sp-3) 0.78rem var(--fs-xs);
+    border-radius: var(--radius-md);
     border: 1px solid rgba(184,194,221,0.24);
     background:
       radial-gradient(circle at top, rgba(255,255,255,0.03), transparent 52%),
       rgba(9,13,22,0.42);
     box-shadow: inset 0 0 0 1px rgba(255,255,255,0.015);
     transition: border-color 0.24s ease, box-shadow 0.24s ease, transform 0.24s ease;
-  
+
 }
 
 #attn24-head-card-h1 {
     --attn24-head-rgb: var(--attn19-focus-rgb);
-  
+
 }
 
 #attn24-head-card-h2 {
     --attn24-head-rgb: var(--attn19-source-rgb);
-  
+
 }
 
 .attn24-head-header {
@@ -262,29 +262,29 @@
     align-items: flex-start;
     justify-content: space-between;
     gap: 0.44rem;
-  
+
 }
 
 .attn24-head-title {
-    font-size: 0.62rem;
+    font-size: var(--fs-2xs);
     font-weight: 700;
     letter-spacing: 0.08em;
     text-transform: uppercase;
     color: rgba(214,224,250,0.9);
-  
+
 }
 
 .attn24-head-meta {
-    font-size: 0.46rem;
+    font-size: var(--fs-2xs);
     font-family: 'JetBrains Mono', monospace;
     color: rgba(182,194,223,0.66);
     white-space: nowrap;
-  
+
 }
 
 .attn24-head-meta sub {
     font-size: 0.78em;
-  
+
 }
 
 .attn24-head-mini-x-label,
@@ -292,11 +292,11 @@
   .attn24-head-output-label,
   .attn24-head-w-label {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 0.54rem;
+    font-size: var(--fs-2xs);
     font-weight: 700;
     letter-spacing: 0.04em;
     text-align: center;
-  
+
 }
 
 .attn24-head-body {
@@ -305,7 +305,7 @@
     grid-template-columns: var(--attn24-mini-x-w) var(--attn24-branch-gap) minmax(0, 1fr);
     align-items: start;
     column-gap: 0;
-  
+
 }
 
 .attn24-head-overlay {
@@ -315,7 +315,7 @@
     z-index: 1;
     opacity: 0;
     transition: opacity 0.22s ease;
-  
+
 }
 
 .attn24-head-overlay-line,
@@ -325,12 +325,12 @@
     border-radius: 999px;
     opacity: 0;
     transition: opacity 0.22s ease;
-  
+
 }
 
 .attn24-head-overlay-bus {
     background: rgba(var(--attn24-head-rgb), 0.38);
-  
+
 }
 
 .attn24-head-copy-node {
@@ -344,13 +344,13 @@
     border: 1px solid rgba(var(--attn24-head-rgb), 0.7);
     opacity: 0;
     transition: opacity 0.22s ease;
-  
+
 }
 
 .attn24-head-copy-label {
     position: absolute;
     font-family: 'JetBrains Mono', monospace;
-    font-size: 0.34rem;
+    font-size: var(--fs-2xs);
     font-weight: 700;
     color: rgba(214,224,250,0.92);
     opacity: 0;
@@ -358,7 +358,7 @@
     line-height: 1;
     text-shadow: 0 0 0.3rem rgba(6,10,18,0.7);
     transform: translate(-50%, -50%);
-  
+
 }
 
 .attn24-head-source-col {
@@ -368,7 +368,7 @@
     align-content: start;
     position: relative;
     z-index: 2;
-  
+
 }
 
 .attn24-head-mini-x-wrap {
@@ -379,25 +379,25 @@
     visibility: hidden;
     transform: translateY(0.18rem);
     transition: opacity 0.22s ease, transform 0.22s ease, visibility 0.22s ease;
-  
+
 }
 
 .attn24-head-mini-x-label {
     color: rgba(184,194,221,0.82);
-  
+
 }
 
 .attn24-head-mini-x-shell {
     width: var(--attn24-mini-x-w);
     padding: 0.08rem;
-  
+
 }
 
 .attn24-head-mini-x-row .attn19-vector {
     height: var(--attn24-struct-row-h);
     border-color: rgba(184,194,221,0.36);
     background: rgba(184,194,221,0.08);
-  
+
 }
 
 .attn24-head-proj-pane {
@@ -407,7 +407,7 @@
     position: relative;
     z-index: 2;
     transition: opacity 0.22s ease, filter 0.22s ease;
-  
+
 }
 
 .attn24-head-proj-row {
@@ -415,7 +415,7 @@
     grid-template-columns: var(--attn24-w-w, 1.96rem) auto minmax(0, 1fr);
     align-items: center;
     gap: 0.32rem;
-  
+
 }
 
 .attn24-head-w-wrap,
@@ -425,14 +425,14 @@
     visibility: hidden;
     transform: translateY(0.18rem);
     transition: opacity 0.22s ease, transform 0.22s ease, visibility 0.22s ease;
-  
+
 }
 
 .attn24-head-w-wrap {
     display: grid;
     justify-items: center;
     gap: 0.08rem;
-  
+
 }
 
 .attn24-head-w-shell {
@@ -440,10 +440,10 @@
     width: var(--attn24-w-w, 1.96rem);
     height: var(--attn24-w-h, 2.84rem);
     border: 1px solid rgba(184,194,221,0.28);
-    border-radius: 0.38rem;
+    border-radius: var(--radius-sm);
     background: rgba(184,194,221,0.05);
     overflow: hidden;
-  
+
 }
 
 .attn24-head-w-shell::before {
@@ -453,13 +453,13 @@
     border-radius: inherit;
     box-shadow: inset 0 0 0 1px rgba(255,255,255,0.02);
     pointer-events: none;
-  
+
 }
 
 .attn24-head-w-grid {
     position: absolute;
     inset: 0;
-  
+
 }
 
 .attn24-head-w-grid-v,
@@ -467,7 +467,7 @@
     position: absolute;
     background: rgba(184,194,221,0.2);
     pointer-events: none;
-  
+
 }
 
 .attn24-head-w-grid-v {
@@ -476,41 +476,41 @@
     left: 50%;
     width: 1px;
     transform: translateX(-50%);
-  
+
 }
 
 .attn24-head-w-grid-h {
     left: 0;
     right: 0;
     height: 1px;
-  
+
 }
 
 .attn24-head-w-label {
     color: rgba(214,224,250,0.9);
-  
+
 }
 
 .attn24-head-w-label sub {
     font-size: 0.78em;
     line-height: 0;
-  
+
 }
 
 .attn24-head-w-dims {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 0.4rem;
+    font-size: var(--fs-2xs);
     color: rgba(182,194,223,0.62);
     letter-spacing: 0.04em;
-  
+
 }
 
 .attn24-head-proj-arrow {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 0.78rem;
+    font-size: var(--fs-2xs);
     color: rgba(202,213,239,0.72);
     transform: translateY(0.18rem);
-  
+
 }
 
 .attn24-head-qkv-wrap {
@@ -518,65 +518,65 @@
     display: grid;
     justify-items: center;
     gap: 0.16rem;
-  
+
 }
 
 .attn24-head-qkv-shell {
     width: var(--attn24-qkv-w);
     padding: 0.08rem;
-  
+
 }
 
 .attn24-head-qkv-row .attn19-vector {
     height: var(--attn24-struct-row-h);
-  
+
 }
 
 .attn24-head-qkv-wrap[data-proj="q"] .attn24-head-qkv-label {
     color: rgba(var(--attn19-focus-rgb), 0.92);
-  
+
 }
 
 .attn24-head-qkv-wrap[data-proj="q"] .attn19-vector {
     border-color: rgba(var(--attn19-focus-rgb), 0.52);
     background: rgba(var(--attn19-focus-rgb), 0.1);
-  
+
 }
 
 .attn24-head-qkv-wrap[data-proj="k"] .attn24-head-qkv-label {
     color: rgba(var(--attn19-source-rgb), 0.9);
-  
+
 }
 
 .attn24-head-qkv-wrap[data-proj="k"] .attn19-vector {
     border-color: rgba(var(--attn19-source-rgb), 0.44);
     background: rgba(var(--attn19-source-rgb), 0.07);
-  
+
 }
 
 .attn24-head-qkv-wrap[data-proj="v"] .attn24-head-qkv-label {
     color: rgba(184,194,221,0.84);
-  
+
 }
 
 .attn24-head-qkv-wrap[data-proj="v"] .attn19-vector {
     border-color: rgba(184,194,221,0.42);
     background: rgba(184,194,221,0.08);
-  
+
 }
 
 .attn24-head-attn-block,
   .attn24-head-output-wrap {
     display: none;
-  
+
 }
 
 .attn24-head-attn-block {
     width: 100%;
     margin-top: 0.08rem;
-    padding: 0.52rem 0.62rem;
+    padding: var(--sp-2) var(--sp-3);
     border: 1px solid rgba(var(--attn24-head-rgb), 0.28);
-    border-radius: 0.52rem;
+    border-radius: var(--radius-md);
     background:
       linear-gradient(180deg, rgba(var(--attn24-head-rgb), 0.08), rgba(var(--attn24-head-rgb), 0.03)),
       rgba(12,16,25,0.56);
@@ -584,34 +584,34 @@
     justify-items: center;
     gap: 0.18rem;
     transition: opacity 0.22s ease, transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
-  
+
 }
 
 .attn24-head-attn-block-title {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 0.56rem;
+    font-size: var(--fs-2xs);
     font-weight: 700;
     letter-spacing: 0.04em;
     color: rgba(var(--attn24-head-rgb), 0.92);
     text-align: center;
-  
+
 }
 
 .attn24-head-attn-block-formula {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 0.45rem;
+    font-size: var(--fs-2xs);
     color: rgba(202,213,239,0.82);
     text-align: center;
     line-height: 1.35;
     white-space: nowrap;
-  
+
 }
 
 .attn24-head-attn-block-formula sup,
   .attn24-head-attn-block-formula sub {
     font-size: 0.78em;
     line-height: 0;
-  
+
 }
 
 .attn24-head-attn-block.is-active {
@@ -619,76 +619,76 @@
     box-shadow:
       0 0 0 1px rgba(var(--attn24-head-rgb), 0.22),
       0 0 0.7rem rgba(var(--attn24-head-rgb), 0.18);
-  
+
 }
 
 .attn24-head-output-wrap {
     gap: 0.16rem;
     justify-items: center;
-  
+
 }
 
 .attn24-head-output-label {
     color: rgba(var(--attn24-head-rgb), 0.94);
-  
+
 }
 
 .attn24-head-output-label sup {
     font-size: 0.74em;
     line-height: 0;
-  
+
 }
 
 .attn24-head-output-shell {
     width: var(--attn24-output-w);
     padding: 0.1rem;
-  
+
 }
 
 .attn24-head-output-row {
     opacity: 1;
     transform: translateY(0);
     transition: opacity 0.22s ease, transform 0.22s ease;
-  
+
 }
 
 .attn24-head-output-row.is-hidden {
     opacity: 0;
     transform: translateY(0.12rem);
-  
+
 }
 
 .attn24-head-output-row.is-active .attn19-vector {
     box-shadow:
       0 0 0 1px rgba(var(--attn24-head-rgb), 0.38),
       0 0 0.48rem rgba(var(--attn24-head-rgb), 0.18);
-  
+
 }
 
 .attn24-head-output-row .attn19-vector-wrap {
     display: block;
     width: 100%;
     min-height: 0;
-  
+
 }
 
 .attn24-head-output-row .attn19-vector {
     width: 100%;
     height: var(--attn24-output-row-h);
     border-radius: 0;
-  
+
 }
 
 #attn24-head-card-h1 .attn24-head-output-row .attn19-vector {
     border-color: rgba(var(--attn19-focus-rgb), 0.52);
     background: rgba(var(--attn19-focus-rgb), 0.14);
-  
+
 }
 
 #attn24-head-card-h2 .attn24-head-output-row .attn19-vector {
     border-color: rgba(var(--attn19-source-rgb), 0.48);
     background: rgba(var(--attn19-source-rgb), 0.11);
-  
+
 }
 
 .attn24-combine-stage {
@@ -707,12 +707,12 @@
     transition: opacity 0.26s ease, transform 0.26s ease;
     transform: translateY(0.18rem);
     z-index: 3;
-  
+
 }
 
 .attn24-combine-stage-inner {
     display: contents;
-  
+
 }
 
 .attn24-concat-wrap,
@@ -722,7 +722,7 @@
     justify-items: center;
     align-content: start;
     gap: 0.16rem;
-  
+
 }
 
 .attn24-concat-wrap,
@@ -731,30 +731,30 @@
     visibility: hidden;
     transform: translateY(0.18rem) scale(0.985);
     transition: opacity 0.22s ease, transform 0.22s ease, visibility 0.22s ease;
-  
+
 }
 
 .attn24-concat-label,
   .attn24-mha-output-label,
   .attn24-wo-label {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 0.58rem;
+    font-size: var(--fs-2xs);
     font-weight: 700;
     letter-spacing: 0.04em;
     text-align: center;
     color: rgba(214,224,250,0.9);
-  
+
 }
 
 .attn24-concat-dims,
   .attn24-mha-output-dims,
   .attn24-wo-dims {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 0.42rem;
+    font-size: var(--fs-2xs);
     color: rgba(182,194,223,0.66);
     letter-spacing: 0.04em;
     text-align: center;
-  
+
 }
 
 .attn24-concat-shell,
@@ -763,10 +763,10 @@
     width: var(--attn24-concat-w);
     padding: 0.1rem;
     border: 1px solid rgba(184,194,221,0.28);
-    border-radius: 0.46rem;
+    border-radius: var(--radius-sm);
     background: rgba(184,194,221,0.05);
     overflow: hidden;
-  
+
 }
 
 .attn24-concat-shell::before,
@@ -778,13 +778,13 @@
     border-radius: inherit;
     box-shadow: inset 0 0 0 1px rgba(255,255,255,0.02);
     pointer-events: none;
-  
+
 }
 
 .attn24-concat-row .attn19-vector,
   .attn24-mha-output-row .attn19-vector {
     height: var(--attn24-output-row-h);
-  
+
 }
 
 .attn24-concat-vector {
@@ -795,7 +795,7 @@
         rgba(var(--attn19-source-rgb), 0.14) 50%,
         rgba(var(--attn19-source-rgb), 0.14) 100%);
     border-color: rgba(184,194,221,0.42);
-  
+
 }
 
 .attn24-concat-vector::after {
@@ -808,7 +808,7 @@
     background: rgba(214,224,250,0.34);
     transform: translateX(-50%);
     pointer-events: none;
-  
+
 }
 
 .attn24-concat-target {
@@ -818,30 +818,30 @@
     width: calc(50% - 0.08rem);
     opacity: 0;
     pointer-events: none;
-  
+
 }
 
 .attn24-concat-target.is-left {
     left: 0.1rem;
-  
+
 }
 
 .attn24-concat-target.is-right {
     right: 0.1rem;
-  
+
 }
 
 .attn24-combine-mul,
   .attn24-combine-equals {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 0.98rem;
+    font-size: var(--fs-base);
     color: rgba(208,219,247,0.88);
     opacity: 0;
     visibility: hidden;
     transform: translateY(0.12rem);
     transition: opacity 0.22s ease, transform 0.22s ease, visibility 0.22s ease;
     align-self: center;
-  
+
 }
 
 .attn24-wo-wrap {
@@ -849,7 +849,7 @@
     visibility: hidden;
     transform: translateY(0.16rem);
     transition: opacity 0.22s ease, transform 0.22s ease, visibility 0.22s ease;
-  
+
 }
 
 .attn24-wo-shell {
@@ -857,16 +857,16 @@
     width: var(--attn24-wo-w);
     height: var(--attn24-wo-h);
     border: 1px solid rgba(184,194,221,0.28);
-    border-radius: 0.42rem;
+    border-radius: var(--radius-sm);
     background: rgba(184,194,221,0.05);
     overflow: hidden;
-  
+
 }
 
 .attn24-wo-grid {
     position: absolute;
     inset: 0;
-  
+
 }
 
 .attn24-wo-grid-v,
@@ -874,27 +874,27 @@
     position: absolute;
     background: rgba(184,194,221,0.2);
     pointer-events: none;
-  
+
 }
 
 .attn24-wo-grid-v {
     top: 0;
     bottom: 0;
     width: 1px;
-  
+
 }
 
 .attn24-wo-grid-h {
     left: 0;
     right: 0;
     height: 1px;
-  
+
 }
 
 .attn24-final-output-vector {
     border-color: rgba(184,194,221,0.46);
     background: rgba(184,194,221,0.1);
-  
+
 }
 
 #slide-24.attn24-show-concat .attn24-source-wrap,
@@ -907,7 +907,7 @@
     transform: translateY(-0.18rem);
     pointer-events: none;
     transition: opacity 0.24s ease, transform 0.24s ease;
-  
+
 }
 
 #slide-24.attn24-show-concat .attn24-combine-stage,
@@ -915,7 +915,7 @@
     opacity: 1;
     visibility: visible;
     transform: translateY(0);
-  
+
 }
 
 #slide-24.attn24-show-concat-ready .attn24-concat-wrap,
@@ -923,20 +923,20 @@
     opacity: 1;
     visibility: visible;
     transform: translateY(0) scale(1);
-  
+
 }
 
 #slide-24.attn24-show-wo .attn24-combine-stage {
     grid-template-columns: var(--attn24-concat-w) auto var(--attn24-wo-w) auto var(--attn24-final-output-w);
     align-items: center;
-  
+
 }
 
 #slide-24.attn24-show-wo .attn24-concat-wrap,
   #slide-24.attn24-show-wo .attn24-wo-wrap,
   #slide-24.attn24-show-wo .attn24-mha-output-wrap {
     align-self: start;
-  
+
 }
 
 #slide-24.attn24-show-wo .attn24-wo-wrap,
@@ -946,19 +946,19 @@
     opacity: 1;
     visibility: visible;
     transform: translateY(0);
-  
+
 }
 
 #slide-24.attn24-show-split .attn24-source-panel,
   #slide-24.attn24-show-proj .attn24-source-panel {
     opacity: 0.78;
-  
+
 }
 
 #slide-24.attn24-show-attn .attn24-source-panel,
   #slide-24.attn24-show-output .attn24-source-panel {
     opacity: 0.46;
-  
+
 }
 
 .attn24-head-card.is-split-visible .attn24-head-mini-x-wrap,
@@ -968,7 +968,7 @@
     opacity: 1;
     visibility: visible;
     transform: translateY(0);
-  
+
 }
 
 .attn24-head-card.is-proj-visible .attn24-head-overlay,
@@ -987,7 +987,7 @@
   .attn24-head-card.is-attn-visible .attn24-head-copy-label,
   .attn24-head-card.is-output-visible .attn24-head-copy-label {
     opacity: 1;
-  
+
 }
 
 .attn24-head-card.is-proj-visible .attn24-head-w-wrap,
@@ -999,7 +999,7 @@
     opacity: 1;
     visibility: visible;
     transform: translateY(0);
-  
+
 }
 
 .attn24-head-card.is-qkv-visible .attn24-head-qkv-wrap,
@@ -1008,34 +1008,34 @@
     opacity: 1;
     visibility: visible;
     transform: translateY(0);
-  
+
 }
 
 .attn24-head-card.is-attn-visible .attn24-head-attn-block,
   .attn24-head-card.is-output-visible .attn24-head-attn-block {
     display: grid;
-  
+
 }
 
 .attn24-head-card.is-output-visible .attn24-head-output-wrap {
     display: grid;
-  
+
 }
 
 .attn24-head-card.is-attn-visible .attn24-head-proj-pane {
     opacity: 0.52;
     transition: opacity 0.22s ease;
-  
+
 }
 
 .attn24-head-card.is-output-visible .attn24-head-proj-pane {
     opacity: 0.34;
-  
+
 }
 
 .attn24-head-card.is-output-visible .attn24-head-attn-block {
     opacity: 0.92;
-  
+
 }
 
 .attn24-ghost {
@@ -1048,7 +1048,7 @@
     z-index: 5;
     will-change: transform, opacity;
     opacity: 0.98;
-  
+
 }
 
 @media (max-width: 56rem) {
@@ -1064,95 +1064,95 @@
         --attn24-wo-h: 3rem;
         --attn24-w-w: 1.78rem;
         --attn24-w-h: 2.58rem;
-        --attn24-struct-row-h: 0.56rem;
-        --attn24-output-row-h: 0.72rem;
-        min-height: clamp(24rem, 74vh, 32rem);
-        gap: 0.82rem;
+        --attn24-struct-row-h: 0.72rem;
+        --attn24-output-row-h: 0.88rem;
+        min-height: clamp(26rem, 74vh, 35rem);
+        gap: var(--fs-xs);
         padding-top: 0.84rem;
-      
+
 }
 
 .attn24-source-label {
-        font-size: 0.56rem;
-      
+        font-size: var(--fs-2xs);
+
 }
 
 .attn24-source-meta,
     .attn24-head-meta {
-        font-size: 0.42rem;
-      
+        font-size: var(--fs-2xs);
+
 }
 
 .attn24-head-card {
-        min-height: 16.8rem;
-        padding: 0.62rem 0.66rem 0.72rem;
+        min-height: 18.8rem;
+        padding: var(--fs-2xs) 0.66rem var(--fs-2xs);
         gap: 0.48rem;
-      
+
 }
 
 .attn24-head-body {
         grid-template-columns: var(--attn24-mini-x-w) var(--attn24-branch-gap) minmax(0, 1fr);
-      
+
 }
 
 .attn24-head-title {
-        font-size: 0.58rem;
-      
+        font-size: var(--fs-2xs);
+
 }
 
 .attn24-head-proj-pane {
         gap: 0.32rem;
-      
+
 }
 
 .attn24-head-proj-row {
-        gap: 0.26rem;
-      
+        gap: var(--sp-1);
+
 }
 
 .attn24-head-mini-x-label,
     .attn24-head-qkv-label,
     .attn24-head-output-label,
     .attn24-head-w-label {
-        font-size: 0.5rem;
-      
+        font-size: var(--fs-2xs);
+
 }
 
 .attn24-head-attn-block-title {
-        font-size: 0.5rem;
-      
+        font-size: var(--fs-2xs);
+
 }
 
 .attn24-head-attn-block-formula {
-        font-size: 0.4rem;
-      
+        font-size: var(--fs-2xs);
+
 }
 
 .attn24-concat-label,
     .attn24-mha-output-label,
     .attn24-wo-label {
-        font-size: 0.54rem;
-      
+        font-size: var(--fs-2xs);
+
 }
 
 .attn24-concat-dims,
     .attn24-mha-output-dims,
     .attn24-wo-dims {
-        font-size: 0.4rem;
-      
+        font-size: var(--fs-2xs);
+
 }
 
 .attn24-combine-mul,
     .attn24-combine-equals {
-        font-size: 0.9rem;
-      
+        font-size: var(--fs-sm);
+
 }
 }
 
 @media (max-width: 44rem) {
 .attn24-overlay {
         display: none;
-      
+
 }
 
 .attn24-stage {
@@ -1167,77 +1167,77 @@
         --attn24-wo-h: 2.86rem;
         --attn24-w-w: 1.66rem;
         --attn24-w-h: 2.34rem;
-        --attn24-struct-row-h: 0.5rem;
-        --attn24-output-row-h: 0.66rem;
-        min-height: clamp(23rem, 72vh, 30rem);
-        gap: 0.72rem;
-      
+        --attn24-struct-row-h: 0.66rem;
+        --attn24-output-row-h: 0.82rem;
+        min-height: clamp(25rem, 72vh, 33rem);
+        gap: var(--fs-2xs);
+
 }
 
 .attn24-source-panel {
         width: min(100%, 10rem);
-      
+
 }
 
 .attn24-head-grid {
         grid-template-columns: 1fr;
         width: min(100%, 22.6rem);
-        gap: 0.72rem;
-      
+        gap: var(--fs-2xs);
+
 }
 
 .attn24-head-card {
-        min-height: 15.7rem;
+        min-height: 17.7rem;
         padding: 0.58rem 0.6rem 0.68rem;
-      
+
 }
 
 .attn24-head-body {
         grid-template-columns: 1fr;
         justify-items: center;
         gap: 0.46rem;
-      
+
 }
 
 .attn24-head-source-col,
     .attn24-head-proj-pane {
         grid-column: auto;
-      
+
 }
 
 .attn24-head-overlay {
         display: none;
-      
+
 }
 
 .attn24-head-proj-pane {
         width: min(100%, 11.6rem);
         gap: 0.24rem;
-      
+
 }
 
 .attn24-head-proj-row {
         grid-template-columns: var(--attn24-w-w) auto minmax(0, 1fr);
         gap: 0.22rem;
         justify-content: center;
-      
+
 }
 
 .attn24-head-attn-block {
         width: min(100%, 11.6rem);
-      
+
 }
 
 .attn24-head-attn-block-formula {
-        font-size: 0.38rem;
+        font-size: var(--fs-2xs);
         white-space: normal;
         line-height: 1.3;
-      
+
 }
 
 .attn24-combine-stage {
         padding-inline: 0.8rem;
-      
+
 }
 
 #slide-24.attn24-show-wo .attn24-combine-stage {
@@ -1246,25 +1246,25 @@
         justify-items: center;
         align-content: center;
         gap: 0.28rem;
-      
+
 }
 
 .attn24-concat-wrap,
     .attn24-wo-wrap,
     .attn24-mha-output-wrap {
         width: 100%;
-      
+
 }
 
 .attn24-concat-shell,
     .attn24-mha-output-shell {
         width: min(100%, var(--attn24-concat-w));
-      
+
 }
 
 .attn24-combine-mul,
     .attn24-combine-equals {
         margin: 0.04rem 0;
-      
+
 }
 }

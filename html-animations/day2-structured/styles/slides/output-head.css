@@ -22,11 +22,11 @@
   width: min(100%, 56rem);
   margin: 0.82rem auto 0;
   padding: 0.62rem 0.78rem;
-  border-radius: 0.58rem;
+  border-radius: var(--radius-md);
   border: 1px solid rgba(123, 154, 255, 0.28);
   background: rgba(123, 154, 255, 0.1);
   color: #dbe4ff;
-  font-size: 0.84rem;
+  font-size: var(--fs-xs);
   line-height: 1.45;
 }
 
@@ -52,7 +52,7 @@
 .softmax35-card,
 .decode36-dist-card,
 .decode36-policy {
-  border-radius: 0.72rem;
+  border-radius: var(--radius-md);
   border: 1px solid rgba(123, 154, 255, 0.18);
   background: rgba(18, 24, 40, 0.46);
   padding: 0.76rem 0.82rem;
@@ -61,7 +61,7 @@
 
 .head-card-title,
 .decode36-policy-title {
-  font-size: 0.6rem;
+  font-size: var(--fs-2xs);
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
@@ -85,12 +85,12 @@
 
 .head-row span {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 0.66rem;
+  font-size: var(--fs-2xs);
 }
 
 .head-bar {
   height: 0.88rem;
-  border-radius: 0.36rem;
+  border-radius: var(--radius-sm);
   border: 1px solid rgba(123, 154, 255, 0.28);
   background:
     repeating-linear-gradient(
@@ -118,7 +118,7 @@
 }
 
 .head-head-formula {
-  font-size: 0.62rem;
+  font-size: var(--fs-2xs);
   font-family: 'JetBrains Mono', monospace;
   text-align: center;
   color: rgba(220, 230, 252, 0.86);
@@ -144,20 +144,20 @@
 
 .head-logit-label,
 .softmax35-bar-item span {
-  font-size: 0.58rem;
+  font-size: var(--fs-2xs);
   color: rgba(214, 224, 250, 0.9);
 }
 
 .head-logit-item strong,
 .softmax35-bar-item strong {
-  font-size: 0.56rem;
+  font-size: var(--fs-2xs);
   color: rgba(220, 230, 252, 0.9);
 }
 
 .head-logit-bar,
 .softmax35-bar {
   width: 1.08rem;
-  border-radius: 0.34rem 0.34rem 0.16rem 0.16rem;
+  border-radius: var(--radius-sm) 0.34rem 0.16rem 0.16rem;
   background: linear-gradient(180deg, rgba(185, 196, 224, 0.96), rgba(101, 116, 156, 0.72));
 }
 
@@ -176,7 +176,7 @@
   border: 1px solid rgba(123, 154, 255, 0.24);
   background: rgba(123, 154, 255, 0.08);
   color: #dbe6ff;
-  font-size: 0.72rem;
+  font-size: var(--fs-2xs);
   text-align: center;
 }
 
@@ -215,7 +215,7 @@
   border: 1px solid rgba(90, 232, 142, 0.28);
   background: rgba(90, 232, 142, 0.1);
   color: #d4f6df;
-  font-size: 0.72rem;
+  font-size: var(--fs-2xs);
 }
 
 .head-head-card {
@@ -257,7 +257,7 @@
 
 .softmax35-arrow {
   color: rgba(188, 199, 225, 0.72);
-  font-size: 0.9rem;
+  font-size: var(--fs-sm);
 }
 
 .softmax35-card-vocab {
@@ -270,7 +270,7 @@
   padding-top: 0.38rem;
   border-top: 2px solid rgba(184, 194, 221, 0.24);
   color: rgba(220, 230, 252, 0.86);
-  font-size: 0.7rem;
+  font-size: var(--fs-2xs);
   text-align: center;
   opacity: 0;
   transform: translateY(0.14rem);
@@ -282,7 +282,7 @@
   gap: 0.36rem;
   justify-items: center;
   color: #e1ebff;
-  font-size: 0.78rem;
+  font-size: var(--fs-2xs);
 }
 
 #slide-35:has(.softmax35-attn-reveal.revealed) .softmax35-brace-attn,
@@ -319,7 +319,7 @@
 
 .decode36-policy-body {
   margin-top: 0.32rem;
-  font-size: 0.72rem;
+  font-size: var(--fs-2xs);
   line-height: 1.45;
   color: rgba(220, 230, 252, 0.88);
   text-align: center;
@@ -358,7 +358,7 @@
 }
 
 .decode36-loop-model {
-  font-size: 0.72rem;
+  font-size: var(--fs-2xs);
   color: #ffe9a7;
   text-align: center;
 }

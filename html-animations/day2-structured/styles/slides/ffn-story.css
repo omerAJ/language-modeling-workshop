@@ -30,7 +30,7 @@
   background: rgba(51, 224, 245, 0.08);
   color: #e7f8ff;
   font-family: 'JetBrains Mono', monospace;
-  font-size: 0.66rem;
+  font-size: var(--fs-2xs);
   text-align: center;
 }
 
@@ -40,13 +40,13 @@
 #slide-29 .ffn29-network-card,
 #slide-29 .ffn29-math-card,
 #slide-29 .ffn29-bottom-note {
-  border-radius: 0.78rem;
+  border-radius: var(--radius-md);
   border: 1px solid rgba(123, 154, 255, 0.18);
   background: rgba(18, 24, 40, 0.46);
 }
 
 #slide-28 .ffn28-card-title {
-  font-size: 0.58rem;
+  font-size: var(--fs-2xs);
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
@@ -106,7 +106,7 @@
 }
 
 #slide-28 .ffn28-card-dims {
-  font-size: 0.56rem;
+  font-size: var(--fs-2xs);
   color: rgba(184, 194, 221, 0.82);
 }
 
@@ -176,7 +176,7 @@
 }
 
 #slide-28 .ffn28-context-note {
-  font-size: 0.6rem;
+  font-size: var(--fs-2xs);
   line-height: 1.45;
   color: rgba(214, 224, 250, 0.82);
 }
@@ -196,7 +196,7 @@
 }
 
 #slide-28 .ffn28-flow-label {
-  font-size: 0.66rem;
+  font-size: var(--fs-2xs);
   color: rgba(226, 235, 255, 0.92);
 }
 
@@ -323,7 +323,7 @@
 #slide-28 .ffn28-mini-label {
   grid-column: 1 / -1;
   margin-top: 0.2rem;
-  font-size: 0.56rem;
+  font-size: var(--fs-2xs);
   color: rgba(214, 224, 250, 0.82);
 }
 
@@ -334,15 +334,15 @@
 
 #slide-28 .ffn28-repeat-flow {
   padding: 0.3rem 0.52rem;
-  border-radius: 0.56rem;
+  border-radius: var(--radius-md);
   border: 1px solid rgba(51, 224, 245, 0.16);
   background: rgba(51, 224, 245, 0.06);
-  font-size: 0.6rem;
+  font-size: var(--fs-2xs);
   color: rgba(223, 247, 255, 0.82);
 }
 
 #slide-28 .ffn28-shared-note {
-  font-size: 0.62rem;
+  font-size: var(--fs-2xs);
   line-height: 1.45;
   color: rgba(214, 224, 250, 0.84);
   text-align: center;
@@ -362,7 +362,7 @@
 #slide-28 .ffn28-bottom-chip {
   padding: 0.32rem 0.68rem;
   border-radius: 999px;
-  font-size: 0.63rem;
+  font-size: var(--fs-2xs);
   border: 1px solid rgba(184, 194, 221, 0.22);
   background: rgba(184, 194, 221, 0.06);
   color: #dbe6ff;
@@ -382,7 +382,7 @@
 
 #slide-28 .ffn28-bottom-formula {
   width: 100%;
-  font-size: 0.74rem;
+  font-size: var(--fs-2xs);
   color: #f3fbff;
 }
 
@@ -477,7 +477,7 @@
 }
 
 #slide-29 .ffn29-network-label span:first-child {
-  font-size: 0.58rem;
+  font-size: var(--fs-2xs);
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
@@ -485,7 +485,7 @@
 }
 
 #slide-29 .ffn29-network-label span:not(:first-child) {
-  font-size: 0.6rem;
+  font-size: var(--fs-2xs);
   color: rgba(214, 224, 250, 0.82);
 }
 
@@ -556,7 +556,7 @@
 
 #slide-29 .ffn29-layer-dim {
   margin-top: 0.22rem;
-  font-size: 0.58rem;
+  font-size: var(--fs-2xs);
   color: rgba(214, 224, 250, 0.84);
 }
 
@@ -661,7 +661,7 @@
   background: rgba(255, 214, 112, 0.12);
   color: #ffe9b7;
   font-family: 'JetBrains Mono', monospace;
-  font-size: 0.62rem;
+  font-size: var(--fs-2xs);
   opacity: 0;
   transform: scale(0.94);
   transition: opacity 0.24s ease, transform 0.24s ease;
@@ -681,7 +681,7 @@
   border: 1px solid rgba(51, 224, 245, 0.18);
   background: rgba(51, 224, 245, 0.08);
   color: rgba(223, 247, 255, 0.88);
-  font-size: 0.6rem;
+  font-size: var(--fs-2xs);
   opacity: 0;
   transform: translateY(0.16rem);
   max-height: 0;
@@ -717,23 +717,23 @@
 }
 
 #slide-29 .ffn29-equation-main {
-  font-size: 0.84rem;
+  font-size: var(--fs-xs);
   color: #f3fbff;
 }
 
 #slide-29 .ffn29-equation-dims {
-  font-size: 0.62rem;
+  font-size: var(--fs-2xs);
   color: rgba(214, 224, 250, 0.84);
 }
 
 #slide-29 .ffn29-equation-note {
-  font-size: 0.6rem;
+  font-size: var(--fs-2xs);
   color: rgba(214, 224, 250, 0.8);
 }
 
 #slide-29 .ffn29-bottom-note {
   text-align: center;
-  font-size: 0.62rem;
+  font-size: var(--fs-2xs);
   line-height: 1.5;
   color: rgba(231, 248, 255, 0.92);
   border-color: rgba(51, 224, 245, 0.24);

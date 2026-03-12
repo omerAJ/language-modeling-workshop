@@ -28,7 +28,7 @@
     gap: 0.42rem;
     min-height: 7rem;
     padding: 0.8rem 0.82rem 0.9rem;
-    border-radius: 0.8rem;
+    border-radius: var(--radius-lg);
     border: 1px solid rgba(184,194,221,0.22);
     background:
       radial-gradient(circle at top, rgba(255,255,255,0.025), transparent 54%),
@@ -38,7 +38,7 @@
 }
 
 .attn25-panel-title {
-    font-size: 0.62rem;
+    font-size: var(--fs-2xs);
     font-weight: 700;
     letter-spacing: 0.08em;
     text-transform: uppercase;
@@ -47,7 +47,7 @@
 }
 
 .attn25-panel-note {
-    font-size: 0.5rem;
+    font-size: var(--fs-2xs);
     font-family: 'JetBrains Mono', monospace;
     color: rgba(182,194,223,0.72);
     text-align: center;
@@ -94,13 +94,13 @@
 .attn25-chip-inline .attn19-token-chip {
     min-width: 2.46rem;
     padding: 0.22rem 0.3rem;
-    font-size: 0.58rem;
+    font-size: var(--fs-2xs);
   
 }
 
 .attn25-rnn-arrow {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 0.7rem;
+    font-size: var(--fs-2xs);
     color: rgba(203,214,240,0.74);
     line-height: 1;
   
@@ -111,7 +111,7 @@
   .attn25-fix-attn-wrap .arch-box.attn {
     min-width: 6.6rem;
     padding-inline: 0.72rem;
-    font-size: 0.66rem;
+    font-size: var(--fs-2xs);
   
 }
 
@@ -124,7 +124,7 @@
     background: rgba(184,194,221,0.06);
     color: rgba(219,229,255,0.94);
     font-family: 'JetBrains Mono', monospace;
-    font-size: 0.56rem;
+    font-size: var(--fs-2xs);
     line-height: 1.35;
     text-align: center;
     display: inline-flex;
@@ -182,7 +182,7 @@
 }
 
 .attn25-seq-label {
-    font-size: 0.58rem;
+    font-size: var(--fs-2xs);
     font-weight: 700;
     letter-spacing: 0.08em;
     text-transform: uppercase;
@@ -192,7 +192,7 @@
 
 .attn25-collapse-arrow {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 0.88rem;
+    font-size: var(--fs-xs);
     color: rgba(203,214,240,0.68);
     line-height: 1;
   
@@ -215,7 +215,7 @@
 }
 
 .attn25-bag-label {
-    font-size: 0.62rem;
+    font-size: var(--fs-2xs);
     font-weight: 700;
     letter-spacing: 0.08em;
     text-transform: uppercase;
@@ -224,7 +224,7 @@
 }
 
 .attn25-bag-subtitle {
-    font-size: 0.5rem;
+    font-size: var(--fs-2xs);
     font-family: 'JetBrains Mono', monospace;
     color: rgba(182,194,223,0.72);
   
@@ -236,7 +236,7 @@
     width: 100%;
     padding: 0.16rem;
     border: 1px solid rgba(184,194,221,0.28);
-    border-radius: 0.5rem;
+    border-radius: var(--radius-md);
     background: rgba(184,194,221,0.05);
     overflow: hidden;
   
@@ -278,8 +278,8 @@
   .attn25-fix-row .attn19-token-chip {
     min-width: 2.7rem;
     padding: 0.18rem 0.28rem;
-    font-size: 0.54rem;
-    border-radius: 0.36rem;
+    font-size: var(--fs-2xs);
+    border-radius: var(--radius-sm);
   
 }
 
@@ -386,7 +386,7 @@
     display: grid;
     gap: 0.56rem;
     padding: 0.84rem 0.88rem 0.94rem;
-    border-radius: 0.84rem;
+    border-radius: var(--radius-lg);
     border: 1px solid rgba(184,194,221,0.22);
     background:
       radial-gradient(circle at top, rgba(255,255,255,0.03), transparent 54%),
@@ -421,7 +421,7 @@
 .attn25-pos-source .arch-box.pos {
     min-width: 5rem;
     padding-inline: 0.62rem;
-    font-size: 0.54rem;
+    font-size: var(--fs-2xs);
   
 }
 
@@ -446,12 +446,12 @@
 .attn25-pos-row {
     min-width: 2.7rem;
     padding: 0.18rem 0.28rem;
-    border-radius: 0.36rem;
+    border-radius: var(--radius-sm);
     border: 1px solid rgba(184,194,221,0.22);
     background: rgba(184,194,221,0.06);
     color: rgba(206,216,241,0.78);
     font-family: 'JetBrains Mono', monospace;
-    font-size: 0.54rem;
+    font-size: var(--fs-2xs);
   
 }
 
@@ -461,7 +461,7 @@
     min-width: 0.96rem;
     min-height: 0.96rem;
     flex-basis: 0.96rem;
-    font-size: 0.62rem;
+    font-size: var(--fs-2xs);
     border-width: 1px;
   
 }

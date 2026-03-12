@@ -10,6 +10,7 @@ Refactor Notes (Zero-Regression):
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Day 2 — How a Transformer Computes the Next Token</title>
+<link rel="stylesheet" href="./styles/tokens.css">
 <link rel="stylesheet" href="./styles/base.css">
 <link rel="stylesheet" href="./styles/layout.css">
 <link rel="stylesheet" href="./styles/components.css">
@@ -19,9 +20,12 @@ Refactor Notes (Zero-Regression):
 <link rel="stylesheet" href="./styles/slides/attention-aggregate.css">
 <link rel="stylesheet" href="./styles/slides/attention-matrix.css">
 <link rel="stylesheet" href="./styles/slides/attention-multihead.css">
+<link rel="stylesheet" href="./styles/slides/attention-position.css">
 <link rel="stylesheet" href="./styles/slides/position-story.css">
+<link rel="stylesheet" href="./styles/slides/ffn.css">
 <link rel="stylesheet" href="./styles/slides/ffn-story.css">
 <link rel="stylesheet" href="./styles/slides/block-mechanics.css">
+<link rel="stylesheet" href="./styles/slides/block-output.css">
 <link rel="stylesheet" href="./styles/slides/output-head.css">
 <script>
   window.MathJax = {
@@ -253,17 +257,17 @@ Refactor Notes (Zero-Regression):
 
     <div class="grid-2">
       <div class="card" style="display:flex; flex-direction:column; align-items:center; justify-content:center; gap:0.65rem; text-align:center;">
-        <div style="font-size:2.2rem; font-weight:700; font-family:'JetBrains Mono',monospace; letter-spacing:0.04em;">
+        <div class="mono" style="font-size:2.2rem; font-weight:700; letter-spacing:0.04em;">
           st<span class="hl-red">r</span>awbe<span class="hl-red">rr</span>y
         </div>
-        <div style="font-size:0.82rem; color:var(--text-dim);">You count: <strong style="color:var(--green);">3 r's</strong></div>
-        <div style="font-size:0.82rem;">GPT-4 answers: <strong style="color:var(--red);">2 r's</strong></div>
+        <div class="text-xs" style="color:var(--text-dim);">You count: <strong style="color:var(--green);">3 r's</strong></div>
+        <div class="text-xs">GPT-4 answers: <strong style="color:var(--red);">2 r's</strong></div>
         <p class="tiny" style="color:var(--text-dim); margin-top:0.1rem;">Cosma et al., EMNLP 2025 — documented this class of failures systematically.</p>
       </div>
       <div class="card">
         <h3>What the model actually sees</h3>
         <div class="token-count-label" style="margin-top:0.5rem;">You write</div>
-        <div style="font-family:'JetBrains Mono',monospace; letter-spacing:0.18em; margin-top:0.25rem; font-size:0.9rem;">s t r a w b e r r y</div>
+        <div class="mono text-sm" style="letter-spacing:0.18em; margin-top:0.25rem;">s t r a w b e r r y</div>
         <div class="token-count-label" style="margin-top:0.7rem;">Model receives</div>
         <div class="token-example" style="margin-top:0.3rem;">
           <span class="token-pill main">[straw]</span>
@@ -313,7 +317,7 @@ Refactor Notes (Zero-Regression):
       <div class="card">
         <h3>Running example — used across all three approaches</h3>
         <div class="token-count-label" style="margin-top:0.5rem;">Sentence</div>
-        <div class="example-sentence" style="font-size:0.85rem;">"researchers fine-tune large-scale models"</div>
+        <div class="example-sentence text-sm">"researchers fine-tune large-scale models"</div>
         <div class="token-count-label" style="margin-top:0.65rem;">Under subword tokenization</div>
         <div class="token-example" style="margin-top:0.4rem; flex-wrap:wrap;">
           <span class="token-pill main">[research]</span>
@@ -469,17 +473,17 @@ Refactor Notes (Zero-Regression):
     <div class="grid-3" style="margin-top:0.75rem;">
       <div class="card tradeoff-card" style="border-color: rgba(255,123,123,0.22);">
         <h3 style="color:var(--red);">Word-level</h3>
-        <div class="token-count-number" style="margin:0.4rem 0; font-family:'JetBrains Mono',monospace; font-size:0.9rem;">4 tokens</div>
+        <div class="token-count-number" class="mono text-sm" style="margin:0.4rem 0;">4 tokens</div>
         <p class="small-text">Short, but brittle. Breaks on hyphens, new jargon, multilingual text.</p>
       </div>
       <div class="card tradeoff-card" style="border-color: rgba(255,170,85,0.24);">
         <h3 style="color:var(--orange);">Character-level</h3>
-        <div class="token-count-number" style="margin:0.4rem 0; font-family:'JetBrains Mono',monospace; font-size:0.9rem;">~40 tokens</div>
+        <div class="token-count-number" class="mono text-sm" style="margin:0.4rem 0;">~40 tokens</div>
         <p class="small-text">Thorough, but very long. Quadratic attention cost makes it impractical at scale.</p>
       </div>
       <div class="card tradeoff-card" style="border-color: rgba(90,232,142,0.28);">
         <h3 style="color:var(--green);">Subword</h3>
-        <div class="token-count-number" style="margin:0.4rem 0; font-family:'JetBrains Mono',monospace; font-size:0.9rem;">~10 tokens</div>
+        <div class="token-count-number" class="mono text-sm" style="margin:0.4rem 0;">~10 tokens</div>
         <p class="small-text">Near-word efficiency with no unknown tokens. GPT-4 averages ~0.75 words per token for English prose.</p>
       </div>
     </div>
@@ -542,7 +546,7 @@ Refactor Notes (Zero-Regression):
     <h2>BPE on a dummy corpus</h2>
     <div class="spacer-sm"></div>
 
-    <div class="grid-2" style="font-size:0.72rem; font-weight:600; letter-spacing:0.06em; color:var(--text-dim); text-transform:uppercase; margin-bottom:0.4rem;">
+    <div class="grid-2 text-xs" style="font-weight:600; letter-spacing:0.06em; color:var(--text-dim); text-transform:uppercase; margin-bottom:0.4rem;">
       <span>Corpus state</span>
       <span>Vocabulary built so far</span>
     </div>

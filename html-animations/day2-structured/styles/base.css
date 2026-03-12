@@ -3,7 +3,7 @@
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
   html {
-    font-size: clamp(14px, calc(0.5vw + 0.55vh + 4px), 32px);
+    font-size: clamp(17px, calc(0.6vw + 0.65vh + 5px), 36px);
   }
 
   :root {
@@ -48,7 +48,7 @@
     inset: 0;
     display: none;
     flex-direction: column;
-    padding: 2.25rem 5vw 4.25rem;
+    padding: 2.25rem 5vw 4.5rem;
     overflow-y: auto;
     scrollbar-width: thin;
     scrollbar-color: var(--border) transparent;
@@ -73,7 +73,7 @@
   }
 
   h1 {
-    font-size: 2.8rem;
+    font-size: var(--fs-2xl);
     font-weight: 800;
     letter-spacing: -0.03em;
     line-height: 1.12;
@@ -86,44 +86,44 @@
   h1.large { font-size: 3.5rem; }
 
   h2 {
-    font-size: 1.7rem;
+    font-size: var(--fs-xl);
     font-weight: 700;
     letter-spacing: -0.02em;
-    margin-bottom: 0.75rem;
+    margin-bottom: var(--sp-3);
   }
 
   h3 {
-    font-size: 1.15rem;
+    font-size: var(--fs-lg);
     font-weight: 600;
-    margin-bottom: 0.5rem;
+    margin-bottom: var(--sp-2);
   }
 
   .subtitle {
-    font-size: 1.2rem;
+    font-size: var(--fs-lg);
     color: var(--text-dim);
-    margin-top: 0.5rem;
+    margin-top: var(--sp-2);
     line-height: 1.5;
   }
 
   .small-text {
-    font-size: 0.88rem;
+    font-size: var(--fs-sm);
     color: var(--text-dim);
     line-height: 1.55;
   }
 
   .tiny {
-    font-size: 0.78rem;
+    font-size: var(--fs-xs);
     color: var(--text-dim);
   }
 
-  .spacer { height: 1.25rem; }
-  .spacer-sm { height: 0.75rem; }
-  .spacer-lg { height: 2rem; }
+  .spacer    { height: var(--sp-4); }
+  .spacer-sm { height: var(--sp-3); }
+  .spacer-lg { height: var(--sp-5); }
 
   .gradient-line {
     width: 12.5rem;
     height: 0.125rem;
-    border-radius: 999px;
+    border-radius: var(--radius-full);
     background: linear-gradient(90deg, transparent, var(--accent), var(--purple), transparent);
   }
 
@@ -131,7 +131,7 @@
     position: absolute;
     top: 1.125rem;
     left: 1.75rem;
-    font-size: 0.72rem;
+    font-size: var(--fs-xs);
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.07em;
@@ -141,20 +141,20 @@
 
   .badge {
     display: inline-block;
-    font-size: 0.72rem;
+    font-size: var(--fs-xs);
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.08em;
-    padding: 0.25rem 0.75rem;
-    border-radius: 1.25rem;
-    margin-bottom: 0.75rem;
+    padding: 0.3rem 0.85rem;
+    border-radius: var(--radius-full);
+    margin-bottom: var(--sp-3);
   }
 
-  .badge.day1 { background: rgba(123,154,255,0.18); color: var(--accent); }
-  .badge.day2 { background: rgba(123,154,255,0.18); color: var(--accent); }
-  .badge.activity { background: rgba(90,232,142,0.18); color: var(--green); }
-  .badge.concept { background: rgba(180,157,255,0.18); color: var(--purple); }
-  .badge.discussion { background: rgba(255,170,85,0.18); color: var(--orange); }
+  .badge.day1     { background: var(--accent-bg); color: var(--accent); }
+  .badge.day2     { background: var(--accent-bg); color: var(--accent); }
+  .badge.activity { background: var(--green-bg);  color: var(--green); }
+  .badge.concept  { background: var(--purple-bg); color: var(--purple); }
+  .badge.discussion { background: var(--orange-bg); color: var(--orange); }
 
   .hl        { color: var(--accent); font-weight: 600; }
   .hl-green  { color: var(--green);  font-weight: 600; }
@@ -163,3 +163,18 @@
   .hl-purple { color: var(--purple); font-weight: 600; }
   .hl-cyan   { color: var(--cyan);   font-weight: 600; }
 
+  /* ── Utility classes ── */
+  .mt-1 { margin-top: var(--sp-1); }
+  .mt-2 { margin-top: var(--sp-2); }
+  .mt-3 { margin-top: var(--sp-3); }
+  .mt-4 { margin-top: var(--sp-4); }
+  .mb-2 { margin-bottom: var(--sp-2); }
+  .mb-3 { margin-bottom: var(--sp-3); }
+  .gap-1 { gap: var(--sp-1); }
+  .gap-2 { gap: var(--sp-2); }
+  .gap-3 { gap: var(--sp-3); }
+  .gap-4 { gap: var(--sp-4); }
+  .text-base { font-size: var(--fs-base); }
+  .text-sm   { font-size: var(--fs-sm); }
+  .text-xs   { font-size: var(--fs-xs); }
+  .mono { font-family: 'JetBrains Mono', monospace; }

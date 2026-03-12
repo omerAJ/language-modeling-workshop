@@ -21,13 +21,13 @@
 
 .ffn26-section {
   border: 1px solid rgba(123, 154, 255, 0.16);
-  border-radius: 0.72rem;
+  border-radius: var(--radius-md);
   background: rgba(18, 24, 40, 0.44);
   padding: 0.78rem 0.82rem;
 }
 
 .ffn26-kicker {
-  font-size: 0.58rem;
+  font-size: var(--fs-2xs);
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -48,11 +48,11 @@
 
 .ffn26-role-box {
   min-width: 8.4rem;
-  border-radius: 0.68rem;
+  border-radius: var(--radius-md);
   padding: 0.7rem 0.9rem;
   border: 1px solid;
   text-align: center;
-  font-size: 0.9rem;
+  font-size: var(--fs-sm);
   font-weight: 700;
 }
 
@@ -82,11 +82,11 @@
 }
 
 .ffn26-role-note {
-  border-radius: 0.58rem;
+  border-radius: var(--radius-md);
   border: 1px solid rgba(123, 154, 255, 0.18);
   background: rgba(123, 154, 255, 0.08);
   padding: 0.56rem 0.64rem;
-  font-size: 0.76rem;
+  font-size: var(--fs-2xs);
   line-height: 1.5;
   color: #dbe4ff;
 }
@@ -100,14 +100,14 @@
 }
 
 .ffn26-matrix-card {
-  border-radius: 0.62rem;
+  border-radius: var(--radius-md);
   border: 1px solid rgba(123, 154, 255, 0.2);
   background: rgba(123, 154, 255, 0.06);
   padding: 0.65rem 0.68rem;
 }
 
 .ffn26-mini-head {
-  font-size: 0.6rem;
+  font-size: var(--fs-2xs);
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -117,7 +117,7 @@
 .ffn26-mini-dims {
   margin-top: 0.12rem;
   font-family: 'JetBrains Mono', monospace;
-  font-size: 0.53rem;
+  font-size: var(--fs-2xs);
   color: rgba(166, 178, 208, 0.82);
 }
 
@@ -137,7 +137,7 @@
 
 .ffn26-matrix-label {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 0.68rem;
+  font-size: var(--fs-2xs);
   color: rgba(220, 230, 252, 0.92);
   text-align: right;
 }
@@ -145,7 +145,7 @@
 .ffn26-matrix-bar {
   position: relative;
   height: 0.88rem;
-  border-radius: 0.38rem;
+  border-radius: var(--radius-sm);
   border: 1px solid rgba(123, 154, 255, 0.3);
   background: rgba(123, 154, 255, 0.12);
   overflow: hidden;
@@ -180,14 +180,14 @@
   border: 1px solid rgba(51, 224, 245, 0.28);
   background: rgba(51, 224, 245, 0.1);
   padding: 0.5rem 0.85rem;
-  font-size: 0.82rem;
+  font-size: var(--fs-xs);
   color: #dff7ff;
   text-align: center;
 }
 
 .ffn26-caption {
   margin-top: 0.58rem;
-  font-size: 0.76rem;
+  font-size: var(--fs-2xs);
   line-height: 1.5;
   color: #dbe4ff;
   text-align: center;
@@ -213,13 +213,13 @@
   background: rgba(123, 154, 255, 0.1);
   padding: 0.44rem 0.7rem;
   font-family: 'JetBrains Mono', monospace;
-  font-size: 0.72rem;
+  font-size: var(--fs-2xs);
   color: #dce6ff;
 }
 
 .ffn26-op-card {
   min-width: 8rem;
-  border-radius: 0.58rem;
+  border-radius: var(--radius-md);
   border: 1px solid rgba(51, 224, 245, 0.24);
   background: rgba(51, 224, 245, 0.08);
   padding: 0.44rem 0.64rem;
@@ -239,20 +239,20 @@
 }
 
 .ffn26-op-title {
-  font-size: 0.74rem;
+  font-size: var(--fs-2xs);
   font-weight: 700;
 }
 
 .ffn26-op-dims {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 0.56rem;
+  font-size: var(--fs-2xs);
   color: rgba(220, 230, 252, 0.84);
 }
 
 .ffn26-equation {
   margin-top: 0.62rem;
   text-align: center;
-  font-size: 0.8rem;
+  font-size: var(--fs-xs);
   color: #e3ecff;
 }
 
@@ -288,7 +288,7 @@
 
 .ffn26-batch-op {
   min-width: 6.2rem;
-  border-radius: 0.62rem;
+  border-radius: var(--radius-md);
   border: 1px solid rgba(51, 224, 245, 0.28);
   background: rgba(51, 224, 245, 0.08);
   padding: 0.46rem 0.62rem;
@@ -306,13 +306,13 @@
 }
 
 .ffn26-batch-op-title {
-  font-size: 0.74rem;
+  font-size: var(--fs-2xs);
   font-weight: 700;
 }
 
 .ffn26-batch-op-dims {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 0.54rem;
+  font-size: var(--fs-2xs);
   color: rgba(220, 230, 252, 0.82);
 }
 
@@ -328,12 +328,12 @@
 .ffn26-takeaway {
   margin-top: 0.82rem;
   border: 1px solid rgba(123, 154, 255, 0.28);
-  border-radius: 0.58rem;
+  border-radius: var(--radius-md);
   background: rgba(123, 154, 255, 0.1);
   display: flex;
   align-items: center;
   padding: 0.62rem 0.72rem;
-  font-size: 0.85rem;
+  font-size: var(--fs-xs);
   color: #dbe4ff;
   line-height: 1.45;
   width: min(100%, 56rem);
@@ -366,7 +366,7 @@
 @media (max-width: 40rem) {
   .ffn26-role-box {
     min-width: 6.4rem;
-    font-size: 0.8rem;
+    font-size: var(--fs-xs);
   }
 
   .ffn26-matrix-row {
@@ -374,7 +374,7 @@
   }
 
   .ffn26-matrix-label {
-    font-size: 0.62rem;
+    font-size: var(--fs-2xs);
   }
 
   .ffn26-matrix-bar {

@@ -1,5 +1,6 @@
+  .token-interface {
     justify-content: center;
-    gap: 0.7rem;
+    gap: var(--sp-3);
     flex-wrap: wrap;
     margin: 0.95rem 0 0.6rem;
   }
@@ -22,7 +23,7 @@
     position: relative;
     padding-left: 1.05rem;
     margin: 0.3rem 0;
-    font-size: 0.82rem;
+    font-size: var(--fs-xs);
     line-height: 1.45;
     color: #cfd4e8;
   }
@@ -47,11 +48,11 @@
     min-width: 13rem;
     background: var(--surface2);
     border: 1px solid var(--border);
-    border-radius: 0.625rem;
+    border-radius: var(--radius-md);
     padding: 0.7rem 0.8rem;
   }
   .token-count-label {
-    font-size: 0.73rem;
+    font-size: var(--fs-2xs);
     letter-spacing: 0.06em;
     text-transform: uppercase;
     color: var(--text-dim);
@@ -59,18 +60,18 @@
   }
   .token-count-number {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 0.82rem;
+    font-size: var(--fs-xs);
     color: #dfe4ff;
   }
 
   .corpus-card {
     background: var(--surface2);
     border: 1px solid var(--border);
-    border-radius: 0.68rem;
+    border-radius: var(--radius-md);
     padding: 0.82rem 0.95rem;
   }
   .corpus-title {
-    font-size: 0.72rem;
+    font-size: var(--fs-2xs);
     letter-spacing: 0.07em;
     text-transform: uppercase;
     color: var(--text-dim);
@@ -78,7 +79,7 @@
   }
   .corpus-body {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 0.78rem;
+    font-size: var(--fs-2xs);
     line-height: 1.58;
     color: #dee3f8;
     white-space: pre-line;
@@ -90,9 +91,9 @@
   }
   .pair-chip {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 0.77rem;
+    font-size: var(--fs-2xs);
     border: 1px solid var(--border);
-    border-radius: 0.5rem;
+    border-radius: var(--radius-md);
     padding: 0.45rem 0.55rem;
     background: rgba(123,154,255,0.08);
     color: #d2dbff;
@@ -130,9 +131,9 @@
   }
   .token-pill {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 0.76rem;
+    font-size: var(--fs-2xs);
     border: 1px solid var(--border);
-    border-radius: 0.45rem;
+    border-radius: var(--radius-sm);
     padding: 0.3rem 0.5rem;
     background: var(--surface2);
     color: #dbe1f6;
@@ -142,28 +143,28 @@
   .token-pill.flex { border-color: rgba(255,170,85,0.5); color: #ffd8b5; background: rgba(255,170,85,0.12); }
   .example-sentence {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 0.85rem;
+    font-size: var(--fs-xs);
     line-height: 1.6;
     color: #e0e6fb;
     padding: 0.65rem 0.75rem;
-    border-radius: 0.55rem;
+    border-radius: var(--radius-md);
     border: 1px solid var(--border);
     background: rgba(123,154,255,0.08);
   }
   .sense-sentence {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 0.85rem;
+    font-size: var(--fs-xs);
     line-height: 1.62;
     color: #e8ecff;
     padding: 0.62rem 0.74rem;
-    border-radius: 0.55rem;
+    border-radius: var(--radius-md);
     border: 1px solid rgba(123,154,255,0.32);
     background: rgba(123,154,255,0.12);
   }
   .sense-focus {
     display: inline-block;
     padding: 0.08rem 0.26rem;
-    border-radius: 0.32rem;
+    border-radius: var(--radius-sm);
     border: 1px solid rgba(255,214,68,0.48);
     background: rgba(255,214,68,0.16);
     color: #ffe89a;
@@ -171,11 +172,11 @@
   }
   .id-seq {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 0.78rem;
+    font-size: var(--fs-2xs);
     line-height: 1.55;
     color: #d5deff;
     padding: 0.6rem 0.7rem;
-    border-radius: 0.5rem;
+    border-radius: var(--radius-md);
     border: 1px solid var(--border);
     background: var(--surface2);
   }
