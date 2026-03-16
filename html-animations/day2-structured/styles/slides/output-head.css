@@ -1,6 +1,8 @@
 /* Slides 32–33: prediction (LM head) and generation (decoding loop). */
 
-/* ── Slide 32: Reading the prediction ── */
+/* ══════════════════════════════════════════════════════════════════
+   Slide 32: From Hidden State to Next Word
+   ══════════════════════════════════════════════════════════════════ */
 
 .pred32-layout {
   margin-top: var(--sp-3);
@@ -12,6 +14,7 @@
   gap: var(--sp-3);
 }
 
+/* — Prompt row — */
 .pred32-prompt-row {
   display: flex;
   align-items: center;
@@ -26,21 +29,38 @@
   font-style: italic;
 }
 
-.pred32-flow {
+/* — Pipeline (4 zones + 3 arrows) — */
+.pred32-pipeline {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) repeat(3, minmax(0, 1fr));
-  gap: var(--sp-3);
-  align-items: stretch;
+  grid-template-columns: minmax(0, 1.1fr) auto minmax(0, 0.9fr) auto minmax(0, 0.9fr) auto minmax(0, 1.3fr);
+  gap: var(--sp-2);
+  align-items: center;
 }
 
+/* — Arrow zones between pipeline stages — */
+.pred32-arrow-zone {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-dim);
+  font-size: var(--fs-lg);
+  opacity: 0.4;
+  transition: opacity 0.28s ease;
+}
+
+.pred32-arrow-zone::after {
+  content: '\2192';
+}
+
+/* — Matrix zone (reuses head-* classes) — */
 .pred32-matrix-card {
   border-radius: var(--radius-md);
   border: 1px solid var(--border);
   background: var(--surface2);
   padding: var(--sp-3);
+  transition: opacity 0.28s ease;
 }
 
-/* reuse head-* classes from old output-head for matrix/logit visuals */
 .head-card-title {
   font-size: var(--fs-2xs);
   font-weight: 700;
@@ -62,6 +82,7 @@
   gap: var(--sp-2);
   align-items: center;
   color: rgba(220, 230, 252, 0.92);
+  transition: opacity 0.28s ease, transform 0.28s ease;
 }
 
 .head-row span {
@@ -74,7 +95,7 @@
   border-radius: var(--radius-sm);
   border: 1px solid var(--accent-border);
   background: var(--accent-bg);
-  transition: border-color 0.24s ease, box-shadow 0.24s ease;
+  transition: border-color 0.28s ease, box-shadow 0.28s ease, background 0.28s ease;
 }
 
 .head-row.is-focus .head-bar {
@@ -82,52 +103,19 @@
   background: rgba(90, 232, 142, 0.12);
 }
 
-.head-logit-bars {
-  margin-top: var(--sp-2);
-  display: flex;
-  align-items: end;
-  justify-content: center;
-  gap: var(--sp-2);
-  min-height: 7rem;
-}
-
-.head-logit-item {
-  display: grid;
-  justify-items: center;
-  gap: 0.28rem;
-}
-
-.head-logit-label {
-  font-size: var(--fs-2xs);
-  color: rgba(214, 224, 250, 0.9);
-}
-
-.head-logit-item strong {
-  font-size: var(--fs-2xs);
-  color: rgba(220, 230, 252, 0.9);
-}
-
-.head-logit-bar {
-  width: 1.08rem;
-  border-radius: var(--radius-sm) 0.34rem 0.16rem 0.16rem;
-  background: linear-gradient(180deg, rgba(185, 196, 224, 0.96), rgba(101, 116, 156, 0.72));
-}
-
-.head-logit-bar.is-prob {
-  background: linear-gradient(180deg, rgba(90, 232, 142, 0.94), rgba(59, 170, 102, 0.8));
-}
-
-.pred32-step {
+/* — Extract zone — */
+.pred32-extract-zone {
   border-radius: var(--radius-md);
   border: 1px solid var(--border);
   background: var(--surface2);
   padding: var(--sp-3);
   display: grid;
   gap: var(--sp-2);
-  align-content: start;
-  opacity: 0.22;
-  transform: translateY(0.18rem);
-  transition: opacity 0.28s ease, transform 0.28s ease, border-color 0.28s ease;
+  align-content: center;
+  text-align: center;
+  opacity: 0;
+  transform: translateY(0.2rem);
+  transition: opacity 0.32s ease, transform 0.32s ease, border-color 0.32s ease;
 }
 
 .pred32-step-label {
@@ -136,7 +124,6 @@
   letter-spacing: 0.05em;
   text-transform: uppercase;
   color: rgba(214, 224, 250, 0.9);
-  text-align: center;
 }
 
 .pred32-extract-chip {
@@ -153,61 +140,189 @@
 .pred32-extract-note {
   font-size: var(--fs-2xs);
   color: var(--text-dim);
+}
+
+/* — W_U zone — */
+.pred32-wu-zone {
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  background: var(--surface2);
+  padding: var(--sp-3);
+  display: grid;
+  gap: var(--sp-2);
+  align-content: center;
   text-align: center;
+  opacity: 0;
+  transform: translateY(0.2rem);
+  transition: opacity 0.32s ease, transform 0.32s ease, border-color 0.32s ease, box-shadow 0.32s ease;
 }
 
 .pred32-formula {
   font-size: var(--fs-sm);
   color: #e1ebff;
-  text-align: center;
 }
 
 .pred32-dims {
   font-size: var(--fs-2xs);
   font-family: 'JetBrains Mono', monospace;
   color: var(--text-dim);
+}
+
+/* — Bars zone — */
+.pred32-bars-zone {
+  opacity: 0;
+  transform: translateY(0.2rem);
+  transition: opacity 0.32s ease, transform 0.32s ease;
+  display: grid;
+  gap: var(--sp-2);
+}
+
+.pred32-softmax-label {
+  font-size: var(--fs-2xs);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: rgba(214, 224, 250, 0.9);
   text-align: center;
 }
 
+.pred32-bars-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: var(--sp-2);
+  min-height: 7rem;
+}
+
+.pred32-bar-item {
+  display: grid;
+  justify-items: center;
+  gap: 0.28rem;
+}
+
+.pred32-bar-item strong {
+  font-size: var(--fs-2xs);
+  color: rgba(220, 230, 252, 0.9);
+}
+
+.pred32-bar-label {
+  font-size: var(--fs-2xs);
+  color: rgba(214, 224, 250, 0.9);
+}
+
+.pred32-bar {
+  width: 1.4rem;
+  border-radius: var(--radius-sm) var(--radius-sm) 0.1rem 0.1rem;
+  background: linear-gradient(180deg, rgba(185, 196, 224, 0.96), rgba(101, 116, 156, 0.72));
+  transition: height 0.44s ease;
+}
+
+.pred32-bar.is-top {
+  background: linear-gradient(180deg, rgba(90, 232, 142, 0.94), rgba(59, 170, 102, 0.8));
+  box-shadow: 0 0 12px rgba(90, 232, 142, 0.35);
+}
+
+/* — Tying note — */
 .pred32-tying-note {
-  font-size: var(--fs-2xs);
+  opacity: 0;
+  max-height: 0;
+  overflow: hidden;
+  transition: opacity 0.32s ease, max-height 0.36s ease;
+}
+
+/* — Contrast section — */
+.pred32-contrast {
+  opacity: 0;
+  max-height: 0;
+  overflow: hidden;
+  transition: opacity 0.32s ease, max-height 0.36s ease;
+}
+
+.pred32-contrast-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--sp-3);
+  margin-top: var(--sp-2);
+}
+
+.pred32-contrast-card {
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  background: var(--surface2);
+  padding: var(--sp-3);
+  display: grid;
+  gap: var(--sp-1);
+}
+
+.pred32-contrast-title {
+  font-size: var(--fs-xs);
+  font-weight: 700;
+}
+
+.pred32-contrast-body {
+  font-size: var(--fs-sm);
   color: var(--text-dim);
-  text-align: center;
-  font-style: italic;
+  line-height: 1.5;
 }
 
-.pred32-vocab-note {
-  font-size: var(--fs-2xs);
-  color: var(--text-dim);
-  line-height: 1.4;
-  text-align: center;
-}
+/* ── Slide 32 state classes ── */
 
-.pred32-stage .pred32-extract-reveal,
-.pred32-stage .pred32-head-reveal,
-.pred32-stage .pred32-logit-reveal {
-  display: none;
-}
-
-.pred32-stage:has(.pred32-extract-reveal.revealed) .pred32-step-extract {
+/* Step 1: show extract */
+.slide.pred32-show-extract .pred32-extract-zone {
   opacity: 1;
   transform: translateY(0);
   border-color: rgba(90, 232, 142, 0.28);
 }
 
-.pred32-stage:has(.pred32-head-reveal.revealed) .pred32-step-head {
+.slide.pred32-show-extract .pred32-arrow-zone:nth-child(2) {
+  opacity: 1;
+}
+
+.slide.pred32-show-extract .head-row:not(.is-focus) {
+  opacity: 0.3;
+}
+
+.slide.pred32-show-extract .head-row.is-focus .head-bar {
+  box-shadow: 0 0 10px rgba(90, 232, 142, 0.3);
+}
+
+/* Step 2: show W_U */
+.slide.pred32-show-wu .pred32-wu-zone {
   opacity: 1;
   transform: translateY(0);
   border-color: var(--accent-border);
+  box-shadow: 0 0 14px rgba(123, 154, 255, 0.18);
 }
 
-.pred32-stage:has(.pred32-logit-reveal.revealed) .pred32-step-logits {
+.slide.pred32-show-wu .pred32-arrow-zone:nth-child(4) {
+  opacity: 1;
+}
+
+/* Step 3: show bars + tying note */
+.slide.pred32-show-bars .pred32-bars-zone {
   opacity: 1;
   transform: translateY(0);
-  border-color: rgba(90, 232, 142, 0.28);
 }
 
-/* ── Slide 33: Generate, append, repeat ── */
+.slide.pred32-show-bars .pred32-arrow-zone:nth-child(6) {
+  opacity: 1;
+}
+
+.slide.pred32-show-bars .pred32-tying-note {
+  opacity: 1;
+  max-height: 8rem;
+}
+
+/* Step 4: show contrast */
+.slide.pred32-show-contrast .pred32-contrast {
+  opacity: 1;
+  max-height: 20rem;
+}
+
+
+/* ══════════════════════════════════════════════════════════════════
+   Slide 33: Generate, Append, Repeat
+   ══════════════════════════════════════════════════════════════════ */
 
 .gen33-layout {
   margin-top: var(--sp-3);
@@ -219,59 +334,79 @@
   gap: var(--sp-3);
 }
 
-.gen33-loop-row {
-  display: flex;
+/* — Arena (context → transformer → dist → selected) — */
+.gen33-arena {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) auto auto auto minmax(0, 1.5fr) auto auto;
+  gap: var(--sp-2);
   align-items: center;
-  justify-content: center;
-  gap: var(--sp-3);
-  flex-wrap: wrap;
-  padding: var(--sp-3) 0;
+  min-height: 6rem;
 }
 
-.gen33-ctx {
+.gen33-context {
   display: flex;
-  gap: var(--sp-1);
   flex-wrap: wrap;
+  gap: var(--sp-1);
 }
 
-.gen33-loop-arrow {
+.gen33-arrow-zone {
   color: var(--text-dim);
   font-size: var(--fs-base);
+  opacity: 0.5;
 }
 
-.gen33-fwd-label,
-.gen33-pick-label {
-  font-size: var(--fs-xs);
-  color: var(--text-dim);
-  font-style: italic;
+.gen33-transformer-box {
+  border: 2px solid var(--purple);
+  border-radius: var(--radius-md);
+  background: var(--purple-bg);
+  padding: var(--sp-2) var(--sp-3);
+  text-align: center;
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: #e8e0ff;
+  transition: box-shadow 0.3s ease;
 }
 
-.gen33-dist {
+.gen33-dist-panel {
   display: flex;
   align-items: flex-end;
-  gap: 0.22rem;
-  height: 3.5rem;
+  gap: 0.18rem;
+  min-height: 4rem;
+  opacity: 0;
+  transition: opacity 0.28s ease;
 }
 
-.gen33-dist-bar {
-  width: 2.4rem;
-  border-radius: var(--radius-sm) var(--radius-sm) 0.1rem 0.1rem;
-  background: linear-gradient(180deg, rgba(90, 232, 142, 0.88), rgba(59, 170, 102, 0.72));
-  display: flex;
-  align-items: flex-start;
-  padding-top: 0.18rem;
-  justify-content: center;
+.gen33-bar-item {
+  display: grid;
+  justify-items: center;
+  gap: 0.2rem;
 }
 
-.gen33-dist-bar span {
+.gen33-bar-item strong {
   font-size: var(--fs-2xs);
-  color: rgba(10, 13, 20, 0.85);
-  font-weight: 600;
-  white-space: nowrap;
+  color: rgba(220, 230, 252, 0.9);
 }
 
-.gen33-dist-bar.gen33-bar-dim {
-  background: linear-gradient(180deg, rgba(153, 160, 184, 0.5), rgba(120, 130, 162, 0.36));
+.gen33-bar-label {
+  font-size: var(--fs-2xs);
+  color: rgba(214, 224, 250, 0.8);
+}
+
+.gen33-bar {
+  width: 1.8rem;
+  border-radius: var(--radius-sm) var(--radius-sm) 0.1rem 0.1rem;
+  background: linear-gradient(180deg, rgba(185, 196, 224, 0.96), rgba(101, 116, 156, 0.72));
+  transition: height 0.38s ease;
+}
+
+.gen33-bar.is-selected {
+  background: linear-gradient(180deg, rgba(90, 232, 142, 0.94), rgba(59, 170, 102, 0.8));
+  box-shadow: 0 0 10px rgba(90, 232, 142, 0.3);
+}
+
+.gen33-selected {
+  opacity: 0;
+  transition: opacity 0.28s ease;
 }
 
 .gen33-new-token {
@@ -280,16 +415,34 @@
   color: #caf8db;
 }
 
-.gen33-back-arrow {
+@keyframes gen33-token-pop {
+  from { opacity: 0; transform: scale(0.7) translateY(4px); }
+  to { opacity: 1; transform: none; }
+}
+
+.gen33-token-new {
+  animation: gen33-token-pop 0.36s ease both;
+}
+
+/* — Loop annotation — */
+.gen33-loop-annotation {
+  text-align: center;
   font-size: var(--fs-xs);
   color: var(--yellow);
   font-style: italic;
+  opacity: 0;
+  transform: translateY(0.2rem);
+  transition: opacity 0.32s ease, transform 0.32s ease;
 }
 
-.gen33-strategies {
+/* — Strategies — */
+.gen33-strategies-panel {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: var(--sp-3);
+  opacity: 0;
+  transform: translateY(0.2rem);
+  transition: opacity 0.32s ease, transform 0.32s ease;
 }
 
 .gen33-strategy {
@@ -323,27 +476,231 @@
   text-align: center;
 }
 
-.gen33-recap {
-  padding: var(--sp-3) var(--sp-4);
-  border-radius: var(--radius-md);
-  border: 1px solid var(--purple-border);
-  background: var(--purple-bg);
-  color: #e8e0ff;
-  font-size: var(--fs-sm);
-  line-height: 1.6;
-  text-align: center;
+/* — Temperature slider — */
+.gen33-temp-wrap {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  margin-top: var(--sp-1);
 }
 
+.gen33-temp-slider {
+  flex: 1;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 4px;
+  background: var(--border);
+  border-radius: 2px;
+  outline: none;
+  cursor: pointer;
+}
+
+.gen33-temp-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--green);
+  border: 2px solid rgba(90, 232, 142, 0.5);
+  cursor: pointer;
+  box-shadow: 0 0 6px rgba(90, 232, 142, 0.3);
+}
+
+.gen33-temp-slider::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--green);
+  border: 2px solid rgba(90, 232, 142, 0.5);
+  cursor: pointer;
+  box-shadow: 0 0 6px rgba(90, 232, 142, 0.3);
+}
+
+.gen33-temp-value {
+  font-size: var(--fs-2xs);
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--green);
+  min-width: 4rem;
+}
+
+/* — Pipeline recap — */
+.gen33-pipeline-recap {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  opacity: 0;
+  transform: translateY(0.2rem);
+  transition: opacity 0.32s ease, transform 0.32s ease;
+}
+
+.gen33-seg {
+  font-size: var(--fs-2xs);
+  padding: 0.2rem 0.4rem;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+}
+
+.gen33-seg-embed {
+  background: rgba(123, 154, 255, 0.15);
+  color: #b4c6ff;
+  border: 1px solid rgba(123, 154, 255, 0.25);
+}
+
+.gen33-seg-position {
+  background: rgba(255, 214, 68, 0.12);
+  color: #ffe68a;
+  border: 1px solid rgba(255, 214, 68, 0.22);
+}
+
+.gen33-seg-norm {
+  background: rgba(153, 160, 184, 0.1);
+  color: var(--text-dim);
+  border: 1px solid rgba(153, 160, 184, 0.2);
+}
+
+.gen33-seg-attn {
+  background: rgba(180, 157, 255, 0.14);
+  color: #d4c8ff;
+  border: 1px solid rgba(180, 157, 255, 0.24);
+}
+
+.gen33-seg-ffn {
+  background: rgba(51, 224, 245, 0.1);
+  color: #8af0fa;
+  border: 1px solid rgba(51, 224, 245, 0.2);
+}
+
+.gen33-seg-add {
+  color: var(--text-dim);
+  font-size: var(--fs-xs);
+}
+
+.gen33-seg-head {
+  background: rgba(90, 232, 142, 0.12);
+  color: #b4f5cb;
+  border: 1px solid rgba(90, 232, 142, 0.22);
+}
+
+.gen33-seg-decode {
+  background: rgba(90, 232, 142, 0.18);
+  color: #d4f6df;
+  border: 1px solid rgba(90, 232, 142, 0.3);
+  font-weight: 700;
+}
+
+.gen33-seg-arrow,
+.gen33-seg-arrow-sm {
+  color: var(--text-dim);
+  background: none;
+  border: none;
+  padding: 0 0.1rem;
+  font-weight: 400;
+}
+
+.gen33-seg-arrow-sm {
+  font-size: 0.55rem;
+}
+
+.gen33-seg-bracket {
+  color: var(--purple);
+  background: none;
+  border: none;
+  padding: 0;
+}
+
+/* — Question — */
+.gen33-question {
+  opacity: 0;
+  max-height: 0;
+  overflow: hidden;
+  transition: opacity 0.32s ease, max-height 0.36s ease;
+}
+
+/* ── Slide 33 state classes ── */
+
+/* Step 1: show pass 1 */
+.slide.gen33-show-pass1 .gen33-dist-panel {
+  opacity: 1;
+}
+
+.slide.gen33-show-pass1 .gen33-selected {
+  opacity: 1;
+}
+
+.slide.gen33-show-pass1 .gen33-transformer-box {
+  box-shadow: 0 0 16px rgba(180, 157, 255, 0.25);
+}
+
+/* Step 2: show loop annotation */
+.slide.gen33-show-loop .gen33-loop-annotation {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Step 3: show strategies */
+.slide.gen33-show-strategies .gen33-strategies-panel {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Step 4: show temp (slider becomes interactive — bars already visible from pass1) */
+.slide.gen33-show-temp .gen33-temp-wrap {
+  opacity: 1;
+}
+
+/* Step 5: show recap + question */
+.slide.gen33-show-recap .gen33-pipeline-recap {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.slide.gen33-show-recap .gen33-question {
+  opacity: 1;
+  max-height: 8rem;
+}
+
+
+/* ══════════════════════════════════════════════════════════════════
+   Responsive
+   ══════════════════════════════════════════════════════════════════ */
+
 @media (max-width: 60rem) {
-  .pred32-flow {
+  .pred32-pipeline {
     grid-template-columns: 1fr;
-  }
-
-  .gen33-strategies {
-    grid-template-columns: 1fr;
-  }
-
-  .gen33-loop-row {
     gap: var(--sp-2);
+  }
+
+  .pred32-arrow-zone {
+    transform: rotate(90deg);
+    justify-self: center;
+  }
+
+  .pred32-contrast-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .gen33-arena {
+    grid-template-columns: 1fr;
+    gap: var(--sp-2);
+    text-align: center;
+  }
+
+  .gen33-arena .gen33-arrow-zone {
+    transform: rotate(90deg);
+    justify-self: center;
+  }
+
+  .gen33-context {
+    justify-content: center;
+  }
+
+  .gen33-dist-panel {
+    justify-content: center;
+  }
+
+  .gen33-strategies-panel {
+    grid-template-columns: 1fr;
   }
 }

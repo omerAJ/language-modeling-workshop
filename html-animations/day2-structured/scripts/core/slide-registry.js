@@ -112,6 +112,16 @@ function defineSlides() {
       init: () => initGptBlockSlide(),
       step: () => runGptBlockStep(),
       reset: () => resetGptBlockSlide()
+    }),
+    'slide-32': createSlideDescriptor('slide-32', {
+      init: () => initOutputHeadSlide(),
+      step: () => runOutputHeadStep(),
+      reset: () => resetOutputHeadSlide()
+    }),
+    'slide-33': createSlideDescriptor('slide-33', {
+      init: () => initGenerationSlide(),
+      step: () => runGenerationStep(),
+      reset: () => resetGenerationSlide()
     })
   };
 

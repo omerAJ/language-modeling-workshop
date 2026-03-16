@@ -2337,131 +2337,54 @@ l e a r n ing &lt;/w&gt;</div>
   <div class="slide" id="slide-32">
     <span class="section-tag">Output Head</span>
     <div class="badge concept">Mechanism</div>
-    <h2>Reading the Prediction</h2>
+    <h2>From Hidden State to Next Word</h2>
     <p class="small-text">After \(L\) blocks you have \(R^{(L)}\). To predict the next token, read the last row and score the vocabulary.</p>
 
     <div class="pred32-layout">
-      <div class="card pred32-stage">
-        <div class="pred32-prompt-row">
-          <span class="attn19-token-chip">cat</span>
-          <span class="attn19-token-chip">sat</span>
-          <span class="attn19-token-chip">on</span>
-          <span class="attn19-token-chip is-focus">the</span>
-          <span class="pred32-next-label">&#8594; predict next</span>
+      <div class="card pred32-stage" id="pred32-stage">
+        <div class="pred32-prompt-row" id="pred32-prompt-row"></div>
+        <div class="pred32-pipeline" id="pred32-pipeline">
+          <div class="pred32-matrix-zone" id="pred32-matrix-zone"></div>
+          <div class="pred32-arrow-zone"></div>
+          <div class="pred32-extract-zone" id="pred32-extract-zone"></div>
+          <div class="pred32-arrow-zone"></div>
+          <div class="pred32-wu-zone" id="pred32-wu-zone"></div>
+          <div class="pred32-arrow-zone"></div>
+          <div class="pred32-bars-zone" id="pred32-bars-zone"></div>
         </div>
-
-        <div class="pred32-flow">
-          <div class="pred32-matrix-card">
-            <div class="head-card-title">\(R^{(L)} \in \mathbb{R}^{S \times d_{\mathrm{model}}}\)</div>
-            <div class="head-matrix">
-              <div class="head-row"><span>\(h_1\)</span><div class="head-bar"></div></div>
-              <div class="head-row"><span>\(h_2\)</span><div class="head-bar"></div></div>
-              <div class="head-row"><span>\(h_3\)</span><div class="head-bar"></div></div>
-              <div class="head-row is-focus"><span>\(h_t^{(L)}\)</span><div class="head-bar"></div></div>
-            </div>
-          </div>
-
-          <div class="pred32-step pred32-step-extract">
-            <div class="pred32-step-label">extract last row</div>
-            <div class="pred32-extract-chip">\(h_t^{(L)}\)</div>
-            <div class="pred32-extract-note">every block was building this vector</div>
-          </div>
-
-          <div class="pred32-step pred32-step-head">
-            <div class="pred32-step-label">LM Head</div>
-            <div class="pred32-formula">\(\ell_t = W_U h_t^{(L)}\)</div>
-            <div class="pred32-dims">\(W_U \in \mathbb{R}^{|V| \times d_{\mathrm{model}}}\)</div>
-            <div class="pred32-tying-note">In most models \(W_U = W_E^\top\)</div>
-          </div>
-
-          <div class="pred32-step pred32-step-logits">
-            <div class="pred32-step-label">softmax &#8594; probabilities</div>
-            <div class="head-logit-bars">
-              <div class="head-logit-item"><span class="head-logit-label">mat</span><div class="head-logit-bar is-prob" style="height:82%"></div><strong>42%</strong></div>
-              <div class="head-logit-item"><span class="head-logit-label">rug</span><div class="head-logit-bar is-prob" style="height:58%"></div><strong>24%</strong></div>
-              <div class="head-logit-item"><span class="head-logit-label">.</span><div class="head-logit-bar is-prob" style="height:44%"></div><strong>16%</strong></div>
-              <div class="head-logit-item"><span class="head-logit-label">cat</span><div class="head-logit-bar is-prob" style="height:30%"></div><strong>11%</strong></div>
-              <div class="head-logit-item"><span class="head-logit-label">sat</span><div class="head-logit-bar is-prob" style="height:22%"></div><strong>7%</strong></div>
-            </div>
-            <div class="pred32-vocab-note">over \(|V|\) tokens &#8212; different from attention softmax (which normalizes over positions)</div>
-          </div>
-        </div>
-
-        <div class="hidden-content autostep pred32-extract-reveal"></div>
-        <div class="hidden-content autostep pred32-head-reveal"></div>
-        <div class="hidden-content autostep pred32-logit-reveal"></div>
+        <div class="pred32-tying-note" id="pred32-tying-note"></div>
+        <div class="pred32-contrast" id="pred32-contrast"></div>
       </div>
     </div>
 
-    <div class="block30-takeaway">The LM head turns one hidden vector into a probability distribution over the entire vocabulary.</div>
+    <div class="block30-takeaway" id="pred32-takeaway">After L blocks, the residual matrix holds one contextualized row per token.</div>
   </div>
 
   <div class="slide" id="slide-33">
     <span class="section-tag">Generation</span>
-    <div class="badge concept">Concept</div>
+    <div class="badge concept">Synthesis</div>
     <h2>Generate, Append, Repeat</h2>
-    <p class="small-text">The model predicts one token at a time. Generation is an autoregressive loop: predict, append to context, run again.</p>
+    <p class="small-text">The model predicts one token at a time. Generation is an autoregressive loop.</p>
 
     <div class="gen33-layout">
-      <div class="card gen33-stage">
-        <div class="gen33-loop-row">
-          <div class="gen33-ctx">
-            <span class="attn19-token-chip">cat</span>
-            <span class="attn19-token-chip">sat</span>
-            <span class="attn19-token-chip">on</span>
-            <span class="attn19-token-chip">the</span>
-          </div>
-          <div class="gen33-loop-arrow">&#8594;</div>
-          <div class="gen33-fwd-label">forward pass</div>
-          <div class="gen33-loop-arrow">&#8594;</div>
-          <div class="gen33-dist">
-            <div class="gen33-dist-bar" style="height:78%"><span>mat 42%</span></div>
-            <div class="gen33-dist-bar" style="height:54%"><span>rug 24%</span></div>
-            <div class="gen33-dist-bar gen33-bar-dim" style="height:40%"><span>&#8230;</span></div>
-          </div>
-          <div class="gen33-loop-arrow">&#8594;</div>
-          <div class="gen33-pick-label">pick</div>
-          <div class="gen33-loop-arrow">&#8594;</div>
-          <span class="attn19-token-chip gen33-new-token">mat</span>
-          <div class="gen33-back-arrow">&#x21A9; append &amp; repeat</div>
+      <div class="card gen33-stage" id="gen33-stage">
+        <div class="gen33-arena" id="gen33-arena">
+          <div class="gen33-context" id="gen33-context"></div>
+          <div class="gen33-arrow-zone">&#8594;</div>
+          <div class="gen33-transformer-box" id="gen33-transformer-box">Transformer &#215; L</div>
+          <div class="gen33-arrow-zone">&#8594;</div>
+          <div class="gen33-dist-panel" id="gen33-dist-panel"></div>
+          <div class="gen33-arrow-zone">&#8594;</div>
+          <div class="gen33-selected" id="gen33-selected"></div>
         </div>
-
-        <div class="hidden-content autostep gen33-strategies-reveal">
-          <div class="gen33-strategies">
-            <div class="gen33-strategy">
-              <div class="gen33-strategy-title">Greedy</div>
-              <div class="gen33-strategy-body">Always pick the top token. Deterministic, but tends to produce repetitive outputs for long sequences.</div>
-              <div class="gen33-strategy-formula">\(x_{t+1} = \arg\max_v\, p_v\)</div>
-            </div>
-            <div class="gen33-strategy">
-              <div class="gen33-strategy-title">Temperature \(T\)</div>
-              <div class="gen33-strategy-body">Divide logits by \(T\) before softmax. \(T \to 0\) approaches greedy; \(T > 1\) flattens the distribution for more varied outputs.</div>
-              <div class="gen33-strategy-formula">\(p_v \propto \exp(\ell_v / T)\)</div>
-            </div>
-            <div class="gen33-strategy">
-              <div class="gen33-strategy-title">Top-\(p\) (Nucleus)</div>
-              <div class="gen33-strategy-body">Keep only the smallest set of tokens whose cumulative probability reaches \(p\). Sample from that set &#8212; adapts to each distribution.</div>
-              <div class="gen33-strategy-formula">sample from \(\{v : \sum p_{v'} \ge p\}\)</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="hidden-content autostep gen33-question-reveal">
-          <div class="callout question">
-            <span class="icon">&#x1F914;</span>
-            <span>For code generation, low or high temperature? What about brainstorming new research directions?</span>
-          </div>
-        </div>
-
-        <div class="hidden-content autostep gen33-recap-reveal">
-          <div class="gen33-recap">
-            embed &#8594; position &#8594; <span class="hl-purple">[LN &#8594; attn &#8594; add &#8594; LN &#8594; FFN &#8594; add] &#215; L</span> &#8594; LM head &#8594; <span class="hl-green">decode</span>
-          </div>
-        </div>
+        <div class="gen33-loop-annotation" id="gen33-loop-annotation">&#x21A9; autoregressive loop &#8212; append &amp; repeat</div>
+        <div class="gen33-strategies-panel" id="gen33-strategies-panel"></div>
+        <div class="gen33-pipeline-recap" id="gen33-pipeline-recap"></div>
+        <div class="gen33-question" id="gen33-question"></div>
       </div>
     </div>
 
-    <div class="block30-takeaway">Generation is autoregressive: predict one token, append it, repeat the forward pass.</div>
+    <div class="block30-takeaway" id="gen33-takeaway">Generation starts from a prompt. The model predicts one token at a time.</div>
   </div>
 
 </div>
@@ -2497,6 +2420,8 @@ l e a r n ing &lt;/w&gt;</div>
 <script src="./scripts/slides/ffn-rowwise.js"></script>
 <script src="./scripts/slides/ffn-internals.js"></script>
 <script src="./scripts/slides/gpt-block.js"></script>
+<script src="./scripts/slides/output-head.js"></script>
+<script src="./scripts/slides/generation.js"></script>
 <script src="./scripts/slides/projection.js"></script>
 <script src="./scripts/app.js"></script>
 </body>

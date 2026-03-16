@@ -32,7 +32,9 @@ function captureSnapshot(label) {
     positionSignalStep: positionSignalState.step,
     ffnRowwiseStep: ffnRowwiseState.step,
     ffnInternalsStep: ffnInternalsState.step,
-    gptBlockStep: gptBlockState.step
+    gptBlockStep: gptBlockState.step,
+    outputHeadStep: outputHeadState.step,
+    generationStep: generationState.step
   };
   state.dev.snapshots.push(snapshot);
   devLog('snapshot', snapshot);

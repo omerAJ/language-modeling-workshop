@@ -152,6 +152,17 @@ const state = {
     initialized: false,
     step: 0
   },
+  outputHead: {
+    initialized: false,
+    step: 0,
+    timers: []
+  },
+  generation: {
+    initialized: false,
+    step: 0,
+    timers: [],
+    sliderBound: false
+  },
   registry: {
     order: [],
     byId: {}
@@ -177,3 +188,5 @@ const positionSignalState = state.positionSignal;
 const ffnRowwiseState = state.ffnRowwise;
 const ffnInternalsState = state.ffnInternals;
 const gptBlockState = state.gptBlock;
+const outputHeadState = state.outputHead;
+const generationState = state.generation;
