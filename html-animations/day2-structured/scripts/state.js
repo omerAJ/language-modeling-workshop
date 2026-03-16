@@ -140,10 +140,6 @@ const state = {
     initialized: false,
     step: 0
   },
-  positionSuperposition: {
-    initialized: false,
-    step: 0
-  },
   ffnRowwise: {
     initialized: false,
     step: 0
@@ -178,7 +174,6 @@ const attentionMultiHeadState = state.attentionMultiHead;
 const attentionPositionState = state.attentionPosition;
 const orderProblemState = state.orderProblem;
 const positionSignalState = state.positionSignal;
-const positionSuperpositionState = state.positionSuperposition;
 const ffnRowwiseState = state.ffnRowwise;
 const ffnInternalsState = state.ffnInternals;
 const gptBlockState = state.gptBlock;

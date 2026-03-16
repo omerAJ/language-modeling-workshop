@@ -30,7 +30,7 @@ Slide-specific (one file per topic):
 - `styles/slides/attention-matrix.css` — slide 23
 - `styles/slides/attention-multihead.css` — slide 24
 - `styles/slides/attention-position.css` — slide 25
-- `styles/slides/position-story.css` — slides 25–27
+- `styles/slides/position-story.css` — slides 25–26
 - `styles/slides/ffn.css` — slide 28
 - `styles/slides/ffn-story.css` — slides 28–29
 - `styles/slides/block-mechanics.css` — slides 30–31 (also defines `.block30-takeaway` used on 30–33)
@@ -58,7 +58,6 @@ Slide-specific (one file per topic):
 - `scripts/slides/attention-multihead.js` — slide 24
 - `scripts/slides/order-problem.js` — slide 25
 - `scripts/slides/position-signal.js` — slide 26
-- `scripts/slides/position-superposition.js` — slide 27
 - `scripts/slides/ffn-rowwise.js` — slide 28
 - `scripts/slides/ffn-internals.js` — slide 29
 - `scripts/slides/gpt-block.js` — slide 30
@@ -83,7 +82,7 @@ Slide IDs are part of the code contract. To jump to one: search `id="slide-23"` 
 | 24 | Multi-head attention |
 | 25 | Order problem: attention is position-blind |
 | 26 | Add position: \(x_i + p_i\) before attention |
-| 27 | Why the sum still works |
+| 27 | Intentionally absent |
 | 28 | Why FFN comes after attention |
 | 29 | Inside one FFN: expand → GELU → project |
 | 30 | The block — walk through the slide-3 diagram now that every piece is understood |

@@ -92,14 +92,6 @@ function defineSlides() {
       step: () => runPositionSignalStep(),
       reset: () => resetPositionSignalSlide()
     }),
-    'slide-27': createSlideDescriptor('slide-27', {
-      init: () => {
-        initPositionSuperpositionSlide();
-        setPositionSuperpositionStep(0);
-      },
-      step: () => runPositionSuperpositionStep(),
-      reset: () => resetPositionSuperpositionSlide()
-    }),
     'slide-28': createSlideDescriptor('slide-28', {
       init: () => {
         initFfnRowwiseSlide();

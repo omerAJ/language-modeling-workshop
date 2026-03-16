@@ -30,7 +30,6 @@ function captureSnapshot(label) {
     attentionPositionStep: attentionPositionState.step,
     orderProblemStep: orderProblemState.step,
     positionSignalStep: positionSignalState.step,
-    positionSuperpositionStep: positionSuperpositionState.step,
     ffnRowwiseStep: ffnRowwiseState.step,
     ffnInternalsStep: ffnInternalsState.step,
     gptBlockStep: gptBlockState.step
@@ -47,11 +46,11 @@ function runDevStartupChecks() {
     'slide-10', 'slide-11', 'slide-12', 'slide-13', 'slide-14',
     'slide-16', 'slide-17', 'slide-18', 'slide-19', 'slide-20',
     'slide-21', 'slide-22', 'slide-23', 'slide-24', 'slide-25',
-    'slide-26', 'slide-27', 'slide-28', 'slide-29', 'slide-30',
+    'slide-26', 'slide-28', 'slide-29', 'slide-30',
     'slide-31', 'slide-32', 'slide-33'
   ];
   const foundOrder = state.nav.slides.map((el) => el.id);
-  devAssert(state.nav.total === 33, 'Slide count mismatch', { expected: 33, actual: state.nav.total });
+  devAssert(state.nav.total === 32, 'Slide count mismatch', { expected: 32, actual: state.nav.total });
   devAssert(
     expectedOrder.join('|') === foundOrder.join('|'),
     'Slide order mismatch',

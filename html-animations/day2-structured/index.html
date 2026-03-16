@@ -1968,84 +1968,6 @@ l e a r n ing &lt;/w&gt;</div>
     <div class="story-takeaway" id="pos26-takeaway">Position is the missing ingredient: without it, the same word looks the same no matter where it appears.</div>
   </div>
 
-  <div class="slide" id="slide-27">
-    <span class="section-tag">Input Representation</span>
-    <div class="badge concept">Intuition</div>
-    <h2>Why The Sum Still Works</h2>
-    <p class="small-text">Adding position does change the row, but it does not make content unusable. The next layers read the sum through learned projections.</p>
-
-    <div class="story-layout">
-      <div class="card story-stage pos27-stage" id="pos27-stage">
-        <div class="pos27-question">If \(h = x + p\), doesn&rsquo;t the token embedding get lost inside the sum?</div>
-
-        <div class="pos27-main">
-          <section class="pos27-intuition-card">
-            <div class="pos27-intuition-title">1. Addition overlays two signals into one state</div>
-            <div class="pos27-intuition-flow">
-              <div class="pos27-content-chip">\(x_{\mathrm{cat}}\)</div>
-              <div class="pos27-flow-branches">
-                <div class="pos27-flow-branch">
-                  <span class="pos27-flow-join">+</span>
-                  <div class="pos27-slot-chip">\(p_1\)</div>
-                  <span class="pos27-flow-arrow">→</span>
-                  <div class="pos27-sum-chip">\(x_{\mathrm{cat}} + p_1 = [4,1]\)</div>
-                </div>
-                <div class="pos27-flow-branch">
-                  <span class="pos27-flow-join">+</span>
-                  <div class="pos27-slot-chip">\(p_3\)</div>
-                  <span class="pos27-flow-arrow">→</span>
-                  <div class="pos27-sum-chip">\(x_{\mathrm{cat}} + p_3 = [4,2]\)</div>
-                </div>
-              </div>
-            </div>
-            <div class="pos27-intuition-note">One reusable content vector combines with reusable slot vectors. These are composed states, not unrelated memorized embeddings.</div>
-          </section>
-
-          <section class="pos27-linearity-card">
-            <div class="pos27-linearity-title">2. The next layer can still use both contributions</div>
-            <div class="pos27-linearity-formula">\(h_i^{(0)} = x_i + p_i\)</div>
-            <div class="pos27-linearity-formula">\(q_i = h_i^{(0)}W_Q = (x_i + p_i)W_Q = x_iW_Q + p_iW_Q\)</div>
-            <div class="pos27-linearity-note">same idea for \(k_i\) and \(v_i\)</div>
-            <div class="pos27-linearity-grid">
-              <div class="pos27-linearity-item">
-                <div class="pos27-linearity-item-label">cat in slot 3</div>
-                <div class="pos27-linearity-chip">
-                  <span class="pos27-linearity-prefix">\(q_{\mathrm{cat},3} = \)</span>
-                  <span class="pos27-term-content">\(x_{\mathrm{cat}}W_Q\)</span>
-                  <span class="pos27-linearity-plus">+</span>
-                  <span class="pos27-term-position">\(p_3W_Q\)</span>
-                </div>
-              </div>
-              <div class="pos27-linearity-item">
-                <div class="pos27-linearity-item-label">cat in slot 1</div>
-                <div class="pos27-linearity-chip">
-                  <span class="pos27-linearity-prefix">\(q_{\mathrm{cat},1} = \)</span>
-                  <span class="pos27-term-content">\(x_{\mathrm{cat}}W_Q\)</span>
-                  <span class="pos27-linearity-plus">+</span>
-                  <span class="pos27-term-position">\(p_1W_Q\)</span>
-                </div>
-              </div>
-            </div>
-          </section>
-        </div>
-
-        <div class="pos27-caveat-card">
-          <div class="pos27-caveat-title">3. What about collisions?</div>
-          <div class="pos27-caveat-main">Could another token + slot pair produce the same sum? In principle, yes.</div>
-          <div class="pos27-caveat-points">
-            <div>Addition is not a perfectly invertible codebook.</div>
-            <div>But the model is not asked to exactly recover \(x\) and \(p\) from \(h\).</div>
-            <div>It only needs the composed row to stay useful for the downstream projections and prediction task.</div>
-          </div>
-        </div>
-
-        <div class="pos27-footer-note">This deck teaches additive absolute position because it makes the idea visible. Many modern decoder LMs instead use rotary position methods.</div>
-      </div>
-    </div>
-
-    <div class="story-takeaway" id="pos27-takeaway">Adding position raises a fair question: if we sum token and slot information, how can the model still use them separately?</div>
-  </div>
-
   <div class="slide" id="slide-28">
     <span class="section-tag">Transformer Block</span>
     <div class="badge concept">Mechanism</div>
@@ -2534,7 +2456,6 @@ l e a r n ing &lt;/w&gt;</div>
 <script src="./scripts/slides/attention-multihead.js"></script>
 <script src="./scripts/slides/order-problem.js"></script>
 <script src="./scripts/slides/position-signal.js"></script>
-<script src="./scripts/slides/position-superposition.js"></script>
 <script src="./scripts/slides/ffn-rowwise.js"></script>
 <script src="./scripts/slides/ffn-internals.js"></script>
 <script src="./scripts/slides/gpt-block.js"></script>
