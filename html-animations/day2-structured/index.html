@@ -2213,28 +2213,38 @@ l e a r n ing &lt;/w&gt;</div>
     <div class="block30-layout">
       <div class="block30-diagram">
         <div class="block30-recall-tag">same diagram as slide 3</div>
-        <div class="arch-stack block30-arch">
-          <span class="arch-label block30-io-label">Block Output \(R^{(\ell+1)}\)</span>
-          <div class="arch-arrow">&#8593;</div>
-          <div class="residual-group block30-ffn-group">
-            <div class="bypass"></div>
-            <div class="arch-plus block30-plus-ffn">+</div>
+        <div class="block-detail-panel block30-detail-panel">
+          <div class="arch-stack block30-arch">
+            <span class="arch-label block30-io-label">Block Output \(R^{(\ell+1)}\)</span>
             <div class="arch-arrow">&#8593;</div>
-            <div class="arch-box ffn block30-ffn-box">Feed-Forward Network</div>
+
+            <div class="residual-group block30-ffn-group">
+              <div class="bypass"></div>
+              <div class="arch-plus block30-plus-ffn">+</div>
+              <div class="arch-arrow">&#8593;</div>
+              <div class="arch-box drop block30-drop-ffn">Dropout</div>
+              <div class="arch-arrow">&#8593;</div>
+              <div class="arch-box ffn block30-ffn-box">Feed-Forward Network</div>
+              <div class="arch-arrow">&#8593;</div>
+              <div class="arch-box norm block30-ln-ffn">LayerNorm</div>
+            </div>
+
             <div class="arch-arrow">&#8593;</div>
-            <div class="arch-box norm block30-ln-ffn">LayerNorm</div>
+
+            <div class="residual-group block30-attn-group">
+              <div class="bypass"></div>
+              <div class="arch-plus block30-plus-attn">+</div>
+              <div class="arch-arrow">&#8593;</div>
+              <div class="arch-box drop block30-drop-attn">Dropout</div>
+              <div class="arch-arrow">&#8593;</div>
+              <div class="arch-box attn block30-attn-box">Multi-Head Attention</div>
+              <div class="arch-arrow">&#8593;</div>
+              <div class="arch-box norm block30-ln-attn">LayerNorm</div>
+            </div>
+
+            <div class="arch-arrow">&#8593;</div>
+            <span class="arch-label block30-io-label">Block Input \(R^{(\ell)}\)</span>
           </div>
-          <div class="arch-arrow">&#8593;</div>
-          <div class="residual-group block30-attn-group">
-            <div class="bypass"></div>
-            <div class="arch-plus block30-plus-attn">+</div>
-            <div class="arch-arrow">&#8593;</div>
-            <div class="arch-box attn block30-attn-box">Multi-Head Attention</div>
-            <div class="arch-arrow">&#8593;</div>
-            <div class="arch-box norm block30-ln-attn">LayerNorm</div>
-          </div>
-          <div class="arch-arrow">&#8593;</div>
-          <span class="arch-label block30-io-label">Block Input \(R^{(\ell)}\)</span>
         </div>
       </div>
 
@@ -2271,43 +2281,51 @@ l e a r n ing &lt;/w&gt;</div>
   <div class="slide" id="slide-31">
     <span class="section-tag">Model Depth</span>
     <div class="badge concept">Concept</div>
-    <h2>Stack the Block \(L\) Times</h2>
-    <p class="small-text">The same GPT block repeats \(L\) times. The shape stays \(S \times d_{\mathrm{model}}\) throughout &#8212; the representation gets richer with each pass.</p>
+    <h2>Stack the Transformer Block \(L\) Times</h2>
+    <p class="small-text">The same Transformer block repeats \(L\) times. The shape stays \(S \times d_{\mathrm{model}}\) throughout &#8212; the representation gets richer with each pass.</p>
 
     <div class="stack31-layout">
       <div class="stack31-chain">
-        <div class="arch-label stack31-io-label">\(R^{(0)}\) &#8212; token + position embeddings &nbsp; \(S \times d_{\mathrm{model}}\)</div>
-        <div class="arch-arrow">&#8593;</div>
-        <div class="arch-box block">GPT Block 1</div>
-        <div class="arch-arrow">&#8593;</div>
-        <div class="arch-box block">GPT Block 2</div>
-        <div class="arch-arrow">&#8593;</div>
-        <div class="arch-dots">&#8942;</div>
-        <div class="arch-arrow">&#8593;</div>
-        <div class="arch-box block">GPT Block L</div>
-        <div class="arch-arrow">&#8593;</div>
-        <div class="arch-label stack31-io-label">\(R^{(L)}\) &#8212; next-token-ready context &nbsp; \(S \times d_{\mathrm{model}}\)</div>
+        <div class="arch-stack stack31-arch-stack">
+          <div class="arch-label stack31-io-label">\(R^{(L)}\) &#8212; next-token-ready context &nbsp; \(S \times d_{\mathrm{model}}\)</div>
+          <div class="arch-arrow">&#8593;</div>
+
+          <div class="arch-brace stack31-brace">
+            <div class="arch-box block">Transformer Block</div>
+            <span class="arch-label">Layer L</span>
+            <div class="arch-dots">&#8942;</div>
+            <div class="arch-box block">Transformer Block</div>
+            <span class="arch-label">Layer 2</span>
+            <div class="arch-dots">&#8942;</div>
+            <div class="arch-box block">Transformer Block</div>
+            <span class="arch-label">Layer 1</span>
+            <div class="arch-brace-label">&#215; L layers</div>
+          </div>
+
+          <div class="arch-arrow">&#8593;</div>
+          <div class="arch-label stack31-io-label">\(R^{(0)}\) &#8212; token + position embeddings &nbsp; \(S \times d_{\mathrm{model}}\)</div>
+        </div>
       </div>
 
       <div class="stack31-notes">
         <div class="hidden-content autostep stack31-depth-reveal">
           <div class="stack31-note-strip">
-            <div class="stack31-note-row"><span class="hl">Early layers</span> &#8212; local patterns: syntax, adjacent tokens, common phrases</div>
-            <div class="stack31-note-row"><span class="hl-purple">Middle layers</span> &#8212; longer range: co-references, subject-verb agreement, clause structure</div>
-            <div class="stack31-note-row"><span class="hl-green">Late layers</span> &#8212; semantics, world knowledge, next-token prediction readiness</div>
-            <div class="tiny mt-2">Rough intuition &#8212; not strict layer boundaries.</div>
+            <div class="stack31-note-row"><span class="hl">One block = one refinement round</span> &#8212; each block reads the current residual stream, runs attention and FFN, and writes an update back into that stream.</div>
+            <div class="stack31-note-row"><span class="hl-purple">The next block starts from the improved stream</span> &#8212; later blocks do not start over; they continue from the richer representation built by earlier ones.</div>
+            <div class="stack31-note-row"><span class="hl-green">Depth buys multiple rounds of computation</span> &#8212; stacking blocks lets the model combine and refine information progressively instead of forcing one pass to do everything.</div>
+            <div class="tiny mt-2">Conceptual view &#8212; depth means repeated refinement, not fixed 'early/middle/late' jobs.</div>
           </div>
         </div>
         <div class="hidden-content autostep stack31-scale-reveal">
           <div class="callout info">
             <span class="icon">&#x1F4D6;</span>
-            <span>GPT-3: <strong>L = 96</strong> blocks, \(d_{\mathrm{model}} = 12{,}288\). GPT-2 small: L = 12, \(d_{\mathrm{model}} = 768\). Same structure &#8212; different depth.</span>
+            <span>GPT-2 small: <strong>L = 12</strong>. GPT-3: <strong>L = 96</strong>. Same Transformer block &#8212; more rounds of refinement.</span>
           </div>
         </div>
         <div class="hidden-content autostep stack31-insight-reveal">
           <div class="callout success">
             <span class="icon">&#x2705;</span>
-            <span>The vector doesn&#8217;t grow &#8212; it stays \(S \times d_{\mathrm{model}}\) at every layer. The <em>representation</em> gets more useful, not larger.</span>
+            <span>Every block preserves shape \(S \times d_{\mathrm{model}}\). Depth changes what the vectors represent, not their dimensions.</span>
           </div>
         </div>
       </div>

@@ -29,6 +29,13 @@
   gap: var(--sp-2);
 }
 
+.block30-detail-panel {
+  margin-left: 0;
+  transform: none;
+  align-self: center;
+  min-width: 0;
+}
+
 .block30-recall-tag {
   font-size: var(--fs-2xs);
   font-weight: 600;
@@ -39,21 +46,15 @@
   text-align: center;
 }
 
-.block30-arch {
-  padding: var(--sp-3) var(--sp-4);
-  border-radius: var(--radius-lg);
-  border: 1.5px solid var(--border);
-  background: var(--surface);
-}
-
 .block30-arch .arch-box,
 .block30-arch .arch-plus {
   transition: border-color 0.25s ease, box-shadow 0.25s ease, opacity 0.25s ease;
   opacity: 0.42;
 }
 
-.block30-arch .arch-box {
-  min-width: 13rem;
+.block30-arch .arch-box.drop,
+.block30-arch .arch-box.norm {
+  min-width: 6.5rem !important;
 }
 
 .block30-io-label {
@@ -180,14 +181,7 @@
 }
 
 .stack31-io-label {
-  font-size: var(--fs-xs);
-  color: var(--text-dim);
   text-align: center;
-  padding: var(--sp-2) 0;
-}
-
-.stack31-chain .arch-box.block {
-  min-width: 13rem;
 }
 
 .stack31-notes {
