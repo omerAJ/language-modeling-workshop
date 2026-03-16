@@ -8,11 +8,11 @@ const FFN29_CLASSES = [
 ];
 const FFN29_TAKEAWAYS = [
   'The FFN starts from one contextualized token row.',
-  'The first linear layer expands the row into a larger hidden dimension.',
-  'GELU adds non-linearity, so the FFN can do more than a single linear transform.',
-  'The second linear layer projects the hidden representation back to model width.',
-  'The full FFN is now visible as a neural network: expand, apply GELU, then project back.',
-  'The full FFN is a two-layer MLP with a non-linearity in between, applied independently to each token row.'
+  'The input row \\(h_i\\) enters the FFN.',
+  'The first linear layer expands from \\(d_{\\mathrm{model}}\\) to \\(d_{\\mathrm{ff}}\\).',
+  'The middle-layer neurons apply GELU, shown with a simplified activation marker.',
+  'The second linear layer projects back from \\(d_{\\mathrm{ff}}\\) to \\(d_{\\mathrm{model}}\\).',
+  'The full FFN is a local computation: \\(\\mathrm{FFN}(h_i) = W_2\\,\\mathrm{GELU}(W_1 h_i + b_1) + b_2\\), reused independently at every position.'
 ];
 
 function setFfnInternalsStep(step) {

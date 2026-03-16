@@ -1971,213 +1971,233 @@ l e a r n ing &lt;/w&gt;</div>
   <div class="slide" id="slide-28">
     <span class="section-tag">Transformer Block</span>
     <div class="badge concept">Mechanism</div>
-    <h2>Why The FFN Comes After Attention</h2>
-    <p class="small-text">Attention mixes information across tokens. The FFN then non-linearly transforms each token row independently.</p>
+    <h2>Attention Gathers, FFN Computes</h2>
+    <p class="small-text">Attention mixes information across tokens. The FFN then transforms each row with the same small network.</p>
 
     <div class="story-layout">
       <div class="card story-stage ffn28-stage" id="ffn28-stage">
-        <div class="ffn28-question">If attention already gathered context, why apply another network afterward?</div>
+        <div class="ffn28-question">After attention mixes information, how does the FFN transform each row?</div>
 
         <div class="ffn28-main">
-          <section class="ffn28-attn-card">
+          <section class="ffn28-context-card">
             <div class="ffn28-card-top">
-              <div class="ffn28-card-title">after attention</div>
+              <div class="ffn28-card-title">after attention: contextual rows</div>
               <div class="ffn28-card-dims">\(S \times d_{\mathrm{model}}\)</div>
             </div>
-            <div class="ffn28-attn-net" aria-hidden="true">
-              <span class="ffn28-attn-line is-top"></span>
-              <span class="ffn28-attn-line is-mid"></span>
-              <span class="ffn28-attn-line is-low"></span>
-            </div>
-            <div class="ffn28-row" data-token="cat">
-              <span class="attn19-token-chip">cat</span>
-              <div class="story-vector is-8 token-cat is-output"></div>
-            </div>
-            <div class="ffn28-row is-focus" data-token="sat">
-              <span class="attn19-token-chip">sat</span>
-              <div class="story-vector is-8 token-sat is-output"></div>
-            </div>
-            <div class="ffn28-row" data-token="on">
-              <span class="attn19-token-chip">on</span>
-              <div class="story-vector is-8 token-on is-output"></div>
-            </div>
-            <div class="ffn28-row" data-token="the">
-              <span class="attn19-token-chip">the</span>
-              <div class="story-vector is-8 token-the is-output"></div>
-            </div>
-            <div class="ffn28-row" data-token="mat">
-              <span class="attn19-token-chip">mat</span>
-              <div class="story-vector is-8 token-mat is-output"></div>
-            </div>
-            <div class="ffn28-context-note">each row now contains contextual information</div>
-          </section>
-
-          <section class="ffn28-mlp-card">
-            <div class="ffn28-card-title">same MLP at every position</div>
-            <div class="ffn28-focus-flow">
-              <div class="ffn28-flow-chip">
-                <div class="ffn28-flow-label">\(h_{\mathrm{sat}}\)</div>
+            <div class="ffn28-row-list">
+              <div class="ffn28-row" data-token="cat">
+                <span class="attn19-token-chip">cat</span>
+                <div class="story-vector is-8 token-cat is-output"></div>
+              </div>
+              <div class="ffn28-row is-focus" data-token="sat">
+                <span class="attn19-token-chip">sat</span>
                 <div class="story-vector is-8 token-sat is-output"></div>
               </div>
-              <div class="ffn28-flow-arrow">→</div>
-              <div class="ffn28-mini-mlp" aria-hidden="true">
-                <div class="ffn28-mini-layer is-input">
-                  <span class="ffn28-mini-node"></span>
-                  <span class="ffn28-mini-node"></span>
-                  <span class="ffn28-mini-node"></span>
-                  <span class="ffn28-mini-node"></span>
-                </div>
-                <div class="ffn28-mini-edge-group is-left">
-                  <span class="ffn28-mini-edge"></span>
-                  <span class="ffn28-mini-edge"></span>
-                  <span class="ffn28-mini-edge"></span>
-                  <span class="ffn28-mini-edge"></span>
-                  <span class="ffn28-mini-edge"></span>
-                  <span class="ffn28-mini-edge"></span>
-                </div>
-                <div class="ffn28-mini-layer is-hidden">
-                  <span class="ffn28-mini-node"></span>
-                  <span class="ffn28-mini-node"></span>
-                  <span class="ffn28-mini-node"></span>
-                  <span class="ffn28-mini-node"></span>
-                  <span class="ffn28-mini-node"></span>
-                  <span class="ffn28-mini-node"></span>
-                  <span class="ffn28-mini-node"></span>
-                </div>
-                <div class="ffn28-mini-edge-group is-right">
-                  <span class="ffn28-mini-edge"></span>
-                  <span class="ffn28-mini-edge"></span>
-                  <span class="ffn28-mini-edge"></span>
-                  <span class="ffn28-mini-edge"></span>
-                  <span class="ffn28-mini-edge"></span>
-                  <span class="ffn28-mini-edge"></span>
-                </div>
-                <div class="ffn28-mini-layer is-output">
-                  <span class="ffn28-mini-node"></span>
-                  <span class="ffn28-mini-node"></span>
-                  <span class="ffn28-mini-node"></span>
-                  <span class="ffn28-mini-node"></span>
-                </div>
-                <div class="ffn28-mini-label">larger hidden layer</div>
+              <div class="ffn28-row" data-token="on">
+                <span class="attn19-token-chip">on</span>
+                <div class="story-vector is-8 token-on is-output"></div>
               </div>
-              <div class="ffn28-flow-arrow">→</div>
+              <div class="ffn28-row" data-token="the">
+                <span class="attn19-token-chip">the</span>
+                <div class="story-vector is-8 token-the is-output"></div>
+              </div>
+              <div class="ffn28-row" data-token="mat">
+                <span class="attn19-token-chip">mat</span>
+                <div class="story-vector is-8 token-mat is-output"></div>
+              </div>
+            </div>
+            <div class="ffn28-context-note">After attention, the <span class="hl-cyan">sat</span> row is already contextualized and ready for a local neural-network transform.</div>
+            <div class="ffn28-context-sources">
+              <span class="token-pill main">sat</span>
+              <span class="ffn28-context-arrow">&#8592;</span>
+              <span class="token-pill">cat</span>
+              <span class="token-pill">on</span>
+              <span class="token-pill">the</span>
+              <span class="token-pill">mat</span>
+            </div>
+          </section>
+
+          <section class="ffn28-local-card">
+            <div class="ffn28-card-top">
+              <div class="ffn28-card-title">local compute on one row</div>
+              <div class="ffn28-card-dims">position-wise MLP</div>
+            </div>
+            <div class="ffn28-local-flow">
               <div class="ffn28-flow-chip">
-                <div class="ffn28-flow-label">\(h'_{\mathrm{sat}}\)</div>
+                <div class="ffn28-flow-label">input row \(h_{\mathrm{sat}}\)</div>
+                <div class="story-vector is-8 token-sat is-output"></div>
+              </div>
+              <div class="ffn28-flow-arrow" aria-hidden="true">&#8594;</div>
+              <div class="ffn28-local-box">
+                <span class="ffn28-local-box-title">FFN</span>
+                <span class="ffn28-local-box-note">2 linear layers + GELU</span>
+              </div>
+              <div class="ffn28-flow-arrow" aria-hidden="true">&#8594;</div>
+              <div class="ffn28-flow-chip">
+                <div class="ffn28-flow-label">updated row \(h'_{\mathrm{sat}}\)</div>
                 <div class="story-vector is-8 token-sat"></div>
               </div>
             </div>
-            <div class="ffn28-repeat-flows">
-              <div class="ffn28-repeat-flow">\(h_{\mathrm{cat}}\) → same MLP → \(h'_{\mathrm{cat}}\)</div>
-              <div class="ffn28-repeat-flow">\(h_{\mathrm{on}}\) → same MLP → \(h'_{\mathrm{on}}\)</div>
-            </div>
-            <div class="ffn28-shared-note">same weights, applied independently to every row</div>
+            <div class="ffn28-local-note">The FFN now applies a small neural network to that single row.</div>
           </section>
         </div>
 
-        <div class="ffn28-bottom-card">
-          <div class="ffn28-bottom-chip is-attn">attention: token-to-token mixing</div>
-          <div class="ffn28-bottom-chip is-ffn">FFN: row-wise nonlinear transformation</div>
-          <div class="ffn28-bottom-formula">\(h'_i = \mathrm{FFN}(h_i)\)</div>
+        <div class="ffn28-evidence-strip">
+          <section class="ffn28-repeat-card">
+            <div class="ffn28-strip-title">FFN reused at every position</div>
+            <div class="ffn28-repeat-grid">
+              <div class="ffn28-repeat-item">\(h_{\mathrm{cat}}\) &#8594; FFN &#8594; \(h'_{\mathrm{cat}}\)</div>
+              <div class="ffn28-repeat-item">\(h_{\mathrm{sat}}\) &#8594; FFN &#8594; \(h'_{\mathrm{sat}}\)</div>
+              <div class="ffn28-repeat-item">\(h_{\mathrm{mat}}\) &#8594; FFN &#8594; \(h'_{\mathrm{mat}}\)</div>
+            </div>
+            <div class="ffn28-repeat-note">FFN weights are reused independently at every position.</div>
+          </section>
+
+          <section class="ffn28-param-card">
+            <div class="ffn28-strip-title">why the FFN carries so much capacity</div>
+            <div class="ffn28-param-grid">
+              <div class="ffn28-param-item">
+                <div class="ffn28-param-label">attention projections</div>
+                <div class="ffn28-param-formula">\(4 d_{\mathrm{model}}^2\)</div>
+              </div>
+              <div class="ffn28-param-item">
+                <div class="ffn28-param-label">FFN projections</div>
+                <div class="ffn28-param-formula">\(2 d_{\mathrm{model}} d_{\mathrm{ff}}\)</div>
+              </div>
+              <div class="ffn28-param-item is-highlight">
+                <div class="ffn28-param-label">usual decoder setting</div>
+                <div class="ffn28-param-formula">\(d_{\mathrm{ff}} = 4 d_{\mathrm{model}} \Rightarrow 8 d_{\mathrm{model}}^2\)</div>
+                <div class="ffn28-param-subnote">about \(2\times\) attention, about \(67\%\) of attention+FFN weights</div>
+              </div>
+            </div>
+            <div class="ffn28-param-example">GPT-2 small: \(d_{\mathrm{model}} = 768,\ d_{\mathrm{ff}} = 3072\). Attention \(\approx 2.36\)M weights, FFN \(\approx 4.72\)M weights. Approximate, excluding biases and LayerNorm.</div>
+          </section>
         </div>
       </div>
     </div>
 
-    <div class="story-takeaway" id="ffn28-takeaway">Attention is the cross-token step. The FFN is the next, row-wise step.</div>
+    <div class="story-takeaway" id="ffn28-takeaway">Attention gathers context. The FFN then transforms each row with the same MLP.</div>
   </div>
 
   <div class="slide" id="slide-29">
     <span class="section-tag">Transformer Block</span>
     <div class="badge concept">Mechanism</div>
-    <h2>Inside The FFN: Expand, Apply GELU, Project Back</h2>
-    <p class="small-text">A position-wise FFN is just a two-layer neural network: grow the row into a larger hidden space, apply a non-linearity, then map it back to model width.</p>
+    <h2>Inside the FFN: Expand, Gate, Project</h2>
+    <p class="small-text">Mechanically, the FFN is a simple two-layer neural network: expand from \(d_{\mathrm{model}}\) to \(d_{\mathrm{ff}}\), apply GELU, then project back.</p>
 
     <div class="story-layout">
       <div class="card story-stage ffn29-stage" id="ffn29-stage">
-        <div class="ffn29-question">What does this neural network actually look like for one token row?</div>
+        <div class="ffn29-question">Mechanically, what is the neural network inside the FFN?</div>
 
         <div class="ffn29-network-card">
-          <div class="ffn29-network-top">
+          <div class="ffn29-network-labels">
             <div class="ffn29-network-label is-input">
               <span>input row</span>
               <span>\(h_i \in \mathbb{R}^{d_{\mathrm{model}}}\)</span>
             </div>
             <div class="ffn29-network-label is-hidden">
-              <span>hidden layer</span>
+              <span>expanded hidden layer</span>
               <span>\(u_i = W_1 h_i + b_1\)</span>
               <span>\(d_{\mathrm{ff}} > d_{\mathrm{model}}\)</span>
             </div>
-            <div class="ffn29-network-label is-gelu">
-              <span>GELU</span>
-            </div>
             <div class="ffn29-network-label is-output">
-              <span>output row</span>
-              <span>\(\mathrm{FFN}(h_i) \in \mathbb{R}^{d_{\mathrm{model}}}\)</span>
+              <span>projected row</span>
+              <span>\(o_i = W_2 g_i + b_2\)</span>
+              <span>\(d_{\mathrm{model}}\)</span>
             </div>
           </div>
 
-          <div class="ffn29-network-diagram" aria-hidden="true">
-            <div class="ffn29-layer ffn29-layer-input">
-              <span class="ffn29-node"></span>
-              <span class="ffn29-node"></span>
-              <span class="ffn29-node"></span>
-              <span class="ffn29-node"></span>
-              <div class="ffn29-layer-dim">\(d_{\mathrm{model}}\)</div>
-            </div>
-            <div class="ffn29-edge-group ffn29-edge-group-left">
-              <span class="ffn29-edge"></span>
-              <span class="ffn29-edge"></span>
-              <span class="ffn29-edge"></span>
-              <span class="ffn29-edge"></span>
-              <span class="ffn29-edge"></span>
-              <span class="ffn29-edge"></span>
-              <span class="ffn29-edge"></span>
-            </div>
-            <div class="ffn29-layer ffn29-layer-hidden">
-              <span class="ffn29-node"></span>
-              <span class="ffn29-node"></span>
-              <span class="ffn29-node"></span>
-              <span class="ffn29-node"></span>
-              <span class="ffn29-node"></span>
-              <span class="ffn29-node"></span>
-              <span class="ffn29-node"></span>
-              <span class="ffn29-node"></span>
-              <span class="ffn29-node"></span>
-              <span class="ffn29-node"></span>
-              <div class="ffn29-layer-dim">\(d_{\mathrm{ff}}\)</div>
-            </div>
-            <div class="ffn29-gelu-label">GELU</div>
-            <div class="ffn29-edge-group ffn29-edge-group-right">
-              <span class="ffn29-edge"></span>
-              <span class="ffn29-edge"></span>
-              <span class="ffn29-edge"></span>
-              <span class="ffn29-edge"></span>
-              <span class="ffn29-edge"></span>
-              <span class="ffn29-edge"></span>
-              <span class="ffn29-edge"></span>
-            </div>
-            <div class="ffn29-layer ffn29-layer-output">
-              <span class="ffn29-node"></span>
-              <span class="ffn29-node"></span>
-              <span class="ffn29-node"></span>
-              <span class="ffn29-node"></span>
-              <div class="ffn29-layer-dim">\(d_{\mathrm{model}}\)</div>
-            </div>
+          <div class="ffn29-network-figure">
+            <svg class="ffn29-network-svg" viewBox="0 0 700 240" aria-hidden="true">
+              <g class="ffn29-svg-left-links">
+                <line class="ffn29-svg-link" x1="123.9" y1="50.5" x2="308.1" y2="31.3"></line>
+                <line class="ffn29-svg-link" x1="124.0" y1="52.5" x2="308.0" y2="59.5"></line>
+                <line class="ffn29-svg-link" x1="123.3" y1="56.3" x2="308.6" y2="116.3"></line>
+                <line class="ffn29-svg-link" x1="123.8" y1="89.9" x2="308.1" y2="61.8"></line>
+                <line class="ffn29-svg-link" x1="124.0" y1="91.9" x2="308.0" y2="90.1"></line>
+                <line class="ffn29-svg-link" x1="123.9" y1="133.2" x2="308.0" y2="149.0"></line>
+                <line class="ffn29-svg-link" x1="123.6" y1="135.1" x2="308.3" y2="177.3"></line>
+                <line class="ffn29-svg-link" x1="123.6" y1="168.6" x2="308.4" y2="122.9"></line>
+                <line class="ffn29-svg-link" x1="124.0" y1="172.5" x2="308.0" y2="179.5"></line>
+                <line class="ffn29-svg-link" x1="123.8" y1="174.5" x2="308.2" y2="207.9"></line>
+              </g>
+
+              <g class="ffn29-svg-right-links">
+                <line class="ffn29-svg-link" x1="331.9" y1="31.1" x2="546.1" y2="50.7"></line>
+                <line class="ffn29-svg-link" x1="332.0" y1="59.6" x2="546.0" y2="52.5"></line>
+                <line class="ffn29-svg-link" x1="331.5" y1="116.7" x2="546.5" y2="55.8"></line>
+                <line class="ffn29-svg-link" x1="331.9" y1="61.6" x2="546.1" y2="90.1"></line>
+                <line class="ffn29-svg-link" x1="332.0" y1="90.1" x2="546.0" y2="91.9"></line>
+                <line class="ffn29-svg-link" x1="332.0" y1="149.1" x2="546.0" y2="133.0"></line>
+                <line class="ffn29-svg-link" x1="331.8" y1="177.6" x2="546.3" y2="134.7"></line>
+                <line class="ffn29-svg-link" x1="331.7" y1="122.5" x2="546.3" y2="169.0"></line>
+                <line class="ffn29-svg-link" x1="332.0" y1="179.6" x2="546.0" y2="172.5"></line>
+                <line class="ffn29-svg-link" x1="331.9" y1="208.1" x2="546.2" y2="174.2"></line>
+              </g>
+
+              <g class="ffn29-svg-input">
+                <circle class="ffn29-svg-node" cx="110" cy="52" r="14"></circle>
+                <circle class="ffn29-svg-node" cx="110" cy="92" r="14"></circle>
+                <circle class="ffn29-svg-node" cx="110" cy="132" r="14"></circle>
+                <circle class="ffn29-svg-node" cx="110" cy="172" r="14"></circle>
+              </g>
+
+              <g class="ffn29-svg-hidden">
+                <g class="ffn29-svg-hidden-node" transform="translate(320 30)">
+                  <circle class="ffn29-svg-node" r="12"></circle>
+                  <polyline class="ffn29-svg-activation" points="-6,4 -1,4 5,-2"></polyline>
+                </g>
+                <g class="ffn29-svg-hidden-node" transform="translate(320 60)">
+                  <circle class="ffn29-svg-node" r="12"></circle>
+                  <polyline class="ffn29-svg-activation" points="-6,4 -1,4 5,-2"></polyline>
+                </g>
+                <g class="ffn29-svg-hidden-node" transform="translate(320 90)">
+                  <circle class="ffn29-svg-node" r="12"></circle>
+                  <polyline class="ffn29-svg-activation" points="-6,4 -1,4 5,-2"></polyline>
+                </g>
+                <g class="ffn29-svg-hidden-node" transform="translate(320 120)">
+                  <circle class="ffn29-svg-node" r="12"></circle>
+                  <polyline class="ffn29-svg-activation" points="-6,4 -1,4 5,-2"></polyline>
+                </g>
+                <g class="ffn29-svg-hidden-node" transform="translate(320 150)">
+                  <circle class="ffn29-svg-node" r="12"></circle>
+                  <polyline class="ffn29-svg-activation" points="-6,4 -1,4 5,-2"></polyline>
+                </g>
+                <g class="ffn29-svg-hidden-node" transform="translate(320 180)">
+                  <circle class="ffn29-svg-node" r="12"></circle>
+                  <polyline class="ffn29-svg-activation" points="-6,4 -1,4 5,-2"></polyline>
+                </g>
+                <g class="ffn29-svg-hidden-node" transform="translate(320 210)">
+                  <circle class="ffn29-svg-node" r="12"></circle>
+                  <polyline class="ffn29-svg-activation" points="-6,4 -1,4 5,-2"></polyline>
+                </g>
+              </g>
+
+              <g class="ffn29-svg-output">
+                <circle class="ffn29-svg-node" cx="560" cy="52" r="14"></circle>
+                <circle class="ffn29-svg-node" cx="560" cy="92" r="14"></circle>
+                <circle class="ffn29-svg-node" cx="560" cy="132" r="14"></circle>
+                <circle class="ffn29-svg-node" cx="560" cy="172" r="14"></circle>
+              </g>
+            </svg>
           </div>
 
-          <div class="ffn29-network-steps">
-            <div class="ffn29-step-chip is-expand">1. linear expansion</div>
-            <div class="ffn29-step-chip is-gelu">2. GELU non-linearity</div>
-            <div class="ffn29-step-chip is-project">3. linear projection back</div>
+          <div class="ffn29-legend">
+            <svg class="ffn29-legend-icon" viewBox="0 0 32 32" aria-hidden="true">
+              <circle class="ffn29-svg-node" cx="16" cy="16" r="10"></circle>
+              <polyline class="ffn29-svg-activation" points="10,19 15,19 19,13"></polyline>
+            </svg>
+            <span class="ffn29-legend-text">Middle-layer neurons apply \(g_i = \mathrm{GELU}(u_i)\). The kink icon is just a simplified activation marker, not the exact GELU curve.</span>
           </div>
         </div>
 
         <div class="ffn29-math-card">
           <div class="ffn29-equation-main">\(\mathrm{FFN}(h_i) = W_2\,\mathrm{GELU}(W_1 h_i + b_1) + b_2\)</div>
           <div class="ffn29-equation-dims">\(W_1 \in \mathbb{R}^{d_{\mathrm{ff}} \times d_{\mathrm{model}}}, \quad W_2 \in \mathbb{R}^{d_{\mathrm{model}} \times d_{\mathrm{ff}}}\)</div>
-          <div class="ffn29-equation-note">same MLP, applied separately to every position</div>
+          <div class="ffn29-equation-note">Same local computation at every position. Slide 30 then adds this FFN update back into the residual stream.</div>
         </div>
 
-        <div class="ffn29-bottom-note">Attention decides what information a token should gather. The FFN then reshapes that gathered information inside the token&rsquo;s own representation.</div>
+        <div class="ffn29-bottom-note">This two-layer MLP is reused independently at every position before the residual add on slide 30.</div>
       </div>
     </div>
 
@@ -2233,7 +2253,7 @@ l e a r n ing &lt;/w&gt;</div>
         </div>
         <div class="block30-note block30-note-ffn">
           <div class="block30-note-head">Feed-Forward Network</div>
-          <div class="block30-note-body">Row-wise transformation. The same two-layer MLP applied independently to every token&#8217;s updated row.</div>
+          <div class="block30-note-body">Token-local computation. The same two-layer MLP computes a row-wise update independently for every token&#8217;s updated row.</div>
         </div>
         <div class="block30-note block30-note-eq">
           <div class="block30-note-head">Compact form</div>

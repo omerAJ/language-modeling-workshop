@@ -83,8 +83,8 @@ Slide IDs are part of the code contract. To jump to one: search `id="slide-23"` 
 | 25 | Order problem: attention is position-blind |
 | 26 | Add position: \(x_i + p_i\) before attention |
 | 27 | Intentionally absent |
-| 28 | Why FFN comes after attention |
-| 29 | Inside one FFN: expand → GELU → project |
+| 28 | Attention gathers, FFN computes |
+| 29 | Inside the FFN: expand, gate, project |
 | 30 | The block — walk through the slide-3 diagram now that every piece is understood |
 | 31 | Stack the block L times — same shape, richer representation |
 | 32 | Reading the prediction: LM head, logits, vocab softmax |
@@ -219,10 +219,10 @@ Expected step counts:
 |---|---|---|---|
 | 18 | 8 | 25 | 4 |
 | 19 | 8 | 26 | 5 |
-| 20 | 5 | 27 | 4 |
-| 21 | 3 | 28 | 4 |
-| 22 | 5 | 29 | 5 |
-| 23 | 14 | 30 | 5 |
+| 20 | 5 | 28 | 4 |
+| 21 | 3 | 29 | 5 |
+| 22 | 5 | 30 | 5 |
+| 23 | 14 | — | — |
 | 24 | 6 | — | — |
 
 Autostep reveals: slide 31 → 3, slide 32 → 3, slide 33 → 3.

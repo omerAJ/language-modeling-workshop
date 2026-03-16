@@ -1,16 +1,16 @@
 const FFN28_MAX_STEP = 4;
 const FFN28_CLASSES = [
-  'ffn28-show-attn',
-  'ffn28-show-focus',
+  'ffn28-show-context',
+  'ffn28-show-local',
   'ffn28-show-repeat',
-  'ffn28-show-bottom'
+  'ffn28-show-params'
 ];
 const FFN28_TAKEAWAYS = [
-  'Attention is the cross-token step. The FFN is the next, row-wise step.',
-  'After attention, each token row already contains context from other tokens.',
-  'The FFN now transforms that one row with a small neural network, without consulting other rows again.',
-  'The exact same FFN is reused independently at every position.',
-  'Attention mixes tokens. The FFN then non-linearly transforms each token row independently.'
+  'Attention gathers context. The FFN then transforms each row with the same MLP.',
+  'After attention, each row is already contextualized.',
+  'The FFN now applies a small neural network to one row.',
+  'FFN weights are reused independently at every position.',
+  'In a standard decoder block, FFN projection weights are roughly twice the attention projection weights.'
 ];
 
 function setFfnRowwiseStep(step) {
@@ -24,6 +24,7 @@ function setFfnRowwiseStep(step) {
     slide.classList.toggle(className, clamped >= idx + 1);
   });
   takeaway.textContent = FFN28_TAKEAWAYS[clamped] || FFN28_TAKEAWAYS[0];
+  typesetMath(slide);
 }
 
 function initFfnRowwiseSlide() {
