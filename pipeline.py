@@ -14,8 +14,25 @@ Manim Community Edition v0.18+
 from manim import *
 import numpy as np
 
-# Fix font kerning issues (e.g., 'self', 'masked' rendering poorly)
-Text.set_default(font="DejaVu Sans")
+# Fix font kerning issues — Pango's Text() has a known kerning bug.
+# Workaround: use Tex (LaTeX pipeline) which renders text correctly.
+import re as _re
+
+def _tex_escape(s):
+    """Escape LaTeX special characters."""
+    specials = {'&': r'\&', '%': r'\%', '$': r'\$', '#': r'\#',
+                '_': r'\_', '{': r'\{', '}': r'\}', '~': r'\textasciitilde{}',
+                '^': r'\textasciicircum{}'}
+    return ''.join(specials.get(c, c) for c in s)
+
+def SText(text, font_size=24, color=WHITE, weight=NORMAL, **kwargs):
+    """Spacing-corrected Text replacement using Tex."""
+    safe = _tex_escape(str(text))
+    if weight == BOLD:
+        tex_str = r"\textbf{" + safe + "}"
+    else:
+        tex_str = r"\text{" + safe + "}"
+    return Tex(tex_str, font_size=font_size, color=color, **kwargs)
 
 # =============================================================================
 # PARAMETERS
@@ -98,7 +115,7 @@ class LLMBlackBox(VGroup):
             stroke_color=ACCENT_COLOR, stroke_width=3,
             fill_color=LLM_BOX_FILL, fill_opacity=0.95,
         )
-        self.title_text = Text("LLM", font_size=36, color=ACCENT_COLOR, weight=BOLD)
+        self.title_text = SText("LLM", font_size=36, color=ACCENT_COLOR, weight=BOLD)
         self.theta_text = MathTex(r"\theta", font_size=32, color=ACCENT_COLOR)
         self.title_text.move_to(self.box.get_center() + UP * 0.3)
         self.theta_text.next_to(self.title_text, DOWN*1.2, buff=0.05)
@@ -116,14 +133,14 @@ class CompactDistribution(VGroup):
 
         rows = []
         for i, (tok, prob) in enumerate(zip(tokens, probs)):
-            label = Text(tok, font_size=16, color=TEXT_COLOR)
+            label = SText(tok, font_size=16, color=TEXT_COLOR)
             bar = Rectangle(
                 width=max((prob / max_prob) * bar_max_width, 0.06),
                 height=0.22,
                 fill_color=ACCENT_COLOR, fill_opacity=0.7,
                 stroke_width=0,
             )
-            pct = Text(f"{prob:.0%}", font_size=12, color=GRAY_B)
+            pct = SText(f"{prob:.0%}", font_size=12, color=GRAY_B)
             label.shift(DOWN * i * 0.38)
             rows.append((label, bar, pct))
 
@@ -154,7 +171,7 @@ class TokenRow(VGroup):
                 corner_radius=0.1, stroke_color=ACCENT_COLOR, stroke_width=2,
                 fill_color=BOX_COLOR, fill_opacity=0.8,
             )
-            label = Text(f'"{token}"', font_size=20, color=TEXT_COLOR)
+            label = SText(f'"{token}"', font_size=20, color=TEXT_COLOR)
             label.move_to(box.get_center())
             token_group = VGroup(box, label)
             token_group.shift(RIGHT * i * (box_width + spacing))
@@ -179,7 +196,7 @@ class IdRow(VGroup):
                 corner_radius=0.1, stroke_color=ACCENT_COLOR_2, stroke_width=2,
                 fill_color=BOX_COLOR, fill_opacity=0.8,
             )
-            label = Text(str(token_id), font_size=18, color=ACCENT_COLOR_2)
+            label = SText(str(token_id), font_size=18, color=ACCENT_COLOR_2)
             label.move_to(box.get_center())
             id_group = VGroup(box, label)
             id_group.shift(RIGHT * i * (box_width + spacing))
@@ -227,7 +244,7 @@ class TensorMatrix(VGroup):
         self.add(self.border)
 
         if label:
-            self.label = Text(label, font_size=16, color=GRAY_B)
+            self.label = SText(label, font_size=16, color=GRAY_B)
             self.label.next_to(self, DOWN, buff=0.15)
             self.add(self.label)
 
@@ -328,7 +345,7 @@ class EquationLabel(VGroup):
 
         content = equations
         if description:
-            self.description = Text(description, font_size=20, color=GRAY_B)
+            self.description = SText(description, font_size=20, color=GRAY_B)
             content = VGroup(equations, self.description).arrange(DOWN, buff=0.15)
 
         background = SurroundingRectangle(
@@ -358,7 +375,7 @@ class PipelineStageBlock(VGroup):
             fill_color=BOX_COLOR, fill_opacity=0.85,
         )
 
-        self.title_text = Text(
+        self.title_text = SText(
             title, font_size=title_font_size,
             color=color, weight=BOLD,
         )
@@ -376,7 +393,7 @@ class PipelineStageBlock(VGroup):
         self.sub_labels = VGroup()
         start_y = line_y - 0.3
         for i, item in enumerate(sub_items):
-            bullet = Text(f"  {item}", font_size=sub_font_size, color=GRAY_A)
+            bullet = SText(f"  {item}", font_size=sub_font_size, color=GRAY_A)
             bullet.move_to(
                 np.array([self.box.get_center()[0], start_y - i * 0.35, 0])
             )
@@ -442,7 +459,7 @@ class LanguageModelingPipeline(Scene):
     def show_black_box_overview(self):
         """Title, LLM black box, and two autoregressive iterations."""
 
-        title = Text(
+        title = SText(
             "How Language Models Generate Text",
             font_size=30, color=ACCENT_COLOR,
         )
@@ -463,7 +480,7 @@ class LanguageModelingPipeline(Scene):
         self.play(FadeIn(ar_eq), run_time=0.8)
 
         current_text = SENTENCE
-        sentence = Text(f'"{current_text}"', font_size=20, color=TEXT_COLOR)
+        sentence = SText(f'"{current_text}"', font_size=20, color=TEXT_COLOR)
         sentence.next_to(llm_box, LEFT, buff=1.6)
         clamp_to_frame(sentence)
 
@@ -535,7 +552,7 @@ class LanguageModelingPipeline(Scene):
         self.play(Transform(cond_eq, sample_eq), run_time=0.4)
 
         selected = data["selected"]
-        flying = Text(selected, font_size=22, color=YELLOW, weight=BOLD)
+        flying = SText(selected, font_size=22, color=YELLOW, weight=BOLD)
         flying.move_to(dist.token_groups[sel_idx][0])
         clamp_to_frame(flying)
 
@@ -552,7 +569,7 @@ class LanguageModelingPipeline(Scene):
         else:
             new_text = current_text + " " + selected
 
-        new_sentence = Text(f'"{new_text}"', font_size=20, color=TEXT_COLOR)
+        new_sentence = SText(f'"{new_text}"', font_size=20, color=TEXT_COLOR)
         new_sentence.move_to(self.bb_sentence.get_center())
         clamp_to_frame(new_sentence)
 
@@ -583,7 +600,7 @@ class LanguageModelingPipeline(Scene):
     def zoom_into_block(self, target, box_attr, fade_out, question_text,
                         inner_fade_attrs, stroke_color=ACCENT_COLOR):
         """Reusable zoom-into transition. Returns zoom_cover for reveal."""
-        question = Text(question_text, font_size=28, color=ACCENT_COLOR)
+        question = SText(question_text, font_size=28, color=ACCENT_COLOR)
         # Center question on screen to avoid going off edges
         question.move_to(ORIGIN + DOWN * 2.5)
         clamp_to_frame(question)
@@ -646,7 +663,7 @@ class LanguageModelingPipeline(Scene):
             inner_fade_attrs=['title_text', 'theta_text'],
         )
 
-        title = Text(
+        title = SText(
             "Three Stages of a Language Model",
             font_size=28, color=ACCENT_COLOR,
         )
@@ -721,7 +738,7 @@ class LanguageModelingPipeline(Scene):
         """
         self.play(*[FadeOut(m) for m in self.mobjects], run_time=1.0)
 
-        title = Text(
+        title = SText(
             "Three Stages of a Language Model",
             font_size=28, color=ACCENT_COLOR,
         )
@@ -792,7 +809,7 @@ class LanguageModelingPipeline(Scene):
 
             # Show narrative question FIRST
             if narrative_text:
-                narr = Text(narrative_text, font_size=20, color=GRAY_A)
+                narr = SText(narrative_text, font_size=20, color=GRAY_A)
                 narr.set(width=wrap_width)
                 narr.to_edge(DOWN, buff=0.6)
                 clamp_to_frame(narr)
@@ -870,7 +887,7 @@ class LanguageModelingPipeline(Scene):
     def transition_to_input_encoding(self):
         """Zoom into the Input Encoding block with narrative motivation."""
         # ── Narrative: Why do we need Input Encoding? ──
-        motivation = Text(
+        motivation = SText(
             "Transformers can't process raw text—they need numbers.",
             font_size=22, color=GRAY_A,
         )
@@ -889,15 +906,15 @@ class LanguageModelingPipeline(Scene):
             inner_fade_attrs=['title_text', 'separator', 'sub_labels'],
         )
 
-        inner_title = Text(
+        inner_title = SText(
             "Input Encoding",
             font_size=32, color=ACCENT_COLOR,
         )
         inner_title.to_edge(UP, buff=0.5)
         clamp_to_frame(inner_title)
 
-        sentence_label = Text("Input:", font_size=20, color=GRAY_B)
-        sentence_text = Text(f'"{SENTENCE}"', font_size=28, color=TEXT_COLOR)
+        sentence_label = SText("Input:", font_size=20, color=GRAY_B)
+        sentence_text = SText(f'"{SENTENCE}"', font_size=28, color=TEXT_COLOR)
         sentence_group = VGroup(sentence_label, sentence_text).arrange(RIGHT, buff=0.3)
         sentence_group.next_to(inner_title, DOWN, buff=0.8)
         clamp_to_frame(sentence_group)
@@ -944,7 +961,7 @@ class LanguageModelingPipeline(Scene):
     def transition_to_output_decoding(self):
         """Zoom into the Output Decoding block with narrative motivation."""
         # ── Narrative: Why do we need Output Decoding? ──
-        motivation = Text(
+        motivation = SText(
             "Nice — we now have powerful, context-aware embeddings.",
             font_size=24, color=YELLOW,
         )
@@ -953,7 +970,7 @@ class LanguageModelingPipeline(Scene):
         self.play(FadeIn(motivation, shift=UP * 0.2), run_time=0.8)
         self.wait(1.0)
 
-        motivation2 = Text(
+        motivation2 = SText(
             "But embeddings aren't words… you can't read them.",
             font_size=24, color=YELLOW,
         )
@@ -990,7 +1007,7 @@ class LanguageModelingPipeline(Scene):
 
     def show_tokenization(self):
         """Text → token boxes."""
-        stage_label = Text("1. Tokenization", font_size=24, color=ACCENT_COLOR_2)
+        stage_label = SText("1. Tokenization", font_size=24, color=ACCENT_COLOR_2)
         stage_label.to_edge(LEFT, buff=0.5).shift(UP * 2)
         clamp_to_frame(stage_label)
 
@@ -1028,7 +1045,7 @@ class LanguageModelingPipeline(Scene):
 
     def show_token_ids(self):
         """Tokens → integer IDs."""
-        new_stage = Text("2. Token IDs", font_size=24, color=ACCENT_COLOR_2)
+        new_stage = SText("2. Token IDs", font_size=24, color=ACCENT_COLOR_2)
         new_stage.move_to(self.stage_label)
         clamp_to_frame(new_stage)
 
@@ -1081,7 +1098,7 @@ class LanguageModelingPipeline(Scene):
             run_time=1,
         )
 
-        new_stage = Text("3. Embedding Lookup", font_size=24, color=ACCENT_COLOR_2)
+        new_stage = SText("3. Embedding Lookup", font_size=24, color=ACCENT_COLOR_2)
         new_stage.move_to(self.stage_label).shift(RIGHT * 0.5)
         clamp_to_frame(new_stage)
 
@@ -1218,7 +1235,7 @@ class LanguageModelingPipeline(Scene):
         )
 
         # ── Update stage label ──
-        new_stage = Text("4. Positional Encoding", font_size=24, color=ACCENT_COLOR_2)
+        new_stage = SText("4. Positional Encoding", font_size=24, color=ACCENT_COLOR_2)
         new_stage.move_to(self.stage_label)
         clamp_to_frame(new_stage)
         self.play(Transform(self.stage_label, new_stage), run_time=0.5)
@@ -1264,7 +1281,7 @@ class LanguageModelingPipeline(Scene):
         self.wait(0.5)
 
         # ── Brief highlight: sine-wave intuition ──
-        intuition = Text(
+        intuition = SText(
             "Each token gets a unique signature from sin/cos waves", #Here we will mention that this is from the original transformers paper, now new techniques are widely used like learnable pos embeddings, and RoPE; we will discuss those later.
             font_size=16, color=GRAY_B,
         )
@@ -1276,7 +1293,7 @@ class LanguageModelingPipeline(Scene):
         self.play(FadeOut(intuition), run_time=0.4)
 
         # ── Narrative conclusion: X₀ is ready ──
-        conclusion = Text(
+        conclusion = SText(
             "X₀: Position-aware embeddings, ready for the Transformer!",
             font_size=20, color=ACCENT_COLOR,
         )
@@ -1298,7 +1315,7 @@ class LanguageModelingPipeline(Scene):
         # ── Clear previous phase ──
         self.play(*[FadeOut(m) for m in self.mobjects], run_time=2.0)
 
-        title = Text("Transformer Core", font_size=28, color=TRANSFORMER_RED)
+        title = SText("Transformer Core", font_size=28, color=TRANSFORMER_RED)
         title.to_edge(UP, buff=0.25)
         clamp_to_frame(title)
 
@@ -1324,7 +1341,7 @@ class LanguageModelingPipeline(Scene):
                 stroke_color=color, stroke_width=2,
                 fill_color=BOX_COLOR, fill_opacity=0.75,
             )
-            txt = Text(label, font_size=fs, color=color)
+            txt = SText(label, font_size=fs, color=color)
             txt.move_to(box)
             return VGroup(box, txt)
 
@@ -1542,7 +1559,7 @@ class LanguageModelingPipeline(Scene):
         # ── Narrative conclusion: X_N is ready (step-by-step) ──
         wrap_width = config.frame_width * 0.85
 
-        conclusion_q = Text(
+        conclusion_q = SText(
             "Does the transformer core transform our embedding matrix into another embedding matrix?",
             font_size=20,
             color=TRANSFORMER_RED,
@@ -1551,7 +1568,7 @@ class LanguageModelingPipeline(Scene):
         conclusion_q.to_edge(DOWN, buff=0.8)
         clamp_to_frame(conclusion_q)
 
-        conclusion_a = Text(
+        conclusion_a = SText(
             "Yes — but now it contains rich, context-aware representations of each token based on the full sequence.",
             font_size=20,
             color=TRANSFORMER_RED,
@@ -1590,12 +1607,12 @@ class LanguageModelingPipeline(Scene):
         # ── Clear previous phase ──
         self.play(*[FadeOut(m) for m in self.mobjects], run_time=1.5)
 
-        title = Text("Output Decoding", font_size=28, color=ACCENT_COLOR_2)
+        title = SText("Output Decoding", font_size=28, color=ACCENT_COLOR_2)
         title.to_edge(UP, buff=0.25)
         clamp_to_frame(title)
         self.play(FadeIn(title), run_time=0.5)
 
-        subtitle = Text(
+        subtitle = SText(
             "Converts embeddings into a probability distribution over the vocabulary, then selects the next token.",
             font_size=18,
             color=GRAY_A,
@@ -1612,7 +1629,7 @@ class LanguageModelingPipeline(Scene):
         self.play(FadeIn(xn_mat, shift=UP * 0.3), run_time=0.6)
 
         # Narrative: explain why we only need the last row
-        explain1 = Text(
+        explain1 = SText(
             "X_N has T rows—one embedding per token position.",
             font_size=18, color=GRAY_A,
         )
@@ -1621,7 +1638,7 @@ class LanguageModelingPipeline(Scene):
         self.play(FadeIn(explain1), run_time=0.5)
         self.wait(0.8)
 
-        explain2 = Text(
+        explain2 = SText(
             "But attention lets x_T 'see' all previous tokens!",
             font_size=18, color=ACCENT_COLOR,
         )
@@ -1637,7 +1654,7 @@ class LanguageModelingPipeline(Scene):
         )
         self.play(Create(last_row_highlight), run_time=0.4)
 
-        explain3 = Text(
+        explain3 = SText(
             "We only need x_T to predict the next token.",
             font_size=18, color=YELLOW,
         )
@@ -1673,7 +1690,7 @@ class LanguageModelingPipeline(Scene):
         vocab_mat = EmbeddingWeightMatrix(num_cols=D_MODEL, cell_size=0.18, top_rows=3, bottom_rows=2)
         vocab_mat.next_to(times_sign, RIGHT, buff=1.0)
 
-        vocab_label = Text("Vocabulary Matrix", font_size=14, color=ACCENT_COLOR_2)
+        vocab_label = SText("Vocabulary Matrix", font_size=14, color=ACCENT_COLOR_2)
         vocab_label.next_to(vocab_mat, UP, buff=1.30)
         clamp_to_frame(vocab_label)
 
@@ -1733,7 +1750,7 @@ class LanguageModelingPipeline(Scene):
             zt_vec.get_bottom() + DOWN * 0.7,
             buff=0, color=ACCENT_COLOR_2, stroke_width=2,
         )
-        softmax_label = Text("softmax", font_size=14, color=ACCENT_COLOR_2)
+        softmax_label = SText("softmax", font_size=14, color=ACCENT_COLOR_2)
         softmax_label.next_to(softmax_arrow, RIGHT, buff=0.1)
         clamp_to_frame(softmax_label)
 
@@ -1772,7 +1789,7 @@ class LanguageModelingPipeline(Scene):
         )
         dist.move_to(ORIGIN)
 
-        dist_title = Text("Next-Token Probabilities", font_size=20, color=YELLOW)
+        dist_title = SText("Next-Token Probabilities", font_size=20, color=YELLOW)
         dist_title.next_to(dist, UP, buff=0.4)
         clamp_to_frame(dist_title)
 
@@ -1804,7 +1821,7 @@ class LanguageModelingPipeline(Scene):
         self.wait(1.0)
 
         # ── Final narrative: The complete journey ──
-        final_text = Text(
+        final_text = SText(
             '"The cat sat on the" → "mat"',
             font_size=24, color=YELLOW,
         )
@@ -1813,7 +1830,7 @@ class LanguageModelingPipeline(Scene):
         self.play(FadeIn(final_text, shift=UP * 0.2), run_time=0.8)
         self.wait(0.8)
 
-        conclusion = Text(
+        conclusion = SText(
             "Text → Numbers → Context → Words",
             font_size=20, color=GRAY_A,
         )
