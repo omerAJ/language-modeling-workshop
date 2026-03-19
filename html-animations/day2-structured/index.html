@@ -1968,6 +1968,117 @@ l e a r n ing &lt;/w&gt;</div>
     <div class="story-takeaway" id="pos26-takeaway">Position is the missing ingredient: without it, the same word looks the same no matter where it appears.</div>
   </div>
 
+  <div class="slide" id="slide-27">
+    <span class="section-tag">Input Representation</span>
+    <div class="badge concept">Bridge</div>
+    <h2>Position Embeddings: Sin/Cos, Learned, RoPE</h2>
+    <p class="small-text">Sin/cos is the clearest signal view of position. Then compare it with learned absolute vectors and RoPE.</p>
+
+    <!--
+      Slide 27 source grounding:
+      - Vaswani et al. (2017), Attention Is All You Need:
+        https://ar5iv.labs.arxiv.org/html/1706.03762
+        Used for sinusoidal encoding claims: same-dimensional addition, sinusoid per dimension,
+        geometric progression of wavelengths, fixed-offset linear relation, extrapolation motivation.
+      - Devlin et al. (2018), BERT:
+        https://ar5iv.labs.arxiv.org/html/1810.04805v2
+        Used for learned absolute input construction as token + segment + position embeddings.
+      - Su et al. (2021), RoFormer:
+        https://arxiv.org/abs/2104.09864
+        Used for RoPE claims: rotation matrix, explicit relative position dependency in self-attention,
+        and sequence-length flexibility / distance-dependent effects.
+      - Teaching inferences on this slide:
+        phase / rotation view of each sin-cos pair;
+        multiscale interpretation of different frequencies;
+        linearity explanation W(x + p) = Wx + Wp.
+    -->
+
+    <div class="story-layout">
+      <div class="card story-stage pos27-stage">
+        <div class="pos27-top">
+          <section class="pos27-structure-card">
+            <div class="pos27-card-title">1. Sin/Cos Structure</div>
+            <div class="pos27-structure-lead">Each adjacent dim pair shares one frequency band: the even dim is sine, the odd dim is cosine. A position embedding is the full stack of these signals across many frequencies.</div>
+            <div class="pos27-formula-block">
+              <div class="pos27-formula-line">\(\omega_i = 10000^{-2i/d}\)</div>
+              <div class="pos27-formula-line">\(PE(\mathrm{pos}, 2i) = \sin(\omega_i \mathrm{pos}), \quad PE(\mathrm{pos}, 2i+1) = \cos(\omega_i \mathrm{pos})\)</div>
+              <div class="pos27-formula-line">same \(i\) = same frequency pair, larger \(\mathrm{pos}\) = later sample on that pair</div>
+            </div>
+            <div class="pos27-key-grid">
+              <div class="pos27-key-chip">
+                <div class="pos27-key-label"><span class="hl">`pos`</span></div>
+                <div class="pos27-key-body">Chooses where you are on every wave.</div>
+              </div>
+              <div class="pos27-key-chip">
+                <div class="pos27-key-label"><span class="hl-purple">`i`</span></div>
+                <div class="pos27-key-body">Chooses which frequency pair you are reading.</div>
+              </div>
+            </div>
+            <div class="pos27-addition-line">Then add it element-wise to the token embedding: \(h_i^{(0)} = x_i + PE(i)\)</div>
+            <div class="pos27-band-row" aria-label="Frequency bands across embedding-dimension pairs">
+              <div class="pos27-band-chip fast"><span class="pos27-band-label">early dims</span><span class="pos27-band-value">small \(i\) -> fast</span></div>
+              <div class="pos27-band-chip mid"><span class="pos27-band-label">middle dims</span><span class="pos27-band-value">mid \(i\) -> medium</span></div>
+              <div class="pos27-band-chip slow"><span class="pos27-band-label">later dims</span><span class="pos27-band-value">larger \(i\) -> slow</span></div>
+            </div>
+            <div class="pos27-structure-note">Fast bands separate nearby positions. Slow bands track coarse location over longer ranges.</div>
+          </section>
+
+          <section class="pos27-wave-card">
+            <div class="pos27-card-title">2. The Signal View</div>
+            <div class="pos27-axis-note">This chart plots selected even dimensions across positions. The neighboring odd dimension is the cosine partner at the same frequency.</div>
+            <div class="pos27-plot-frame">
+              <img class="pos27-plot-image" src="assets/generated/positional-signals.svg" alt="Generated chart of sinusoidal positional signals across selected embedding dimensions and positions">
+            </div>
+            <div class="pos27-plot-key" aria-label="Selected dimensions shown in the signal plot">
+              <div class="pos27-plot-key-chip fast">d0 fast</div>
+              <div class="pos27-plot-key-chip mid">d16 faster-mid</div>
+              <div class="pos27-plot-key-chip slow">d64 slower</div>
+              <div class="pos27-plot-key-chip cyan">d256 very slow</div>
+            </div>
+            <ul class="pos27-plot-notes">
+              <li>Early dimensions wiggle fast; later dimensions drift slowly.</li>
+              <li>The dashed vertical slice is one token position. Reading that slice across dimensions gives one position embedding vector.</li>
+            </ul>
+          </section>
+        </div>
+
+        <div class="hidden-content autostep">
+          <section class="pos27-why-card">
+            <div class="pos27-why-title">3. Why Sin/Cos Works</div>
+            <div class="pos27-why-grid">
+              <div class="pos27-why-formula">
+                <div class="pos27-formula-line">\(v_i(\mathrm{pos}) = \begin{bmatrix}\sin(\omega_i \mathrm{pos}) \\ \cos(\omega_i \mathrm{pos})\end{bmatrix}\)</div>
+                <div class="pos27-formula-line">\(v_i(\mathrm{pos}+k) = \begin{bmatrix}\cos(\omega_i k) & \sin(\omega_i k) \\ -\sin(\omega_i k) & \cos(\omega_i k)\end{bmatrix} v_i(\mathrm{pos})\)</div>
+              </div>
+              <ul class="pos27-why-list">
+                <li><span class="hl">A fixed offset \(k\)</span> becomes a fixed linear transform for every frequency pair.</li>
+                <li><span class="hl-purple">That transform is a rotation</span>: sin/cos turn position shifts into phase shifts.</li>
+                <li><span class="hl-green">Many frequencies at once</span> give both local detail and coarse global location.</li>
+                <li><span class="hl-cyan">And addition keeps content usable</span>: \(W(x_i + PE(i)) = W x_i + W PE(i)\).</li>
+              </ul>
+            </div>
+          </section>
+        </div>
+
+        <div class="hidden-content autostep">
+          <div class="pos27-compare-grid">
+            <section class="pos27-compare-card pos27-learned-card">
+              <div class="pos27-card-title">Learned absolute</div>
+              <div class="pos27-compare-main">Learn a table \(P[\mathrm{pos}]\), then add \(x_{\mathrm{pos}} + P[\mathrm{pos}]\).</div>
+              <div class="pos27-compare-note">Flexible, but the structure lives in parameters instead of in a fixed signal rule.</div>
+            </section>
+
+            <section class="pos27-compare-card pos27-rope-card">
+              <div class="pos27-card-title">Rotary / RoPE</div>
+              <div class="pos27-compare-main">Keep the same phase idea, but rotate \(Q\) and \(K\) instead of adding a separate input vector.</div>
+              <div class="pos27-compare-note">That pushes positional information directly into attention scores.</div>
+            </section>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div class="slide" id="slide-28">
     <span class="section-tag">Transformer Block</span>
     <div class="badge concept">Mechanism</div>

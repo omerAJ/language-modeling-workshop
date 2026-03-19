@@ -2045,6 +2045,352 @@
   pointer-events: auto;
 }
 
+/* Slide 27: click-through, sin/cos-first position embedding comparison. */
+#slide-27 {
+  padding-top: 1.7rem;
+  padding-bottom: 2.28rem;
+}
+
+#slide-27 h2 {
+  margin-bottom: 0.32rem;
+}
+
+#slide-27 > .small-text {
+  max-width: 72rem;
+  line-height: 1.28;
+}
+
+#slide-27 .pos27-stage {
+  min-height: clamp(22rem, 64vh, 31rem);
+  display: grid;
+  gap: 0.34rem;
+  padding: 0.58rem 0.68rem;
+  background:
+    radial-gradient(circle at 14% 14%, rgba(123, 154, 255, 0.07), transparent 30%),
+    radial-gradient(circle at 84% 12%, rgba(51, 224, 245, 0.06), transparent 28%),
+    var(--surface);
+}
+
+#slide-27 .pos27-structure-card,
+#slide-27 .pos27-wave-card,
+#slide-27 .pos27-why-card,
+#slide-27 .pos27-compare-card,
+#slide-27 .pos27-close-card {
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(123, 154, 255, 0.18);
+  background: rgba(18, 24, 40, 0.46);
+}
+
+#slide-27 .pos27-top {
+  display: grid;
+  grid-template-columns: minmax(0, 1.04fr) minmax(18rem, 1fr);
+  gap: 0.4rem;
+  align-items: stretch;
+}
+
+#slide-27 .pos27-structure-card,
+#slide-27 .pos27-wave-card,
+#slide-27 .pos27-why-card,
+#slide-27 .pos27-compare-card,
+#slide-27 .pos27-close-card {
+  display: grid;
+  gap: 0.24rem;
+  padding: 0.48rem 0.58rem;
+}
+
+#slide-27 .pos27-structure-lead,
+#slide-27 .pos27-close-main {
+  font-size: var(--fs-sm);
+  line-height: 1.32;
+  color: #eef3ff;
+}
+
+#slide-27 .pos27-why-grid,
+#slide-27 .pos27-close-note,
+#slide-27 .pos27-structure-note,
+#slide-27 .pos27-wave-note {
+  font-size: var(--fs-2xs);
+  line-height: 1.36;
+  color: rgba(210, 221, 246, 0.78);
+}
+
+#slide-27 .pos27-card-title,
+#slide-27 .pos27-why-title {
+  font-size: var(--fs-2xs);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: rgba(214, 224, 250, 0.94);
+}
+
+#slide-27 .pos27-formula-block {
+  display: grid;
+  gap: 0.08rem;
+  padding: 0.38rem 0.5rem;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(123, 154, 255, 0.22);
+  background: rgba(123, 154, 255, 0.09);
+}
+
+#slide-27 .pos27-formula-line,
+#slide-27 .pos27-addition-line,
+#slide-27 .pos27-compare-main {
+  font-size: var(--fs-xs);
+  line-height: 1.28;
+  color: #eef3ff;
+}
+
+#slide-27 .pos27-key-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.28rem;
+}
+
+#slide-27 .pos27-key-chip {
+  display: grid;
+  gap: 0.08rem;
+  padding: 0.34rem 0.42rem;
+  border-radius: 0.5rem;
+  border: 1px solid rgba(123, 154, 255, 0.14);
+  background: rgba(255, 255, 255, 0.032);
+}
+
+#slide-27 .pos27-key-label {
+  font-size: 0.64rem;
+  line-height: 1.2;
+}
+
+#slide-27 .pos27-key-body {
+  font-size: 0.66rem;
+  line-height: 1.24;
+  color: rgba(224, 232, 251, 0.88);
+}
+
+#slide-27 .pos27-band-row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.28rem;
+}
+
+#slide-27 .pos27-band-chip {
+  display: grid;
+  gap: 0.08rem;
+  padding: 0.34rem 0.42rem;
+  border-radius: 0.5rem;
+  border: 1px solid rgba(123, 154, 255, 0.16);
+  background: rgba(255, 255, 255, 0.035);
+}
+
+#slide-27 .pos27-band-chip.fast {
+  border-color: rgba(180, 157, 255, 0.22);
+  background: rgba(180, 157, 255, 0.08);
+}
+
+#slide-27 .pos27-band-chip.mid {
+  border-color: rgba(123, 154, 255, 0.24);
+  background: rgba(123, 154, 255, 0.1);
+}
+
+#slide-27 .pos27-band-chip.slow {
+  border-color: rgba(90, 232, 142, 0.22);
+  background: rgba(90, 232, 142, 0.08);
+}
+
+#slide-27 .pos27-band-label,
+#slide-27 .pos27-band-value {
+  display: block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.58rem;
+  line-height: 1.2;
+}
+
+#slide-27 .pos27-band-label {
+  color: rgba(210, 221, 246, 0.74);
+}
+
+#slide-27 .pos27-band-value {
+  color: rgba(239, 244, 255, 0.95);
+}
+
+#slide-27 .pos27-addition-line,
+#slide-27 .pos27-compare-note {
+  color: rgba(224, 232, 251, 0.88);
+}
+
+#slide-27 .pos27-axis-note {
+  font-size: 0.69rem;
+  line-height: 1.28;
+  color: rgba(226, 234, 252, 0.88);
+}
+
+#slide-27 .pos27-plot-frame {
+  padding: 0.28rem;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(123, 154, 255, 0.16);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+#slide-27 .pos27-plot-image {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 0.44rem;
+  background: #0f1524;
+}
+
+#slide-27 .pos27-plot-key {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.22rem;
+}
+
+#slide-27 .pos27-plot-key-chip {
+  display: grid;
+  place-items: center;
+  min-height: 1.52rem;
+  padding: 0.14rem 0.3rem;
+  border-radius: 0.52rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.54rem;
+  line-height: 1.14;
+  border: 1px solid rgba(123, 154, 255, 0.16);
+  background: rgba(255, 255, 255, 0.035);
+  color: rgba(239, 244, 255, 0.95);
+}
+
+#slide-27 .pos27-plot-key-chip.fast {
+  border-color: rgba(180, 157, 255, 0.22);
+  background: rgba(180, 157, 255, 0.08);
+}
+
+#slide-27 .pos27-plot-key-chip.mid {
+  border-color: rgba(123, 154, 255, 0.24);
+  background: rgba(123, 154, 255, 0.1);
+}
+
+#slide-27 .pos27-plot-key-chip.slow {
+  border-color: rgba(90, 232, 142, 0.22);
+  background: rgba(90, 232, 142, 0.08);
+}
+
+#slide-27 .pos27-plot-key-chip.cyan {
+  border-color: rgba(51, 224, 245, 0.22);
+  background: rgba(51, 224, 245, 0.08);
+}
+
+#slide-27 .pos27-plot-notes {
+  margin: 0;
+  padding-left: 0.95rem;
+  display: grid;
+  gap: 0.16rem;
+}
+
+#slide-27 .pos27-plot-notes li {
+  font-size: var(--fs-2xs);
+  line-height: 1.28;
+  color: rgba(226, 234, 252, 0.92);
+}
+
+#slide-27 .pos27-why-list {
+  margin: 0;
+  padding-left: 0.95rem;
+  display: grid;
+  gap: 0.18rem;
+}
+
+#slide-27 .pos27-why-list li {
+  font-size: var(--fs-2xs);
+  line-height: 1.34;
+  color: rgba(226, 234, 252, 0.92);
+}
+
+#slide-27 .pos27-why-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  gap: 0.38rem;
+  align-items: start;
+}
+
+#slide-27 .pos27-why-formula {
+  display: grid;
+  gap: 0.14rem;
+  padding: 0.44rem 0.54rem;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(123, 154, 255, 0.18);
+  background: rgba(123, 154, 255, 0.09);
+}
+
+#slide-27 .pos27-compare-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.18rem;
+  align-items: start;
+}
+
+#slide-27 .pos27-learned-card {
+  border-color: rgba(255, 170, 85, 0.22);
+  background: rgba(255, 170, 85, 0.08);
+}
+
+#slide-27 .pos27-compare-card {
+  gap: 0.16rem;
+  padding: 0.32rem 0.42rem;
+}
+
+#slide-27 .pos27-compare-card .pos27-compare-main,
+#slide-27 .pos27-compare-card .pos27-compare-note {
+  font-size: var(--fs-2xs);
+  line-height: 1.12;
+}
+
+#slide-27 .pos27-rope-card,
+#slide-27 .pos27-close-card {
+  border-color: rgba(51, 224, 245, 0.22);
+  background: rgba(51, 224, 245, 0.07);
+}
+
+#slide-27 .pos27-close-ribbon {
+  grid-template-columns: auto 1fr;
+  column-gap: 0.6rem;
+  align-items: center;
+}
+
+#slide-27 .pos27-close-ribbon .pos27-close-main {
+  font-size: var(--fs-xs);
+  line-height: 1.3;
+}
+
+@media (max-width: 68rem) {
+  #slide-27 .pos27-top,
+  #slide-27 .pos27-compare-grid,
+  #slide-27 .pos27-why-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 54rem) {
+  #slide-27 .pos27-stage {
+    padding: 0.62rem;
+  }
+
+  #slide-27 .pos27-structure-lead,
+  #slide-27 .pos27-close-main {
+    font-size: var(--fs-2xs);
+  }
+
+  #slide-27 .pos27-formula-line,
+  #slide-27 .pos27-addition-line,
+  #slide-27 .pos27-compare-main {
+    font-size: var(--fs-2xs);
+  }
+
+  #slide-27 .pos27-key-grid,
+  #slide-27 .pos27-plot-key,
+  #slide-27 .pos27-band-row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
 @media (max-width: 68.75rem) {
   #slide-26 .pos26-main {
     gap: 0.62rem;
