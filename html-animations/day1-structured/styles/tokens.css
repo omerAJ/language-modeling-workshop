@@ -1,0 +1,27 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+/* ── Responsive root scaling ──
+   Single source of truth: all rem values scale with viewport.
+   At 1920×1080 ≈ 20px, at 3840×2160 → clamped 32px, at 1366×768 ≈ 15px */
+html {
+  font-size: clamp(14px, calc(0.5vw + 0.55vh + 4px), 32px);
+}
+
+:root {
+  --bg: #0a0d14;
+  --surface: #161923;
+  --surface2: #1e2231;
+  --border: #2a2f42;
+  --text: #f0f1f4;
+  --text-dim: #99a0b8;
+  --accent: #7b9aff;
+  --accent-glow: rgba(123,154,255,0.28);
+  --green: #5ae88e;
+  --green-glow: rgba(90,232,142,0.22);
+  --red: #ff7b7b;
+  --orange: #ffaa55;
+  --purple: #b49dff;
+  --yellow: #ffd644;
+  --cyan: #33e0f5;
+  --pink: #ff82c4;
+}

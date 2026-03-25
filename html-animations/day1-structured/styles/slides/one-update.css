@@ -1,0 +1,321 @@
+/* ── Not-in-objective list ── */
+.not-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.625rem;
+    margin: 0.75rem 0;
+  }
+  .not-item {
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    background: rgba(255,123,123,0.08);
+    border: 1px solid rgba(255,123,123,0.25);
+    color: var(--red);
+    position: relative;
+    padding-left: 2rem;
+  }
+  .not-item::before {
+    content: '✕';
+    position: absolute;
+    left: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-weight: 700;
+    font-size: 0.78rem;
+  }
+
+/* ── Data stats ── */
+.data-stat { text-align: center; padding: 1rem; }
+  .data-stat .big-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 2.2rem;
+    font-weight: 700;
+  }
+  .data-stat .stat-label {
+    font-size: 0.82rem;
+    color: var(--text-dim);
+    margin-top: 0.125rem;
+  }
+
+/* ── Bar chart (for loss deep-dive slides) ── */
+.bar-row {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    margin-bottom: 0.375rem;
+    height: 1.75rem;
+  }
+  .bar-word {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.84rem;
+    width: 5rem;
+    text-align: right;
+    color: var(--text-dim);
+    flex-shrink: 0;
+  }
+  .bar-track {
+    flex: 1;
+    height: 1.375rem;
+    background: var(--surface2);
+    border-radius: 0.375rem;
+    overflow: hidden;
+  }
+  .bar-fill {
+    height: 100%;
+    border-radius: 0.375rem;
+    transition: width 1s cubic-bezier(0.22, 1, 0.36, 1);
+    min-width: 0;
+  }
+  .bar-fill.predicted { background: linear-gradient(90deg, var(--accent), var(--purple)); }
+  .bar-fill.target-fill { background: linear-gradient(90deg, var(--green), #34d399); }
+  .bar-pct {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.76rem;
+    color: var(--text-dim);
+    width: 3rem;
+    text-align: left;
+    flex-shrink: 0;
+  }
+
+/* dual chart layout */
+.dual-charts {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+    margin-top: 0.625rem;
+  }
+  @media (max-width: 40rem) {
+    .dual-charts { grid-template-columns: 1fr; }
+  }
+  .chart-col {
+    background: var(--surface2);
+    border-radius: 0.625rem;
+    padding: 0.875rem;
+  }
+  .chart-title {
+    font-size: 0.78rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.5rem;
+  }
+
+/* loss display */
+.loss-display {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1.125rem;
+    margin: 1rem 0;
+    flex-wrap: wrap;
+  }
+  .loss-box {
+    text-align: center;
+    padding: 0.875rem 1.5rem;
+    border-radius: 0.75rem;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    min-width: 8rem;
+  }
+  .loss-box .label {
+    font-size: 0.74rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-dim);
+    margin-bottom: 0.25rem;
+  }
+  .loss-box .value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.5rem;
+    font-weight: 700;
+  }
+  .loss-box .value.high { color: var(--red); }
+  .loss-box .value.low  { color: var(--green); }
+  .loss-box .formula {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.74rem;
+    color: var(--text-dim);
+    margin-top: 0.25rem;
+  }
+  .comparison-arrow {
+    font-size: 2rem;
+    color: var(--text-dim);
+    animation: pulseOpacity 1.5s ease-in-out infinite;
+  }
+  @keyframes pulseOpacity {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+/* loss meter */
+.loss-meter {
+    width: 100%;
+    height: 0.625rem;
+    border-radius: 0.375rem;
+    background: var(--surface2);
+    margin: 0.5rem 0;
+    overflow: hidden;
+  }
+  .loss-meter-fill {
+    height: 100%;
+    border-radius: 0.375rem;
+    transition: width 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+/* before / after */
+.before-after {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 1rem;
+    align-items: start;
+    margin-top: 0.625rem;
+  }
+  @media (max-width: 40rem) {
+    .before-after { grid-template-columns: 1fr; }
+  }
+  .ba-col {
+    background: var(--surface2);
+    border-radius: 0.625rem;
+    padding: 0.875rem;
+  }
+  .ba-col .ba-label {
+    font-size: 0.76rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+  .ba-col.before .ba-label { color: var(--red); }
+  .ba-col.after  .ba-label { color: var(--green); }
+  .ba-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.8rem;
+    color: var(--text-dim);
+    padding-top: 2.5rem;
+  }
+
+/* backprop arrows */
+.backprop-arrows {
+    display: flex;
+    justify-content: center;
+    gap: 0.25rem;
+    margin: 0.5rem 0;
+    font-size: 1.3rem;
+  }
+  .backprop-arrows span {
+    color: var(--orange);
+    animation: flowLeft 1s ease-in-out infinite;
+    animation-delay: 0.45s;
+  }
+  .backprop-arrows span:nth-child(2) { animation-delay: 0.30s; }
+  .backprop-arrows span:nth-child(3) { animation-delay: 0.15s; }
+  .backprop-arrows span:nth-child(4) { animation-delay: 0.0s; }
+  @keyframes flowLeft {
+    0%, 100% { opacity: 0.2; }
+    50% { opacity: 1; }
+  }
+
+/* flow node (for backprop) */
+.update-flow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    margin: 0.875rem 0;
+    flex-wrap: wrap;
+  }
+  .flow-node {
+    padding: 0.625rem 1.125rem;
+    border-radius: 0.625rem;
+    font-size: 0.86rem;
+    font-weight: 600;
+    text-align: center;
+    border: 1px solid var(--border);
+  }
+  .flow-node.loss-node   { background: rgba(255,123,123,0.12); border-color: rgba(255,123,123,0.35); color: var(--red); }
+  .flow-node.grad-node   { background: rgba(255,170,85,0.12);  border-color: rgba(255,170,85,0.35);  color: var(--orange); }
+  .flow-node.param-node  { background: rgba(180,157,255,0.12); border-color: rgba(180,157,255,0.35); color: var(--purple); }
+  .flow-node.better-node { background: rgba(90,232,142,0.12);  border-color: rgba(90,232,142,0.35);  color: var(--green); }
+
+/* network box (for forward-pass slide) */
+.network-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.875rem;
+    padding: 1rem 1.5rem;
+    background: linear-gradient(135deg, rgba(123,154,255,0.1), rgba(180,157,255,0.1));
+    border: 1px solid rgba(123,154,255,0.25);
+    border-radius: 0.75rem;
+    margin: 0 auto;
+    max-width: 22rem;
+    position: relative;
+  }
+  .network-box .nn-label { font-weight: 600; font-size: 0.95rem; }
+  .network-box .nn-sub   { font-size: 0.76rem; color: var(--text-dim); }
+  .network-box .param-badge {
+    position: absolute;
+    top: -0.625rem; right: -0.625rem;
+    font-size: 0.68rem;
+    font-weight: 600;
+    background: var(--purple);
+    color: #fff;
+    padding: 0.2rem 0.56rem;
+    border-radius: 0.75rem;
+  }
+  .arrow-down {
+    text-align: center;
+    color: var(--text-dim);
+    font-size: 1.4rem;
+    margin: 0.25rem 0;
+    animation: bobDown 1.2s ease-in-out infinite;
+  }
+  @keyframes bobDown { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(0.3rem); } }
+
+/* context row (for loss slides) */
+.context-row {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    flex-wrap: wrap;
+    margin: 0.875rem 0 0.375rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.05rem;
+  }
+  .ctx-tok {
+    padding: 0.3rem 0.75rem;
+    border-radius: 0.44rem;
+    border: 1px solid var(--accent);
+    background: rgba(123,154,255,0.12);
+  }
+  .ctx-blank {
+    padding: 0.3rem 0.75rem;
+    border-radius: 0.44rem;
+    border: 2px dashed var(--orange);
+    color: var(--orange);
+    min-width: 3.75rem;
+    text-align: center;
+    animation: pulseBorder 1.5s ease-in-out infinite;
+  }
+  @keyframes pulseBorder {
+    0%, 100% { border-color: var(--orange); }
+    50% { border-color: rgba(251,146,60,0.3); }
+  }
+
+/* step label pill (for loss deep-dive slides) */
+.step-label {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--yellow);
+    background: rgba(255,214,68,0.12);
+    padding: 0.2rem 0.625rem;
+    border-radius: 1.25rem;
+    margin-bottom: 0.625rem;
+  }

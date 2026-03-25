@@ -1,0 +1,97 @@
+/* dataset-mix bars (for capability profile slide) */
+.mix-bar {
+    display: flex;
+    height: 0.75rem;
+    border-radius: 999px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    background: var(--surface2);
+    margin: 0.625rem 0 0.5rem;
+  }
+  .mix-seg.code { background: linear-gradient(90deg, rgba(180,157,255,0.95), rgba(123,154,255,0.95)); }
+  .mix-seg.lit  { background: linear-gradient(90deg, rgba(51,224,245,0.95), rgba(90,232,142,0.95)); }
+
+  .prompt-block {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    line-height: 1.65;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 0.625rem;
+    padding: 0.75rem 0.875rem;
+    white-space: pre-wrap;
+  }
+
+/* ── Vertical pipeline ── */
+.pipeline-v {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    position: relative;
+  }
+  .pipeline-v::before {
+    content: '';
+    position: absolute;
+    left: 1.0625rem;
+    top: 1.125rem;
+    bottom: 1.125rem;
+    width: 0.125rem;
+    background: linear-gradient(to bottom, var(--cyan), var(--accent), var(--orange), var(--green));
+    opacity: 0.4;
+  }
+  .pv-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 0.625rem 0;
+    position: relative;
+  }
+  .pv-dot {
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.78rem;
+    font-weight: 700;
+    flex-shrink: 0;
+    z-index: 1;
+    border: 2px solid;
+  }
+  .pv-dot.cyan   { border-color: var(--cyan);   color: var(--cyan);   background: rgba(51,224,245,0.12); }
+  .pv-dot.accent { border-color: var(--accent); color: var(--accent); background: rgba(123,154,255,0.12); }
+  .pv-dot.orange { border-color: var(--orange); color: var(--orange); background: rgba(255,170,85,0.12); }
+  .pv-dot.purple { border-color: var(--purple); color: var(--purple); background: rgba(180,157,255,0.12); }
+  .pv-dot.green  { border-color: var(--green);  color: var(--green);  background: rgba(90,232,142,0.12); }
+  .pv-dot.red    { border-color: var(--red);    color: var(--red);    background: rgba(255,123,123,0.12); }
+  .pv-body {
+    flex: 1;
+    min-width: 0;
+    padding-top: 0.25rem;
+  }
+  .pv-body h4 {
+    font-size: 0.95rem;
+    font-weight: 700;
+    margin-bottom: 0.125rem;
+  }
+  .pv-body .pv-detail {
+    font-size: 0.82rem;
+    color: var(--text-dim);
+    line-height: 1.5;
+  }
+  .pv-body .pv-tag {
+    display: inline-block;
+    font-size: 0.68rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    padding: 0.125rem 0.5rem;
+    border-radius: 0.25rem;
+    margin-left: 0.5rem;
+    vertical-align: middle;
+  }
+  .pv-tag.data   { background: rgba(51,224,245,0.15); color: var(--cyan); }
+  .pv-tag.train  { background: rgba(123,154,255,0.15); color: var(--accent); }
+  .pv-tag.align  { background: rgba(255,170,85,0.15); color: var(--orange); }
+  .pv-tag.eval   { background: rgba(90,232,142,0.15); color: var(--green); }

@@ -1,0 +1,59 @@
+/* ── NTP game ── */
+.ntp-sentence {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.1rem;
+    line-height: 1.7;
+    padding: 1.125rem 1.375rem;
+    background: var(--surface2);
+    border-radius: 0.625rem;
+    border: 1px solid var(--border);
+    margin: 0.625rem 0;
+  }
+  .ntp-blank {
+    display: inline-block;
+    min-width: 5rem;
+    border-bottom: 2px dashed var(--orange);
+    color: var(--orange);
+    text-align: center;
+    padding: 0 0.25rem;
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+  .ntp-blank.show {
+    border-bottom-color: var(--green);
+    color: var(--green);
+    font-weight: 600;
+  }
+  .ntp-concept-btn {
+    display: inline-block;
+    margin-left: 0.5rem;
+    padding: 0.125rem 0.5rem;
+    border-radius: 0.375rem;
+    border: 1px dashed var(--purple);
+    color: var(--purple);
+    font-size: 0.72rem;
+    font-weight: 600;
+    cursor: pointer;
+    vertical-align: middle;
+    transition: all 0.2s;
+  }
+  .ntp-concept-btn:hover { background: rgba(180,157,255,0.12); }
+  .ntp-tag {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 0.125rem 0.5rem;
+    border-radius: 0.375rem;
+    margin-left: 0.5rem;
+    vertical-align: middle;
+    opacity: 0;
+    transform: translateY(0.2rem);
+    transition: opacity 0.25s ease, transform 0.25s ease;
+    pointer-events: none;
+  }
+  .ntp-tag.show { opacity: 1; transform: translateY(0); }
+  .ntp-tag.fact  { background: rgba(51,224,245,0.18); color: var(--cyan); }
+  .ntp-tag.logic { background: rgba(255,170,85,0.18); color: var(--orange); }
+  .ntp-tag.code  { background: rgba(180,157,255,0.18); color: var(--purple); }
+  .ntp-tag.lang  { background: rgba(123,154,255,0.18); color: var(--accent); }
+  .ntp-tag.math  { background: rgba(255,214,68,0.18); color: var(--yellow); }

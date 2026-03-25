@@ -1,0 +1,58 @@
+/* ── Math formulas ── */
+.math {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 1.05rem;
+    text-align: center;
+    padding: 1rem;
+    background: var(--surface2);
+    border-radius: 0.625rem;
+    margin: 0.75rem 0;
+    color: var(--yellow);
+    letter-spacing: 0.02em;
+    line-height: 1.6;
+  }
+  .math-big { font-size: 1.35rem; padding: 1.375rem; }
+  .math mjx-container {
+    margin: 0 auto !important;
+    color: inherit;
+  }
+  .math mjx-container[display="true"] {
+    margin: 0 auto !important;
+  }
+
+/* ── Animated gradient line ── */
+.gradient-line {
+    height: 0.15rem;
+    background: linear-gradient(90deg, var(--accent), var(--purple), var(--pink), var(--accent));
+    background-size: 200% 100%;
+    animation: shimmer 2.5s linear infinite;
+    border-radius: 0.125rem;
+    margin: 0.625rem 0;
+  }
+  @keyframes shimmer {
+    0%   { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+
+/* ── Pipeline boxes ── */
+.pipeline-box {
+    padding: 1.25rem;
+    border-radius: 0.75rem;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    position: relative;
+  }
+  .pipeline-box h3 { font-size: 1.05rem; margin-bottom: 0.375rem; }
+  .pipeline-box .small-text { font-size: 0.84rem; }
+  .pipeline-box .pipe-num {
+    position: absolute;
+    top: -0.625rem; left: -0.625rem;
+    width: 1.625rem; height: 1.625rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: #fff;
+  }
