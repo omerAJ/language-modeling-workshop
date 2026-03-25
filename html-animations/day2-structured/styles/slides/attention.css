@@ -26,7 +26,6 @@
     --attn18-focus-rgb: 123, 154, 255;
     position: relative;
     width: min(100%, 56rem);
-    min-height: clamp(12rem, 36vh, 17rem);
     padding: clamp(1rem, 2.2vw, 1.5rem) clamp(0.85rem, 2.6vw, 1.8rem);
     border-color: rgba(123,154,255,0.34);
     background:
@@ -323,9 +322,8 @@
 .attn19-layout {
     margin-top: 0.85rem;
     display: flex;
-    align-items: center;
+    align-items: stretch;
     justify-content: center;
-
 }
 
 .attn19-stage {
@@ -340,7 +338,6 @@
     --attn19-gap-kv-row: clamp(1.25rem, 2.8vh, 1.7rem);
     position: relative;
     width: min(100%, 56rem);
-    min-height: clamp(16rem, 52vh, 22.5rem);
     padding: clamp(0.95rem, 2vw, 1.4rem) clamp(0.8rem, 2.4vw, 1.7rem);
     border-color: rgba(123,154,255,0.34);
     background:
@@ -901,9 +898,7 @@
 }
 
 .attn18-stage {
-        min-height: clamp(11rem, 40vh, 15rem);
         padding: 0.92rem var(--sp-3);
-
 }
 
 .attn18-token-band {
@@ -955,7 +950,6 @@
         --attn19-gap-xq-row: clamp(3.6rem, 11.8vh, 4.8rem);
         --attn19-gap-sk-row: clamp(0.96rem, 2.8vh, 1.35rem);
         --attn19-gap-kv-row: clamp(1.02rem, 2.6vh, 1.35rem);
-        min-height: clamp(15rem, 60vh, 20rem);
         padding: 0.9rem var(--fs-2xs);
 
 }
@@ -1667,7 +1661,6 @@
 
 .attn21-stage {
     --attn21-col-gap: clamp(0.2rem, 0.56vw, 0.34rem);
-    min-height: clamp(18rem, 58vh, 26rem);
     width: min(100%, 62rem);
     display: flex;
     flex-direction: column;
@@ -2166,10 +2159,6 @@
 
 .attn19p1-takeaway {
    font-size: var(--fs-2xs); padding: var(--sp-2) 0.58rem;
-}
-
-.attn21-stage {
-   min-height: clamp(21rem, 72vh, 30rem);
 }
 
 .attn21-token-row {

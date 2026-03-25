@@ -16,7 +16,6 @@
     --attn24-struct-row-h: 0.82rem;
     --attn24-output-row-h: 1rem;
     position: relative;
-    min-height: clamp(28rem, 76vh, 38rem);
     display: grid;
     justify-items: center;
     align-content: start;
@@ -1066,7 +1065,6 @@
         --attn24-w-h: 2.58rem;
         --attn24-struct-row-h: 0.72rem;
         --attn24-output-row-h: 0.88rem;
-        min-height: clamp(26rem, 74vh, 35rem);
         gap: var(--fs-xs);
         padding-top: 0.84rem;
 
@@ -1169,7 +1167,6 @@
         --attn24-w-h: 2.34rem;
         --attn24-struct-row-h: 0.66rem;
         --attn24-output-row-h: 0.82rem;
-        min-height: clamp(25rem, 72vh, 33rem);
         gap: var(--fs-2xs);
 
 }

@@ -19,7 +19,6 @@
     --attn23-postscore-main-w: clamp(19.6rem, 44vw, 22.6rem);
     --attn23-postscore-vector-w: clamp(11.8rem, 24vw, 13.8rem);
     --attn23-postscore-cell-h: 1.72rem;
-    min-height: clamp(18rem, 56vh, 24rem);
     display: flex;
     flex-direction: column;
     align-items: center;

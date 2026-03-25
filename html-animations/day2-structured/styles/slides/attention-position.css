@@ -2,7 +2,6 @@
 
 .attn25-stage {
     position: relative;
-    min-height: clamp(24rem, 76vh, 34rem);
     display: grid;
     justify-items: center;
     align-content: start;

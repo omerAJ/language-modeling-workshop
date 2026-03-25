@@ -1,6 +1,6 @@
   .embed-table {
     display: grid;
-    gap: 0.6rem;
+    gap: 0.4rem;
     margin-top: 0.65rem;
   }
   .matrix-shape-label {
@@ -100,8 +100,36 @@
     background: rgba(90,232,142,0.18);
     color: #d7ffe8;
   }
-  .projection-stage {
+  .projection-body {
+    display: grid;
+    grid-template-columns: 1fr 20rem;
+    gap: var(--sp-3);
     margin-top: 0.7rem;
+    align-items: start;
+  }
+  .projection-body-canvas {
+    min-width: 0;
+  }
+  .projection-body-info {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+  }
+  .projection-body-info .projection-readout {
+    margin-top: 0;
+  }
+  .projection-body-info .projection-note {
+    margin-top: 0.4rem;
+  }
+  .projection-body-info .math-note {
+    margin-top: 0.5rem;
+  }
+  @media (max-width: 56rem) {
+    .projection-body {
+      grid-template-columns: 1fr;
+    }
+  }
+  .projection-stage {
     border: 1px solid rgba(123,154,255,0.3);
     border-radius: var(--radius-md);
     background:

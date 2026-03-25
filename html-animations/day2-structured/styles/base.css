@@ -48,10 +48,8 @@
     inset: 0;
     display: none;
     flex-direction: column;
-    padding: 2.25rem 5vw 4.5rem;
-    overflow-y: auto;
-    scrollbar-width: thin;
-    scrollbar-color: var(--border) transparent;
+    padding: 1.75rem 3.5vw 3.5rem;
+    overflow: hidden;
     animation: fadeSlideIn 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   }
 
@@ -61,6 +59,40 @@
     justify-content: center;
     align-items: center;
     text-align: center;
+  }
+
+  /* ── Slide Region System ── */
+  .slide-fit-shell {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    transform-origin: top center;
+  }
+
+  .slide-header {
+    flex: 0 0 auto;
+  }
+
+  .slide-body {
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .slide-body > .story-layout,
+  .slide-body > .attn19-layout,
+  .slide-body > .grid-2,
+  .slide-body > .grid-3,
+  .slide-body > .card {
+    flex: 1 1 auto;
+    min-height: 0;
+  }
+
+  .slide-body > .callout,
+  .slide-body > .template-note,
+  .slide-body > .story-takeaway {
+    flex: 0 0 auto;
   }
 
   @keyframes fadeSlideIn {

@@ -250,10 +250,11 @@ Refactor Notes (Zero-Regression):
   <!-- ═══════ SLIDE 4 — TOKENIZATION HOOK ═══════ -->
   <div class="slide" id="slide-4">
     <span class="section-tag">Tokenization</span>
-    <div class="badge concept">Tokenization</div>
-    <h2>How many r's in strawberry?</h2>
-    <div class="spacer-sm"></div>
-
+    <div class="slide-header">
+      <div class="badge concept">Tokenization</div>
+      <h2>How many r's in strawberry?</h2>
+    </div>
+    <div class="slide-body">
     <div class="grid-2">
       <div class="card" style="display:flex; flex-direction:column; align-items:center; justify-content:center; gap:0.65rem; text-align:center;">
         <div class="mono" style="font-size:2.2rem; font-weight:700; letter-spacing:0.04em;">
@@ -276,13 +277,13 @@ Refactor Notes (Zero-Regression):
       </div>
     </div>
 
-    <div class="spacer-sm"></div>
-    <div class="callout info">
+    <div class="callout info" style="margin-top:0.5rem;">
       <span class="icon">i</span>
       <span>This is not a bug — it is an architectural property. The next slides explain exactly how it arises and what it means for building reliable models.</span>
     </div>
-    <div class="template-note" style="margin-top:0.75rem;">
+    <div class="template-note" style="margin-top:0.4rem;">
       here we can show the gpt3.5 live demo and it failing on such tasks
+    </div>
     </div>
   </div>
 
@@ -503,20 +504,21 @@ Refactor Notes (Zero-Regression):
   <!-- ═══════ SLIDE 9 — BPE INTRO ═══════ -->
   <div class="slide" id="slide-9">
     <span class="section-tag">Tokenization</span>
-    <div class="badge concept">BPE</div>
-    <h2>How does the tokenizer learn these splits?</h2>
-    <div class="spacer-sm"></div>
-
+    <div class="slide-header">
+      <div class="badge concept">BPE</div>
+      <h2>How does the tokenizer learn these splits?</h2>
+    </div>
+    <div class="slide-body">
     <p class="token-anchor">Subword splits don't come from rules or dictionaries. They are <strong>learned from data</strong> using Byte Pair Encoding (BPE).</p>
 
-    <div class="flow token-interface" style="margin-top:0.85rem;">
+    <div class="flow token-interface" style="margin-top:0.55rem;">
       <div class="flow-box">Start: characters</div>
       <div class="flow-box">Count adjacent pairs</div>
       <div class="flow-box">Merge most frequent</div>
       <div class="flow-box">Repeat N times</div>
     </div>
 
-    <div class="grid-2" style="margin-top:0.75rem;">
+    <div class="grid-2" style="margin-top:0.5rem;">
       <div class="card">
         <h3>The core rule</h3>
         <p class="small-text">BPE starts with every word split into individual characters. It repeatedly finds the most frequent adjacent pair in the corpus and merges it into a single new token. After N merges, you have a vocabulary of N reusable subword pieces.</p>
@@ -527,14 +529,14 @@ Refactor Notes (Zero-Regression):
       </div>
     </div>
 
-    <div class="spacer-sm"></div>
-    <div class="callout info">
+    <div class="callout info" style="margin-top:0.5rem;">
       <span class="icon">i</span>
       <span><strong>BPE is a frequency-based compression algorithm.</strong> It builds the vocabulary the training data demands, not the one a linguist would design.</span>
     </div>
     <div class="callout question" style="margin-top:0.6rem;">
       <span class="icon">?</span>
       <span>To see exactly how this works, let's run BPE on a corpus you'll recognise.</span>
+    </div>
     </div>
   </div>
 
@@ -997,32 +999,27 @@ l e a r n ing &lt;/w&gt;</div>
   <!-- ═══════ SLIDE 13 — EMBEDDING INTERFACE ═══════ -->
   <div class="slide" id="slide-13">
     <span class="section-tag">Embeddings</span>
-    <div class="badge concept">Mechanism</div>
-    <h2>From token IDs to vectors</h2>
-    <div class="spacer-sm"></div>
-
+    <div class="slide-header">
+      <div class="badge concept">Mechanism</div>
+      <h2>From token IDs to vectors</h2>
+    </div>
+    <div class="slide-body">
     <p class="small-text">Token IDs index rows of a learned embedding table.</p>
     <div class="math">\[
       T\in\{1,\dots,|V|\}^{n},\quad X^{(0)}=E[T]\in\mathbb{R}^{n\times d_{\text{model}}}
     \]</div>
 
-    <div class="flow token-interface" style="margin-top:0.8rem;">
+    <div class="flow token-interface" style="margin-top:0.45rem;">
       <div class="flow-box ids">Token IDs: [812, 1452, 5021]</div>
       <div class="flow-box embed">Row lookup in \(E\)</div>
       <div class="flow-box" style="border-color: rgba(90,232,142,0.45); color: var(--green); background: rgba(90,232,142,0.1);">Output: \(x_1,x_2,x_3 \in \mathbb{R}^{d_{\text{model}}}\)</div>
     </div>
 
-    <div class="grid-2" style="margin-top:0.8rem;">
+    <div class="grid-2" style="margin-top:0.45rem;">
       <div class="card">
         <h3>Embedding matrix view</h3>
         <div class="matrix-shape-label">Full table: \(E \in \mathbb{R}^{|V| \times d_{\text{model}}}\)</div>
         <div class="embed-table">
-          <div class="embed-row matrix-ellipsis-row">
-            <span class="embed-key dim">\(E[0,:]\)</span>
-            <div class="vec-chip-group">
-              <span class="vec-chip dim">+0.03</span><span class="vec-chip dim">-0.11</span><span class="vec-chip dim">+0.07</span><span class="vec-chip dim">...</span>
-            </div>
-          </div>
           <div class="embed-row matrix-ellipsis-row">
             <span class="embed-key dim">⋮</span>
             <div class="vec-chip-group">
@@ -1053,12 +1050,6 @@ l e a r n ing &lt;/w&gt;</div>
               <span class="vec-chip dim">⋯</span>
             </div>
           </div>
-          <div class="embed-row matrix-ellipsis-row">
-            <span class="embed-key dim">\(E[|V|-1,:]\)</span>
-            <div class="vec-chip-group">
-              <span class="vec-chip dim">-0.09</span><span class="vec-chip dim">+0.41</span><span class="vec-chip dim">-0.28</span><span class="vec-chip dim">...</span>
-            </div>
-          </div>
         </div>
       </div>
       <div class="card">
@@ -1071,53 +1062,55 @@ l e a r n ing &lt;/w&gt;</div>
         <p class="tiny" style="margin-top:0.5rem;">Token IDs shown here are illustrative; exact values depend on the tokenizer vocabulary.</p>
       </div>
     </div>
+    </div>
   </div>
 
   <!-- ═══════ SLIDE 14 — KEY PROPERTIES ═══════ -->
   <div class="slide" id="slide-14">
     <span class="section-tag">Embeddings</span>
-    <div class="badge concept">Key Properties</div>
-    <h2>Embeddings establish the layer-0 input state</h2>
-    <div class="spacer-sm"></div>
-
-    <div class="grid-2">
-      <div class="card">
-        <h3>What this establishes</h3>
-        <ul class="pc-list good" style="margin-top:0.5rem;">
-          <li>A learned table \(E \in \mathbb{R}^{|V| \times d_{\text{model}}}\), where each token type has one trainable row.</li>
-          <li>Often one of the largest parameter blocks, scaling directly with \(|V| \times d_{\text{model}}\).</li>
-          <li>Lookup outputs \(X^{(0)}\) already match model width, so later blocks can consume them directly.</li>
-          <li>Geometry is distributed: useful structure appears as directions, neighborhoods, and relative offsets.</li>
-        </ul>
-      </div>
-      <div class="card">
-        <h3>What still needs later layers</h3>
-        <ul class="pc-list bad" style="margin-top:0.5rem;">
-          <li>Sense is unresolved at input: one token row can support multiple intended meanings.</li>
-          <li>No token-token interaction has happened yet, so rows cannot use neighboring words.</li>
-          <li>Row identity alone does not specify sentence role, dependency structure, or discourse function.</li>
-          <li>Later layers must refine these initial vectors into context-dependent states.</li>
-        </ul>
-      </div>
+    <div class="slide-header">
+      <div class="badge concept">Key Properties</div>
+      <h2>Embeddings establish the layer-0 input state</h2>
     </div>
+    <div class="slide-body">
+      <div class="grid-2">
+        <div class="card">
+          <h3>What this establishes</h3>
+          <ul class="pc-list good" style="margin-top:0.5rem;">
+            <li>Learned table \(E \in \mathbb{R}^{|V| \times d_{\text{model}}}\): one trainable row per token type.</li>
+            <li>Often one of the largest parameter blocks, scaling with \(|V| \times d_{\text{model}}\).</li>
+            <li>Outputs \(X^{(0)}\) already match model width — later blocks consume them directly.</li>
+            <li>Useful structure appears as directions, neighborhoods, and relative offsets.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>What still needs later layers</h3>
+          <ul class="pc-list bad" style="margin-top:0.5rem;">
+            <li>Sense is unresolved: one row can support multiple intended meanings.</li>
+            <li>No token-token interaction yet — rows cannot use neighboring words.</li>
+            <li>Row identity alone does not specify sentence role or dependency structure.</li>
+            <li>Later layers must refine these vectors into context-dependent states.</li>
+          </ul>
+        </div>
+      </div>
 
-    <div class="spacer-sm"></div>
-    <div class="callout info">
-      <span class="icon">→</span>
-      <span>Next: same vectors, different projections. Then we show why sentence context is needed to pick intended meaning.</span>
+      <div class="callout info" style="margin-top:0.5rem;">
+        <span class="icon">→</span>
+        <span>Next: same vectors, different projections. Then we show why sentence context is needed to pick intended meaning.</span>
+      </div>
     </div>
   </div>
 
   <!-- ═══════ SLIDE 16 — HIGH-DIMENSIONAL INTUITION ═══════ -->
   <div class="slide" id="slide-16">
     <span class="section-tag">Embeddings</span>
-    <div class="badge discussion">Geometry</div>
-    <h2>One embedding space, multiple semantic projections</h2>
-    <div class="spacer-sm"></div>
-
-    <p class="small-text">Each token has a \(d_{\text{model}}\)-dimensional vector. This plot shows only 2D projections of that same vector space.</p>
-
-    <div class="card projection-card" style="margin-top:0.8rem;">
+    <div class="slide-header">
+      <div class="badge discussion">Geometry</div>
+      <h2>One embedding space, multiple semantic projections</h2>
+      <p class="small-text">Each token has a \(d_{\text{model}}\)-dimensional vector. This plot shows only 2D projections of that same vector space.</p>
+    </div>
+    <div class="slide-body">
+    <div class="card projection-card" style="margin-top:0.5rem;">
       <h3>Projection controls (same space, different view)</h3>
       <div class="projection-toolbar" id="projectionToolbar16">
         <button class="lens-btn active" data-lens="pet" aria-pressed="true">Pet / companionship</button>
@@ -1125,26 +1118,29 @@ l e a r n ing &lt;/w&gt;</div>
         <button class="lens-btn" data-lens="care" aria-pressed="false">Care context</button>
       </div>
 
-      <div class="projection-stage">
-        <canvas class="projection-canvas" id="projectionCanvas16" width="1200" height="700" aria-label="Interactive embedding semantic lens plot"></canvas>
-      </div>
-
-      <div class="projection-readout" id="projectionReadout16">
-        <div class="small-text">Projection lens: <span class="hl" id="projectionLensLabel16">Pet / companionship</span></div>
-        <div class="small-text" style="margin-top:0.28rem;">Dimension pair emphasizes: <strong id="projectionMeaning16">pet and companionship features</strong></div>
-        <div class="small-text" style="margin-top:0.28rem;">Nearest to <strong>cat</strong> under this lens:</div>
-        <div class="projection-neighbors" id="projectionNeighbors16">
-          <span class="neighbor-chip">dog</span>
-          <span class="neighbor-chip">hamster</span>
-          <span class="neighbor-chip">vet</span>
+      <div class="projection-body">
+        <div class="projection-body-canvas">
+          <div class="projection-stage">
+            <canvas class="projection-canvas" id="projectionCanvas16" width="1200" height="700" aria-label="Interactive embedding semantic lens plot"></canvas>
+          </div>
         </div>
-        <div class="math-note" style="margin-top:0.55rem;">\(z^{(\mathrm{lens})} = P_{\mathrm{lens}}x,\; P_{\mathrm{lens}}\in\mathbb{R}^{2\times d_{\text{model}}}\)</div>
-        <p class="tiny" style="margin-top:0.38rem;">Changing \(P_{\mathrm{lens}}\) changes the view, not the embedding vector.</p>
-      </div>
 
-      <p class="projection-note">Each lens is a different 2D projection of the same high-dimensional space.</p>
-      <p class="projection-note" style="margin-top:0.32rem;">The points do not move in high-D space; only our 2D view changes.</p>
-      <p class="projection-note" style="margin-top:0.32rem;">This is why one token row can support multiple potential meanings before context resolves it.</p>
+        <div class="projection-body-info">
+          <div class="projection-readout" id="projectionReadout16">
+            <div class="small-text">Projection lens: <span class="hl" id="projectionLensLabel16">Pet / companionship</span></div>
+            <div class="small-text" style="margin-top:0.28rem;">Dimension pair emphasizes: <strong id="projectionMeaning16">pet and companionship features</strong></div>
+            <div class="small-text" style="margin-top:0.28rem;">Nearest to <strong>cat</strong> under this lens:</div>
+            <div class="projection-neighbors" id="projectionNeighbors16">
+              <span class="neighbor-chip">dog</span>
+              <span class="neighbor-chip">hamster</span>
+              <span class="neighbor-chip">vet</span>
+            </div>
+          </div>
+          <div class="math-note" style="margin-top:0.5rem;">\(z^{(\mathrm{lens})} = P_{\mathrm{lens}}x,\; P_{\mathrm{lens}}\in\mathbb{R}^{2\times d_{\text{model}}}\)</div>
+          <p class="projection-note" style="margin-top:0.5rem;">Each lens is a different 2D projection of the same high-dimensional space. The points do not move in high-D — only our 2D view changes. This is why one token row can support multiple potential meanings before context resolves it.</p>
+        </div>
+      </div>
+    </div>
     </div>
   </div>
 
@@ -1412,10 +1408,12 @@ l e a r n ing &lt;/w&gt;</div>
 
   <div class="slide" id="slide-22">
     <span class="section-tag">Attention</span>
-    <div class="badge concept">Mechanism</div>
-    <h2>Step 4 — Aggregate values and add residual</h2>
-    <p class="small-text attn19-subtitle">Mix value vectors with attention weights, then add back \(x_{\mathrm{sat}}\)</p>
-
+    <div class="slide-header">
+      <div class="badge concept">Mechanism</div>
+      <h2>Step 4 — Aggregate values and add residual</h2>
+      <p class="small-text attn19-subtitle">Mix value vectors with attention weights, then add back \(x_{\mathrm{sat}}\)</p>
+    </div>
+    <div class="slide-body">
     <div class="attn19-layout">
       <div class="card attn19-stage" id="attn22-stage">
         <svg class="attn19-overlay" id="attn22-overlay" aria-hidden="true">
@@ -1501,14 +1499,17 @@ l e a r n ing &lt;/w&gt;</div>
       </div>
     </div>
     <div class="attn19-takeaway" id="attn22-takeaway">Start from Step 3 scores \(s_j = q_{\mathrm{sat}}^{\mathsf{T}} k_j\) for each token.</div>
+    </div>
   </div>
 
   <div class="slide" id="slide-23">
     <span class="section-tag">Attention</span>
-    <div class="badge concept">Mechanism</div>
-    <h2>Matrix View of Attention</h2>
-    <p class="small-text attn19-subtitle">Stack tokens, project \(X\) into \(Q\), \(K\), and \(V\), compute scores, mask the future, then normalize and mix values</p>
-
+    <div class="slide-header">
+      <div class="badge concept">Mechanism</div>
+      <h2>Matrix View of Attention</h2>
+      <p class="small-text attn19-subtitle">Stack tokens, project \(X\) into \(Q\), \(K\), and \(V\), compute scores, mask the future, then normalize and mix values</p>
+    </div>
+    <div class="slide-body">
     <div class="attn19-layout">
       <div class="card attn19-stage attn23-stage" id="attn23-stage">
         <div class="attn23-ghost-layer" id="attn23-ghost-layer" aria-hidden="true"></div>
@@ -1566,14 +1567,17 @@ l e a r n ing &lt;/w&gt;</div>
     </div>
 
     <div class="attn19-takeaway" id="attn23-takeaway">Start from the same sequence: tokens plus their embedding rows.</div>
+    </div>
   </div>
 
   <div class="slide" id="slide-24">
     <span class="section-tag">Attention</span>
-    <div class="badge concept">Mechanism</div>
-    <h2>Multi-Head Attention</h2>
-    <p class="small-text attn19-subtitle">Run parallel attention heads on different learned projections of \(X\), then combine them back together</p>
-
+    <div class="slide-header">
+      <div class="badge concept">Mechanism</div>
+      <h2>Multi-Head Attention</h2>
+      <p class="small-text attn19-subtitle">Run parallel attention heads on different learned projections of \(X\), then combine them back together</p>
+    </div>
+    <div class="slide-body">
     <div class="attn19-layout">
       <div class="card attn19-stage attn24-stage" id="attn24-stage">
         <div class="attn24-ghost-layer" id="attn24-ghost-layer" aria-hidden="true"></div>
@@ -1599,14 +1603,17 @@ l e a r n ing &lt;/w&gt;</div>
     </div>
 
     <div class="attn19-takeaway" id="attn24-takeaway">Multi-head attention lets tokens read from each other in parallel, but the block still needs explicit position and a per-token computation after attention.</div>
+    </div>
   </div>
 
   <div class="slide" id="slide-25">
     <span class="section-tag">Input Representation</span>
-    <div class="badge concept">Problem</div>
-    <h2>Attention Still Doesn&rsquo;t Know Order</h2>
-    <p class="small-text">Self-attention compares token vectors by matrix multiplication. If we only permute the token rows, the same score values appear in a different order.</p>
-
+    <div class="slide-header">
+      <div class="badge concept">Problem</div>
+      <h2>Attention Still Doesn&rsquo;t Know Order</h2>
+      <p class="small-text">Self-attention compares token vectors by matrix multiplication. If we only permute the token rows, the same score values appear in a different order.</p>
+    </div>
+    <div class="slide-body">
     <div class="story-layout">
       <div class="card story-stage order25-stage" id="order25-stage">
         <div class="order25-question">If we keep the same query vector but permute the key rows, do the scores change or just move?</div>
@@ -1798,14 +1805,17 @@ l e a r n ing &lt;/w&gt;</div>
     </div>
 
     <div class="story-takeaway" id="order25-takeaway">Without position, attention only sees token rows. Reordering the rows changes where things appear, not which token vectors exist.</div>
+    </div>
   </div>
 
   <div class="slide" id="slide-26">
     <span class="section-tag">Input Representation</span>
-    <div class="badge concept">Mechanism</div>
-    <h2>Add Position Before Attention</h2>
-    <p class="small-text">The Transformer has no built-in notion of order, so position must be injected into each row before the first Q/K/V projections.</p>
-
+    <div class="slide-header">
+      <div class="badge concept">Mechanism</div>
+      <h2>Add Position Before Attention</h2>
+      <p class="small-text">The Transformer has no built-in notion of order, so position must be injected into each row before the first Q/K/V projections.</p>
+    </div>
+    <div class="slide-body">
     <div class="story-layout">
       <div class="card story-stage pos26-stage" id="pos26-stage">
         <div class="pos26-question">If the word &quot;cat&quot; moves from slot 3 to slot 1, does attention still receive the same row for cat?</div>
@@ -1966,14 +1976,17 @@ l e a r n ing &lt;/w&gt;</div>
     </div>
 
     <div class="story-takeaway" id="pos26-takeaway">Position is the missing ingredient: without it, the same word looks the same no matter where it appears.</div>
+    </div>
   </div>
 
   <div class="slide" id="slide-27">
     <span class="section-tag">Input Representation</span>
-    <div class="badge concept">Bridge</div>
-    <h2>Position Embeddings: Sin/Cos, Learned, RoPE</h2>
-    <p class="small-text">Sin/cos is the clearest signal view of position. Then compare it with learned absolute vectors and RoPE.</p>
-
+    <div class="slide-header">
+      <div class="badge concept">Bridge</div>
+      <h2>Position Embeddings: Sin/Cos, Learned, RoPE</h2>
+      <p class="small-text">Sin/cos is the clearest signal view of position. Then compare it with learned absolute vectors and RoPE.</p>
+    </div>
+    <div class="slide-body">
     <!--
       Slide 27 source grounding:
       - Vaswani et al. (2017), Attention Is All You Need:
@@ -2077,14 +2090,17 @@ l e a r n ing &lt;/w&gt;</div>
         </div>
       </div>
     </div>
+    </div>
   </div>
 
   <div class="slide" id="slide-28">
     <span class="section-tag">Transformer Block</span>
-    <div class="badge concept">Mechanism</div>
-    <h2>Attention Gathers, FFN Computes</h2>
-    <p class="small-text">Attention mixes information across tokens. The FFN then transforms each row with the same small network.</p>
-
+    <div class="slide-header">
+      <div class="badge concept">Mechanism</div>
+      <h2>Attention Gathers, FFN Computes</h2>
+      <p class="small-text">Attention mixes information across tokens. The FFN then transforms each row with the same small network.</p>
+    </div>
+    <div class="slide-body">
     <div class="story-layout">
       <div class="card story-stage ffn28-stage" id="ffn28-stage">
         <div class="ffn28-question">After attention mixes information, how does the FFN transform each row?</div>
@@ -2188,14 +2204,17 @@ l e a r n ing &lt;/w&gt;</div>
     </div>
 
     <div class="story-takeaway" id="ffn28-takeaway">Attention gathers context. The FFN then transforms each row with the same MLP.</div>
+    </div>
   </div>
 
   <div class="slide" id="slide-29">
     <span class="section-tag">Transformer Block</span>
-    <div class="badge concept">Mechanism</div>
-    <h2>Inside the FFN: Expand, Gate, Project</h2>
-    <p class="small-text">Mechanically, the FFN is a simple two-layer neural network: expand from \(d_{\mathrm{model}}\) to \(d_{\mathrm{ff}}\), apply GELU, then project back.</p>
-
+    <div class="slide-header">
+      <div class="badge concept">Mechanism</div>
+      <h2>Inside the FFN: Expand, Gate, Project</h2>
+      <p class="small-text">Mechanically, the FFN is a simple two-layer neural network: expand from \(d_{\mathrm{model}}\) to \(d_{\mathrm{ff}}\), apply GELU, then project back.</p>
+    </div>
+    <div class="slide-body">
     <div class="story-layout">
       <div class="card story-stage ffn29-stage" id="ffn29-stage">
         <div class="ffn29-question">Mechanically, what is the neural network inside the FFN?</div>
@@ -2313,6 +2332,7 @@ l e a r n ing &lt;/w&gt;</div>
     </div>
 
     <div class="story-takeaway" id="ffn29-takeaway">The FFN starts from one contextualized token row.</div>
+    </div>
   </div>
 
   <div class="slide" id="slide-30">
@@ -2518,6 +2538,7 @@ l e a r n ing &lt;/w&gt;</div>
 <script src="./scripts/slides/attention-shared.js"></script>
 <script src="./scripts/core/slide-registry.js"></script>
 <script src="./scripts/core/math.js"></script>
+<script src="./scripts/core/fit.js"></script>
 <script src="./scripts/core/navigation.js"></script>
 <script src="./scripts/slides/attention-intro.js"></script>
 <script src="./scripts/slides/attention-p1.js"></script>

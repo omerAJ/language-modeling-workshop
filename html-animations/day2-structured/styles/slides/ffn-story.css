@@ -10,14 +10,6 @@
     var(--surface);
 }
 
-#slide-28 .ffn28-stage {
-  min-height: clamp(24rem, 71vh, 35rem);
-}
-
-#slide-29 .ffn29-stage {
-  min-height: clamp(25rem, 72vh, 36rem);
-}
-
 #slide-29 .ffn29-question {
   justify-self: center;
   width: fit-content;
@@ -563,6 +555,27 @@
   transform: translateY(0);
   pointer-events: auto;
   border-width: 1px;
+}
+
+/* Slide 28: collapse earlier cards when later steps fire */
+#slide-28.ffn28-show-repeat .ffn28-context-card,
+#slide-28.ffn28-show-repeat .ffn28-local-card,
+#slide-28.ffn28-show-params .ffn28-context-card,
+#slide-28.ffn28-show-params .ffn28-local-card {
+  max-height: 0;
+  max-width: 0;
+  width: 0;
+  opacity: 0;
+  padding: 0;
+  border-width: 0;
+  pointer-events: none;
+  overflow: hidden;
+  transition: max-height 0.3s ease, opacity 0.2s ease, max-width 0.3s ease, width 0.3s ease, padding 0.3s ease;
+}
+
+/* Slide 29: shrink network figure when math card appears */
+#slide-29.ffn29-show-math .ffn29-network-figure {
+  min-height: 9rem;
 }
 
 /* Responsive */

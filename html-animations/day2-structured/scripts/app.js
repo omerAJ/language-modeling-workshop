@@ -1,5 +1,6 @@
 cacheUiReferences();
 refreshSlides();
+initializeSlideFitSystem();
 
 addTrackedListener(state.ui.btnNext, 'click', nextWithInteractions);
 addTrackedListener(state.ui.btnSkip, 'click', nextSlide);

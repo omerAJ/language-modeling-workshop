@@ -71,7 +71,7 @@ function drawProjection() {
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   ctx.clearRect(0, 0, width, height);
 
-  const pad = 48;
+  const pad = 32;
   const plotW = Math.max(1, width - pad * 2);
   const plotH = Math.max(1, height - pad * 2);
   const centerX = pad + plotW * 0.5;
@@ -129,20 +129,20 @@ function drawProjection() {
 
     if (isNeighbor) {
       ctx.beginPath();
-      ctx.arc(x, y, 11, 0, Math.PI * 2);
+      ctx.arc(x, y, 16, 0, Math.PI * 2);
       ctx.fillStyle = isEmphasized ? 'rgba(255,214,68,0.2)' : 'rgba(255,214,68,0.1)';
       ctx.fill();
     }
 
     ctx.beginPath();
-    ctx.arc(x, y, 6.2, 0, Math.PI * 2);
+    ctx.arc(x, y, 9, 0, Math.PI * 2);
     ctx.fillStyle = toRgba(style.fill, alpha);
     ctx.fill();
-    ctx.lineWidth = 1.4;
+    ctx.lineWidth = 1.8;
     ctx.strokeStyle = toRgba(style.stroke, isEmphasized ? 0.75 : 0.34);
     ctx.stroke();
 
-    ctx.font = '600 13px Inter, sans-serif';
+    ctx.font = '600 16px Inter, sans-serif';
     ctx.textAlign = 'left';
     ctx.textBaseline = 'middle';
     ctx.fillStyle = isEmphasized ? 'rgba(233,239,255,0.96)' : 'rgba(233,239,255,0.46)';
@@ -152,18 +152,18 @@ function drawProjection() {
   const catCoords = projectionState.currentPositions.cat || [0.5, 0.5];
   const [catX, catY] = toXY(catCoords);
   ctx.beginPath();
-  ctx.arc(catX, catY, 16, 0, Math.PI * 2);
+  ctx.arc(catX, catY, 22, 0, Math.PI * 2);
   ctx.fillStyle = 'rgba(90,232,142,0.18)';
   ctx.fill();
   ctx.beginPath();
-  ctx.arc(catX, catY, 8.5, 0, Math.PI * 2);
+  ctx.arc(catX, catY, 12, 0, Math.PI * 2);
   ctx.fillStyle = 'rgba(90,232,142,0.95)';
   ctx.fill();
-  ctx.lineWidth = 1.8;
+  ctx.lineWidth = 2.2;
   ctx.strokeStyle = 'rgba(218,255,232,0.85)';
   ctx.stroke();
 
-  ctx.font = '700 13px Inter, sans-serif';
+  ctx.font = '700 16px Inter, sans-serif';
   ctx.fillStyle = '#d8ffe9';
   ctx.textAlign = 'left';
   ctx.fillText('cat (anchor)', catX + 12, catY + 1);
