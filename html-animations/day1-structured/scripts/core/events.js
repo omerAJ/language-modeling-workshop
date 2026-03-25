@@ -17,24 +17,28 @@ function handleDelegatedClick(event) {
   const ingredientBtn = event.target.closest('[data-ingredient]');
   if (ingredientBtn) {
     revealIngredient(Number(ingredientBtn.dataset.ingredient));
+    scheduleActiveSlideFit({ reason: 'click-reveal' });
     return;
   }
 
   const trainBtn = event.target.closest('[data-train-phase]');
   if (trainBtn) {
     trainStep(Number(trainBtn.dataset.trainPhase));
+    scheduleActiveSlideFit({ reason: 'click-reveal' });
     return;
   }
 
   const suspectBtn = event.target.closest('[data-suspect]');
   if (suspectBtn) {
     chooseDramaSuspect(suspectBtn.dataset.suspect, suspectBtn);
+    scheduleActiveSlideFit({ reason: 'click-reveal' });
     return;
   }
 
   const fixBtn = event.target.closest('[data-fix]');
   if (fixBtn) {
     revealFix(fixBtn.dataset.fix);
+    scheduleActiveSlideFit({ reason: 'click-reveal' });
     return;
   }
 
@@ -45,24 +49,28 @@ function handleDelegatedClick(event) {
     if (action === 'reveal-drama-answer') revealDramaAnswer();
     if (action === 'reveal-all-ntp') revealAllNTP();
     if (action === 'reveal-dumb-response') revealDumbResponse();
+    scheduleActiveSlideFit({ reason: 'click-reveal' });
     return;
   }
 
   const inferenceBlank = event.target.closest('#infCurrent');
   if (inferenceBlank) {
     animateInference();
+    scheduleActiveSlideFit({ reason: 'click-reveal' });
     return;
   }
 
   const ntpBlank = event.target.closest('.ntp-blank');
   if (ntpBlank) {
     revealNTP(ntpBlank);
+    scheduleActiveSlideFit({ reason: 'click-reveal' });
     return;
   }
 
   const ntpConceptBtn = event.target.closest('.ntp-concept-btn');
   if (ntpConceptBtn) {
     revealNTPConcept(ntpConceptBtn);
+    scheduleActiveSlideFit({ reason: 'click-reveal' });
   }
 }
 
@@ -84,6 +92,10 @@ function handleKeydown(e) {
     e.preventDefault();
     prevSlide();
   }
+  if (e.key === 'n' || e.key === 'N') {
+    document.body.classList.toggle('show-notes');
+    scheduleActiveSlideFit({ reason: 'toggle-notes' });
+  }
 }
 
 function handleTransitionEnd(e) {
@@ -91,6 +103,7 @@ function handleTransitionEnd(e) {
   if (!el.classList.contains('hidden-content') || e.propertyName !== 'max-height') return;
   if (el.classList.contains('revealed')) {
     el.classList.add('settled');
+    scheduleActiveSlideFit({ reason: 'reveal-settled', dispatchResize: false });
   } else {
     el.classList.remove('settled');
   }

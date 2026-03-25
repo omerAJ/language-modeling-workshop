@@ -2,12 +2,14 @@
 
 /* ── Responsive root scaling ──
    Single source of truth: all rem values scale with viewport.
-   At 1920×1080 ≈ 20px, at 3840×2160 → clamped 32px, at 1366×768 ≈ 15px */
+   Optimised for projector readability (300-person auditorium).
+   At 1920×1080 ≈ 23 px, at 1366×768 ≈ 19 px, at 3840×2160 → clamped 36 px */
 html {
-  font-size: clamp(14px, calc(0.5vw + 0.55vh + 4px), 32px);
+  font-size: clamp(17px, calc(0.6vw + 0.65vh + 5px), 36px);
 }
 
 :root {
+  /* ── Colours ── */
   --bg: #0a0d14;
   --surface: #161923;
   --surface2: #1e2231;
@@ -24,4 +26,43 @@ html {
   --yellow: #ffd644;
   --cyan: #33e0f5;
   --pink: #ff82c4;
+
+  /* ── Semantic colour backgrounds & borders ── */
+  --accent-bg: rgba(123,154,255,0.08);
+  --accent-border: rgba(123,154,255,0.25);
+  --green-bg: rgba(90,232,142,0.08);
+  --green-border: rgba(90,232,142,0.25);
+  --red-bg: rgba(255,123,123,0.08);
+  --red-border: rgba(255,123,123,0.25);
+  --orange-bg: rgba(255,170,85,0.08);
+  --orange-border: rgba(255,170,85,0.25);
+  --purple-bg: rgba(180,157,255,0.08);
+  --purple-border: rgba(180,157,255,0.25);
+  --cyan-bg: rgba(51,224,245,0.08);
+  --cyan-border: rgba(51,224,245,0.25);
+  --yellow-bg: rgba(255,214,68,0.08);
+  --yellow-border: rgba(255,214,68,0.25);
+
+  /* ── Typography scale (7 stops) ── */
+  --fs-2xl: 2.8rem;   /* h1, hero titles */
+  --fs-xl:  1.8rem;   /* h2 */
+  --fs-lg:  1.25rem;  /* h3, card titles, math blocks */
+  --fs-base: 1.05rem; /* body text, callouts */
+  --fs-sm:  0.92rem;  /* secondary text */
+  --fs-xs:  0.82rem;  /* badges, nav, labels */
+  --fs-2xs: 0.72rem;  /* absolute floor — dense diagram labels only */
+
+  /* ── Spacing scale (6 stops) ── */
+  --sp-1: 0.25rem;
+  --sp-2: 0.5rem;
+  --sp-3: 0.75rem;
+  --sp-4: 1.25rem;
+  --sp-5: 2rem;
+  --sp-6: 3rem;
+
+  /* ── Radius ── */
+  --radius-sm: 0.375rem;
+  --radius-md: 0.625rem;
+  --radius-lg: 1rem;
+  --radius-full: 999px;
 }

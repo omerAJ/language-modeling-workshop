@@ -16,6 +16,9 @@ function getCurrentSlide() {
 
 function resetSlideInteractions(slideEl) {
   if (!slideEl) return;
+  slideEl.querySelectorAll('.hidden-content').forEach(function(el) {
+    el.classList.remove('revealed', 'settled');
+  });
   const descriptor = getSlideDescriptorById(slideEl.id);
   descriptor.reset(state, slideEl);
 }
@@ -44,6 +47,7 @@ function goToSlide(index) {
   const descriptor = getSlideDescriptorById(nextSlideEl.id);
   descriptor.init(state, nextSlideEl);
   typesetMath(nextSlideEl);
+  scheduleActiveSlideFit({ reason: 'goToSlide' });
 }
 
 function goTo(index) {
@@ -75,8 +79,14 @@ function nextStep() {
   const active = getCurrentSlide();
   if (!active) return false;
   const descriptor = getSlideDescriptorById(active.id);
-  if (descriptor.step(active, state)) return true;
-  if (runAutoStep(active)) return true;
+  if (descriptor.step(active, state)) {
+    scheduleActiveSlideFit({ reason: 'step' });
+    return true;
+  }
+  if (runAutoStep(active)) {
+    scheduleActiveSlideFit({ reason: 'autostep' });
+    return true;
+  }
   return false;
 }
 
