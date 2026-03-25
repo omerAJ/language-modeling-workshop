@@ -20,7 +20,9 @@ function defineSlides() {
       reset: () => resetIngredients()
     }),
     'slide-5': createSlideDescriptor('slide-5', {
-      step: () => runInferenceSlideStep()
+      init: () => resetInferenceDemo(),
+      step: () => runInferenceSlideStep(),
+      reset: () => resetInferenceDemo()
     }),
     'slide-6': createSlideDescriptor('slide-6', {
       init: () => resetTrainLoop(),

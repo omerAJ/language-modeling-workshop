@@ -1,7 +1,73 @@
 // ══════════════════════════════════════
 //  Inference demo + training loop
 // ══════════════════════════════════════
+function appendInferenceBlank() {
+  const row = document.getElementById('inferenceDemo');
+  if (!row || document.getElementById('infCurrent')) return;
+
+  const newBlank = document.createElement('span');
+  newBlank.className = 'tok blank';
+  newBlank.id = 'infCurrent';
+  newBlank.textContent = 'click';
+  row.appendChild(newBlank);
+}
+
+function clearInferenceBlankTimer() {
+  if (!inferenceState.blankTimer) return;
+  clearTrackedTimeout(inferenceState.blankTimer);
+  inferenceState.blankTimer = null;
+}
+
+function scheduleInferenceBlank() {
+  clearInferenceBlankTimer();
+  inferenceState.pendingBlank = true;
+  inferenceState.blankTimer = setTrackedTimeout(function() {
+    inferenceState.blankTimer = null;
+    inferenceState.pendingBlank = false;
+    appendInferenceBlank();
+  }, 350);
+}
+
+function resumeInferenceBlank() {
+  if (!inferenceState.pendingBlank) return;
+  if (document.getElementById('infCurrent')) {
+    inferenceState.pendingBlank = false;
+    return;
+  }
+  scheduleInferenceBlank();
+}
+
+function resetInferenceDemo() {
+  const row = document.getElementById('inferenceDemo');
+  const hint = document.getElementById('infHint');
+  clearInferenceBlankTimer();
+  inferenceState.step = 0;
+  inferenceState.pendingBlank = false;
+
+  if (row) {
+    row.innerHTML = [
+      '<span class="tok input">The</span>',
+      '<span class="tok input">capital</span>',
+      '<span class="tok input">of</span>',
+      '<span class="tok input">Pakistan</span>',
+      '<span class="tok input">is</span>',
+      '<span class="tok blank" id="infCurrent">click</span>'
+    ].join('');
+  }
+
+  if (hint) {
+    hint.textContent = 'Click the blank to simulate one inference step';
+    hint.style.color = '';
+  }
+}
+
 function runInferenceSlideStep() {
+  if (inferenceState.pendingBlank) {
+    clearInferenceBlankTimer();
+    inferenceState.pendingBlank = false;
+    appendInferenceBlank();
+    return true;
+  }
   if (inferenceState.step >= INF_TOKENS.length) return false;
   if (!document.getElementById('infCurrent')) return false;
   animateInference();
@@ -32,14 +98,10 @@ function animateInference() {
   inferenceState.step += 1;
 
   if (inferenceState.step < INF_TOKENS.length) {
-    setTimeout(() => {
-      const newBlank = document.createElement('span');
-      newBlank.className = 'tok blank';
-      newBlank.id = 'infCurrent';
-      newBlank.textContent = 'click';
-      row.appendChild(newBlank);
-    }, 350);
+    scheduleInferenceBlank();
   } else {
+    clearInferenceBlankTimer();
+    inferenceState.pendingBlank = false;
     const hint = document.getElementById('infHint');
     if (hint) {
       hint.textContent = 'Generation complete — the model produced 3 tokens.';

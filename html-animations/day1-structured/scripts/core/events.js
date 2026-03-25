@@ -16,61 +16,85 @@ function handleDelegatedClick(event) {
 
   const ingredientBtn = event.target.closest('[data-ingredient]');
   if (ingredientBtn) {
-    revealIngredient(Number(ingredientBtn.dataset.ingredient));
-    scheduleActiveSlideFit({ reason: 'click-reveal' });
+    if (runMutationWithHistory(function() {
+      revealIngredient(Number(ingredientBtn.dataset.ingredient));
+    })) {
+      scheduleActiveSlideFit({ reason: 'click-reveal' });
+    }
     return;
   }
 
   const trainBtn = event.target.closest('[data-train-phase]');
   if (trainBtn) {
-    trainStep(Number(trainBtn.dataset.trainPhase));
-    scheduleActiveSlideFit({ reason: 'click-reveal' });
+    if (runMutationWithHistory(function() {
+      trainStep(Number(trainBtn.dataset.trainPhase));
+    })) {
+      scheduleActiveSlideFit({ reason: 'click-reveal' });
+    }
     return;
   }
 
   const suspectBtn = event.target.closest('[data-suspect]');
   if (suspectBtn) {
-    chooseDramaSuspect(suspectBtn.dataset.suspect, suspectBtn);
-    scheduleActiveSlideFit({ reason: 'click-reveal' });
+    if (runMutationWithHistory(function() {
+      chooseDramaSuspect(suspectBtn.dataset.suspect, suspectBtn);
+    })) {
+      scheduleActiveSlideFit({ reason: 'click-reveal' });
+    }
     return;
   }
 
   const fixBtn = event.target.closest('[data-fix]');
   if (fixBtn) {
-    revealFix(fixBtn.dataset.fix);
-    scheduleActiveSlideFit({ reason: 'click-reveal' });
+    if (runMutationWithHistory(function() {
+      revealFix(fixBtn.dataset.fix);
+    })) {
+      scheduleActiveSlideFit({ reason: 'click-reveal' });
+    }
     return;
   }
 
   const actionBtn = event.target.closest('[data-action]');
   if (actionBtn) {
-    const action = actionBtn.dataset.action;
-    if (action === 'reveal-reasoning-pressure') revealReasoningPressure();
-    if (action === 'reveal-drama-answer') revealDramaAnswer();
-    if (action === 'reveal-all-ntp') revealAllNTP();
-    if (action === 'reveal-dumb-response') revealDumbResponse();
-    scheduleActiveSlideFit({ reason: 'click-reveal' });
+    if (runMutationWithHistory(function() {
+      const action = actionBtn.dataset.action;
+      if (action === 'reveal-reasoning-pressure') revealReasoningPressure();
+      if (action === 'reveal-drama-answer') revealDramaAnswer();
+      if (action === 'reveal-all-ntp') revealAllNTP();
+      if (action === 'reveal-dumb-response') revealDumbResponse();
+    })) {
+      scheduleActiveSlideFit({ reason: 'click-reveal' });
+    }
     return;
   }
 
   const inferenceBlank = event.target.closest('#infCurrent');
   if (inferenceBlank) {
-    animateInference();
-    scheduleActiveSlideFit({ reason: 'click-reveal' });
+    if (runMutationWithHistory(function() {
+      animateInference();
+    })) {
+      scheduleActiveSlideFit({ reason: 'click-reveal' });
+    }
     return;
   }
 
   const ntpBlank = event.target.closest('.ntp-blank');
   if (ntpBlank) {
-    revealNTP(ntpBlank);
-    scheduleActiveSlideFit({ reason: 'click-reveal' });
+    if (runMutationWithHistory(function() {
+      revealNTP(ntpBlank);
+    })) {
+      scheduleActiveSlideFit({ reason: 'click-reveal' });
+    }
     return;
   }
 
   const ntpConceptBtn = event.target.closest('.ntp-concept-btn');
   if (ntpConceptBtn) {
-    revealNTPConcept(ntpConceptBtn);
-    scheduleActiveSlideFit({ reason: 'click-reveal' });
+    if (runMutationWithHistory(function() {
+      revealNTPConcept(ntpConceptBtn);
+    })) {
+      scheduleActiveSlideFit({ reason: 'click-reveal' });
+    }
   }
 }
 
@@ -90,7 +114,7 @@ function handleKeydown(e) {
   }
   if (e.key === 'ArrowLeft') {
     e.preventDefault();
-    prevSlide();
+    prevWithInteractions();
   }
   if (e.key === 'n' || e.key === 'N') {
     document.body.classList.toggle('show-notes');
@@ -112,7 +136,7 @@ function handleTransitionEnd(e) {
 function bindGlobalEvents() {
   state.ui.btnNext.addEventListener('click', nextWithInteractions);
   state.ui.btnSkip.addEventListener('click', nextSlide);
-  state.ui.btnPrev.addEventListener('click', prevSlide);
+  state.ui.btnPrev.addEventListener('click', prevWithInteractions);
   document.addEventListener('click', handleDelegatedClick);
   document.addEventListener('keydown', handleKeydown);
   document.addEventListener('transitionend', handleTransitionEnd);

@@ -245,7 +245,16 @@ function initProjectionSlide() {
     projectionState.activeLens = DEFAULT_PROJECTION_LENS;
 
     toolbar.querySelectorAll('.lens-btn').forEach((btn) => {
-      addTrackedListener(btn, 'click', () => setProjectionLens(btn.dataset.lens));
+      addTrackedListener(btn, 'click', () => {
+        if (typeof runMutationWithHistory === 'function') {
+          if (runMutationWithHistory(() => setProjectionLens(btn.dataset.lens))) {
+            scheduleActiveSlideFit({ reason: 'projection-lens' });
+          }
+          return;
+        }
+        setProjectionLens(btn.dataset.lens);
+        scheduleActiveSlideFit({ reason: 'projection-lens' });
+      });
     });
 
     if (!projectionState.resizeBound) {

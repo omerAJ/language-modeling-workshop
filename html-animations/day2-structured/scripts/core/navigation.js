@@ -8,6 +8,203 @@ function refreshSlides() {
   });
 }
 
+const STEP_STATE_CONTROLLERS = {
+  'slide-18': {
+    get: () => attentionIntroState.step,
+    set: (step) => setAttentionIntroStep(step)
+  },
+  'slide-19': {
+    get: () => attentionP1State.step,
+    set: (step) => setAttentionP1Step(step)
+  },
+  'slide-20': {
+    get: () => attentionQkvState.step,
+    set: (step) => setAttentionQkvStep(step)
+  },
+  'slide-21': {
+    get: () => attentionWeightsState.step,
+    set: (step) => setAttentionWeightsStep(step)
+  },
+  'slide-22': {
+    get: () => attentionStep4State.step,
+    set: (step) => setAttentionStep4Step(step)
+  },
+  'slide-23': {
+    get: () => attentionMatrixState.step,
+    set: (step) => setAttentionMatrixStep(step)
+  },
+  'slide-24': {
+    get: () => attentionMultiHeadState.step,
+    set: (step) => setAttentionMultiHeadStep(step)
+  },
+  'slide-25': {
+    get: () => orderProblemState.step,
+    set: (step) => setOrderProblemStep(step)
+  },
+  'slide-26': {
+    get: () => positionSignalState.step,
+    set: (step) => setPositionSignalStep(step)
+  },
+  'slide-28': {
+    get: () => ffnRowwiseState.step,
+    set: (step) => setFfnRowwiseStep(step)
+  },
+  'slide-29': {
+    get: () => ffnInternalsState.step,
+    set: (step) => setFfnInternalsStep(step)
+  },
+  'slide-30': {
+    get: () => gptBlockState.step,
+    set: (step) => setGptBlockStep(step)
+  },
+  'slide-32': {
+    get: () => outputHeadState.step,
+    set: (step) => setOutputHeadStep(step)
+  },
+  'slide-33': {
+    get: () => generationState.step,
+    set: (step) => setGenerationStep(step)
+  }
+};
+
+function getCurrentSlide() {
+  return state.nav.slides[state.nav.current] || null;
+}
+
+function getStepController(slideId) {
+  return STEP_STATE_CONTROLLERS[slideId] || null;
+}
+
+function updateNavigationUi() {
+  state.ui.btnPrev.disabled = state.nav.history.length === 0;
+  state.ui.btnNext.textContent = state.nav.current === state.nav.total - 1 ? 'Restart ↺' : 'Next →';
+  state.ui.btnSkip.textContent = state.nav.current === state.nav.total - 1 ? 'Restart ↺' : 'Skip Slide →';
+  state.ui.slideCounter.textContent = (state.nav.current + 1) + ' / ' + state.nav.total;
+  state.ui.progressFill.style.width = ((state.nav.current / Math.max(state.nav.total - 1, 1)) * 100) + '%';
+}
+
+function getAutostepRevealCount(slideEl) {
+  if (!slideEl) return 0;
+  return slideEl.querySelectorAll('.hidden-content.autostep.revealed').length;
+}
+
+function restoreAutostepRevealCount(slideEl, count) {
+  if (!slideEl) return;
+  const autosteps = Array.from(slideEl.querySelectorAll('.hidden-content.autostep'));
+  autosteps.forEach((el, idx) => {
+    const reveal = idx < count;
+    el.classList.toggle('revealed', reveal);
+    el.classList.toggle('settled', reveal);
+  });
+}
+
+function getProjectionLensOrder(slideEl) {
+  const toolbar = slideEl ? slideEl.querySelector('#projectionToolbar16') : null;
+  if (!toolbar) return [];
+  return Array.from(toolbar.querySelectorAll('.lens-btn'))
+    .map((btn) => btn.dataset.lens)
+    .filter((lens, idx, arr) => lens && LENS_STATES[lens] && arr.indexOf(lens) === idx);
+}
+
+function restoreProjectionLens(lensKey) {
+  const nextLens = LENS_STATES[lensKey] ? lensKey : DEFAULT_PROJECTION_LENS;
+
+  if (!projectionState.initialized) {
+    initProjectionSlide();
+  }
+
+  if (projectionState.rafId) {
+    cancelAnimationFrame(projectionState.rafId);
+    projectionState.rafId = null;
+  }
+  if (projectionState.readoutTimer) {
+    clearTimeout(projectionState.readoutTimer);
+    projectionState.readoutTimer = null;
+  }
+
+  projectionState.activeLens = nextLens;
+  projectionState.currentPositions = cloneLensState(nextLens);
+  projectionState.animFrom = null;
+  projectionState.animTo = null;
+  projectionState.animStart = 0;
+
+  syncProjectionButtons(nextLens);
+  updateProjectionReadout(nextLens);
+  resizeProjectionCanvas();
+  drawProjection();
+}
+
+function createHistorySnapshot() {
+  const activeSlide = getCurrentSlide();
+  if (!activeSlide) return null;
+
+  const controller = getStepController(activeSlide.id);
+  const snapshot = {
+    index: state.nav.current,
+    slideId: activeSlide.id,
+    autostepCount: getAutostepRevealCount(activeSlide)
+  };
+
+  if (activeSlide.id === 'slide-16') {
+    snapshot.projectionLens = projectionState.activeLens;
+  }
+  if (controller) {
+    snapshot.step = controller.get();
+  }
+
+  return snapshot;
+}
+
+function snapshotsEqual(a, b) {
+  if (!a || !b) return false;
+  return (
+    a.index === b.index &&
+    a.slideId === b.slideId &&
+    a.autostepCount === b.autostepCount &&
+    a.projectionLens === b.projectionLens &&
+    a.step === b.step
+  );
+}
+
+function commitHistorySnapshot(before) {
+  const after = createHistorySnapshot();
+  if (!before || !after || snapshotsEqual(before, after)) return false;
+  state.nav.history.push(before);
+  updateNavigationUi();
+  return true;
+}
+
+function runMutationWithHistory(mutator) {
+  const before = createHistorySnapshot();
+  mutator();
+  return commitHistorySnapshot(before);
+}
+
+function restoreHistorySnapshot(snapshot) {
+  if (!snapshot) return false;
+  const targetSlide = state.nav.slides[snapshot.index];
+  if (!targetSlide || targetSlide.id !== snapshot.slideId) return false;
+
+  goToSlide(snapshot.index);
+
+  const activeSlide = getCurrentSlide();
+  if (!activeSlide || activeSlide.id !== snapshot.slideId) return false;
+
+  if (snapshot.slideId === 'slide-16') {
+    restoreProjectionLens(snapshot.projectionLens);
+  }
+
+  const controller = getStepController(snapshot.slideId);
+  if (controller) {
+    controller.set(snapshot.step || 0);
+  }
+
+  restoreAutostepRevealCount(activeSlide, snapshot.autostepCount || 0);
+  typesetMath(activeSlide);
+  scheduleActiveSlideFit({ reason: 'history-restore' });
+  return true;
+}
+
 function resetSlideInteractions(slideEl) {
   if (!slideEl) return;
   const descriptor = getSlideDescriptorById(slideEl.id);
@@ -36,11 +233,7 @@ function goToSlide(index) {
   activeSlide.classList.add('active');
   state.nav.current = index;
 
-  state.ui.btnPrev.disabled = state.nav.current === 0;
-  state.ui.btnNext.textContent = state.nav.current === state.nav.total - 1 ? 'Restart ↺' : 'Next →';
-  state.ui.btnSkip.textContent = state.nav.current === state.nav.total - 1 ? 'Restart ↺' : 'Skip Slide →';
-  state.ui.slideCounter.textContent = (state.nav.current + 1) + ' / ' + state.nav.total;
-  state.ui.progressFill.style.width = ((state.nav.current / Math.max(state.nav.total - 1, 1)) * 100) + '%';
+  updateNavigationUi();
 
   typesetMath(activeSlide);
   const descriptor = getSlideDescriptorById(activeSlide.id);
@@ -55,28 +248,50 @@ function goTo(index) {
 
 function nextSlide() {
   if (state.nav.total === 0) return;
-  if (state.nav.current === state.nav.total - 1) {
-    goToSlide(0);
-    return;
-  }
-  goToSlide(state.nav.current + 1);
+  runMutationWithHistory(() => {
+    if (state.nav.current === state.nav.total - 1) {
+      goToSlide(0);
+      return;
+    }
+    goToSlide(state.nav.current + 1);
+  });
 }
 
 function prevSlide() {
   goToSlide(state.nav.current - 1);
 }
 
+function prevWithInteractions() {
+  if (state.nav.history.length === 0) {
+    updateNavigationUi();
+    return false;
+  }
+
+  const snapshot = state.nav.history.pop();
+  if (!restoreHistorySnapshot(snapshot)) {
+    updateNavigationUi();
+    return false;
+  }
+
+  updateNavigationUi();
+  return true;
+}
+
 function nextStep() {
   if (state.nav.total === 0) return false;
-  const active = state.nav.slides[state.nav.current];
+  const active = getCurrentSlide();
   if (!active) return false;
   const descriptor = getSlideDescriptorById(active.id);
+  const before = createHistorySnapshot();
   if (descriptor.step(active, state)) {
+    commitHistorySnapshot(before);
     scheduleActiveSlideFit({ reason: 'step' });
     captureSnapshot('nextStep:' + active.id);
     return true;
   }
+  const beforeAutoStep = createHistorySnapshot();
   if (runAutoStep(active)) {
+    commitHistorySnapshot(beforeAutoStep);
     scheduleActiveSlideFit({ reason: 'autostep' });
     captureSnapshot('nextStep:auto:' + active.id);
     return true;
@@ -85,8 +300,7 @@ function nextStep() {
 }
 
 function prevStep() {
-  prevSlide();
-  return true;
+  return prevWithInteractions();
 }
 
 function runAutoStep(slideEl) {

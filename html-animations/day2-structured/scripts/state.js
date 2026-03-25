@@ -2,7 +2,8 @@ const state = {
   nav: {
     slides: [],
     total: 0,
-    current: 0
+    current: 0,
+    history: []
   },
   ui: {
     btnPrev: null,

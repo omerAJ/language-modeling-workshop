@@ -4,7 +4,7 @@ initializeSlideFitSystem();
 
 addTrackedListener(state.ui.btnNext, 'click', nextWithInteractions);
 addTrackedListener(state.ui.btnSkip, 'click', nextSlide);
-addTrackedListener(state.ui.btnPrev, 'click', prevSlide);
+addTrackedListener(state.ui.btnPrev, 'click', prevWithInteractions);
 
 addTrackedListener(document, 'keydown', (e) => {
   const tag = e.target && e.target.tagName;
@@ -20,7 +20,7 @@ addTrackedListener(document, 'keydown', (e) => {
   }
   if (e.key === 'ArrowLeft') {
     e.preventDefault();
-    prevSlide();
+    prevWithInteractions();
   }
 });
 

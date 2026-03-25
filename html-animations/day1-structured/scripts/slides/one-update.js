@@ -62,7 +62,7 @@ function revealAllNTP() {
     fill.className = 'bar-fill ' + type;
     const pctWidth = d.value > 0 ? Math.max(d.value * 100, 1.5) : 0;
     fill.style.width = '0%';
-    setTimeout(() => { fill.style.width = pctWidth + '%'; }, 80 + i * 50);
+    setTrackedTimeout(() => { fill.style.width = pctWidth + '%'; }, 80 + i * 50);
 
     track.appendChild(fill);
 
@@ -105,14 +105,14 @@ function afterData()     { return VOCAB.map(v => ({ word: v.word, value: v.after
               $('#lossValueDisplay').textContent = `\\(${lossText}\\)`;
               const meter = $('#lossMeter');
               meter.style.width = '0%';
-              setTimeout(() => {
+              setTrackedTimeout(() => {
                 meter.style.width = Math.min(loss / 5 * 100, 100) + '%';
               }, 200);
             }
 
             function initAfterUpdateSlide() {
               buildBars('#beforeBars', predictedData(), 'predicted');
-              setTimeout(() => {
+              setTrackedTimeout(() => {
                 buildBars('#afterBars', afterData(), 'target-fill');
               }, 300);
               const afterLoss = -Math.log(VOCAB[0].after);
