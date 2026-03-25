@@ -1,11 +1,7 @@
 const $ = s => document.querySelector(s);
 const $$ = s => document.querySelectorAll(s);
 
-const SLIDE_ORDER = [0, 1, 2, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 3, 4, 5, 6, 7, 9, 10, 11, 12, 13, 14, 8, 22, 23, 24, 16, 29, 30, 31, 32, 33];
-
-const VIDEO_CLIP_SLIDE_IDS = [2, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50];
-
-const ABS_CLIP_FALLBACK_DIR = '/home/maincoder/Documents/inside-LLM/manimations/media/videos/pipeline/1080p60/LanguageModelingPipeline_snippets';
+const SLIDE_ORDER = [0, 1, 3, 4, 5, 6, 7, 9, 10, 11, 12, 13, 14, 8, 22, 23, 24, 16, 29, 30, 31, 32, 33];
 
 const INGREDIENT_COLORS = {
   1: 'rgba(0,255,255,0.35)',

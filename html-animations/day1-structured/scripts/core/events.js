@@ -68,18 +68,11 @@ function handleDelegatedClick(event) {
 
 function handleKeydown(e) {
   const tag = e.target && e.target.tagName;
-  const isSeekSlider = tag === 'INPUT' && e.target && e.target.classList && e.target.classList.contains('clip-seek-slider');
-  if ((tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || (e.target && e.target.isContentEditable)) && !isSeekSlider) return;
-  if (isSeekSlider && e.key !== ' ') return;
+  if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || (e.target && e.target.isContentEditable)) return;
 
   if (e.key === ' ') {
     e.preventDefault();
-    const slideId = getCurrentSlideId();
-    if (slideId !== null && isVideoClipSlide(slideId)) {
-      toggleVideoClipPlayback(slideId);
-    } else {
-      nextWithInteractions();
-    }
+    nextWithInteractions();
     return;
   }
 

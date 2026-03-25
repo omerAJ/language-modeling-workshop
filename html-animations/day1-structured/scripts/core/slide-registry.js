@@ -13,13 +13,6 @@ function defineSlides() {
   const descriptors = [];
   const interactive = {};
 
-  VIDEO_CLIP_SLIDE_IDS.forEach((id) => {
-    interactive['slide-' + id] = createSlideDescriptor('slide-' + id, {
-      init: () => playVideoClipSlide(id),
-      reset: () => pauseVideoClipSlide(id, true)
-    });
-  });
-
   Object.assign(interactive, {
     'slide-3': createSlideDescriptor('slide-3', {
       init: () => resetIngredients(),

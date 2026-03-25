@@ -14,13 +14,6 @@ function getCurrentSlide() {
   return state.nav.slides[state.nav.current] || null;
 }
 
-function getCurrentSlideId() {
-  const active = getCurrentSlide();
-  if (!active) return null;
-  const parts = active.id.split('-');
-  return Number(parts[1]);
-}
-
 function resetSlideInteractions(slideEl) {
   if (!slideEl) return;
   const descriptor = getSlideDescriptorById(slideEl.id);
