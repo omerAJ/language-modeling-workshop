@@ -54,6 +54,18 @@ function handleDelegatedClick(event) {
     return;
   }
 
+  const liveDemoPreset = event.target.closest('[data-demo-preset]');
+  if (liveDemoPreset) {
+    triggerLiveDemoPreset(liveDemoPreset.dataset.demoPreset);
+    return;
+  }
+
+  const liveDemoClear = event.target.closest('[data-demo-clear]');
+  if (liveDemoClear) {
+    clearLiveFailureDemo();
+    return;
+  }
+
   const actionBtn = event.target.closest('[data-action]');
   if (actionBtn) {
     if (runMutationWithHistory(function() {
@@ -98,6 +110,13 @@ function handleDelegatedClick(event) {
   }
 }
 
+function handleSubmit(event) {
+  const liveDemoForm = event.target.closest('#liveDemoForm');
+  if (!liveDemoForm) return;
+  event.preventDefault();
+  submitLiveDemoPrompt();
+}
+
 function handleKeydown(e) {
   const tag = e.target && e.target.tagName;
   if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || (e.target && e.target.isContentEditable)) return;
@@ -138,6 +157,7 @@ function bindGlobalEvents() {
   state.ui.btnSkip.addEventListener('click', nextSlide);
   state.ui.btnPrev.addEventListener('click', prevWithInteractions);
   document.addEventListener('click', handleDelegatedClick);
+  document.addEventListener('submit', handleSubmit);
   document.addEventListener('keydown', handleKeydown);
   document.addEventListener('transitionend', handleTransitionEnd);
 }

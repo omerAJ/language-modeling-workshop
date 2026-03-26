@@ -77,38 +77,18 @@ function defineSlides() {
       reset: () => resetAttentionMultiHeadSlide()
     }),
     'slide-25': createSlideDescriptor('slide-25', {
-      init: () => {
-        initOrderProblemSlide();
-        setOrderProblemStep(0);
-      },
-      step: () => runOrderProblemStep(),
+      init: () => initOrderProblemSlide(),
       reset: () => resetOrderProblemSlide()
     }),
     'slide-26': createSlideDescriptor('slide-26', {
-      init: () => {
-        initPositionSignalSlide();
-        setPositionSignalStep(0);
-      },
-      step: () => runPositionSignalStep(),
+      init: () => initPositionSignalSlide(),
       reset: () => resetPositionSignalSlide()
     }),
+    'slide-27': createSlideDescriptor('slide-27', {
+      init: () => initFfnCombinedSlide(),
+      reset: () => resetFfnCombinedSlide()
+    }),
     'slide-28': createSlideDescriptor('slide-28', {
-      init: () => {
-        initFfnRowwiseSlide();
-        setFfnRowwiseStep(0);
-      },
-      step: () => runFfnRowwiseStep(),
-      reset: () => resetFfnRowwiseSlide()
-    }),
-    'slide-29': createSlideDescriptor('slide-29', {
-      init: () => {
-        initFfnInternalsSlide();
-        setFfnInternalsStep(0);
-      },
-      step: () => runFfnInternalsStep(),
-      reset: () => resetFfnInternalsSlide()
-    }),
-    'slide-30': createSlideDescriptor('slide-30', {
       init: () => initGptBlockSlide(),
       step: () => runGptBlockStep(),
       reset: () => resetGptBlockSlide()

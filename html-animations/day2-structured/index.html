@@ -1606,807 +1606,355 @@ l e a r n ing &lt;/w&gt;</div>
     </div>
   </div>
 
+  <!-- ═══════════════════════════════════════════════════════════════
+       SLIDE 25 — Shuffle the Words, Break the Meaning (Position Problem)
+       ═══════════════════════════════════════════════════════════════ -->
   <div class="slide" id="slide-25">
     <span class="section-tag">Input Representation</span>
     <div class="slide-header">
       <div class="badge concept">Problem</div>
-      <h2>Attention Still Doesn&rsquo;t Know Order</h2>
-      <p class="small-text">Self-attention compares token vectors by matrix multiplication. If we only permute the token rows, the same score values appear in a different order.</p>
+      <h2>Shuffle the Words, Break the Meaning</h2>
+      <p class="small-text">Self-attention compares token vectors by dot-product similarity. It never asks <em>where</em> a token sits.</p>
     </div>
     <div class="slide-body">
     <div class="story-layout">
-      <div class="card story-stage order25-stage" id="order25-stage">
-        <div class="order25-question">If we keep the same query vector but permute the key rows, do the scores change or just move?</div>
+      <div class="card story-stage pos25-stage">
 
-        <div class="order25-query-ribbon">
-          <span class="order25-query-label">fixed query</span>
-          <span class="order25-query-math">\(q_{\mathrm{dog}} = [2\ \ 1]\)</span>
-          <span class="order25-query-caption">same query vector on both sides</span>
-        </div>
-
-        <div class="order25-main">
-          <section class="order25-panel order25-panel-left">
-            <div class="order25-panel-title">original order</div>
-            <div class="order25-strip">
-              <span class="attn19-token-chip">dog</span>
-              <span class="order25-strip-sep">|</span>
-              <span class="attn19-token-chip">chased</span>
-              <span class="order25-strip-sep">|</span>
-              <span class="attn19-token-chip">cat</span>
+        <div class="pos25-compare">
+          <div class="pos25-sentence">
+            <div class="pos25-pills">
+              <span class="token-pill">The</span>
+              <span class="token-pill main">dog</span>
+              <span class="token-pill">chased</span>
+              <span class="token-pill">the</span>
+              <span class="token-pill reuse">cat</span>
             </div>
-            <div class="order25-panel-note">key rows follow this order</div>
-
-            <div class="order25-math-row">
-              <div class="order25-mini-vector">
-                <div class="order25-mini-vector-label">\(q_{\mathrm{dog}}\)</div>
-                <div class="order25-mini-vector-body">
-                  <span class="order25-mini-cell">2</span>
-                  <span class="order25-mini-cell">1</span>
-                </div>
-              </div>
-              <div class="order25-mul-symbol">&times;</div>
-              <div class="order25-mini-matrix-wrap">
-                <div class="order25-mini-matrix-label">\(K^{\mathsf T}\)</div>
-                <div class="order25-mini-matrix">
-                  <span class="order25-mini-matrix-cell">2</span>
-                  <span class="order25-mini-matrix-cell">1</span>
-                  <span class="order25-mini-matrix-cell">1</span>
-                  <span class="order25-mini-matrix-cell">1</span>
-                  <span class="order25-mini-matrix-cell">2</span>
-                  <span class="order25-mini-matrix-cell">0</span>
-                </div>
-              </div>
-              <div class="order25-equals-symbol">=</div>
-              <div class="order25-score-result">
-                <div class="order25-score-result-label">\(q_{\mathrm{dog}} K^{\mathsf T}\)</div>
-                <div class="order25-score-result-body">
-                  <span class="order25-mini-cell">5</span>
-                  <span class="order25-mini-cell">4</span>
-                  <span class="order25-mini-cell">2</span>
-                </div>
-              </div>
-            </div>
-
-            <div class="order25-dot-line">\( [2,1]\cdot[2,1]=5,\ [2,1]\cdot[1,2]=4,\ [2,1]\cdot[1,0]=2 \)</div>
-
-            <div class="order25-score-align-row">
-              <div class="order25-score-chip">5</div>
-              <div class="order25-score-chip">4</div>
-              <div class="order25-score-chip">2</div>
-            </div>
-          </section>
-
-          <section class="order25-panel order25-panel-right">
-            <div class="order25-panel-title">permuted order</div>
-            <div class="order25-strip">
-              <span class="attn19-token-chip">cat</span>
-              <span class="order25-strip-sep">|</span>
-              <span class="attn19-token-chip">chased</span>
-              <span class="order25-strip-sep">|</span>
-              <span class="attn19-token-chip">dog</span>
-            </div>
-            <div class="order25-panel-note">same key rows, new order</div>
-
-            <div class="order25-math-row">
-              <div class="order25-mini-vector">
-                <div class="order25-mini-vector-label">\(q_{\mathrm{dog}}\)</div>
-                <div class="order25-mini-vector-body">
-                  <span class="order25-mini-cell">2</span>
-                  <span class="order25-mini-cell">1</span>
-                </div>
-              </div>
-              <div class="order25-mul-symbol">&times;</div>
-              <div class="order25-mini-matrix-wrap">
-                <div class="order25-mini-matrix-label">\(K'^{\mathsf T}\)</div>
-                <div class="order25-mini-matrix">
-                  <span class="order25-mini-matrix-cell">1</span>
-                  <span class="order25-mini-matrix-cell">1</span>
-                  <span class="order25-mini-matrix-cell">2</span>
-                  <span class="order25-mini-matrix-cell">0</span>
-                  <span class="order25-mini-matrix-cell">2</span>
-                  <span class="order25-mini-matrix-cell">1</span>
-                </div>
-              </div>
-              <div class="order25-equals-symbol">=</div>
-              <div class="order25-score-result">
-                <div class="order25-score-result-label">\(q_{\mathrm{dog}} K'^{\mathsf T}\)</div>
-                <div class="order25-score-result-body">
-                  <span class="order25-mini-cell">2</span>
-                  <span class="order25-mini-cell">4</span>
-                  <span class="order25-mini-cell">5</span>
-                </div>
-              </div>
-            </div>
-
-            <div class="order25-dot-line">\( [2,1]\cdot[1,0]=2,\ [2,1]\cdot[1,2]=4,\ [2,1]\cdot[2,1]=5 \)</div>
-
-            <div class="order25-score-align-row">
-              <div class="order25-score-chip">2</div>
-              <div class="order25-score-chip">4</div>
-              <div class="order25-score-chip">5</div>
-            </div>
-          </section>
-        </div>
-
-        <div class="order25-perm-strip">
-          <span>\( \text{Permutation } P \text{ only reorders rows: } X' = PX,\ K' = PK \)</span>
-          <span class="order25-perm-strip-note">same score values, new positions</span>
-        </div>
-
-        <div class="order25-update-card">
-          <div class="order25-update-title">Why this matters</div>
-          <div class="order25-update-subtitle">the dog token gets the same attention update in both sequences</div>
-
-          <div class="order25-update-grid">
-            <section class="order25-update-side order25-update-side-left">
-              <div class="order25-update-label">original weights on value terms</div>
-              <div class="order25-update-weight-line">\(a_{\mathrm{dog}} = \operatorname{softmax}([5,4,2]) \approx [0.71, 0.26, 0.04]\)</div>
-              <div class="order25-update-row">
-                <div class="order25-update-col">
-                  <div class="order25-weight-pill">0.71</div>
-                  <div class="order25-value-pill">\(v_{\mathrm{dog}}\)</div>
-                </div>
-                <div class="order25-update-col">
-                  <div class="order25-weight-pill">0.26</div>
-                  <div class="order25-value-pill">\(v_{\mathrm{chased}}\)</div>
-                </div>
-                <div class="order25-update-col">
-                  <div class="order25-weight-pill">0.04</div>
-                  <div class="order25-value-pill">\(v_{\mathrm{cat}}\)</div>
-                </div>
-              </div>
-              <div class="order25-update-formula">\(o_{\mathrm{dog}} = 0.71\,v_{\mathrm{dog}} + 0.26\,v_{\mathrm{chased}} + 0.04\,v_{\mathrm{cat}}\)</div>
-            </section>
-
-            <section class="order25-update-side order25-update-side-right">
-              <div class="order25-update-label">permuted weights on permuted value terms</div>
-              <div class="order25-update-weight-line">\(a'_3 = \operatorname{softmax}([2,4,5]) \approx [0.04, 0.26, 0.71]\)</div>
-              <div class="order25-update-row">
-                <div class="order25-update-col">
-                  <div class="order25-weight-pill">0.04</div>
-                  <div class="order25-value-pill">\(v_{\mathrm{cat}}\)</div>
-                </div>
-                <div class="order25-update-col">
-                  <div class="order25-weight-pill">0.26</div>
-                  <div class="order25-value-pill">\(v_{\mathrm{chased}}\)</div>
-                </div>
-                <div class="order25-update-col">
-                  <div class="order25-weight-pill">0.71</div>
-                  <div class="order25-value-pill">\(v_{\mathrm{dog}}\)</div>
-                </div>
-              </div>
-              <div class="order25-update-formula">\(o'_3 = 0.04\,v_{\mathrm{cat}} + 0.26\,v_{\mathrm{chased}} + 0.71\,v_{\mathrm{dog}}\)</div>
-            </section>
+            <div class="pos25-meaning">The dog is the chaser</div>
           </div>
 
-          <div class="order25-update-final">\(o'_3 = o_{\mathrm{dog}}\)</div>
-          <div class="order25-update-note">the weights moved, the value terms moved with them, so the same weighted sum is recovered</div>
+          <div class="pos25-vs">Same words</div>
+
+          <div class="pos25-sentence">
+            <div class="pos25-pills">
+              <span class="token-pill">The</span>
+              <span class="token-pill reuse">cat</span>
+              <span class="token-pill">chased</span>
+              <span class="token-pill">the</span>
+              <span class="token-pill main">dog</span>
+            </div>
+            <div class="pos25-meaning">The cat is the chaser</div>
+          </div>
         </div>
 
-        <div class="order25-proof-card">
-          <div class="order25-proof-title">Full proof</div>
-          <div class="order25-proof-line">\(X' = PX\)</div>
-          <div class="order25-proof-line">\(Q' = PQ,\quad K' = PK,\quad V' = PV\)</div>
-          <div class="order25-proof-line">\(S' = Q'K'^{\mathsf T}\)</div>
-          <div class="order25-proof-line">\(S' = (PQ)(PK)^{\mathsf T}\)</div>
-          <div class="order25-proof-line">\(S' = (PQ)(K^{\mathsf T}P^{\mathsf T})\)</div>
-          <div class="order25-proof-line">\(S' = P(QK^{\mathsf T})P^{\mathsf T} = P S P^{\mathsf T}\)</div>
-          <div class="order25-proof-line">\(A' = \operatorname{softmax}(S') = P A P^{\mathsf T}\)</div>
-          <div class="order25-proof-line">\(O' = A'V' = (PAP^{\mathsf T})(PV) = PO\)</div>
-          <div class="order25-proof-note">The example showed the dog row keeps the same update. The proof shows the whole attention output permutes the same way: \(O' = PO\).</div>
+        <div class="pos25-punchline">Same tokens, completely different meaning.</div>
+
+        <div class="hidden-content autostep">
+          <div class="callout question">
+            <span class="callout-icon">&#10067;</span>
+            <span>Does attention know which word came first? Think back to what we just built.</span>
+          </div>
         </div>
 
-        <div class="order25-conclusion-card">
-          <div>Self-attention processes tokens as a set, not a sequence.</div>
-          <div>Reordering the tokens simply reorders the computation.</div>
-          <div>Positional encoding is what introduces sequence order.</div>
+        <div class="hidden-content autostep">
+          <div class="pos25-answer-card">
+            <div class="pos25-answer-title">No. Attention treats tokens as a set, not a sequence.</div>
+            <div class="pos25-answer-body">Attention computes dot-product similarity between embedding vectors. If the same vectors appear, the same scores appear &#8212; regardless of order. Shuffling the input rows just shuffles the output rows.</div>
+          </div>
         </div>
+
+        <div class="hidden-content autostep">
+          <div class="callout warn">
+            <span class="callout-icon">&#9888;&#65039;</span>
+            <span>We need to inject position information <em>before</em> attention sees anything. That way, the same word in a different slot becomes a different input vector.</span>
+          </div>
+        </div>
+
       </div>
     </div>
 
-    <div class="story-takeaway" id="order25-takeaway">Without position, attention only sees token rows. Reordering the rows changes where things appear, not which token vectors exist.</div>
+    <div class="story-takeaway" id="pos25-takeaway">Without position, &#8220;the dog chased the cat&#8221; and &#8220;the cat chased the dog&#8221; look the same to attention.</div>
     </div>
   </div>
 
+  <!-- ═══════════════════════════════════════════════════════════════
+       SLIDE 26 — Give Every Position a Fingerprint (Position Solution)
+       ═══════════════════════════════════════════════════════════════ -->
   <div class="slide" id="slide-26">
     <span class="section-tag">Input Representation</span>
     <div class="slide-header">
       <div class="badge concept">Mechanism</div>
-      <h2>Add Position Before Attention</h2>
-      <p class="small-text">The Transformer has no built-in notion of order, so position must be injected into each row before the first Q/K/V projections.</p>
+      <h2>Give Every Position a Fingerprint</h2>
+      <p class="small-text">Add a position-specific vector to each token embedding before the first attention layer.</p>
     </div>
     <div class="slide-body">
     <div class="story-layout">
-      <div class="card story-stage pos26-stage" id="pos26-stage">
-        <div class="pos26-question">If the word &quot;cat&quot; moves from slot 3 to slot 1, does attention still receive the same row for cat?</div>
+      <div class="card story-stage pos26-stage">
 
-        <div class="pos26-setup-ribbon">
-          <div class="pos26-setup-group pos26-setup-token">
-            <div class="pos26-setup-label">token vectors</div>
-            <div class="pos26-setup-items">
-              <div class="pos26-setup-item">\(x_{\mathrm{dog}} = [2\ \ 1]\)</div>
-              <div class="pos26-setup-item">\(x_{\mathrm{chased}} = [1\ \ 3]\)</div>
-              <div class="pos26-setup-item">\(x_{\mathrm{cat}} = [3\ \ 1]\)</div>
+        <div class="pos26-flow-ribbon">
+          <div class="pos26-flow-box pos26-flow-token">token embedding \(x_i\)</div>
+          <div class="pos26-flow-plus">+</div>
+          <div class="pos26-flow-box pos26-flow-pos">position vector \(p_i\)</div>
+          <div class="pos26-flow-eq">=</div>
+          <div class="pos26-flow-box pos26-flow-result">input to attention \(h_i^{(0)}\)</div>
+        </div>
+
+        <div class="hidden-content autostep">
+          <div class="pos26-binary-section">
+            <div class="pos26-binary-title">Think of a binary counter</div>
+            <div class="pos26-binary-caption">Each bit flips at a different rate. Sinusoidal position encoding works the same way &#8212; each dimension oscillates at a different frequency.</div>
+            <div class="pos26-binary-grid">
+              <div class="pos26-binary-label">Position</div>
+              <div class="pos26-binary-cell pos26-binary-header">0</div>
+              <div class="pos26-binary-cell pos26-binary-header">1</div>
+              <div class="pos26-binary-cell pos26-binary-header">2</div>
+              <div class="pos26-binary-cell pos26-binary-header">3</div>
+              <div class="pos26-binary-cell pos26-binary-header">4</div>
+              <div class="pos26-binary-cell pos26-binary-header">5</div>
+              <div class="pos26-binary-cell pos26-binary-header">6</div>
+              <div class="pos26-binary-cell pos26-binary-header">7</div>
+
+              <div class="pos26-binary-label">Bit 0 <span class="pos26-freq-tag fast">fast</span></div>
+              <div class="pos26-binary-cell on">0</div>
+              <div class="pos26-binary-cell off">1</div>
+              <div class="pos26-binary-cell on">0</div>
+              <div class="pos26-binary-cell off">1</div>
+              <div class="pos26-binary-cell on">0</div>
+              <div class="pos26-binary-cell off">1</div>
+              <div class="pos26-binary-cell on">0</div>
+              <div class="pos26-binary-cell off">1</div>
+
+              <div class="pos26-binary-label">Bit 1 <span class="pos26-freq-tag mid">medium</span></div>
+              <div class="pos26-binary-cell on">0</div>
+              <div class="pos26-binary-cell on">0</div>
+              <div class="pos26-binary-cell off">1</div>
+              <div class="pos26-binary-cell off">1</div>
+              <div class="pos26-binary-cell on">0</div>
+              <div class="pos26-binary-cell on">0</div>
+              <div class="pos26-binary-cell off">1</div>
+              <div class="pos26-binary-cell off">1</div>
+
+              <div class="pos26-binary-label">Bit 2 <span class="pos26-freq-tag slow">slow</span></div>
+              <div class="pos26-binary-cell on">0</div>
+              <div class="pos26-binary-cell on">0</div>
+              <div class="pos26-binary-cell on">0</div>
+              <div class="pos26-binary-cell on">0</div>
+              <div class="pos26-binary-cell off">1</div>
+              <div class="pos26-binary-cell off">1</div>
+              <div class="pos26-binary-cell off">1</div>
+              <div class="pos26-binary-cell off">1</div>
             </div>
           </div>
-          <div class="pos26-setup-group pos26-setup-pos">
-            <div class="pos26-setup-label">slot vectors</div>
-            <div class="pos26-setup-items">
-              <div class="pos26-setup-item">\(p_1 = [1\ \ 0]\)</div>
-              <div class="pos26-setup-item">\(p_2 = [0\ \ 1]\)</div>
-              <div class="pos26-setup-item">\(p_3 = [1\ \ 1]\)</div>
+        </div>
+
+        <div class="hidden-content autostep">
+          <div class="pos26-heatmap-section">
+            <div class="pos26-heatmap-title">The real encoding: a unique fingerprint for every position</div>
+            <div class="pos26-plot-frame">
+              <img class="pos26-plot-image" src="assets/generated/positional-signals.svg" alt="Sinusoidal positional signals across embedding dimensions and positions">
+            </div>
+            <div class="callout info">
+              <span class="callout-icon">&#8505;&#65039;</span>
+              <span>Each column is a position, each row is a dimension. Early dims wiggle fast, later dims drift slowly. Every position gets a unique fingerprint. Nearby positions have similar fingerprints.</span>
             </div>
           </div>
-          <div class="pos26-setup-caption">same token dictionary, same slot dictionary on both sides</div>
         </div>
 
-        <div class="pos26-main">
-          <section class="pos26-panel pos26-panel-left">
-            <div class="pos26-panel-title">original order</div>
-            <div class="pos26-strip">
-              <span class="attn19-token-chip">dog</span>
-              <span class="order25-strip-sep">|</span>
-              <span class="attn19-token-chip">chased</span>
-              <span class="order25-strip-sep">|</span>
-              <span class="attn19-token-chip">cat</span>
+        <div class="hidden-content autostep">
+          <div class="pos26-methods-title">Three approaches in practice</div>
+          <div class="grid-3 pos26-methods-grid">
+            <div class="pos26-method-card">
+              <div class="pos26-method-name">Sin/Cos <span class="hl">(original)</span></div>
+              <div class="pos26-method-desc">Fixed formula. No learned parameters. Works for any sequence length.</div>
+              <div class="pos26-method-cite tiny">Vaswani et al., 2017</div>
             </div>
-            <div class="pos26-panel-note">slot 1, slot 2, slot 3</div>
-
-            <div class="pos26-eq-row">
-              <div class="pos26-mini-matrix-wrap">
-                <div class="pos26-mini-matrix-label">\(X\)</div>
-                <div class="pos26-mini-matrix">
-                  <span class="pos26-mini-matrix-cell">2</span>
-                  <span class="pos26-mini-matrix-cell">1</span>
-                  <span class="pos26-mini-matrix-cell">1</span>
-                  <span class="pos26-mini-matrix-cell">3</span>
-                  <span class="pos26-mini-matrix-cell">3</span>
-                  <span class="pos26-mini-matrix-cell">1</span>
-                </div>
-              </div>
-              <div class="pos26-op-symbol">+</div>
-              <div class="pos26-mini-matrix-wrap">
-                <div class="pos26-mini-matrix-label">\(P\)</div>
-                <div class="pos26-mini-matrix">
-                  <span class="pos26-mini-matrix-cell">1</span>
-                  <span class="pos26-mini-matrix-cell">0</span>
-                  <span class="pos26-mini-matrix-cell">0</span>
-                  <span class="pos26-mini-matrix-cell">1</span>
-                  <span class="pos26-mini-matrix-cell">1</span>
-                  <span class="pos26-mini-matrix-cell">1</span>
-                </div>
-              </div>
-              <div class="pos26-op-symbol">=</div>
-              <div class="pos26-mini-matrix-wrap">
-                <div class="pos26-mini-matrix-label">\(H^{(0)}\)</div>
-                <div class="pos26-mini-matrix pos26-mini-matrix-result">
-                  <span class="pos26-mini-matrix-cell">3</span>
-                  <span class="pos26-mini-matrix-cell">1</span>
-                  <span class="pos26-mini-matrix-cell">1</span>
-                  <span class="pos26-mini-matrix-cell">4</span>
-                  <span class="pos26-mini-matrix-cell is-focus">4</span>
-                  <span class="pos26-mini-matrix-cell is-focus">2</span>
-                </div>
-              </div>
+            <div class="pos26-method-card">
+              <div class="pos26-method-name">Learned <span class="hl-purple">(BERT-style)</span></div>
+              <div class="pos26-method-desc">Learn a lookup table \(P[\mathrm{pos}]\). Flexible, but limited to training length.</div>
+              <div class="pos26-method-cite tiny">Devlin et al., 2018</div>
             </div>
-
-            <div class="pos26-row-callout">\(x_{\mathrm{cat}} + p_3 = [4,2]\)</div>
-          </section>
-
-          <section class="pos26-panel pos26-panel-right">
-            <div class="pos26-panel-title">permuted order</div>
-            <div class="pos26-strip">
-              <span class="attn19-token-chip">cat</span>
-              <span class="order25-strip-sep">|</span>
-              <span class="attn19-token-chip">chased</span>
-              <span class="order25-strip-sep">|</span>
-              <span class="attn19-token-chip">dog</span>
-            </div>
-            <div class="pos26-panel-note">same slots, different word order</div>
-
-            <div class="pos26-eq-row">
-              <div class="pos26-mini-matrix-wrap">
-                <div class="pos26-mini-matrix-label">\(X'\)</div>
-                <div class="pos26-mini-matrix">
-                  <span class="pos26-mini-matrix-cell">3</span>
-                  <span class="pos26-mini-matrix-cell">1</span>
-                  <span class="pos26-mini-matrix-cell">1</span>
-                  <span class="pos26-mini-matrix-cell">3</span>
-                  <span class="pos26-mini-matrix-cell">2</span>
-                  <span class="pos26-mini-matrix-cell">1</span>
-                </div>
-              </div>
-              <div class="pos26-op-symbol">+</div>
-              <div class="pos26-mini-matrix-wrap">
-                <div class="pos26-mini-matrix-label">\(P\)</div>
-                <div class="pos26-mini-matrix">
-                  <span class="pos26-mini-matrix-cell">1</span>
-                  <span class="pos26-mini-matrix-cell">0</span>
-                  <span class="pos26-mini-matrix-cell">0</span>
-                  <span class="pos26-mini-matrix-cell">1</span>
-                  <span class="pos26-mini-matrix-cell">1</span>
-                  <span class="pos26-mini-matrix-cell">1</span>
-                </div>
-              </div>
-              <div class="pos26-op-symbol">=</div>
-              <div class="pos26-mini-matrix-wrap">
-                <div class="pos26-mini-matrix-label">\(H'^{(0)}\)</div>
-                <div class="pos26-mini-matrix pos26-mini-matrix-result">
-                  <span class="pos26-mini-matrix-cell is-focus">4</span>
-                  <span class="pos26-mini-matrix-cell is-focus">1</span>
-                  <span class="pos26-mini-matrix-cell">1</span>
-                  <span class="pos26-mini-matrix-cell">4</span>
-                  <span class="pos26-mini-matrix-cell">3</span>
-                  <span class="pos26-mini-matrix-cell">2</span>
-                </div>
-              </div>
-            </div>
-
-            <div class="pos26-row-callout">\(x_{\mathrm{cat}} + p_1 = [4,1]\)</div>
-          </section>
-        </div>
-
-        <div class="pos26-compare-card">
-          <div class="pos26-compare-title">Same word, different slot, different input row</div>
-          <div class="pos26-compare-main">\(x_{\mathrm{cat}} + p_3 = [4,2] \neq [4,1] = x_{\mathrm{cat}} + p_1\)</div>
-          <div class="pos26-compare-note">attention no longer sees just &quot;cat&quot;: it sees &quot;cat in slot 3&quot; or &quot;cat in slot 1&quot;</div>
-        </div>
-
-        <div class="pos26-tech-card">
-          <div class="pos26-tech-title">Why this changes attention</div>
-          <div class="pos26-tech-subtitle">these position-aware rows are the actual inputs to the first attention projections</div>
-          <div class="pos26-tech-formula">\(q_i = h_i^{(0)}W_Q,\quad k_i = h_i^{(0)}W_K,\quad v_i = h_i^{(0)}W_V\)</div>
-          <div class="pos26-tech-grid">
-            <div class="pos26-tech-item pos26-tech-left">
-              <div class="pos26-tech-item-label">cat in slot 3</div>
-              <div class="pos26-tech-row-chip">\(h_{\mathrm{cat}}^{(0)} = [4,2]\)</div>
-            </div>
-            <div class="pos26-tech-item pos26-tech-right">
-              <div class="pos26-tech-item-label">cat in slot 1</div>
-              <div class="pos26-tech-row-chip">\(h_{\mathrm{cat}}'^{(0)} = [4,1]\)</div>
+            <div class="pos26-method-card">
+              <div class="pos26-method-name">RoPE <span class="hl-green">(modern)</span></div>
+              <div class="pos26-method-desc">Rotate Q and K vectors by position. Used in GPT-4, Llama, Gemma.</div>
+              <div class="pos26-method-cite tiny">Su et al., 2021</div>
             </div>
           </div>
-          <div class="pos26-tech-consequence">different input row -&gt; different projected q/k/v -&gt; different attention scores are now possible</div>
-          <div class="pos26-tech-note">This is the point of positional information: it breaks the pure permutation behavior from the previous slide before attention begins.</div>
         </div>
 
-        <div class="pos26-formula">\(h_i^{(0)} = x_i + p_i\)</div>
-        <div class="pos26-note tiny">Teaching model: additive absolute position vectors. Many modern decoder LMs instead use rotary position methods.</div>
       </div>
     </div>
 
-    <div class="story-takeaway" id="pos26-takeaway">Position is the missing ingredient: without it, the same word looks the same no matter where it appears.</div>
+    <div class="story-takeaway" id="pos26-takeaway">Position encoding gives every slot a unique fingerprint. The model reads both <em>what</em> a token is and <em>where</em> it sits.</div>
     </div>
   </div>
 
+  <!-- ═══════════════════════════════════════════════════════════════
+       SLIDE 27 — Attention Mixes, FFN Transforms
+       ═══════════════════════════════════════════════════════════════ -->
   <div class="slide" id="slide-27">
-    <span class="section-tag">Input Representation</span>
+    <span class="section-tag">Transformer Block</span>
     <div class="slide-header">
-      <div class="badge concept">Bridge</div>
-      <h2>Position Embeddings: Sin/Cos, Learned, RoPE</h2>
-      <p class="small-text">Sin/cos is the clearest signal view of position. Then compare it with learned absolute vectors and RoPE.</p>
+      <div class="badge concept">Mechanism</div>
+      <h2>Attention Mixes, FFN Transforms</h2>
+      <p class="small-text">Attention mixes information across tokens. The FFN then transforms each token&#8217;s representation independently.</p>
     </div>
     <div class="slide-body">
-    <!--
-      Slide 27 source grounding:
-      - Vaswani et al. (2017), Attention Is All You Need:
-        https://ar5iv.labs.arxiv.org/html/1706.03762
-        Used for sinusoidal encoding claims: same-dimensional addition, sinusoid per dimension,
-        geometric progression of wavelengths, fixed-offset linear relation, extrapolation motivation.
-      - Devlin et al. (2018), BERT:
-        https://ar5iv.labs.arxiv.org/html/1810.04805v2
-        Used for learned absolute input construction as token + segment + position embeddings.
-      - Su et al. (2021), RoFormer:
-        https://arxiv.org/abs/2104.09864
-        Used for RoPE claims: rotation matrix, explicit relative position dependency in self-attention,
-        and sequence-length flexibility / distance-dependent effects.
-      - Teaching inferences on this slide:
-        phase / rotation view of each sin-cos pair;
-        multiscale interpretation of different frequencies;
-        linearity explanation W(x + p) = Wx + Wp.
-    -->
-
     <div class="story-layout">
-      <div class="card story-stage pos27-stage">
-        <div class="pos27-top">
-          <section class="pos27-structure-card">
-            <div class="pos27-card-title">1. Sin/Cos Structure</div>
-            <div class="pos27-structure-lead">Each adjacent dim pair shares one frequency band: the even dim is sine, the odd dim is cosine. A position embedding is the full stack of these signals across many frequencies.</div>
-            <div class="pos27-formula-block">
-              <div class="pos27-formula-line">\(\omega_i = 10000^{-2i/d}\)</div>
-              <div class="pos27-formula-line">\(PE(\mathrm{pos}, 2i) = \sin(\omega_i \mathrm{pos}), \quad PE(\mathrm{pos}, 2i+1) = \cos(\omega_i \mathrm{pos})\)</div>
-              <div class="pos27-formula-line">same \(i\) = same frequency pair, larger \(\mathrm{pos}\) = later sample on that pair</div>
-            </div>
-            <div class="pos27-key-grid">
-              <div class="pos27-key-chip">
-                <div class="pos27-key-label"><span class="hl">`pos`</span></div>
-                <div class="pos27-key-body">Chooses where you are on every wave.</div>
-              </div>
-              <div class="pos27-key-chip">
-                <div class="pos27-key-label"><span class="hl-purple">`i`</span></div>
-                <div class="pos27-key-body">Chooses which frequency pair you are reading.</div>
-              </div>
-            </div>
-            <div class="pos27-addition-line">Then add it element-wise to the token embedding: \(h_i^{(0)} = x_i + PE(i)\)</div>
-            <div class="pos27-band-row" aria-label="Frequency bands across embedding-dimension pairs">
-              <div class="pos27-band-chip fast"><span class="pos27-band-label">early dims</span><span class="pos27-band-value">small \(i\) -> fast</span></div>
-              <div class="pos27-band-chip mid"><span class="pos27-band-label">middle dims</span><span class="pos27-band-value">mid \(i\) -> medium</span></div>
-              <div class="pos27-band-chip slow"><span class="pos27-band-label">later dims</span><span class="pos27-band-value">larger \(i\) -> slow</span></div>
-            </div>
-            <div class="pos27-structure-note">Fast bands separate nearby positions. Slow bands track coarse location over longer ranges.</div>
-          </section>
+      <div class="card story-stage ffn27-stage">
 
-          <section class="pos27-wave-card">
-            <div class="pos27-card-title">2. The Signal View</div>
-            <div class="pos27-axis-note">This chart plots selected even dimensions across positions. The neighboring odd dimension is the cosine partner at the same frequency.</div>
-            <div class="pos27-plot-frame">
-              <img class="pos27-plot-image" src="assets/generated/positional-signals.svg" alt="Generated chart of sinusoidal positional signals across selected embedding dimensions and positions">
-            </div>
-            <div class="pos27-plot-key" aria-label="Selected dimensions shown in the signal plot">
-              <div class="pos27-plot-key-chip fast">d0 fast</div>
-              <div class="pos27-plot-key-chip mid">d16 faster-mid</div>
-              <div class="pos27-plot-key-chip slow">d64 slower</div>
-              <div class="pos27-plot-key-chip cyan">d256 very slow</div>
-            </div>
-            <ul class="pos27-plot-notes">
-              <li>Early dimensions wiggle fast; later dimensions drift slowly.</li>
-              <li>The dashed vertical slice is one token position. Reading that slice across dimensions gives one position embedding vector.</li>
-            </ul>
-          </section>
-        </div>
-
-        <div class="hidden-content autostep">
-          <section class="pos27-why-card">
-            <div class="pos27-why-title">3. Why Sin/Cos Works</div>
-            <div class="pos27-why-grid">
-              <div class="pos27-why-formula">
-                <div class="pos27-formula-line">\(v_i(\mathrm{pos}) = \begin{bmatrix}\sin(\omega_i \mathrm{pos}) \\ \cos(\omega_i \mathrm{pos})\end{bmatrix}\)</div>
-                <div class="pos27-formula-line">\(v_i(\mathrm{pos}+k) = \begin{bmatrix}\cos(\omega_i k) & \sin(\omega_i k) \\ -\sin(\omega_i k) & \cos(\omega_i k)\end{bmatrix} v_i(\mathrm{pos})\)</div>
-              </div>
-              <ul class="pos27-why-list">
-                <li><span class="hl">A fixed offset \(k\)</span> becomes a fixed linear transform for every frequency pair.</li>
-                <li><span class="hl-purple">That transform is a rotation</span>: sin/cos turn position shifts into phase shifts.</li>
-                <li><span class="hl-green">Many frequencies at once</span> give both local detail and coarse global location.</li>
-                <li><span class="hl-cyan">And addition keeps content usable</span>: \(W(x_i + PE(i)) = W x_i + W PE(i)\).</li>
-              </ul>
-            </div>
-          </section>
-        </div>
-
-        <div class="hidden-content autostep">
-          <div class="pos27-compare-grid">
-            <section class="pos27-compare-card pos27-learned-card">
-              <div class="pos27-card-title">Learned absolute</div>
-              <div class="pos27-compare-main">Learn a table \(P[\mathrm{pos}]\), then add \(x_{\mathrm{pos}} + P[\mathrm{pos}]\).</div>
-              <div class="pos27-compare-note">Flexible, but the structure lives in parameters instead of in a fixed signal rule.</div>
-            </section>
-
-            <section class="pos27-compare-card pos27-rope-card">
-              <div class="pos27-card-title">Rotary / RoPE</div>
-              <div class="pos27-compare-main">Keep the same phase idea, but rotate \(Q\) and \(K\) instead of adding a separate input vector.</div>
-              <div class="pos27-compare-note">That pushes positional information directly into attention scores.</div>
-            </section>
+        <div class="ffn27-role-compare">
+          <div class="ffn27-role-box ffn27-role-attn">
+            <div class="ffn27-role-title">Attention</div>
+            <div class="ffn27-role-desc">Mixes information <strong>across</strong> tokens</div>
+            <div class="ffn27-role-detail">&#8220;What should I pay attention to?&#8221;</div>
+          </div>
+          <div class="ffn27-role-arrow">&#8594;</div>
+          <div class="ffn27-role-box ffn27-role-ffn">
+            <div class="ffn27-role-title">FFN</div>
+            <div class="ffn27-role-desc">Transforms <strong>each</strong> token independently</div>
+            <div class="ffn27-role-detail">&#8220;Now let me think about what I heard.&#8221;</div>
           </div>
         </div>
+
+        <div class="hidden-content autostep">
+          <div class="callout question">
+            <span class="callout-icon">&#10067;</span>
+            <span>Why can&#8217;t attention do everything?</span>
+          </div>
+          <div class="ffn27-analogy-card">
+            <p>Attention is like a <strong>group discussion</strong> &#8212; everyone shares information. But after the discussion, each person needs time alone to <em>think about what they heard</em> and update their own understanding. That&#8217;s the FFN.</p>
+          </div>
+        </div>
+
+        <div class="hidden-content autostep">
+          <div class="ffn27-flow-section">
+            <div class="ffn27-flow-title">The mechanism: expand, activate, contract</div>
+            <div class="ffn27-flow">
+              <div class="ffn27-flow-box ffn27-flow-input">
+                <div class="ffn27-flow-label">token row</div>
+                <div class="ffn27-flow-dim">\(d_{\mathrm{model}}\)</div>
+              </div>
+              <div class="ffn27-flow-arrow">&#8594;</div>
+              <div class="ffn27-flow-box ffn27-flow-expand">
+                <div class="ffn27-flow-label">expand 4&times;</div>
+                <div class="ffn27-flow-dim">\(W_1\)</div>
+              </div>
+              <div class="ffn27-flow-arrow">&#8594;</div>
+              <div class="ffn27-flow-box ffn27-flow-act">
+                <div class="ffn27-flow-label">GELU</div>
+                <div class="ffn27-flow-dim">activate</div>
+              </div>
+              <div class="ffn27-flow-arrow">&#8594;</div>
+              <div class="ffn27-flow-box ffn27-flow-contract">
+                <div class="ffn27-flow-label">contract</div>
+                <div class="ffn27-flow-dim">\(W_2\)</div>
+              </div>
+              <div class="ffn27-flow-arrow">&#8594;</div>
+              <div class="ffn27-flow-box ffn27-flow-output">
+                <div class="ffn27-flow-label">updated row</div>
+                <div class="ffn27-flow-dim">\(d_{\mathrm{model}}\)</div>
+              </div>
+            </div>
+            <div class="ffn27-flow-formula">\(\mathrm{FFN}(h_i) = W_2\,\mathrm{GELU}(W_1 h_i + b_1) + b_2\)</div>
+            <div class="ffn27-flow-note">Same small network runs independently on every token position. Same weights, different inputs.</div>
+          </div>
+        </div>
+
+        <div class="hidden-content autostep">
+          <div class="callout success">
+            <span class="callout-icon">&#9989;</span>
+            <span>Interpretability research (Geva et al., 2021) suggests FFN neurons act as <strong>memory cells</strong> &#8212; each fires for specific patterns the model has learned. The 4&times; expansion gives the model more patterns to detect.</span>
+          </div>
+        </div>
+
       </div>
     </div>
+
+    <div class="story-takeaway" id="ffn27-takeaway">Attention mixes information across tokens. The FFN then transforms each token&#8217;s representation independently.</div>
     </div>
   </div>
 
+  <!-- ═══════════════════════════════════════════════════════════════
+       SLIDE 28 — The Complete Block (Synthesis, from old slide 30)
+       ═══════════════════════════════════════════════════════════════ -->
   <div class="slide" id="slide-28">
-    <span class="section-tag">Transformer Block</span>
-    <div class="slide-header">
-      <div class="badge concept">Mechanism</div>
-      <h2>Attention Gathers, FFN Computes</h2>
-      <p class="small-text">Attention mixes information across tokens. The FFN then transforms each row with the same small network.</p>
-    </div>
-    <div class="slide-body">
-    <div class="story-layout">
-      <div class="card story-stage ffn28-stage" id="ffn28-stage">
-        <div class="ffn28-question">After attention mixes information, how does the FFN transform each row?</div>
-
-        <div class="ffn28-main">
-          <section class="ffn28-context-card">
-            <div class="ffn28-card-top">
-              <div class="ffn28-card-title">after attention: contextual rows</div>
-              <div class="ffn28-card-dims">\(S \times d_{\mathrm{model}}\)</div>
-            </div>
-            <div class="ffn28-row-list">
-              <div class="ffn28-row" data-token="cat">
-                <span class="attn19-token-chip">cat</span>
-                <div class="story-vector is-8 token-cat is-output"></div>
-              </div>
-              <div class="ffn28-row is-focus" data-token="sat">
-                <span class="attn19-token-chip">sat</span>
-                <div class="story-vector is-8 token-sat is-output"></div>
-              </div>
-              <div class="ffn28-row" data-token="on">
-                <span class="attn19-token-chip">on</span>
-                <div class="story-vector is-8 token-on is-output"></div>
-              </div>
-              <div class="ffn28-row" data-token="the">
-                <span class="attn19-token-chip">the</span>
-                <div class="story-vector is-8 token-the is-output"></div>
-              </div>
-              <div class="ffn28-row" data-token="mat">
-                <span class="attn19-token-chip">mat</span>
-                <div class="story-vector is-8 token-mat is-output"></div>
-              </div>
-            </div>
-            <div class="ffn28-context-note">After attention, the <span class="hl-cyan">sat</span> row is already contextualized and ready for a local neural-network transform.</div>
-            <div class="ffn28-context-sources">
-              <span class="token-pill main">sat</span>
-              <span class="ffn28-context-arrow">&#8592;</span>
-              <span class="token-pill">cat</span>
-              <span class="token-pill">on</span>
-              <span class="token-pill">the</span>
-              <span class="token-pill">mat</span>
-            </div>
-          </section>
-
-          <section class="ffn28-local-card">
-            <div class="ffn28-card-top">
-              <div class="ffn28-card-title">local compute on one row</div>
-              <div class="ffn28-card-dims">position-wise MLP</div>
-            </div>
-            <div class="ffn28-local-flow">
-              <div class="ffn28-flow-chip">
-                <div class="ffn28-flow-label">input row \(h_{\mathrm{sat}}\)</div>
-                <div class="story-vector is-8 token-sat is-output"></div>
-              </div>
-              <div class="ffn28-flow-arrow" aria-hidden="true">&#8594;</div>
-              <div class="ffn28-local-box">
-                <span class="ffn28-local-box-title">FFN</span>
-                <span class="ffn28-local-box-note">2 linear layers + GELU</span>
-              </div>
-              <div class="ffn28-flow-arrow" aria-hidden="true">&#8594;</div>
-              <div class="ffn28-flow-chip">
-                <div class="ffn28-flow-label">updated row \(h'_{\mathrm{sat}}\)</div>
-                <div class="story-vector is-8 token-sat"></div>
-              </div>
-            </div>
-            <div class="ffn28-local-note">The FFN now applies a small neural network to that single row.</div>
-          </section>
-        </div>
-
-        <div class="ffn28-evidence-strip">
-          <section class="ffn28-repeat-card">
-            <div class="ffn28-strip-title">FFN reused at every position</div>
-            <div class="ffn28-repeat-grid">
-              <div class="ffn28-repeat-item">\(h_{\mathrm{cat}}\) &#8594; FFN &#8594; \(h'_{\mathrm{cat}}\)</div>
-              <div class="ffn28-repeat-item">\(h_{\mathrm{sat}}\) &#8594; FFN &#8594; \(h'_{\mathrm{sat}}\)</div>
-              <div class="ffn28-repeat-item">\(h_{\mathrm{mat}}\) &#8594; FFN &#8594; \(h'_{\mathrm{mat}}\)</div>
-            </div>
-            <div class="ffn28-repeat-note">FFN weights are reused independently at every position.</div>
-          </section>
-
-          <section class="ffn28-param-card">
-            <div class="ffn28-strip-title">why the FFN carries so much capacity</div>
-            <div class="ffn28-param-grid">
-              <div class="ffn28-param-item">
-                <div class="ffn28-param-label">attention projections</div>
-                <div class="ffn28-param-formula">\(4 d_{\mathrm{model}}^2\)</div>
-              </div>
-              <div class="ffn28-param-item">
-                <div class="ffn28-param-label">FFN projections</div>
-                <div class="ffn28-param-formula">\(2 d_{\mathrm{model}} d_{\mathrm{ff}}\)</div>
-              </div>
-              <div class="ffn28-param-item is-highlight">
-                <div class="ffn28-param-label">usual decoder setting</div>
-                <div class="ffn28-param-formula">\(d_{\mathrm{ff}} = 4 d_{\mathrm{model}} \Rightarrow 8 d_{\mathrm{model}}^2\)</div>
-                <div class="ffn28-param-subnote">about \(2\times\) attention, about \(67\%\) of attention+FFN weights</div>
-              </div>
-            </div>
-            <div class="ffn28-param-example">GPT-2 small: \(d_{\mathrm{model}} = 768,\ d_{\mathrm{ff}} = 3072\). Attention \(\approx 2.36\)M weights, FFN \(\approx 4.72\)M weights. Approximate, excluding biases and LayerNorm.</div>
-          </section>
-        </div>
-      </div>
-    </div>
-
-    <div class="story-takeaway" id="ffn28-takeaway">Attention gathers context. The FFN then transforms each row with the same MLP.</div>
-    </div>
-  </div>
-
-  <div class="slide" id="slide-29">
-    <span class="section-tag">Transformer Block</span>
-    <div class="slide-header">
-      <div class="badge concept">Mechanism</div>
-      <h2>Inside the FFN: Expand, Gate, Project</h2>
-      <p class="small-text">Mechanically, the FFN is a simple two-layer neural network: expand from \(d_{\mathrm{model}}\) to \(d_{\mathrm{ff}}\), apply GELU, then project back.</p>
-    </div>
-    <div class="slide-body">
-    <div class="story-layout">
-      <div class="card story-stage ffn29-stage" id="ffn29-stage">
-        <div class="ffn29-question">Mechanically, what is the neural network inside the FFN?</div>
-
-        <div class="ffn29-network-card">
-          <div class="ffn29-network-labels">
-            <div class="ffn29-network-label is-input">
-              <span>input row</span>
-              <span>\(h_i \in \mathbb{R}^{d_{\mathrm{model}}}\)</span>
-            </div>
-            <div class="ffn29-network-label is-hidden">
-              <span>expanded hidden layer</span>
-              <span>\(u_i = W_1 h_i + b_1\)</span>
-              <span>\(d_{\mathrm{ff}} > d_{\mathrm{model}}\)</span>
-            </div>
-            <div class="ffn29-network-label is-output">
-              <span>projected row</span>
-              <span>\(o_i = W_2 g_i + b_2\)</span>
-              <span>\(d_{\mathrm{model}}\)</span>
-            </div>
-          </div>
-
-          <div class="ffn29-network-figure">
-            <svg class="ffn29-network-svg" viewBox="0 0 700 240" aria-hidden="true">
-              <g class="ffn29-svg-left-links">
-                <line class="ffn29-svg-link" x1="123.9" y1="50.5" x2="308.1" y2="31.3"></line>
-                <line class="ffn29-svg-link" x1="124.0" y1="52.5" x2="308.0" y2="59.5"></line>
-                <line class="ffn29-svg-link" x1="123.3" y1="56.3" x2="308.6" y2="116.3"></line>
-                <line class="ffn29-svg-link" x1="123.8" y1="89.9" x2="308.1" y2="61.8"></line>
-                <line class="ffn29-svg-link" x1="124.0" y1="91.9" x2="308.0" y2="90.1"></line>
-                <line class="ffn29-svg-link" x1="123.9" y1="133.2" x2="308.0" y2="149.0"></line>
-                <line class="ffn29-svg-link" x1="123.6" y1="135.1" x2="308.3" y2="177.3"></line>
-                <line class="ffn29-svg-link" x1="123.6" y1="168.6" x2="308.4" y2="122.9"></line>
-                <line class="ffn29-svg-link" x1="124.0" y1="172.5" x2="308.0" y2="179.5"></line>
-                <line class="ffn29-svg-link" x1="123.8" y1="174.5" x2="308.2" y2="207.9"></line>
-              </g>
-
-              <g class="ffn29-svg-right-links">
-                <line class="ffn29-svg-link" x1="331.9" y1="31.1" x2="546.1" y2="50.7"></line>
-                <line class="ffn29-svg-link" x1="332.0" y1="59.6" x2="546.0" y2="52.5"></line>
-                <line class="ffn29-svg-link" x1="331.5" y1="116.7" x2="546.5" y2="55.8"></line>
-                <line class="ffn29-svg-link" x1="331.9" y1="61.6" x2="546.1" y2="90.1"></line>
-                <line class="ffn29-svg-link" x1="332.0" y1="90.1" x2="546.0" y2="91.9"></line>
-                <line class="ffn29-svg-link" x1="332.0" y1="149.1" x2="546.0" y2="133.0"></line>
-                <line class="ffn29-svg-link" x1="331.8" y1="177.6" x2="546.3" y2="134.7"></line>
-                <line class="ffn29-svg-link" x1="331.7" y1="122.5" x2="546.3" y2="169.0"></line>
-                <line class="ffn29-svg-link" x1="332.0" y1="179.6" x2="546.0" y2="172.5"></line>
-                <line class="ffn29-svg-link" x1="331.9" y1="208.1" x2="546.2" y2="174.2"></line>
-              </g>
-
-              <g class="ffn29-svg-input">
-                <circle class="ffn29-svg-node" cx="110" cy="52" r="14"></circle>
-                <circle class="ffn29-svg-node" cx="110" cy="92" r="14"></circle>
-                <circle class="ffn29-svg-node" cx="110" cy="132" r="14"></circle>
-                <circle class="ffn29-svg-node" cx="110" cy="172" r="14"></circle>
-              </g>
-
-              <g class="ffn29-svg-hidden">
-                <g class="ffn29-svg-hidden-node" transform="translate(320 30)">
-                  <circle class="ffn29-svg-node" r="12"></circle>
-                  <polyline class="ffn29-svg-activation" points="-6,4 -1,4 5,-2"></polyline>
-                </g>
-                <g class="ffn29-svg-hidden-node" transform="translate(320 60)">
-                  <circle class="ffn29-svg-node" r="12"></circle>
-                  <polyline class="ffn29-svg-activation" points="-6,4 -1,4 5,-2"></polyline>
-                </g>
-                <g class="ffn29-svg-hidden-node" transform="translate(320 90)">
-                  <circle class="ffn29-svg-node" r="12"></circle>
-                  <polyline class="ffn29-svg-activation" points="-6,4 -1,4 5,-2"></polyline>
-                </g>
-                <g class="ffn29-svg-hidden-node" transform="translate(320 120)">
-                  <circle class="ffn29-svg-node" r="12"></circle>
-                  <polyline class="ffn29-svg-activation" points="-6,4 -1,4 5,-2"></polyline>
-                </g>
-                <g class="ffn29-svg-hidden-node" transform="translate(320 150)">
-                  <circle class="ffn29-svg-node" r="12"></circle>
-                  <polyline class="ffn29-svg-activation" points="-6,4 -1,4 5,-2"></polyline>
-                </g>
-                <g class="ffn29-svg-hidden-node" transform="translate(320 180)">
-                  <circle class="ffn29-svg-node" r="12"></circle>
-                  <polyline class="ffn29-svg-activation" points="-6,4 -1,4 5,-2"></polyline>
-                </g>
-                <g class="ffn29-svg-hidden-node" transform="translate(320 210)">
-                  <circle class="ffn29-svg-node" r="12"></circle>
-                  <polyline class="ffn29-svg-activation" points="-6,4 -1,4 5,-2"></polyline>
-                </g>
-              </g>
-
-              <g class="ffn29-svg-output">
-                <circle class="ffn29-svg-node" cx="560" cy="52" r="14"></circle>
-                <circle class="ffn29-svg-node" cx="560" cy="92" r="14"></circle>
-                <circle class="ffn29-svg-node" cx="560" cy="132" r="14"></circle>
-                <circle class="ffn29-svg-node" cx="560" cy="172" r="14"></circle>
-              </g>
-            </svg>
-          </div>
-
-          <div class="ffn29-legend">
-            <svg class="ffn29-legend-icon" viewBox="0 0 32 32" aria-hidden="true">
-              <circle class="ffn29-svg-node" cx="16" cy="16" r="10"></circle>
-              <polyline class="ffn29-svg-activation" points="10,19 15,19 19,13"></polyline>
-            </svg>
-            <span class="ffn29-legend-text">Middle-layer neurons apply \(g_i = \mathrm{GELU}(u_i)\). The kink icon is just a simplified activation marker, not the exact GELU curve.</span>
-          </div>
-        </div>
-
-        <div class="ffn29-math-card">
-          <div class="ffn29-equation-main">\(\mathrm{FFN}(h_i) = W_2\,\mathrm{GELU}(W_1 h_i + b_1) + b_2\)</div>
-          <div class="ffn29-equation-dims">\(W_1 \in \mathbb{R}^{d_{\mathrm{ff}} \times d_{\mathrm{model}}}, \quad W_2 \in \mathbb{R}^{d_{\mathrm{model}} \times d_{\mathrm{ff}}}\)</div>
-          <div class="ffn29-equation-note">Same local computation at every position. Slide 30 then adds this FFN update back into the residual stream.</div>
-        </div>
-
-        <div class="ffn29-bottom-note">This two-layer MLP is reused independently at every position before the residual add on slide 30.</div>
-      </div>
-    </div>
-
-    <div class="story-takeaway" id="ffn29-takeaway">The FFN starts from one contextualized token row.</div>
-    </div>
-  </div>
-
-  <div class="slide" id="slide-30">
     <span class="section-tag">Transformer Block</span>
     <div class="badge concept">Synthesis</div>
     <h2>The Block &#8212; Now You Know What&#8217;s Inside</h2>
     <p class="small-text">You saw this diagram on slide 3. Let&#8217;s walk through it again &#8212; this time you know what every box does.</p>
 
-    <div class="block30-layout">
-      <div class="block30-diagram">
-        <div class="block30-recall-tag">same diagram as slide 3</div>
-        <div class="block-detail-panel block30-detail-panel">
-          <div class="arch-stack block30-arch">
-            <span class="arch-label block30-io-label">Block Output \(R^{(\ell+1)}\)</span>
+    <div class="block28-layout">
+      <div class="block28-diagram">
+        <div class="block28-recall-tag">same diagram as slide 3</div>
+        <div class="block-detail-panel block28-detail-panel">
+          <div class="arch-stack block28-arch">
+            <span class="arch-label block28-io-label">Block Output \(R^{(\ell+1)}\)</span>
             <div class="arch-arrow">&#8593;</div>
 
-            <div class="residual-group block30-ffn-group">
+            <div class="residual-group block28-ffn-group">
               <div class="bypass"></div>
-              <div class="arch-plus block30-plus-ffn">+</div>
+              <div class="arch-plus block28-plus-ffn">+</div>
               <div class="arch-arrow">&#8593;</div>
-              <div class="arch-box drop block30-drop-ffn">Dropout</div>
+              <div class="arch-box drop block28-drop-ffn">Dropout</div>
               <div class="arch-arrow">&#8593;</div>
-              <div class="arch-box ffn block30-ffn-box">Feed-Forward Network</div>
+              <div class="arch-box ffn block28-ffn-box">Feed-Forward Network</div>
               <div class="arch-arrow">&#8593;</div>
-              <div class="arch-box norm block30-ln-ffn">LayerNorm</div>
+              <div class="arch-box norm block28-ln-ffn">LayerNorm</div>
             </div>
 
             <div class="arch-arrow">&#8593;</div>
 
-            <div class="residual-group block30-attn-group">
+            <div class="residual-group block28-attn-group">
               <div class="bypass"></div>
-              <div class="arch-plus block30-plus-attn">+</div>
+              <div class="arch-plus block28-plus-attn">+</div>
               <div class="arch-arrow">&#8593;</div>
-              <div class="arch-box drop block30-drop-attn">Dropout</div>
+              <div class="arch-box drop block28-drop-attn">Dropout</div>
               <div class="arch-arrow">&#8593;</div>
-              <div class="arch-box attn block30-attn-box">Multi-Head Attention</div>
+              <div class="arch-box attn block28-attn-box">Multi-Head Attention</div>
               <div class="arch-arrow">&#8593;</div>
-              <div class="arch-box norm block30-ln-attn">LayerNorm</div>
+              <div class="arch-box norm block28-ln-attn">LayerNorm</div>
             </div>
 
             <div class="arch-arrow">&#8593;</div>
-            <span class="arch-label block30-io-label">Block Input \(R^{(\ell)}\)</span>
+            <span class="arch-label block28-io-label">Block Input \(R^{(\ell)}\)</span>
           </div>
         </div>
       </div>
 
-      <div class="block30-panel">
-        <div class="block30-note block30-note-ln">
-          <div class="block30-note-head">LayerNorm</div>
-          <div class="block30-note-body">Each row of the residual stream may have a very different scale. LN normalizes every row independently before the sublayer sees it.</div>
+      <div class="block28-panel">
+        <div class="block28-note block28-note-ln">
+          <div class="block28-note-head">LayerNorm</div>
+          <div class="block28-note-body">Each row of the residual stream may have a very different scale. LN normalizes every row independently before the sublayer sees it.</div>
         </div>
-        <div class="block30-note block30-note-attn">
-          <div class="block30-note-head">Multi-Head Attention</div>
-          <div class="block30-note-body">Token-to-token mixing. Each token attends to all earlier tokens and gathers relevant context.</div>
+        <div class="block28-note block28-note-attn">
+          <div class="block28-note-head">Multi-Head Attention</div>
+          <div class="block28-note-body">Token-to-token mixing. Each token attends to all earlier tokens and gathers relevant context.</div>
         </div>
-        <div class="block30-note block30-note-add">
-          <div class="block30-note-head">Residual Add (+)</div>
-          <div class="block30-note-body">Attention computes a small update \(\Delta_{\mathrm{attn}}\) and adds it back. The stream persists &#8212; neither sublayer rewrites it.</div>
+        <div class="block28-note block28-note-add">
+          <div class="block28-note-head">Residual Add (+)</div>
+          <div class="block28-note-body">Attention computes a small update \(\Delta_{\mathrm{attn}}\) and adds it back. The stream persists &#8212; neither sublayer rewrites it.</div>
         </div>
-        <div class="block30-note block30-note-ffn">
-          <div class="block30-note-head">Feed-Forward Network</div>
-          <div class="block30-note-body">Token-local computation. The same two-layer MLP computes a row-wise update independently for every token&#8217;s updated row.</div>
+        <div class="block28-note block28-note-ffn">
+          <div class="block28-note-head">Feed-Forward Network</div>
+          <div class="block28-note-body">Token-local computation. The same two-layer MLP computes a row-wise update independently for every token&#8217;s updated row.</div>
         </div>
-        <div class="block30-note block30-note-eq">
-          <div class="block30-note-head">Compact form</div>
-          <div class="block30-equations">
-            <div class="block30-equation">\(R_{\mathrm{mid}} = R^{(\ell)} + \mathrm{MHA}(\mathrm{LN}(R^{(\ell)}))\)</div>
-            <div class="block30-equation">\(R^{(\ell+1)} = R_{\mathrm{mid}} + \mathrm{FFN}(\mathrm{LN}(R_{\mathrm{mid}}))\)</div>
+        <div class="block28-note block28-note-eq">
+          <div class="block28-note-head">Compact form</div>
+          <div class="block28-equations">
+            <div class="block28-equation">\(R_{\mathrm{mid}} = R^{(\ell)} + \mathrm{MHA}(\mathrm{LN}(R^{(\ell)}))\)</div>
+            <div class="block28-equation">\(R^{(\ell+1)} = R_{\mathrm{mid}} + \mathrm{FFN}(\mathrm{LN}(R_{\mathrm{mid}}))\)</div>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="block30-takeaway" id="block30-takeaway">Attention and FFN both write updates into a shared residual stream &#8212; neither one replaces it.</div>
+    <div class="hidden-content autostep">
+      <div class="callout success" style="margin-top:0.8rem;">
+        <span class="callout-icon">&#9989;</span>
+        <span>You now understand every component of one Transformer block. Next: stack it \(L\) times to build the full model.</span>
+      </div>
+    </div>
+
+    <div class="block28-takeaway" id="block28-takeaway">Attention and FFN both write updates into a shared residual stream &#8212; neither one replaces it.</div>
   </div>
 
   <div class="slide" id="slide-31">
@@ -2462,7 +2010,7 @@ l e a r n ing &lt;/w&gt;</div>
       </div>
     </div>
 
-    <div class="block30-takeaway">The stack refines meaning without changing the sequence shape.</div>
+    <div class="block28-takeaway">The stack refines meaning without changing the sequence shape.</div>
   </div>
 
   <div class="slide" id="slide-32">
@@ -2488,7 +2036,7 @@ l e a r n ing &lt;/w&gt;</div>
       </div>
     </div>
 
-    <div class="block30-takeaway" id="pred32-takeaway">After L blocks, the residual matrix holds one contextualized row per token.</div>
+    <div class="block28-takeaway" id="pred32-takeaway">After L blocks, the residual matrix holds one contextualized row per token.</div>
   </div>
 
   <div class="slide" id="slide-33">
@@ -2515,7 +2063,7 @@ l e a r n ing &lt;/w&gt;</div>
       </div>
     </div>
 
-    <div class="block30-takeaway" id="gen33-takeaway">Generation starts from a prompt. The model predicts one token at a time.</div>
+    <div class="block28-takeaway" id="gen33-takeaway">Generation starts from a prompt. The model predicts one token at a time.</div>
   </div>
 
 </div>
@@ -2549,8 +2097,7 @@ l e a r n ing &lt;/w&gt;</div>
 <script src="./scripts/slides/attention-multihead.js"></script>
 <script src="./scripts/slides/order-problem.js"></script>
 <script src="./scripts/slides/position-signal.js"></script>
-<script src="./scripts/slides/ffn-rowwise.js"></script>
-<script src="./scripts/slides/ffn-internals.js"></script>
+<script src="./scripts/slides/ffn-combined.js"></script>
 <script src="./scripts/slides/gpt-block.js"></script>
 <script src="./scripts/slides/output-head.js"></script>
 <script src="./scripts/slides/generation.js"></script>

@@ -13,6 +13,7 @@
         <link rel="stylesheet" href="./styles/slides/reasoning.css">
         <link rel="stylesheet" href="./styles/slides/activities.css">
         <link rel="stylesheet" href="./styles/slides/scale-data.css">
+        <link rel="stylesheet" href="./styles/slides/live-demo.css">
         <script>
           window.MathJax = {
             tex: {
@@ -1124,6 +1125,70 @@ What is the capital of ...</div>
   </div>
 </div>
 
+<!-- ═══════ SLIDE 32B — LIVE FAILURE DEMO ═══════ -->
+<div class="slide" id="slide-32b">
+  <span class="section-tag">Final Demo</span>
+  <div class="badge activity">Live Demo</div>
+  <h2>Common LLM failures, live</h2>
+  <p class="small-text">Challenge a legacy chat model with tasks humans find trivial: repeated-letter counting, word reversal, exact copying, and decimal comparison.</p>
+  <div class="spacer-sm"></div>
+
+  <div class="live-demo-shell">
+    <div class="card live-demo-main">
+      <div class="live-demo-connection">
+        <label class="live-demo-field" for="liveDemoApiKey">
+          <span class="live-demo-label">API key</span>
+          <input id="liveDemoApiKey" type="password" placeholder="Paste an OpenAI-compatible API key" autocomplete="off">
+        </label>
+        <div class="live-demo-meta">
+          <span class="live-demo-label">Model</span>
+          <div class="live-demo-chip">gpt-3.5-turbo-0125</div>
+        </div>
+      </div>
+
+      <div>
+        <div class="live-demo-label" style="margin-bottom:0.45rem;">Tap a failure probe to auto-type and send</div>
+      <div class="live-demo-presets">
+        <button class="nav-btn text-xs" type="button" data-demo-preset="How many r letters are in the word strawberry?">Strawberry count</button>
+        <button class="nav-btn text-xs" type="button" data-demo-preset="How many k letters are in the word bookkeeper?">Bookkeeper count</button>
+        <button class="nav-btn text-xs" type="button" data-demo-preset="How many s letters are in the word mississippi?">Mississippi count</button>
+        <button class="nav-btn text-xs" type="button" data-demo-preset="Write the word strawberry backwards.">Reverse strawberry</button>
+        <button class="nav-btn text-xs" type="button" data-demo-preset="Reverse the word encyclopedia letter by letter.">Reverse encyclopedia</button>
+        <button class="nav-btn text-xs" type="button" data-demo-preset="Which number is larger: 9.11 or 9.9?">Decimal compare</button>
+        <button class="nav-btn text-xs" type="button" data-demo-preset="Rank these numbers from smallest to largest: 9.11, 9.9, 9.2, 9.02.">Rank decimals</button>
+        <button class="nav-btn text-xs" type="button" data-demo-preset="Repeat the word poem exactly 12 times, separated by commas.">Exact repetition</button>
+        <button class="nav-btn text-xs" type="button" data-demo-preset="Sort these words alphabetically: pear, apple, apricot, banana.">Alphabetical sort</button>
+      </div>
+      </div>
+
+      <div class="live-demo-chat" id="liveDemoMessages">
+        <div class="live-demo-empty">Tap a probe or type your own prompt. The transcript stays here until you clear context.</div>
+      </div>
+
+      <div class="live-demo-status" id="liveDemoStatus" data-tone="info">Enter an API key, then send a probe.</div>
+
+      <form class="live-demo-input-row" id="liveDemoForm" autocomplete="off">
+        <input id="liveDemoInput" class="live-demo-text-input" type="text" placeholder="Ask about counting, reversal, copying, sorting, comparison, or another failure mode..." spellcheck="false" autocomplete="off">
+        <button class="nav-btn primary" type="submit" data-demo-send>Send</button>
+        <button class="nav-btn" type="button" data-demo-clear>Clear context</button>
+      </form>
+    </div>
+
+    <div class="card live-demo-sidebar">
+      <h3 style="color:var(--orange);">What these probes stress-test</h3>
+      <ul class="obj-list live-demo-tips">
+        <li data-num="1"><strong>Character control:</strong> repeated-letter counting and letter-by-letter reversal require fine-grained tracking that token predictors often mishandle.</li>
+        <li data-num="2"><strong>Exactness:</strong> copying a word exactly N times or alphabetizing a short list reveals how quickly outputs can drift from precise constraints.</li>
+        <li data-num="3"><strong>Symbolic comparison:</strong> decimals and ranking tasks expose the difference between pattern-matching and exact reasoning.</li>
+      </ul>
+      <div class="callout info live-demo-note">
+        <span class="icon">i</span>
+        <span><strong>Context persists across turns.</strong> Use <code>Clear context</code> whenever you want each probe to start from a clean conversation.</span>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- ═══════ SLIDE 33 — WHY POST-TRAINING EXISTS (STEPS 5-6) ═══════ -->
 <div class="slide" id="slide-33">
   <span class="section-tag">Alignment</span>
@@ -1189,7 +1254,7 @@ What is the capital of ...</div>
   <div class="progress-track">
     <div class="progress-fill" id="progressFill" style="width:0%"></div>
   </div>
-  <span class="slide-counter" id="slideCounter">1 / 24</span>
+  <span class="slide-counter" id="slideCounter">1 / 25</span>
   <button class="nav-btn primary" id="btnNext">Next →</button>
 </div>
 
@@ -1202,6 +1267,7 @@ What is the capital of ...</div>
         <script src="./scripts/slides/one-update.js"></script>
         <script src="./scripts/slides/reasoning.js"></script>
         <script src="./scripts/slides/completion.js"></script>
+        <script src="./scripts/slides/live-demo.js"></script>
         <script src="./scripts/core/slide-registry.js"></script>
         <script src="./scripts/core/navigation.js"></script>
         <script src="./scripts/core/events.js"></script>

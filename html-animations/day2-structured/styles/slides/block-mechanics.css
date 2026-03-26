@@ -1,7 +1,7 @@
-/* Slides 30–31: GPT block walkthrough and stack. */
+/* Slides 28 + 31: GPT block walkthrough and stack. */
 
-/* ── Shared takeaway strip (slides 30–33) ── */
-.block30-takeaway {
+/* ── Shared takeaway strip ── */
+.block28-takeaway {
   margin-top: var(--sp-3);
   padding: 0.62rem 0.78rem;
   border-radius: var(--radius-md);
@@ -12,9 +12,9 @@
   line-height: 1.45;
 }
 
-/* ── Slide 30: GPT block walkthrough ── */
+/* ── Slide 28: GPT block walkthrough ── */
 
-.block30-layout {
+.block28-layout {
   display: grid;
   grid-template-columns: max-content 1fr;
   gap: var(--sp-5);
@@ -22,21 +22,21 @@
   margin-top: var(--sp-3);
 }
 
-.block30-diagram {
+.block28-diagram {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: var(--sp-2);
 }
 
-.block30-detail-panel {
+.block28-detail-panel {
   margin-left: 0;
   transform: none;
   align-self: center;
   min-width: 0;
 }
 
-.block30-recall-tag {
+.block28-recall-tag {
   font-size: var(--fs-2xs);
   font-weight: 600;
   letter-spacing: 0.06em;
@@ -46,30 +46,30 @@
   text-align: center;
 }
 
-.block30-arch .arch-box,
-.block30-arch .arch-plus {
+.block28-arch .arch-box,
+.block28-arch .arch-plus {
   transition: border-color 0.25s ease, box-shadow 0.25s ease, opacity 0.25s ease;
   opacity: 0.42;
 }
 
-.block30-arch .arch-box.drop,
-.block30-arch .arch-box.norm {
+.block28-arch .arch-box.drop,
+.block28-arch .arch-box.norm {
   min-width: 6.5rem !important;
 }
 
-.block30-io-label {
+.block28-io-label {
   font-size: var(--fs-xs);
   color: var(--text-dim);
 }
 
 /* annotation panel */
-.block30-panel {
+.block28-panel {
   display: grid;
   gap: var(--sp-2);
   align-content: start;
 }
 
-.block30-note {
+.block28-note {
   padding: var(--sp-3) var(--sp-4);
   border-radius: var(--radius-md);
   border: 1px solid var(--border);
@@ -79,26 +79,26 @@
   transition: opacity 0.28s ease, transform 0.28s ease;
 }
 
-.block30-note-head {
+.block28-note-head {
   font-size: var(--fs-xs);
   font-weight: 700;
   color: var(--text);
   margin-bottom: 0.3rem;
 }
 
-.block30-note-body {
+.block28-note-body {
   font-size: var(--fs-sm);
   color: var(--text-dim);
   line-height: 1.5;
 }
 
-.block30-equations {
+.block28-equations {
   display: grid;
   gap: var(--sp-2);
   margin-top: var(--sp-2);
 }
 
-.block30-equation {
+.block28-equation {
   padding: 0.42rem 0.68rem;
   border-radius: var(--radius-sm);
   border: 1px solid var(--accent-border);
@@ -109,59 +109,59 @@
 }
 
 /* step-driven visibility */
-#slide-30.block30-show-ln .block30-ln-attn,
-#slide-30.block30-show-ln .block30-ln-ffn,
-#slide-30.block30-show-attn .block30-attn-box,
-#slide-30.block30-show-add .block30-plus-attn,
-#slide-30.block30-show-ffn .block30-ffn-box,
-#slide-30.block30-show-eq .block30-plus-ffn {
+#slide-28.block28-show-ln .block28-ln-attn,
+#slide-28.block28-show-ln .block28-ln-ffn,
+#slide-28.block28-show-attn .block28-attn-box,
+#slide-28.block28-show-add .block28-plus-attn,
+#slide-28.block28-show-ffn .block28-ffn-box,
+#slide-28.block28-show-eq .block28-plus-ffn {
   opacity: 1;
   border-color: inherit;
 }
 
 /* color-coded highlights per step */
-#slide-30.block30-show-ln .block30-ln-attn,
-#slide-30.block30-show-ln .block30-ln-ffn {
+#slide-28.block28-show-ln .block28-ln-attn,
+#slide-28.block28-show-ln .block28-ln-ffn {
   border-color: var(--cyan-border) !important;
   box-shadow: 0 0 0 0.06rem var(--cyan-bg);
 }
 
-#slide-30.block30-show-attn .block30-attn-box {
+#slide-28.block28-show-attn .block28-attn-box {
   border-color: rgba(180,157,255,0.55) !important;
   box-shadow: 0 0 0 0.06rem var(--purple-bg);
 }
 
-#slide-30.block30-show-add .block30-plus-attn {
+#slide-28.block28-show-add .block28-plus-attn {
   border-color: var(--accent-border) !important;
   box-shadow: 0 0 0 0.06rem var(--accent-bg);
 }
 
-#slide-30.block30-show-ffn .block30-ffn-box {
+#slide-28.block28-show-ffn .block28-ffn-box {
   border-color: var(--cyan-border) !important;
   box-shadow: 0 0 0 0.06rem var(--cyan-bg);
 }
 
-#slide-30.block30-show-eq .block30-plus-ffn {
+#slide-28.block28-show-eq .block28-plus-ffn {
   border-color: var(--accent-border) !important;
   box-shadow: 0 0 0 0.06rem var(--accent-bg);
 }
 
 /* note reveals keyed to steps */
-#slide-30.block30-show-ln .block30-note-ln,
-#slide-30.block30-show-attn .block30-note-attn,
-#slide-30.block30-show-add .block30-note-add,
-#slide-30.block30-show-ffn .block30-note-ffn,
-#slide-30.block30-show-eq .block30-note-eq {
+#slide-28.block28-show-ln .block28-note-ln,
+#slide-28.block28-show-attn .block28-note-attn,
+#slide-28.block28-show-add .block28-note-add,
+#slide-28.block28-show-ffn .block28-note-ffn,
+#slide-28.block28-show-eq .block28-note-eq {
   opacity: 1;
   transform: translateX(0);
 }
 
 /* color accents on note heads */
-.block30-note-ln .block30-note-head { color: var(--cyan); }
-.block30-note-attn .block30-note-head { color: var(--purple); }
-.block30-note-add .block30-note-head { color: var(--accent); }
-.block30-note-ffn .block30-note-head { color: var(--cyan); }
-.block30-note-eq .block30-note-head { color: var(--text); }
+.block28-note-ln .block28-note-head { color: var(--cyan); }
+.block28-note-attn .block28-note-head { color: var(--purple); }
+.block28-note-add .block28-note-head { color: var(--accent); }
+.block28-note-ffn .block28-note-head { color: var(--cyan); }
+.block28-note-eq .block28-note-head { color: var(--text); }
 
 /* ── Slide 31: block stack ── */
 
@@ -207,13 +207,13 @@
 }
 
 @media (max-width: 60rem) {
-  .block30-layout,
+  .block28-layout,
   .stack31-layout {
     grid-template-columns: 1fr;
     justify-items: center;
   }
 
-  .block30-panel {
+  .block28-panel {
     width: 100%;
   }
 

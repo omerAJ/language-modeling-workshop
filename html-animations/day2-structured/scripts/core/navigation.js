@@ -37,23 +37,7 @@ const STEP_STATE_CONTROLLERS = {
     get: () => attentionMultiHeadState.step,
     set: (step) => setAttentionMultiHeadStep(step)
   },
-  'slide-25': {
-    get: () => orderProblemState.step,
-    set: (step) => setOrderProblemStep(step)
-  },
-  'slide-26': {
-    get: () => positionSignalState.step,
-    set: (step) => setPositionSignalStep(step)
-  },
   'slide-28': {
-    get: () => ffnRowwiseState.step,
-    set: (step) => setFfnRowwiseStep(step)
-  },
-  'slide-29': {
-    get: () => ffnInternalsState.step,
-    set: (step) => setFfnInternalsStep(step)
-  },
-  'slide-30': {
     get: () => gptBlockState.step,
     set: (step) => setGptBlockStep(step)
   },

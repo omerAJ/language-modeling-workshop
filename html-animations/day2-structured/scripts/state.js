@@ -134,20 +134,13 @@ const state = {
     resizeBound: false
   },
   orderProblem: {
-    initialized: false,
-    step: 0
+    initialized: false
   },
   positionSignal: {
-    initialized: false,
-    step: 0
+    initialized: false
   },
-  ffnRowwise: {
-    initialized: false,
-    step: 0
-  },
-  ffnInternals: {
-    initialized: false,
-    step: 0
+  ffnCombined: {
+    initialized: false
   },
   gptBlock: {
     initialized: false,
@@ -186,8 +179,7 @@ const attentionMultiHeadState = state.attentionMultiHead;
 const attentionPositionState = state.attentionPosition;
 const orderProblemState = state.orderProblem;
 const positionSignalState = state.positionSignal;
-const ffnRowwiseState = state.ffnRowwise;
-const ffnInternalsState = state.ffnInternals;
+const ffnCombinedState = state.ffnCombined;
 const gptBlockState = state.gptBlock;
 const outputHeadState = state.outputHead;
 const generationState = state.generation;

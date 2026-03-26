@@ -36,12 +36,19 @@ const state = {
     },
     pendingBridge: false,
     bridgeTimer: null
+  },
+  liveDemo: {
+    abortController: null,
+    isLoading: false,
+    suppressAbortStatus: false,
+    presetTimer: null
   }
 };
 
 const inferenceState = state.inference;
 const trainingState = state.training;
 const completionState = state.completion;
+const liveDemoState = state.liveDemo;
 
 function removeTrackedTimeout(timerId) {
   state.timers.timeouts = state.timers.timeouts.filter((id) => id !== timerId);

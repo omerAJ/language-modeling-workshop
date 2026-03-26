@@ -26,6 +26,7 @@ python3 -m http.server 8123
 - `styles/slides/reasoning.css` — slides 22–24 reasoning/drama visuals
 - `styles/slides/activities.css` — slide 16 and slides 31–32 activity visuals
 - `styles/slides/scale-data.css` — slides 29–30 scale/data-mixture visuals
+- `styles/slides/live-demo.css` — slide 32b live browser chat demo
 
 ### Scripts
 - `scripts/constants.js` — slide order, shared data tables, static strings
@@ -39,13 +40,14 @@ python3 -m http.server 8123
 - `scripts/slides/one-update.js` — slides 10–16 chart and NTP activity logic
 - `scripts/slides/reasoning.js` — slides 22–23 reasoning/drama logic
 - `scripts/slides/completion.js` — slides 31–32 completion/prompt-fix logic
+- `scripts/slides/live-demo.js` — slide 32b browser chat-completions demo
 - `scripts/app.js` — bootstraps the deck
 
 ## Slide Map
 
 Navigation uses a fixed custom order, not DOM order:
 
-`0, 1, 3, 4, 5, 6, 7, 9, 10, 11, 12, 13, 14, 8, 22, 23, 24, 16, 29, 30, 31, 32, 33`
+`0, 1, 3, 4, 5, 6, 7, 9, 10, 11, 12, 13, 14, 8, 22, 23, 24, 16, 29, 30, 31, 32, 33, 32b`
 
 High-level grouping:
 - `0–1` — title and objectives
@@ -55,6 +57,7 @@ High-level grouping:
 - `16` — “You Are the Language Model” activity
 - `29–30` — pretraining scale and data distribution
 - `31–33` — completion, prompt steering, post-training
+- `32b` — final live failure demo
 
 ## Where To Edit What
 
@@ -83,3 +86,11 @@ Manual smoke test:
 - slide 22 reasoning-pressure reveal
 - slide 23 suspect selection and answer reset
 - slides 31–32 completion/fix reveals and reset
+- slide 32b live chat: preset auto-send, manual prompt, clear-context, API errors
+
+## Live Demo Notes
+
+- Slide `32b` is fully static HTML/JS: no Python or package install is required.
+- It calls `chat/completions` directly from the browser, so it requires internet access and an API key at demo time.
+- The default model is `gpt-3.5-turbo-0125`, but the model and base URL fields are editable for other OpenAI-compatible endpoints.
+- Do not bake a real key into `index.html`; paste one at runtime or replace the browser call with a small proxy if you need a public/shareable version.

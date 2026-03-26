@@ -63,6 +63,10 @@ function defineSlides() {
       init: () => resetCompletionActivity(),
       step: () => runPromptFixStep(),
       reset: () => resetCompletionActivity()
+    }),
+    'slide-32b': createSlideDescriptor('slide-32b', {
+      init: () => initLiveFailureDemo(),
+      reset: () => resetLiveFailureDemo()
     })
   });
 

@@ -1,12 +1,12 @@
-const BLOCK30_MAX_STEP = 5;
-const BLOCK30_CLASSES = [
-  'block30-show-ln',
-  'block30-show-attn',
-  'block30-show-add',
-  'block30-show-ffn',
-  'block30-show-eq'
+const BLOCK28_MAX_STEP = 5;
+const BLOCK28_CLASSES = [
+  'block28-show-ln',
+  'block28-show-attn',
+  'block28-show-add',
+  'block28-show-ffn',
+  'block28-show-eq'
 ];
-const BLOCK30_TAKEAWAYS = [
+const BLOCK28_TAKEAWAYS = [
   'Attention and FFN both write updates into a shared residual stream \u2014 neither one replaces it.',
   'LayerNorm normalizes every row independently before the sublayer sees it.',
   'Multi-head attention gathers context across tokens and produces a small update \\(\\Delta_{\\mathrm{attn}}\\).',
@@ -16,25 +16,25 @@ const BLOCK30_TAKEAWAYS = [
 ];
 
 function setGptBlockStep(step) {
-  const slide = document.getElementById('slide-30');
-  const takeaway = document.getElementById('block30-takeaway');
+  const slide = document.getElementById('slide-28');
+  const takeaway = document.getElementById('block28-takeaway');
   if (!slide || !takeaway) return;
 
-  const clamped = Math.max(0, Math.min(BLOCK30_MAX_STEP, step));
+  const clamped = Math.max(0, Math.min(BLOCK28_MAX_STEP, step));
   gptBlockState.step = clamped;
-  BLOCK30_CLASSES.forEach((className, idx) => {
+  BLOCK28_CLASSES.forEach((className, idx) => {
     slide.classList.toggle(className, clamped >= idx + 1);
   });
-  takeaway.innerHTML = BLOCK30_TAKEAWAYS[clamped] || BLOCK30_TAKEAWAYS[0];
+  takeaway.innerHTML = BLOCK28_TAKEAWAYS[clamped] || BLOCK28_TAKEAWAYS[0];
 }
 
 function initGptBlockSlide() {
   setGptBlockStep(gptBlockState.step || 0);
-  typesetMath(document.getElementById('slide-30'));
+  typesetMath(document.getElementById('slide-28'));
 }
 
 function runGptBlockStep() {
-  if (gptBlockState.step >= BLOCK30_MAX_STEP) return false;
+  if (gptBlockState.step >= BLOCK28_MAX_STEP) return false;
   setGptBlockStep(gptBlockState.step + 1);
   return true;
 }
