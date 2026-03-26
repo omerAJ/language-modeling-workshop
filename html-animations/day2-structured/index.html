@@ -1677,113 +1677,498 @@ l e a r n ing &lt;/w&gt;</div>
   </div>
 
   <!-- ═══════════════════════════════════════════════════════════════
-       SLIDE 26 — Give Every Position a Fingerprint (Position Solution)
+       SLIDE 26 — From Position Codes to RoPE
+       Pedagogy adapted from Hugging Face's
+       "You could have designed state of the art positional encoding" (2024),
+       compressed for workshop pacing. Technical grounding:
+       Vaswani et al. (2017), Su et al. (2021).
        ═══════════════════════════════════════════════════════════════ -->
   <div class="slide" id="slide-26">
     <span class="section-tag">Input Representation</span>
     <div class="slide-header">
-      <div class="badge concept">Mechanism</div>
-      <h2>Give Every Position a Fingerprint</h2>
-      <p class="small-text">Add a position-specific vector to each token embedding before the first attention layer.</p>
+      <div class="badge concept">Design Journey</div>
+      <h2>From Position Codes to RoPE</h2>
+      <p class="small-text">We already know we need position before attention. Now build a position signal the way you would design it from scratch.</p>
     </div>
     <div class="slide-body">
     <div class="story-layout">
       <div class="card story-stage pos26-stage">
-
-        <div class="pos26-flow-ribbon">
-          <div class="pos26-flow-box pos26-flow-token">token embedding \(x_i\)</div>
-          <div class="pos26-flow-plus">+</div>
-          <div class="pos26-flow-box pos26-flow-pos">position vector \(p_i\)</div>
-          <div class="pos26-flow-eq">=</div>
-          <div class="pos26-flow-box pos26-flow-result">input to attention \(h_i^{(0)}\)</div>
-        </div>
-
-        <div class="hidden-content autostep">
-          <div class="pos26-binary-section">
-            <div class="pos26-binary-title">Think of a binary counter</div>
-            <div class="pos26-binary-caption">Each bit flips at a different rate. Sinusoidal position encoding works the same way &#8212; each dimension oscillates at a different frequency.</div>
-            <div class="pos26-binary-grid">
-              <div class="pos26-binary-label">Position</div>
-              <div class="pos26-binary-cell pos26-binary-header">0</div>
-              <div class="pos26-binary-cell pos26-binary-header">1</div>
-              <div class="pos26-binary-cell pos26-binary-header">2</div>
-              <div class="pos26-binary-cell pos26-binary-header">3</div>
-              <div class="pos26-binary-cell pos26-binary-header">4</div>
-              <div class="pos26-binary-cell pos26-binary-header">5</div>
-              <div class="pos26-binary-cell pos26-binary-header">6</div>
-              <div class="pos26-binary-cell pos26-binary-header">7</div>
-
-              <div class="pos26-binary-label">Bit 0 <span class="pos26-freq-tag fast">fast</span></div>
-              <div class="pos26-binary-cell on">0</div>
-              <div class="pos26-binary-cell off">1</div>
-              <div class="pos26-binary-cell on">0</div>
-              <div class="pos26-binary-cell off">1</div>
-              <div class="pos26-binary-cell on">0</div>
-              <div class="pos26-binary-cell off">1</div>
-              <div class="pos26-binary-cell on">0</div>
-              <div class="pos26-binary-cell off">1</div>
-
-              <div class="pos26-binary-label">Bit 1 <span class="pos26-freq-tag mid">medium</span></div>
-              <div class="pos26-binary-cell on">0</div>
-              <div class="pos26-binary-cell on">0</div>
-              <div class="pos26-binary-cell off">1</div>
-              <div class="pos26-binary-cell off">1</div>
-              <div class="pos26-binary-cell on">0</div>
-              <div class="pos26-binary-cell on">0</div>
-              <div class="pos26-binary-cell off">1</div>
-              <div class="pos26-binary-cell off">1</div>
-
-              <div class="pos26-binary-label">Bit 2 <span class="pos26-freq-tag slow">slow</span></div>
-              <div class="pos26-binary-cell on">0</div>
-              <div class="pos26-binary-cell on">0</div>
-              <div class="pos26-binary-cell on">0</div>
-              <div class="pos26-binary-cell on">0</div>
-              <div class="pos26-binary-cell off">1</div>
-              <div class="pos26-binary-cell off">1</div>
-              <div class="pos26-binary-cell off">1</div>
-              <div class="pos26-binary-cell off">1</div>
+        <div class="pos26-shell">
+          <div class="pos26-progress" aria-label="Slide 26 progress">
+            <div class="pos26-progress-step is-active">
+              <span class="pos26-progress-num">1</span>
+              <span class="pos26-progress-name">Target</span>
+            </div>
+            <div class="pos26-progress-step">
+              <span class="pos26-progress-num">2</span>
+              <span class="pos26-progress-name">Integer</span>
+            </div>
+            <div class="pos26-progress-step">
+              <span class="pos26-progress-num">3</span>
+              <span class="pos26-progress-name">Binary</span>
+            </div>
+            <div class="pos26-progress-step">
+              <span class="pos26-progress-num">4</span>
+              <span class="pos26-progress-name">Sin/Cos</span>
+            </div>
+            <div class="pos26-progress-step">
+              <span class="pos26-progress-num">5</span>
+              <span class="pos26-progress-name">Relative</span>
+            </div>
+            <div class="pos26-progress-step">
+              <span class="pos26-progress-num">6</span>
+              <span class="pos26-progress-name">RoPE</span>
             </div>
           </div>
-        </div>
 
-        <div class="hidden-content autostep">
-          <div class="pos26-heatmap-section">
-            <div class="pos26-heatmap-title">The real encoding: a unique fingerprint for every position</div>
-            <div class="pos26-plot-frame">
-              <img class="pos26-plot-image" src="assets/generated/positional-signals.svg" alt="Sinusoidal positional signals across embedding dimensions and positions">
-            </div>
-            <div class="callout info">
-              <span class="callout-icon">&#8505;&#65039;</span>
-              <span>Each column is a position, each row is a dimension. Early dims wiggle fast, later dims drift slowly. Every position gets a unique fingerprint. Nearby positions have similar fingerprints.</span>
-            </div>
-          </div>
-        </div>
+          <div class="pos26-state-frame" id="pos26-state-frame">
+            <section class="pos26-state-panel is-active" data-step="0" aria-hidden="false">
+              <div class="pos26-panel-header">
+                <div class="pos26-step-label">Step 1 · Design Target</div>
+                <h3 class="pos26-state-title">We need a position code attention can use</h3>
+                <p class="pos26-state-lead">Before picking a formula, define what a good position signal should do for the model.</p>
+              </div>
+              <div class="pos26-state-grid">
+                <div class="pos26-copy-card">
+                  <div class="pos26-copy-title">Three practical tests</div>
+                  <div class="pos26-teach-list">
+                    <div class="pos26-teach-row">
+                      <span class="pos26-row-badge">1</span>
+                      <div class="pos26-row-body">
+                        <strong>Unique slots</strong>
+                        <span>The first, fifth, and hundredth token should not look identical to attention.</span>
+                      </div>
+                    </div>
+                    <div class="pos26-teach-row">
+                      <span class="pos26-row-badge">2</span>
+                      <div class="pos26-row-body">
+                        <strong>Stable meaning across lengths</strong>
+                        <span>Position 5 should still mean "position 5" whether the sequence length is 10 or 10,000.</span>
+                      </div>
+                    </div>
+                    <div class="pos26-teach-row">
+                      <span class="pos26-row-badge">3</span>
+                      <div class="pos26-row-body">
+                        <strong>Smooth local change</strong>
+                        <span>Nearby positions should produce nearby signals so the model sees predictable transitions.</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="pos26-footnote">Workshop compression of the broader design criteria discussed in the Hugging Face article.</div>
+                </div>
+                <div class="pos26-visual-card pos26-visual-flow">
+                  <div class="pos26-flow-ribbon">
+                    <div class="pos26-flow-box pos26-flow-token">token embedding \(x_i\)</div>
+                    <div class="pos26-flow-plus">+</div>
+                    <div class="pos26-flow-box pos26-flow-pos">position code \(p_i\)</div>
+                    <div class="pos26-flow-eq">=</div>
+                    <div class="pos26-flow-box pos26-flow-result">input to attention \(h_i^{(0)}\)</div>
+                  </div>
+                  <div class="pos26-token-story">
+                    <div class="pos26-panel-label">why we need this at all</div>
+                    <div class="pos26-token-line">
+                      <span class="token-pill">The</span>
+                      <span class="token-pill main">dog</span>
+                      <span class="token-pill">chased</span>
+                      <span class="token-pill">another</span>
+                      <span class="token-pill reuse">dog</span>
+                    </div>
+                    <div class="pos26-token-note">The two <strong>dog</strong> tokens share content features. Position has to help attention distinguish their roles in the sentence.</div>
+                  </div>
+                </div>
+              </div>
+            </section>
 
-        <div class="hidden-content autostep">
-          <div class="pos26-methods-title">Three approaches in practice</div>
-          <div class="grid-3 pos26-methods-grid">
-            <div class="pos26-method-card">
-              <div class="pos26-method-name">Sin/Cos <span class="hl">(original)</span></div>
-              <div class="pos26-method-desc">Fixed formula. No learned parameters. Works for any sequence length.</div>
-              <div class="pos26-method-cite tiny">Vaswani et al., 2017</div>
-            </div>
-            <div class="pos26-method-card">
-              <div class="pos26-method-name">Learned <span class="hl-purple">(BERT-style)</span></div>
-              <div class="pos26-method-desc">Learn a lookup table \(P[\mathrm{pos}]\). Flexible, but limited to training length.</div>
-              <div class="pos26-method-cite tiny">Devlin et al., 2018</div>
-            </div>
-            <div class="pos26-method-card">
-              <div class="pos26-method-name">RoPE <span class="hl-green">(modern)</span></div>
-              <div class="pos26-method-desc">Rotate Q and K vectors by position. Used in GPT-4, Llama, Gemma.</div>
-              <div class="pos26-method-cite tiny">Su et al., 2021</div>
-            </div>
+            <section class="pos26-state-panel" data-step="1" aria-hidden="true">
+              <div class="pos26-panel-header">
+                <div class="pos26-step-label">Step 2 · Attempt 1</div>
+                <h3 class="pos26-state-title">Add the raw index</h3>
+                <p class="pos26-state-lead">The obvious first idea is to add the token index itself. It fails for two separate reasons.</p>
+              </div>
+              <div class="pos26-state-grid">
+                <div class="pos26-copy-card">
+                  <div class="pos26-copy-title">What goes wrong?</div>
+                  <div class="pos26-teach-list">
+                    <div class="pos26-teach-row">
+                      <span class="pos26-row-badge">A</span>
+                      <div class="pos26-row-body">
+                        <strong>Scale mismatch</strong>
+                        <span>Embedding components usually live near 0. A position like 252 is orders of magnitude larger.</span>
+                      </div>
+                    </div>
+                    <div class="pos26-teach-row">
+                      <span class="pos26-row-badge">B</span>
+                      <div class="pos26-row-body">
+                        <strong>Signal gets swamped</strong>
+                        <span>After addition, attention mostly sees the position magnitude rather than the original token semantics.</span>
+                      </div>
+                    </div>
+                    <div class="pos26-teach-row">
+                      <span class="pos26-row-badge">C</span>
+                      <div class="pos26-row-body">
+                        <strong>Normalizing by sequence length is inconsistent</strong>
+                        <span>Position 5 becomes 0.5 in a short sequence and 0.0005 in a long one, so the same slot means different things.</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="pos26-visual-card">
+                  <div class="pos26-panel-label">the scale problem</div>
+                  <div class="pos26-raw-grid">
+                    <div class="pos26-raw-panel">
+                      <div class="pos26-panel-label">token embedding \(x_{252}\)</div>
+                      <div class="pos26-number-vector pos26-number-vector-token">
+                        <span>-0.02</span><span>0.04</span><span>-0.01</span><span>0.03</span>
+                        <span>-0.05</span><span>0.01</span><span>0.02</span><span>-0.03</span>
+                      </div>
+                    </div>
+                    <div class="pos26-math-op">+</div>
+                    <div class="pos26-raw-panel">
+                      <div class="pos26-panel-label">raw position code</div>
+                      <div class="pos26-number-vector pos26-number-vector-pos">
+                        <span>252</span><span>252</span><span>252</span><span>252</span>
+                        <span>252</span><span>252</span><span>252</span><span>252</span>
+                      </div>
+                    </div>
+                    <div class="pos26-math-op">=</div>
+                    <div class="pos26-raw-panel">
+                      <div class="pos26-panel-label">what attention sees</div>
+                      <div class="pos26-number-vector pos26-number-vector-out">
+                        <span>251.98</span><span>252.04</span><span>251.99</span><span>252.03</span>
+                        <span>251.95</span><span>252.01</span><span>252.02</span><span>251.97</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="pos26-normalize-compare">
+                    <div class="pos26-normalize-card">
+                      <div class="pos26-panel-label">short sequence</div>
+                      <div class="pos26-normalize-value">\(5 / 10 = 0.5\)</div>
+                    </div>
+                    <div class="pos26-normalize-card">
+                      <div class="pos26-panel-label">long sequence</div>
+                      <div class="pos26-normalize-value">\(5 / 10000 = 0.0005\)</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <section class="pos26-state-panel" data-step="2" aria-hidden="true">
+              <div class="pos26-panel-header">
+                <div class="pos26-step-label">Step 3 · Attempt 2</div>
+                <h3 class="pos26-state-title">Binary fixes the range and reveals the right intuition</h3>
+                <p class="pos26-state-lead">Binary is not the final answer, but it teaches us the important structure we want to keep.</p>
+              </div>
+              <div class="pos26-state-grid">
+                <div class="pos26-copy-card">
+                  <div class="pos26-copy-title">What binary teaches us</div>
+                  <div class="pos26-teach-list">
+                    <div class="pos26-teach-row">
+                      <span class="pos26-row-badge">A</span>
+                      <div class="pos26-row-body">
+                        <strong>Values stay bounded</strong>
+                        <span>Every component is just 0 or 1, so the position code no longer explodes in magnitude.</span>
+                      </div>
+                    </div>
+                    <div class="pos26-teach-row">
+                      <span class="pos26-row-badge">B</span>
+                      <div class="pos26-row-body">
+                        <strong>Different dimensions change at different rates</strong>
+                        <span>Fast bits flip every token; slower bits flip every 2, 4, 8, ... tokens.</span>
+                      </div>
+                    </div>
+                    <div class="pos26-teach-row">
+                      <span class="pos26-row-badge">C</span>
+                      <div class="pos26-row-body">
+                        <strong>But the geometry is jumpy</strong>
+                        <span>Moving from one position to the next can flip several bits at once, so nearby positions are not smooth neighbors.</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="pos26-visual-card">
+                  <div class="pos26-panel-label">binary counter across positions</div>
+                  <div class="pos26-binary-stage">
+                    <div class="pos26-binary-grid">
+                      <div class="pos26-binary-label">Position</div>
+                      <div class="pos26-binary-cell pos26-binary-header">0</div>
+                      <div class="pos26-binary-cell pos26-binary-header">1</div>
+                      <div class="pos26-binary-cell pos26-binary-header">2</div>
+                      <div class="pos26-binary-cell pos26-binary-header">3</div>
+                      <div class="pos26-binary-cell pos26-binary-header">4</div>
+                      <div class="pos26-binary-cell pos26-binary-header">5</div>
+                      <div class="pos26-binary-cell pos26-binary-header">6</div>
+                      <div class="pos26-binary-cell pos26-binary-header">7</div>
+
+                      <div class="pos26-binary-label">Bit 0 <span class="pos26-freq-tag fast">fast</span></div>
+                      <div class="pos26-binary-cell on">0</div><div class="pos26-binary-cell off">1</div><div class="pos26-binary-cell on">0</div><div class="pos26-binary-cell off">1</div>
+                      <div class="pos26-binary-cell on">0</div><div class="pos26-binary-cell off">1</div><div class="pos26-binary-cell on">0</div><div class="pos26-binary-cell off">1</div>
+
+                      <div class="pos26-binary-label">Bit 1 <span class="pos26-freq-tag mid">medium</span></div>
+                      <div class="pos26-binary-cell on">0</div><div class="pos26-binary-cell on">0</div><div class="pos26-binary-cell off">1</div><div class="pos26-binary-cell off">1</div>
+                      <div class="pos26-binary-cell on">0</div><div class="pos26-binary-cell on">0</div><div class="pos26-binary-cell off">1</div><div class="pos26-binary-cell off">1</div>
+
+                      <div class="pos26-binary-label">Bit 2 <span class="pos26-freq-tag slow">slow</span></div>
+                      <div class="pos26-binary-cell on">0</div><div class="pos26-binary-cell on">0</div><div class="pos26-binary-cell on">0</div><div class="pos26-binary-cell on">0</div>
+                      <div class="pos26-binary-cell off">1</div><div class="pos26-binary-cell off">1</div><div class="pos26-binary-cell off">1</div><div class="pos26-binary-cell off">1</div>
+                    </div>
+                  </div>
+                  <div class="pos26-jump-card">
+                    <div class="pos26-panel-label">why it is still hard to learn</div>
+                    <svg class="pos26-jump-plot" viewBox="0 0 220 84" aria-hidden="true">
+                      <line x1="16" y1="68" x2="208" y2="68"></line>
+                      <line x1="16" y1="12" x2="16" y2="68"></line>
+                      <polyline points="20,54 48,46 76,50 104,28 132,56 160,20 188,40 204,18"></polyline>
+                    </svg>
+                    <div class="pos26-jump-note">Crossing a bit boundary can produce a sharp jump rather than a gentle drift.</div>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <section class="pos26-state-panel" data-step="3" aria-hidden="true">
+              <div class="pos26-panel-header">
+                <div class="pos26-step-label">Step 4 · Attempt 3</div>
+                <h3 class="pos26-state-title">Replace bit flips with smooth sinusoids</h3>
+                <p class="pos26-state-lead">Keep the multirate pattern from binary, but make each dimension change smoothly instead of abruptly.</p>
+              </div>
+              <div class="pos26-state-grid">
+                <div class="pos26-copy-card">
+                  <div class="pos26-copy-title">What improves?</div>
+                  <div class="pos26-teach-list">
+                    <div class="pos26-teach-row">
+                      <span class="pos26-row-badge">A</span>
+                      <div class="pos26-row-body">
+                        <strong>Same hierarchy, smoother motion</strong>
+                        <span>Early dimensions wiggle quickly; later dimensions change slowly, but now every step is continuous.</span>
+                      </div>
+                    </div>
+                    <div class="pos26-teach-row">
+                      <span class="pos26-row-badge">B</span>
+                      <div class="pos26-row-body">
+                        <strong>Bounded values</strong>
+                        <span>Sin and cos stay between -1 and 1, so position remains on a controlled scale.</span>
+                      </div>
+                    </div>
+                    <div class="pos26-teach-row">
+                      <span class="pos26-row-badge">C</span>
+                      <div class="pos26-row-body">
+                        <strong>Local similarity</strong>
+                        <span>Nearby positions now look similar, which is much easier for optimization to learn.</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="pos26-formula-card">
+                    <div class="pos26-panel-label">light formula cue</div>
+                    <div class="pos26-formula-lines">
+                      <div>\(PE(pos, 2i) = \sin\!\left(\frac{pos}{10000^{2i/d}}\right)\)</div>
+                      <div>\(PE(pos, 2i+1) = \cos\!\left(\frac{pos}{10000^{2i/d}}\right)\)</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="pos26-visual-card">
+                  <div class="pos26-panel-label">same multirate idea, smoother geometry</div>
+                  <div class="pos26-compare-rail">
+                    <div class="pos26-mini-strip-card">
+                      <div class="pos26-panel-label">binary intuition</div>
+                      <div class="pos26-mini-binary">
+                        <div class="pos26-mini-binary-row">
+                          <span class="pos26-freq-tag fast">fast</span>
+                          <span class="pos26-mini-bit on"></span><span class="pos26-mini-bit off"></span><span class="pos26-mini-bit on"></span><span class="pos26-mini-bit off"></span>
+                          <span class="pos26-mini-bit on"></span><span class="pos26-mini-bit off"></span><span class="pos26-mini-bit on"></span><span class="pos26-mini-bit off"></span>
+                        </div>
+                        <div class="pos26-mini-binary-row">
+                          <span class="pos26-freq-tag mid">medium</span>
+                          <span class="pos26-mini-bit on"></span><span class="pos26-mini-bit on"></span><span class="pos26-mini-bit off"></span><span class="pos26-mini-bit off"></span>
+                          <span class="pos26-mini-bit on"></span><span class="pos26-mini-bit on"></span><span class="pos26-mini-bit off"></span><span class="pos26-mini-bit off"></span>
+                        </div>
+                        <div class="pos26-mini-binary-row">
+                          <span class="pos26-freq-tag slow">slow</span>
+                          <span class="pos26-mini-bit on"></span><span class="pos26-mini-bit on"></span><span class="pos26-mini-bit on"></span><span class="pos26-mini-bit on"></span>
+                          <span class="pos26-mini-bit off"></span><span class="pos26-mini-bit off"></span><span class="pos26-mini-bit off"></span><span class="pos26-mini-bit off"></span>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="pos26-transition-arrow">&#8594;</div>
+                    <div class="pos26-wave-card">
+                      <div class="pos26-panel-label">sinusoidal version</div>
+                      <div class="pos26-wave-row fast">
+                        <span class="pos26-freq-tag fast">fast</span>
+                        <svg viewBox="0 0 240 30" aria-hidden="true" preserveAspectRatio="none">
+                          <polyline class="pos26-wave-line" points="0,15.0 4,7.2 8,7.2 12,15.0 16,22.8 20,22.8 24,15.0 28,7.2 32,7.2 36,15.0 40,22.8 44,22.8 48,15.0 52,7.2 56,7.2 60,15.0 64,22.8 68,22.8 72,15.0 76,7.2 80,7.2 84,15.0 88,22.8 92,22.8 96,15.0 100,7.2 104,7.2 108,15.0 112,22.8 116,22.8 120,15.0 124,7.2 128,7.2 132,15.0 136,22.8 140,22.8 144,15.0 148,7.2 152,7.2 156,15.0 160,22.8 164,22.8 168,15.0 172,7.2 176,7.2 180,15.0 184,22.8 188,22.8 192,15.0 196,7.2 200,7.2 204,15.0 208,22.8 212,22.8 216,15.0 220,7.2 224,7.2 228,15.0 232,22.8 236,22.8 240,15.0"></polyline>
+                        </svg>
+                      </div>
+                      <div class="pos26-wave-row mid">
+                        <span class="pos26-freq-tag mid">medium</span>
+                        <svg viewBox="0 0 240 30" aria-hidden="true" preserveAspectRatio="none">
+                          <polyline class="pos26-wave-line" points="0,15.0 4,11.5 8,8.9 12,8.0 16,8.9 20,11.5 24,15.0 28,18.5 32,21.1 36,22.0 40,21.1 44,18.5 48,15.0 52,11.5 56,8.9 60,8.0 64,8.9 68,11.5 72,15.0 76,18.5 80,21.1 84,22.0 88,21.1 92,18.5 96,15.0 100,11.5 104,8.9 108,8.0 112,8.9 116,11.5 120,15.0 124,18.5 128,21.1 132,22.0 136,21.1 140,18.5 144,15.0 148,11.5 152,8.9 156,8.0 160,8.9 164,11.5 168,15.0 172,18.5 176,21.1 180,22.0 184,21.1 188,18.5 192,15.0 196,11.5 200,8.9 204,8.0 208,8.9 212,11.5 216,15.0 220,18.5 224,21.1 228,22.0 232,21.1 236,18.5 240,15.0"></polyline>
+                        </svg>
+                      </div>
+                      <div class="pos26-wave-row slow">
+                        <span class="pos26-freq-tag slow">slow</span>
+                        <svg viewBox="0 0 240 30" aria-hidden="true" preserveAspectRatio="none">
+                          <polyline class="pos26-wave-line" points="0,15.0 4,14.0 8,13.0 12,12.1 16,11.3 20,10.7 24,10.2 28,10.0 32,10.0 36,10.2 40,10.7 44,11.3 48,12.1 52,13.0 56,14.0 60,15.0 64,16.0 68,17.0 72,17.9 76,18.7 80,19.3 84,19.8 88,20.0 92,20.0 96,19.8 100,19.3 104,18.7 108,17.9 112,17.0 116,16.0 120,15.0 124,14.0 128,13.0 132,12.1 136,11.3 140,10.7 144,10.2 148,10.0 152,10.0 156,10.2 160,10.7 164,11.3 168,12.1 172,13.0 176,14.0 180,15.0 184,16.0 188,17.0 192,17.9 196,18.7 200,19.3 204,19.8 208,20.0 212,20.0 216,19.8 220,19.3 224,18.7 228,17.9 232,17.0 236,16.0 240,15.0"></polyline>
+                        </svg>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="pos26-frequency-note">Early dimensions wiggle quickly, later ones drift slowly. Every position gets a distinct but smooth fingerprint.</div>
+                </div>
+              </div>
+            </section>
+
+            <section class="pos26-state-panel" data-step="4" aria-hidden="true">
+              <div class="pos26-panel-header">
+                <div class="pos26-step-label">Step 5 · Attention Context</div>
+                <h3 class="pos26-state-title">Meaning depends more on relative position than absolute index</h3>
+                <p class="pos26-state-lead">Sinusoids are already good absolute encodings. The next question is: where should position act inside attention?</p>
+              </div>
+              <div class="pos26-state-grid">
+                <div class="pos26-copy-card">
+                  <div class="pos26-copy-title">The bridge to RoPE</div>
+                  <div class="pos26-teach-list">
+                    <div class="pos26-teach-row">
+                      <span class="pos26-row-badge">A</span>
+                      <div class="pos26-row-body">
+                        <strong>Absolute slot is rarely the main semantic fact</strong>
+                        <span>What matters is usually how far one token is from another token of interest.</span>
+                      </div>
+                    </div>
+                    <div class="pos26-teach-row">
+                      <span class="pos26-row-badge">B</span>
+                      <div class="pos26-row-body">
+                        <strong>Attention compares tokens through \(QK^\top\)</strong>
+                        <span>If positional information should change comparisons, the dot product is the critical place to look.</span>
+                      </div>
+                    </div>
+                    <div class="pos26-teach-row">
+                      <span class="pos26-row-badge">C</span>
+                      <div class="pos26-row-body">
+                        <strong>Dot products depend on angle</strong>
+                        <span>Changing angle changes the attention score without having to overwrite the norm that carries token content.</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="pos26-visual-card">
+                  <div class="pos26-relative-scene">
+                    <div class="pos26-panel-label">absolute vs relative position</div>
+                    <div class="pos26-sentence-row pos26-sentence-row-top">
+                      <span class="pos26-index-chip">0</span>
+                      <span class="pos26-index-chip">1</span>
+                      <span class="pos26-index-chip pos26-focus">2</span>
+                      <span class="pos26-index-chip">3</span>
+                      <span class="pos26-index-chip">4</span>
+                    </div>
+                    <div class="pos26-token-line pos26-token-line-wide">
+                      <span class="token-pill">The</span>
+                      <span class="token-pill main">dog</span>
+                      <span class="token-pill flex">chased</span>
+                      <span class="token-pill">another</span>
+                      <span class="token-pill reuse">dog</span>
+                    </div>
+                    <div class="pos26-sentence-row pos26-sentence-row-bottom">
+                      <span class="pos26-index-chip">-2</span>
+                      <span class="pos26-index-chip">-1</span>
+                      <span class="pos26-index-chip pos26-focus">0</span>
+                      <span class="pos26-index-chip">+1</span>
+                      <span class="pos26-index-chip">+2</span>
+                    </div>
+                  </div>
+                  <div class="pos26-attn-bridge">
+                    <div class="pos26-bridge-card">
+                      <div class="pos26-panel-label">attention score</div>
+                      <div class="pos26-bridge-formula">\(\mathrm{Attn}(Q,K,V) = \mathrm{softmax}\!\left(\frac{QK^\top}{\sqrt{d_k}}\right)V\)</div>
+                    </div>
+                    <div class="pos26-bridge-card">
+                      <div class="pos26-panel-label">geometry of the dot product</div>
+                      <div class="pos26-bridge-formula">\(\vec{a}\cdot\vec{b} = |\vec{a}|\,|\vec{b}|\,\cos\theta\)</div>
+                      <svg class="pos26-angle-visual" viewBox="0 0 120 72" aria-hidden="true">
+                        <line x1="18" y1="56" x2="18" y2="16"></line>
+                        <line x1="18" y1="56" x2="92" y2="56"></line>
+                        <line x1="18" y1="56" x2="54" y2="20"></line>
+                        <path d="M38 56 A20 20 0 0 0 32 42"></path>
+                      </svg>
+                      <div class="pos26-angle-note">Change the angle, change the score.</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <section class="pos26-state-panel" data-step="5" aria-hidden="true">
+              <div class="pos26-panel-header">
+                <div class="pos26-step-label">Step 6 · RoPE</div>
+                <h3 class="pos26-state-title">RoPE moves the sinusoidal idea into the comparison itself</h3>
+                <p class="pos26-state-lead">Instead of adding position into \(x\), rotate each 2D pair of \(Q\) and \(K\) before attention computes the dot product.</p>
+              </div>
+              <div class="pos26-state-grid">
+                <div class="pos26-copy-card">
+                  <div class="pos26-copy-title">What changes in RoPE?</div>
+                  <div class="pos26-teach-list">
+                    <div class="pos26-teach-row">
+                      <span class="pos26-row-badge">A</span>
+                      <div class="pos26-row-body">
+                        <strong>Reuse the same frequency ladder</strong>
+                        <span>The fast and slow sinusoidal frequencies are still there; they now become rotation angles.</span>
+                      </div>
+                    </div>
+                    <div class="pos26-teach-row">
+                      <span class="pos26-row-badge">B</span>
+                      <div class="pos26-row-body">
+                        <strong>Operate on 2D pairs</strong>
+                        <span>Each pair like \((q_1, q_2)\) or \((k_1, k_2)\) is rotated according to that token's position.</span>
+                      </div>
+                    </div>
+                    <div class="pos26-teach-row">
+                      <span class="pos26-row-badge">C</span>
+                      <div class="pos26-row-body">
+                        <strong>Relative position shows up through angle</strong>
+                        <span>Attention scores change because the rotated queries and keys meet at different angles, while norms stay intact.</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="pos26-formula-card">
+                    <div class="pos26-panel-label">compact notation</div>
+                    <div class="pos26-formula-lines">
+                      <div>\(Q, K \xrightarrow{\text{rotate by position}} Q', K'\)</div>
+                      <div>\(\text{attention score comes from } Q'K'^\top\)</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="pos26-visual-card">
+                  <div class="pos26-rope-topline">Same sinusoidal frequency idea, but used multiplicatively inside attention.</div>
+                  <div class="pos26-rope-layout">
+                    <div class="pos26-rope-box">
+                      <div class="pos26-panel-label">query pair</div>
+                      <div class="pos26-rope-pair-grid"><span>\(q_1\)</span><span>\(q_2\)</span></div>
+                      <div class="pos26-rope-arrow">&#8635; rotate by \(p\theta_i\)</div>
+                    </div>
+                    <div class="pos26-rope-box pos26-rope-box-center">
+                      <div class="pos26-panel-label">position acts here</div>
+                      <div class="pos26-rope-score-formula">\(\big(q_1, q_2\big)\), \(\big(k_1, k_2\big)\)</div>
+                      <div class="pos26-rope-score-note">same frequency bank, different position angles</div>
+                    </div>
+                    <div class="pos26-rope-box">
+                      <div class="pos26-panel-label">key pair</div>
+                      <div class="pos26-rope-pair-grid"><span>\(k_1\)</span><span>\(k_2\)</span></div>
+                      <div class="pos26-rope-arrow">&#8635; rotate by \(p\theta_i\)</div>
+                    </div>
+                  </div>
+                  <div class="pos26-rope-score-card">
+                    <div class="pos26-panel-label">teaching takeaway</div>
+                    <div class="pos26-rope-text">RoPE is the sinusoidal idea moved into the right computational place: not "add position and hope attention learns it," but "rotate \(Q\) and \(K\) so relative position directly changes the comparison."</div>
+                  </div>
+                </div>
+              </div>
+            </section>
           </div>
         </div>
 
       </div>
     </div>
 
-    <div class="story-takeaway" id="pos26-takeaway">Position encoding gives every slot a unique fingerprint. The model reads both <em>what</em> a token is and <em>where</em> it sits.</div>
+    <div class="story-takeaway" id="pos26-takeaway">Before choosing a position method, define what success looks like: unique slots, stable meanings across context lengths, and smooth local change.</div>
     </div>
   </div>
 

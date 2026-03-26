@@ -82,6 +82,7 @@ function defineSlides() {
     }),
     'slide-26': createSlideDescriptor('slide-26', {
       init: () => initPositionSignalSlide(),
+      step: () => runPositionSignalStep(),
       reset: () => resetPositionSignalSlide()
     }),
     'slide-27': createSlideDescriptor('slide-27', {

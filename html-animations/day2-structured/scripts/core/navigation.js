@@ -37,6 +37,10 @@ const STEP_STATE_CONTROLLERS = {
     get: () => attentionMultiHeadState.step,
     set: (step) => setAttentionMultiHeadStep(step)
   },
+  'slide-26': {
+    get: () => positionSignalState.step,
+    set: (step) => setPositionSignalStep(step)
+  },
   'slide-28': {
     get: () => gptBlockState.step,
     set: (step) => setGptBlockStep(step)

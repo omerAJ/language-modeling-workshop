@@ -137,7 +137,9 @@ const state = {
     initialized: false
   },
   positionSignal: {
-    initialized: false
+    initialized: false,
+    step: 0,
+    resizeBound: false
   },
   ffnCombined: {
     initialized: false
