@@ -18,6 +18,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    flex: 1 1 auto;
+    min-height: 0;
 
 }
 
@@ -317,6 +319,8 @@
     display: flex;
     align-items: stretch;
     justify-content: center;
+    flex: 1 1 auto;
+    min-height: 0;
 }
 
 .attn19-stage {
@@ -884,6 +888,12 @@
     color: #dbe4ff;
     line-height: 1.45;
 
+}
+
+.slide-has-takeaway .attn18-layout,
+.slide-has-takeaway .attn19-layout,
+.slide-has-takeaway .attn21-layout {
+    margin-top: 0.28rem;
 }
 
 .attn19-takeaway mjx-container {
@@ -1544,6 +1554,8 @@
     margin-top: 0.84rem;
     display: flex;
     justify-content: center;
+    flex: 1 1 auto;
+    min-height: 0;
 
 }
 

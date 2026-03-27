@@ -9,6 +9,7 @@
   flex: 1;
   display: flex;
   flex-direction: column;
+  min-height: 0;
 }
 
 .pred32-stage {
@@ -179,6 +180,12 @@
   justify-content: flex-start;
   gap: 0.78rem;
   margin-top: 0.68rem;
+  min-height: 0;
+}
+
+.slide-has-takeaway .pred32-layout,
+.slide-has-takeaway .close33-layout {
+  margin-top: 0.3rem;
 }
 
 /* — Pipeline diagram — */
