@@ -925,7 +925,8 @@
 
 }
 
-#slide-24.attn24-show-concat .attn24-combine-stage,
+#slide-24.attn24-show-concat-flight .attn24-combine-stage,
+  #slide-24.attn24-show-concat .attn24-combine-stage,
   #slide-24.attn24-show-wo .attn24-combine-stage {
     opacity: 1;
     visibility: visible;

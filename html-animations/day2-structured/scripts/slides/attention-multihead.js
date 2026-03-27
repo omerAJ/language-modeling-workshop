@@ -755,7 +755,7 @@ function resetAttentionMultiHeadVisuals() {
   state.attentionMultiHead.combineVisible = false;
   state.attentionMultiHead.outputVisibleCount = 0;
   if (!slide) return;
-  slide.classList.remove('attn24-show-split', 'attn24-source-collapsed', 'attn24-show-proj', 'attn24-show-attn', 'attn24-show-output', 'attn24-show-concat', 'attn24-show-concat-ready', 'attn24-show-wo');
+  slide.classList.remove('attn24-show-split', 'attn24-source-collapsed', 'attn24-show-proj', 'attn24-show-attn', 'attn24-show-output', 'attn24-show-concat-flight', 'attn24-show-concat', 'attn24-show-concat-ready', 'attn24-show-wo');
   slide.querySelectorAll('.attn24-head-card').forEach((card) => {
     card.classList.remove('is-split-visible', 'is-proj-visible', 'is-qkv-visible', 'is-attn-visible', 'is-output-visible');
   });
@@ -845,6 +845,7 @@ function settleAttentionMultiHeadConcatState() {
   const slide = document.getElementById('slide-24');
   settleAttentionMultiHeadOutputState();
   if (!slide) return;
+  slide.classList.remove('attn24-show-concat-flight');
   slide.classList.add('attn24-show-concat', 'attn24-show-concat-ready');
   slide.classList.remove('attn24-show-wo');
   state.attentionMultiHead.splitDone = true;
@@ -1020,8 +1021,9 @@ function runAttentionMultiHeadConcatSequence() {
   }
   clearAttentionMultiHeadTimers();
   clearAttentionMultiHeadGhosts();
-  slide.classList.add('attn24-show-concat');
-  slide.classList.remove('attn24-show-wo');
+  slide.classList.add('attn24-show-concat-flight');
+  slide.classList.remove('attn24-show-concat', 'attn24-show-concat-ready', 'attn24-show-wo');
+  let concatGhostAnimated = false;
 
   ATTN_MHA_HEADS.forEach((head) => {
     const sourceShell = document.getElementById('attn24-head-output-shell-' + head);
@@ -1029,16 +1031,35 @@ function runAttentionMultiHeadConcatSequence() {
     const ghost = createAttentionMultiHeadOutputGhost(head);
     setAttentionMultiHeadSourceOutputVisible(head, false);
     if (ghost && sourceShell && target) {
-      animateAttentionMultiHeadGhost(ghost, sourceShell, target, ATTN_MHA_CONCAT_MS);
-      state.attentionMultiHead.timers.push(setTimeout(() => {
+      const didAnimate = animateAttentionMultiHeadGhost(ghost, sourceShell, target, ATTN_MHA_CONCAT_MS);
+      if (didAnimate) {
+        concatGhostAnimated = true;
+        state.attentionMultiHead.timers.push(setTimeout(() => {
+          ghost.style.opacity = '0.08';
+        }, Math.max(ATTN_MHA_CONCAT_MS - ATTN_MATRIX_FADE_MS + 40, 140)));
+        state.attentionMultiHead.timers.push(setTimeout(() => {
+          ghost.remove();
+        }, ATTN_MHA_CONCAT_MS + ATTN_MATRIX_FADE_MS + 40));
+      } else {
         ghost.remove();
-      }, ATTN_MHA_CONCAT_MS + ATTN_MATRIX_FADE_MS + 40));
+      }
     }
   });
 
   state.attentionMultiHead.timers.push(setTimeout(() => {
+    if (concatGhostAnimated) {
+      slide.classList.add('attn24-show-concat');
+      slide.classList.remove('attn24-show-concat-flight');
+    }
+  }, concatGhostAnimated
+    ? Math.max(ATTN_MHA_CONCAT_MS - 60, 220)
+    : Math.max(ATTN_MHA_CONCAT_MS - 120, 180)));
+
+  state.attentionMultiHead.timers.push(setTimeout(() => {
     slide.classList.add('attn24-show-concat-ready');
-  }, Math.max(ATTN_MHA_CONCAT_MS - 120, 180)));
+  }, concatGhostAnimated
+    ? (ATTN_MHA_CONCAT_MS + 20)
+    : Math.max(ATTN_MHA_CONCAT_MS - 60, 220)));
 
   state.attentionMultiHead.timers.push(setTimeout(() => {
     settleAttentionMultiHeadConcatState();
@@ -1054,7 +1075,7 @@ function runAttentionMultiHeadOutputProjectionSequence() {
   clearAttentionMultiHeadTimers();
   clearAttentionMultiHeadGhosts();
   slide.classList.add('attn24-show-concat', 'attn24-show-concat-ready');
-  slide.classList.remove('attn24-show-wo');
+  slide.classList.remove('attn24-show-concat-flight', 'attn24-show-wo');
 
   state.attentionMultiHead.timers.push(setTimeout(() => {
     slide.classList.add('attn24-show-wo');

@@ -80,56 +80,60 @@ Refactor Notes (Zero-Regression):
       <!-- DAY 1 -->
       <div class="card" style="border-color: rgba(108,140,255,0.3); opacity:0.6;">
         <div class="badge day1">Day 1 — Completed</div>
-        <h3 style="color:var(--accent);">Why models learn useful behavior</h3>
+        <h3 style="color:var(--accent); margin-top:0.45rem;">Why LLMs behave the way they do</h3>
         <ul style="list-style:none; margin-top:0.625rem;">
           <li class="small-text" style="padding:0.3rem 0 0.3rem 1.25rem; position:relative;">
             <span style="position:absolute;left:0;color:var(--accent);">→</span>
-            Training vs. inference
+            Inference vs. training
           </li>
           <li class="small-text" style="padding:0.3rem 0 0.3rem 1.25rem; position:relative;">
             <span style="position:absolute;left:0;color:var(--accent);">→</span>
-            Next-token prediction objective
+            Next-token prediction
           </li>
           <li class="small-text" style="padding:0.3rem 0 0.3rem 1.25rem; position:relative;">
             <span style="position:absolute;left:0;color:var(--accent);">→</span>
-            Loss → gradients → parameter updates
+            Loss → gradients → updates
           </li>
           <li class="small-text" style="padding:0.3rem 0 0.3rem 1.25rem; position:relative;">
             <span style="position:absolute;left:0;color:var(--accent);">→</span>
-            Training pipeline and data work
+            Why this objective works
+          </li>
+          <li class="small-text" style="padding:0.3rem 0 0.3rem 1.25rem; position:relative;">
+            <span style="position:absolute;left:0;color:var(--accent);">→</span>
+            Data, scale, and alignment
           </li>
         </ul>
         <div class="callout info" style="margin-top:0.875rem;">
           <span class="icon">i</span>
-          <span>Day 1 focused on the <strong>learning process.</strong></span>
+          <span>Today: treat the model as a <strong>system being shaped.</strong></span>
         </div>
       </div>
 
       <!-- DAY 2 -->
       <div class="card" style="border-color: rgba(167,139,250,0.25);">
         <div class="badge day2">Day 2 — Today</div>
-        <h3 style="color:var(--purple);">How one inference step computes the next token</h3>
+        <h3 style="color:var(--purple); margin-top:0.45rem;">How a Transformer processes text and computes the next word</h3>
         <ul style="list-style:none; margin-top:0.625rem;">
           <li class="small-text" style="padding:0.3rem 0 0.3rem 1.25rem; position:relative;">
             <span style="position:absolute;left:0;color:var(--purple);">→</span>
-            Tokens → embeddings → position
+            Tokenization & embeddings
           </li>
           <li class="small-text" style="padding:0.3rem 0 0.3rem 1.25rem; position:relative;">
             <span style="position:absolute;left:0;color:var(--purple);">→</span>
-            Attention routes information
+            Self-attention
           </li>
           <li class="small-text" style="padding:0.3rem 0 0.3rem 1.25rem; position:relative;">
             <span style="position:absolute;left:0;color:var(--purple);">→</span>
-            FFN transforms each token
+            Feed-forward layers
           </li>
           <li class="small-text" style="padding:0.3rem 0 0.3rem 1.25rem; position:relative;">
             <span style="position:absolute;left:0;color:var(--purple);">→</span>
-            Forward pass → logits → decoding
+            Full forward pass end-to-end
           </li>
         </ul>
         <div class="callout info" style="margin-top:0.875rem;">
           <span class="icon">i</span>
-          <span>Today we trace the <strong>computation itself.</strong></span>
+          <span>Tomorrow: treat it as a <strong>machine executing computation.</strong></span>
         </div>
       </div>
     </div>
