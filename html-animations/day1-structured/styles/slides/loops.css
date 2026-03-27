@@ -20,4 +20,102 @@
   .tok.input  { border-color: var(--accent); background: rgba(123,154,255,0.12); }
   .tok.target { border-color: var(--green);  background: rgba(90,232,142,0.12); color: var(--green); font-weight: 600; }
   .tok.blank  { border: 2px dashed var(--orange); color: var(--orange); min-width: 3.75rem; justify-content: center; cursor: pointer; }
-  .tok.done   { border: 1px solid var(--text-dim); color: var(--text-dim); cursor: default; opacity: 0.5; }
+.tok.done   { border: 1px solid var(--text-dim); color: var(--text-dim); cursor: default; opacity: 0.5; }
+
+/* Projector-safe compaction for slide 6 */
+#slide-6 h2 {
+  margin-bottom: 0.65rem;
+}
+
+#slide-6 .small-text {
+  line-height: 1.42;
+}
+
+#slide-6 .spacer-sm {
+  height: 0.3rem;
+}
+
+#slide-6 > div[style*='justify-content:center'] {
+  gap: 0.28rem !important;
+  margin-bottom: 0.55rem !important;
+}
+
+#slide-6 .reveal-btn {
+  margin-top: 0;
+  padding: 0.36rem 0.62rem;
+  font-size: var(--fs-xs);
+}
+
+#slide-6 > .card {
+  padding: 0.7rem 0.85rem;
+}
+
+#slide-6 .flow {
+  gap: 0.38rem;
+  margin: 0.45rem 0;
+}
+
+#slide-6 .flow-box {
+  min-width: 4.8rem;
+  padding: 0.34rem 0.5rem;
+  font-size: var(--fs-2xs);
+  line-height: 1.25;
+}
+
+#slide-6 .flow .flow-box ~ .flow-box {
+  margin-left: 0.95rem;
+}
+
+#slide-6 .flow .flow-box ~ .flow-box::before {
+  right: calc(100% + 0.1rem);
+  font-size: 0.72rem;
+}
+
+#slide-6 .tiny {
+  font-size: 0.62rem;
+  line-height: 1.3;
+}
+
+#slide-6 #trainCompare {
+  margin-top: 0.18rem;
+}
+
+#slide-6 #trainCompare > div {
+  gap: 0.6rem !important;
+  margin: 0.45rem 0 0.1rem !important;
+}
+
+#slide-6 #trainCompare .flow-box {
+  min-width: 4.7rem !important;
+}
+
+#slide-6 #trainLoss,
+#slide-6 #trainBackprop,
+#slide-6 #trainUpdate {
+  margin-top: 0.28rem !important;
+}
+
+#slide-6 #trainLoss > div:first-child,
+#slide-6 #trainUpdate > div:first-child {
+  font-size: 0.9rem !important;
+}
+
+#slide-6 #trainBackprop > p {
+  margin-bottom: 0.18rem !important;
+}
+
+#slide-6 #trainUpdate .flow-loop {
+  font-size: 0.88rem;
+}
+
+#slide-6 #trainExplain {
+  margin-top: 0.5rem !important;
+  padding: 0.52rem 0.66rem;
+  gap: 0.45rem;
+  font-size: var(--fs-xs);
+  line-height: 1.38;
+}
+
+#slide-6 #trainExplain .icon {
+  font-size: var(--fs-base);
+}

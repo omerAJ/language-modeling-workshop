@@ -202,3 +202,115 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* Fixed-stage deck: preserve the authored desktop layout inside the 1920×1080 stage. */
+.live-demo-shell {
+  grid-template-columns: minmax(0, 1.7fr) minmax(18rem, 0.95fr);
+}
+
+.live-demo-connection {
+  grid-template-columns: minmax(0, 1fr) auto;
+}
+
+/* Projector-safe compaction for slide 32b */
+#slide-32b h2 {
+  margin-bottom: 0.7rem;
+}
+
+#slide-32b .small-text {
+  line-height: 1.42;
+}
+
+#slide-32b .spacer-sm {
+  height: 0.32rem;
+}
+
+#slide-32b .live-demo-shell {
+  gap: 0.7rem;
+}
+
+#slide-32b .live-demo-main,
+#slide-32b .live-demo-sidebar {
+  gap: 0.5rem;
+}
+
+#slide-32b .card.live-demo-main,
+#slide-32b .card.live-demo-sidebar {
+  padding: 0.76rem 0.82rem;
+}
+
+#slide-32b .live-demo-connection {
+  gap: 0.55rem;
+}
+
+#slide-32b .live-demo-label {
+  font-size: 0.64rem;
+}
+
+#slide-32b .live-demo-chip {
+  font-size: var(--fs-xs);
+  padding: 0.48rem 0.62rem;
+}
+
+#slide-32b .live-demo-field input,
+#slide-32b .live-demo-text-input {
+  font-size: var(--fs-xs);
+  padding: 0.48rem 0.62rem;
+}
+
+#slide-32b .live-demo-presets {
+  gap: 0.34rem;
+}
+
+#slide-32b .live-demo-presets .nav-btn {
+  padding: 0.24rem 0.42rem;
+  font-size: 0.62rem;
+}
+
+#slide-32b .live-demo-chat {
+  min-height: 12rem;
+  max-height: 12rem;
+  padding: 0.56rem 0.64rem;
+}
+
+#slide-32b .live-demo-empty,
+#slide-32b .live-demo-message {
+  padding: 0.56rem 0.64rem;
+}
+
+#slide-32b .live-demo-message-body,
+#slide-32b .live-demo-empty,
+#slide-32b .obj-list li {
+  font-size: var(--fs-xs);
+  line-height: 1.4;
+}
+
+#slide-32b .obj-list li {
+  margin-bottom: 0.34rem;
+  padding: 0.34rem 0.5rem 0.34rem 1.7rem;
+}
+
+#slide-32b .obj-list li::before {
+  left: 0.5rem;
+}
+
+#slide-32b .live-demo-status {
+  min-height: 1rem;
+  font-size: 0.68rem;
+}
+
+#slide-32b .live-demo-input-row {
+  gap: 0.38rem;
+}
+
+#slide-32b .live-demo-input-row .nav-btn {
+  padding: 0.42rem 0.56rem;
+  font-size: var(--fs-xs);
+}
+
+#slide-32b .live-demo-note {
+  padding: 0.48rem 0.6rem;
+  gap: 0.42rem;
+  font-size: var(--fs-xs);
+  line-height: 1.38;
+}

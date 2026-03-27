@@ -55,3 +55,48 @@
     border-color: rgba(255,123,123,0.4);
     color: var(--red);
   }
+
+  /* Fixed-stage deck: do not collapse to single column based on viewport width. */
+  .pressure-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  /* Projector-safe compaction for slide 23 */
+  #slide-23 h2 {
+    margin-bottom: 0.7rem;
+  }
+
+  #slide-23 .small-text {
+    line-height: 1.42;
+  }
+
+  #slide-23 .spacer-sm {
+    height: 0.38rem;
+  }
+
+  #slide-23 .drama-script {
+    font-size: var(--fs-xs);
+    line-height: 1.42;
+    padding: 0.56rem 0.72rem;
+  }
+
+  #slide-23 .drama-choices {
+    gap: 0.36rem;
+    margin-top: 0.38rem;
+  }
+
+  #slide-23 .drama-choices .nav-btn {
+    padding: 0.34rem 0.58rem;
+    font-size: var(--fs-2xs);
+  }
+
+  #slide-23 .callout {
+    gap: 0.45rem;
+    padding: 0.52rem 0.68rem;
+    font-size: var(--fs-xs);
+    line-height: 1.38;
+  }
+
+  #slide-23 #dramaWhy.revealed {
+    margin-top: 0.6rem;
+  }

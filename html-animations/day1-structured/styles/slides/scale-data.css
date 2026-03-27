@@ -95,3 +95,99 @@
   .pv-tag.train  { background: rgba(123,154,255,0.15); color: var(--accent); }
   .pv-tag.align  { background: rgba(255,170,85,0.15); color: var(--orange); }
   .pv-tag.eval   { background: rgba(90,232,142,0.15); color: var(--green); }
+
+/* Projector-safe compaction for slides 32 and 33 */
+#slide-32 h2,
+#slide-33 h2 {
+  margin-bottom: 0.7rem;
+}
+
+#slide-32 .small-text,
+#slide-33 .small-text {
+  line-height: 1.42;
+}
+
+#slide-32 .spacer-sm,
+#slide-33 .spacer-sm {
+  height: 0.38rem;
+}
+
+#slide-32 .hidden-content.revealed,
+#slide-33 .hidden-content.revealed {
+  margin-top: 0.55rem;
+}
+
+#slide-32 #completionPhase2 > .card {
+  padding: 0.8rem 0.92rem;
+}
+
+#slide-32 #completionPhase2 .grid-3 {
+  gap: 0.75rem;
+}
+
+#slide-32 #completionPhase2 .grid-3 > .card {
+  padding: 0.68rem 0.72rem;
+}
+
+#slide-32 .prompt-block {
+  font-size: 0.68rem;
+  line-height: 1.48;
+  padding: 0.48rem 0.56rem;
+}
+
+#slide-32 .reveal-btn.text-xs {
+  margin-top: 0.36rem;
+  padding: 0.28rem 0.52rem;
+}
+
+#slide-32 #fixTakeaway .callout,
+#slide-32 #fixBridge .callout,
+#slide-33 .callout {
+  gap: 0.45rem;
+  padding: 0.5rem 0.66rem;
+  font-size: var(--fs-xs);
+  line-height: 1.38;
+}
+
+#slide-32 #fixTakeaway.revealed,
+#slide-32 #fixBridge.revealed {
+  margin-top: 0.55rem;
+}
+
+#slide-33 .grid-2 {
+  gap: 0.72rem;
+}
+
+#slide-33 .grid-2 > .card {
+  padding: 0.76rem 0.84rem;
+}
+
+#slide-33 .obj-list li {
+  margin-bottom: 0.36rem;
+  padding: 0.36rem 0.56rem 0.36rem 1.8rem;
+  font-size: var(--fs-xs);
+}
+
+#slide-33 .obj-list li::before {
+  left: 0.56rem;
+}
+
+#slide-33 > .flow {
+  gap: 0.34rem;
+  margin: 0.48rem 0 0;
+}
+
+#slide-33 > .flow .flow-box {
+  min-width: 5.3rem;
+  padding: 0.34rem 0.5rem;
+  font-size: var(--fs-2xs);
+}
+
+#slide-33 > .flow .flow-box ~ .flow-box {
+  margin-left: 1rem;
+}
+
+#slide-33 > .flow .flow-box ~ .flow-box::before {
+  right: calc(100% + 0.14rem);
+  font-size: 0.74rem;
+}
