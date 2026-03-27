@@ -190,40 +190,25 @@ function createAttentionMultiHeadProjectionRow(head, proj) {
     dataset: { head, proj }
   });
   row.appendChild(createAttentionMultiHeadDummyX(head, proj));
+  row.appendChild(createEl('div', {
+    className: 'attn24-head-proj-op',
+    text: '×'
+  }));
   row.appendChild(createAttentionMultiHeadWMatrix(head, proj));
+  row.appendChild(createEl('div', {
+    className: 'attn24-head-proj-op',
+    text: '='
+  }));
   row.appendChild(createAttentionMultiHeadQkvMatrix(head, proj));
   return row;
 }
 
 function createAttentionMultiHeadHeadOverlay(head) {
-  const arrowColor = head === 'h1'
-    ? 'rgba(123,154,255,0.92)'
-    : 'rgba(90,232,142,0.92)';
-  const markerId = 'attn24-head-arr-marker-' + head;
   const overlay = svgEl('svg', {
     class: 'attn24-head-overlay',
     id: 'attn24-head-overlay-' + head,
     ariaHidden: 'true'
   });
-  const defs = svgEl('defs');
-  defs.appendChild(svgEl('marker', {
-    id: markerId,
-    viewBox: '0 0 8 10',
-    markerWidth: 8,
-    markerHeight: 10,
-    refX: 7.2,
-    refY: 5,
-    orient: 'auto',
-    markerUnits: 'userSpaceOnUse'
-  }, svgEl('path', {
-    d: 'M0.8,0.8 L7.2,5 L0.8,9.2',
-    fill: 'none',
-    stroke: arrowColor,
-    'stroke-width': 1.7,
-    'stroke-linecap': 'round',
-    'stroke-linejoin': 'round'
-  })));
-  overlay.appendChild(defs);
   overlay.appendChild(svgEl('line', {
     class: 'attn24-head-overlay-line',
     id: 'attn24-head-line-source-' + head
@@ -244,18 +229,7 @@ function createAttentionMultiHeadHeadOverlay(head) {
   ATTN_MHA_PROJS.forEach((proj) => {
     overlay.appendChild(svgEl('path', {
       class: 'attn24-head-overlay-line',
-      id: 'attn24-head-line-' + proj + '-' + head,
-      'marker-end': 'url(#' + markerId + ')'
-    }));
-    overlay.appendChild(svgEl('path', {
-      class: 'attn24-head-overlay-line',
-      id: 'attn24-head-line-dummy-w-' + proj + '-' + head,
-      'marker-end': 'url(#' + markerId + ')'
-    }));
-    overlay.appendChild(svgEl('path', {
-      class: 'attn24-head-overlay-line',
-      id: 'attn24-head-line-w-qkv-' + proj + '-' + head,
-      'marker-end': 'url(#' + markerId + ')'
+      id: 'attn24-head-line-' + proj + '-' + head
     }));
   });
   return overlay;
@@ -716,21 +690,11 @@ function updateAttentionMultiHeadHeadOverlay(head) {
   const sourcePoint = point(sourceShell, 1, 0.5);
   const targets = ATTN_MHA_PROJS.map((proj) => {
     const dummyShell = document.getElementById('attn24-head-dummy-x-shell-' + proj + '-' + head);
-    const shell = document.getElementById('attn24-head-w-shell-' + proj + '-' + head);
-    const qkvShell = document.getElementById('attn24-head-qkv-shell-' + proj + '-' + head);
     const branchLine = document.getElementById('attn24-head-line-' + proj + '-' + head);
-    const dummyToWLine = document.getElementById('attn24-head-line-dummy-w-' + proj + '-' + head);
-    const wToQkvLine = document.getElementById('attn24-head-line-w-qkv-' + proj + '-' + head);
-    if (!dummyShell || !shell || !qkvShell || !branchLine || !dummyToWLine || !wToQkvLine) return null;
+    if (!dummyShell || !branchLine) return null;
     return {
       branchLine,
-      dummyToWLine,
-      wToQkvLine,
-      dummyLeft: point(dummyShell, 0, 0.5),
-      dummyRight: point(dummyShell, 1, 0.5),
-      wLeft: point(shell, 0, 0.5),
-      wRight: point(shell, 1, 0.5),
-      qkvLeft: point(qkvShell, 0, 0.5)
+      dummyLeft: point(dummyShell, 0, 0.5)
     };
   }).filter(Boolean);
   if (!targets.length) return;
@@ -741,7 +705,7 @@ function updateAttentionMultiHeadHeadOverlay(head) {
   const busX = sourcePoint.x + Math.max(16, Math.min(34, gapWidth * 0.42));
   const busBottom = Math.max(sourcePoint.y, maxTargetY);
   const nodeRadius = 4.4;
-  const arrowInset = 3.2;
+  const branchInset = 8.5;
 
   setLine(sourceLine, sourcePoint, {
     x: Math.max(sourcePoint.x, busX - nodeRadius - 1.5),
@@ -759,7 +723,7 @@ function updateAttentionMultiHeadHeadOverlay(head) {
 
   sortedTargets.forEach((entry, idx) => {
     const dummyEnd = {
-      x: Math.max(busX + 2, entry.dummyLeft.x - arrowInset),
+      x: Math.max(busX + 2, entry.dummyLeft.x - branchInset),
       y: entry.dummyLeft.y
     };
     if (idx === 0) {
@@ -776,15 +740,6 @@ function updateAttentionMultiHeadHeadOverlay(head) {
         dummyEnd
       ]);
     }
-
-    setPath(entry.dummyToWLine, [
-      entry.dummyRight,
-      { x: Math.max(entry.dummyRight.x + 2, entry.wLeft.x - arrowInset), y: entry.wLeft.y }
-    ]);
-    setPath(entry.wToQkvLine, [
-      entry.wRight,
-      { x: Math.max(entry.wRight.x + 2, entry.qkvLeft.x - arrowInset), y: entry.qkvLeft.y }
-    ]);
   });
 }
 
