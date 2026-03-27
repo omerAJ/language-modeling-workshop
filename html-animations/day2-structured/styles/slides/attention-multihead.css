@@ -6,6 +6,11 @@
     --attn24-mini-x-w: 7.9rem;
     --attn24-branch-gap: 1.55rem;
     --attn24-qkv-w: 3.18rem;
+    --attn24-proj-shell-w: var(--attn24-qkv-w);
+    --attn24-proj-shell-pad: 0.07rem;
+    --attn24-proj-shell-h: calc((var(--attn24-struct-row-h) * 5) - 4px + (var(--attn24-proj-shell-pad) * 2));
+    --attn24-proj-top-band: 1.05rem;
+    --attn24-proj-bottom-band: 2.05rem;
     --attn24-attn-w: 7.8rem;
     --attn24-output-w: 5.9rem;
     --attn24-concat-w: 10.7rem;
@@ -303,6 +308,7 @@
 }
 
 .attn24-head-mini-x-label,
+  .attn24-head-dummy-x-label,
   .attn24-head-qkv-label,
   .attn24-head-output-label,
   .attn24-head-w-label {
@@ -326,8 +332,10 @@
 .attn24-head-overlay {
     position: absolute;
     inset: 0;
+    width: 100%;
+    height: 100%;
     pointer-events: none;
-    z-index: 1;
+    z-index: 3;
     opacity: 0;
     transition: opacity 0.22s ease;
 
@@ -335,44 +343,41 @@
 
 .attn24-head-overlay-line,
   .attn24-head-overlay-bus {
-    position: absolute;
-    background: rgba(var(--attn24-head-rgb), 0.46);
-    border-radius: 999px;
+    stroke: rgba(var(--attn24-head-rgb), 0.78);
+    stroke-width: 1.52;
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
     opacity: 0;
     transition: opacity 0.22s ease;
 
 }
 
 .attn24-head-overlay-bus {
-    background: rgba(var(--attn24-head-rgb), 0.38);
+    stroke: rgba(var(--attn24-head-rgb), 0.58);
+    stroke-width: 1.28;
 
 }
 
 .attn24-head-copy-node {
-    position: absolute;
-    width: 0.54rem;
-    height: 0.54rem;
-    margin-left: -0.27rem;
-    margin-top: -0.27rem;
-    border-radius: 999px;
-    background: rgba(var(--attn24-head-rgb), 0.16);
-    border: 1px solid rgba(var(--attn24-head-rgb), 0.7);
+    fill: rgba(var(--attn24-head-rgb), 0.24);
+    stroke: rgba(var(--attn24-head-rgb), 0.92);
+    stroke-width: 1.2;
     opacity: 0;
     transition: opacity 0.22s ease;
 
 }
 
 .attn24-head-copy-label {
-    position: absolute;
     font-family: 'JetBrains Mono', monospace;
     font-size: var(--fs-2xs);
     font-weight: 700;
-    color: rgba(214,224,250,0.92);
+    fill: rgba(214,224,250,0.92);
+    text-anchor: middle;
+    dominant-baseline: middle;
     opacity: 0;
     transition: opacity 0.22s ease;
-    line-height: 1;
     text-shadow: 0 0 0.3rem rgba(6,10,18,0.7);
-    transform: translate(-50%, -50%);
 
 }
 
@@ -410,8 +415,82 @@
 
 .attn24-head-mini-x-row .attn19-vector {
     height: var(--attn24-struct-row-h);
-    border-color: rgba(184,194,221,0.36);
-    background: rgba(184,194,221,0.08);
+    border-color: rgba(206,216,242,0.44);
+    background: rgba(184,194,221,0.13);
+
+}
+
+.attn24-head-dummy-x-wrap {
+    display: grid;
+    width: var(--attn24-proj-shell-w);
+    grid-template-rows: var(--attn24-proj-top-band) var(--attn24-proj-shell-h) var(--attn24-proj-bottom-band);
+    justify-items: center;
+    align-items: center;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(0.18rem);
+    transition: opacity 0.22s ease, transform 0.22s ease, visibility 0.22s ease;
+    position: relative;
+    z-index: 2;
+
+}
+
+.attn24-head-dummy-x-label {
+    color: rgba(184,194,221,0.8);
+    line-height: 1;
+    grid-row: 3;
+    align-self: start;
+
+}
+
+.attn24-head-dummy-x-shell {
+    position: relative;
+    grid-row: 2;
+    width: var(--attn24-proj-shell-w);
+    height: var(--attn24-proj-shell-h);
+    border: 1px solid rgba(206,216,242,0.4);
+    border-radius: var(--radius-sm);
+    background: rgba(184,194,221,0.11);
+    overflow: hidden;
+
+}
+
+.attn24-head-dummy-x-shell::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.02);
+    pointer-events: none;
+
+}
+
+.attn24-head-dummy-x-grid {
+    position: absolute;
+    inset: 0;
+
+}
+
+.attn24-head-dummy-x-grid-v,
+  .attn24-head-dummy-x-grid-h {
+    position: absolute;
+    background: rgba(206,216,242,0.26);
+    pointer-events: none;
+
+}
+
+.attn24-head-dummy-x-grid-v {
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    transform: translateX(-50%);
+
+}
+
+.attn24-head-dummy-x-grid-h {
+    left: 0;
+    right: 0;
+    height: 1px;
 
 }
 
@@ -427,14 +506,13 @@
 
 .attn24-head-proj-row {
     display: grid;
-    grid-template-columns: var(--attn24-w-w, 1.96rem) auto minmax(0, 1fr);
+    grid-template-columns: max-content max-content minmax(0, 1fr);
     align-items: center;
-    gap: 0.22rem;
+    gap: 0.82rem;
 
 }
 
 .attn24-head-w-wrap,
-  .attn24-head-proj-arrow,
   .attn24-head-qkv-wrap {
     opacity: 0;
     visibility: hidden;
@@ -445,18 +523,23 @@
 
 .attn24-head-w-wrap {
     display: grid;
+    width: var(--attn24-proj-shell-w);
+    grid-template-rows: var(--attn24-proj-top-band) var(--attn24-proj-shell-h) var(--attn24-proj-bottom-band);
     justify-items: center;
-    gap: 0.08rem;
+    align-items: center;
+    position: relative;
+    z-index: 2;
 
 }
 
 .attn24-head-w-shell {
     position: relative;
-    width: var(--attn24-w-w, 1.96rem);
-    height: var(--attn24-w-h, 2.84rem);
-    border: 1px solid rgba(184,194,221,0.28);
+    grid-row: 2;
+    width: var(--attn24-proj-shell-w);
+    height: var(--attn24-proj-shell-h);
+    border: 1px solid rgba(206,216,242,0.42);
     border-radius: var(--radius-sm);
-    background: rgba(184,194,221,0.05);
+    background: rgba(184,194,221,0.1);
     overflow: hidden;
 
 }
@@ -480,7 +563,7 @@
 .attn24-head-w-grid-v,
   .attn24-head-w-grid-h {
     position: absolute;
-    background: rgba(184,194,221,0.2);
+    background: rgba(206,216,242,0.28);
     pointer-events: none;
 
 }
@@ -503,6 +586,8 @@
 
 .attn24-head-w-label {
     color: rgba(214,224,250,0.9);
+    grid-row: 3;
+    align-self: start;
 
 }
 
@@ -517,38 +602,41 @@
     font-size: var(--fs-2xs);
     color: rgba(182,194,223,0.62);
     letter-spacing: 0.04em;
-
-}
-
-.attn24-head-proj-arrow {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: var(--fs-2xs);
-    color: rgba(202,213,239,0.72);
-    transform: translateY(0.18rem);
+    grid-row: 3;
+    align-self: end;
 
 }
 
 .attn24-head-qkv-wrap {
-    width: 100%;
     display: grid;
+    width: var(--attn24-proj-shell-w);
+    grid-template-rows: var(--attn24-proj-top-band) var(--attn24-proj-shell-h) var(--attn24-proj-bottom-band);
     justify-items: center;
-    gap: 0.16rem;
+    align-items: center;
+    position: relative;
+    z-index: 2;
 
 }
 
 .attn24-head-qkv-shell {
-    width: var(--attn24-qkv-w);
-    padding: 0.08rem;
+    grid-row: 2;
+    width: var(--attn24-proj-shell-w);
+    height: var(--attn24-proj-shell-h);
+    padding: var(--attn24-proj-shell-pad);
 
 }
 
 .attn24-head-qkv-row .attn19-vector {
     height: var(--attn24-struct-row-h);
+    border-color: rgba(206,216,242,0.46);
+    background: rgba(184,194,221,0.12);
 
 }
 
 .attn24-head-qkv-wrap[data-proj="q"] .attn24-head-qkv-label {
     color: rgba(var(--attn19-focus-rgb), 0.92);
+    grid-row: 1;
+    align-self: end;
 
 }
 
@@ -560,6 +648,8 @@
 
 .attn24-head-qkv-wrap[data-proj="k"] .attn24-head-qkv-label {
     color: rgba(var(--attn19-source-rgb), 0.9);
+    grid-row: 1;
+    align-self: end;
 
 }
 
@@ -571,6 +661,8 @@
 
 .attn24-head-qkv-wrap[data-proj="v"] .attn24-head-qkv-label {
     color: rgba(184,194,221,0.84);
+    grid-row: 1;
+    align-self: end;
 
 }
 
@@ -1018,6 +1110,15 @@
 
 }
 
+.attn24-head-card.is-proj-visible .attn24-head-dummy-x-wrap,
+  .attn24-head-card.is-attn-visible .attn24-head-dummy-x-wrap,
+  .attn24-head-card.is-output-visible .attn24-head-dummy-x-wrap {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+
+}
+
 .attn24-head-card.is-proj-visible .attn24-head-overlay,
   .attn24-head-card.is-attn-visible .attn24-head-overlay,
   .attn24-head-card.is-output-visible .attn24-head-overlay,
@@ -1039,10 +1140,7 @@
 
 .attn24-head-card.is-proj-visible .attn24-head-w-wrap,
   .attn24-head-card.is-attn-visible .attn24-head-w-wrap,
-  .attn24-head-card.is-output-visible .attn24-head-w-wrap,
-  .attn24-head-card.is-proj-visible .attn24-head-proj-arrow,
-  .attn24-head-card.is-attn-visible .attn24-head-proj-arrow,
-  .attn24-head-card.is-output-visible .attn24-head-proj-arrow {
+  .attn24-head-card.is-output-visible .attn24-head-w-wrap {
     opacity: 1;
     visibility: visible;
     transform: translateY(0);

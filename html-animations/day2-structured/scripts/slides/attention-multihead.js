@@ -83,6 +83,40 @@ function createAttentionMultiHeadMiniX(head) {
   return wrap;
 }
 
+function createAttentionMultiHeadDummyX(head, proj) {
+  const wrap = createEl('div', {
+    className: 'attn24-head-dummy-x-wrap',
+    id: 'attn24-head-dummy-x-wrap-' + proj + '-' + head,
+    dataset: { proj, head }
+  });
+  const shell = createEl('div', {
+    className: 'attn24-head-dummy-x-shell',
+    id: 'attn24-head-dummy-x-shell-' + proj + '-' + head
+  });
+  const grid = createEl('div', {
+    className: 'attn24-head-dummy-x-grid'
+  });
+  [25, 50, 75].forEach((pct) => {
+    grid.appendChild(createEl('span', {
+      className: 'attn24-head-dummy-x-grid-v',
+      style: { left: pct + '%' }
+    }));
+  });
+  [20, 40, 60, 80].forEach((pct) => {
+    grid.appendChild(createEl('span', {
+      className: 'attn24-head-dummy-x-grid-h',
+      style: { top: pct + '%' }
+    }));
+  });
+  shell.appendChild(grid);
+  wrap.appendChild(shell);
+  wrap.appendChild(createEl('div', {
+    className: 'attn24-head-dummy-x-label',
+    html: inlineMath('X')
+  }));
+  return wrap;
+}
+
 function createAttentionMultiHeadQkvMatrix(head, proj) {
   const wrap = createEl('div', {
     className: 'attn24-head-qkv-wrap',
@@ -132,7 +166,7 @@ function createAttentionMultiHeadWMatrix(head, proj) {
   grid.appendChild(createEl('span', {
     className: 'attn24-head-w-grid-v'
   }));
-  [25, 50, 75].forEach((pct) => {
+  [20, 40, 60, 80].forEach((pct) => {
     grid.appendChild(createEl('span', {
       className: 'attn24-head-w-grid-h',
       style: { top: pct + '%' }
@@ -146,11 +180,6 @@ function createAttentionMultiHeadWMatrix(head, proj) {
   }, createEl('span', {
     html: inlineMath('W_' + proj.toUpperCase())
   })));
-  wrap.appendChild(createEl('div', {
-    className: 'attn24-head-w-dims',
-    id: 'attn24-head-w-dims-' + proj + '-' + head,
-    html: inlineMath('4 \\times 2')
-  }));
   return wrap;
 }
 
@@ -160,43 +189,68 @@ function createAttentionMultiHeadProjectionRow(head, proj) {
     id: 'attn24-head-proj-row-' + proj + '-' + head,
     dataset: { head, proj }
   });
+  row.appendChild(createAttentionMultiHeadDummyX(head, proj));
   row.appendChild(createAttentionMultiHeadWMatrix(head, proj));
-  row.appendChild(createEl('div', {
-    className: 'attn24-head-proj-arrow',
-    id: 'attn24-head-proj-arrow-' + proj + '-' + head,
-    text: '→'
-  }));
   row.appendChild(createAttentionMultiHeadQkvMatrix(head, proj));
   return row;
 }
 
 function createAttentionMultiHeadHeadOverlay(head) {
-  const overlay = createEl('div', {
-    className: 'attn24-head-overlay',
+  const arrowColor = head === 'h1'
+    ? 'rgba(123,154,255,0.92)'
+    : 'rgba(90,232,142,0.92)';
+  const markerId = 'attn24-head-arr-marker-' + head;
+  const overlay = svgEl('svg', {
+    class: 'attn24-head-overlay',
     id: 'attn24-head-overlay-' + head,
     ariaHidden: 'true'
   });
-  overlay.appendChild(createEl('div', {
-    className: 'attn24-head-overlay-line',
+  const defs = svgEl('defs');
+  defs.appendChild(svgEl('marker', {
+    id: markerId,
+    markerWidth: 8,
+    markerHeight: 8,
+    refX: 7,
+    refY: 4,
+    orient: 'auto',
+    markerUnits: 'userSpaceOnUse'
+  }, svgEl('path', {
+    d: 'M0,0 L8,4 L0,8 Z',
+    fill: arrowColor
+  })));
+  overlay.appendChild(defs);
+  overlay.appendChild(svgEl('line', {
+    class: 'attn24-head-overlay-line',
     id: 'attn24-head-line-source-' + head
   }));
-  overlay.appendChild(createEl('div', {
-    className: 'attn24-head-overlay-bus',
+  overlay.appendChild(svgEl('line', {
+    class: 'attn24-head-overlay-bus',
     id: 'attn24-head-line-bus-' + head
   }));
-  overlay.appendChild(createEl('div', {
-    className: 'attn24-head-copy-node',
+  overlay.appendChild(svgEl('circle', {
+    class: 'attn24-head-copy-node',
     id: 'attn24-head-copy-node-' + head
   }));
-  overlay.appendChild(createEl('div', {
-    className: 'attn24-head-copy-label',
+  overlay.appendChild(svgEl('text', {
+    class: 'attn24-head-copy-label',
     id: 'attn24-head-copy-label-' + head,
     text: '×3'
   }));
   ATTN_MHA_PROJS.forEach((proj) => {
-    overlay.appendChild(createEl('div', {
-      className: 'attn24-head-overlay-line',
-      id: 'attn24-head-line-' + proj + '-' + head
+    overlay.appendChild(svgEl('line', {
+      class: 'attn24-head-overlay-line',
+      id: 'attn24-head-line-' + proj + '-' + head,
+      'marker-end': 'url(#' + markerId + ')'
+    }));
+    overlay.appendChild(svgEl('path', {
+      class: 'attn24-head-overlay-line',
+      id: 'attn24-head-line-dummy-w-' + proj + '-' + head,
+      'marker-end': 'url(#' + markerId + ')'
+    }));
+    overlay.appendChild(svgEl('path', {
+      class: 'attn24-head-overlay-line',
+      id: 'attn24-head-line-w-qkv-' + proj + '-' + head,
+      'marker-end': 'url(#' + markerId + ')'
     }));
   });
   return overlay;
@@ -552,6 +606,34 @@ function setAttentionMultiHeadSourceOutputVisible(head, visible) {
   wrap.style.visibility = visible ? '' : 'hidden';
 }
 
+function setAttentionMultiHeadHeadSourceVisible(head, visible) {
+  const wrap = document.getElementById('attn24-head-mini-x-wrap-' + head);
+  if (!wrap) return;
+  wrap.style.opacity = visible ? '1' : '0';
+  wrap.style.visibility = visible ? 'visible' : 'hidden';
+  wrap.style.transform = visible ? 'translateY(0)' : 'translateY(0.18rem)';
+}
+
+function setAttentionMultiHeadDummyCopiesVisible(head, visible) {
+  ATTN_MHA_PROJS.forEach((proj) => {
+    const wrap = document.getElementById('attn24-head-dummy-x-wrap-' + proj + '-' + head);
+    if (!wrap) return;
+    wrap.style.opacity = visible ? '1' : '0';
+    wrap.style.visibility = visible ? 'visible' : 'hidden';
+    wrap.style.transform = visible ? 'translateY(0)' : 'translateY(0.18rem)';
+  });
+}
+
+function setAttentionMultiHeadHeadOverlayVisible(head, visible) {
+  const overlay = document.getElementById('attn24-head-overlay-' + head);
+  if (!overlay) return;
+  overlay.style.opacity = visible ? '1' : '0';
+  overlay.querySelectorAll('.attn24-head-overlay-line, .attn24-head-overlay-bus, .attn24-head-copy-node, .attn24-head-copy-label').forEach((el) => {
+    el.style.opacity = visible ? '1' : '0';
+    el.style.visibility = visible ? 'visible' : 'hidden';
+  });
+}
+
 function setAttentionMultiHeadOutputRowVisible(head, token, visible) {
   const row = document.getElementById('attn24-head-output-' + head + '-row-' + token);
   if (!row) return;
@@ -600,6 +682,7 @@ function updateAttentionMultiHeadHeadOverlay(head) {
 
   const bodyRect = body.getBoundingClientRect();
   if (bodyRect.width < 1 || bodyRect.height < 1) return;
+  overlay.setAttribute('viewBox', '0 0 ' + bodyRect.width + ' ' + bodyRect.height);
 
   const point = (el, fx, fy) => {
     const rect = el.getBoundingClientRect();
@@ -608,51 +691,72 @@ function updateAttentionMultiHeadHeadOverlay(head) {
       y: rect.top - bodyRect.top + rect.height * fy
     };
   };
-  const setLine = (el, x, y, w, h) => {
+  const setLine = (el, from, to) => {
     if (!el) return;
-    el.style.left = x.toFixed(2) + 'px';
-    el.style.top = y.toFixed(2) + 'px';
-    el.style.width = Math.max(1, w).toFixed(2) + 'px';
-    el.style.height = Math.max(1, h).toFixed(2) + 'px';
+    el.setAttribute('x1', from.x.toFixed(2));
+    el.setAttribute('y1', from.y.toFixed(2));
+    el.setAttribute('x2', to.x.toFixed(2));
+    el.setAttribute('y2', to.y.toFixed(2));
+  };
+  const setOrthogonalPath = (el, from, to) => {
+    if (!el) return;
+    const midX = from.x + ((to.x - from.x) * 0.5);
+    el.setAttribute(
+      'd',
+      'M' + from.x.toFixed(2) + ',' + from.y.toFixed(2)
+      + ' L' + midX.toFixed(2) + ',' + from.y.toFixed(2)
+      + ' L' + midX.toFixed(2) + ',' + to.y.toFixed(2)
+      + ' L' + to.x.toFixed(2) + ',' + to.y.toFixed(2)
+    );
   };
 
   const sourcePoint = point(sourceShell, 1, 0.5);
   const targets = ATTN_MHA_PROJS.map((proj) => {
+    const dummyShell = document.getElementById('attn24-head-dummy-x-shell-' + proj + '-' + head);
     const shell = document.getElementById('attn24-head-w-shell-' + proj + '-' + head);
-    const line = document.getElementById('attn24-head-line-' + proj + '-' + head);
-    if (!shell || !line) return null;
+    const qkvShell = document.getElementById('attn24-head-qkv-shell-' + proj + '-' + head);
+    const branchLine = document.getElementById('attn24-head-line-' + proj + '-' + head);
+    const dummyToWLine = document.getElementById('attn24-head-line-dummy-w-' + proj + '-' + head);
+    const wToQkvLine = document.getElementById('attn24-head-line-w-qkv-' + proj + '-' + head);
+    if (!dummyShell || !shell || !qkvShell || !branchLine || !dummyToWLine || !wToQkvLine) return null;
     return {
-      line,
-      point: point(shell, 0, 0.5)
+      branchLine,
+      dummyToWLine,
+      wToQkvLine,
+      dummyLeft: point(dummyShell, 0, 0.5),
+      dummyRight: point(dummyShell, 1, 0.5),
+      wLeft: point(shell, 0, 0.5),
+      wRight: point(shell, 1, 0.5),
+      qkvLeft: point(qkvShell, 0, 0.5)
     };
   }).filter(Boolean);
   if (!targets.length) return;
 
-  const minTargetY = Math.min.apply(null, targets.map((entry) => entry.point.y));
-  const maxTargetY = Math.max.apply(null, targets.map((entry) => entry.point.y));
-  const nearestTargetX = Math.min.apply(null, targets.map((entry) => entry.point.x));
+  const minTargetY = Math.min.apply(null, targets.map((entry) => entry.dummyLeft.y));
+  const maxTargetY = Math.max.apply(null, targets.map((entry) => entry.dummyLeft.y));
+  const nearestTargetX = Math.min.apply(null, targets.map((entry) => entry.dummyLeft.x));
   const gapWidth = Math.max(1, nearestTargetX - sourcePoint.x);
-  const rightBuffer = Math.max(18, Math.min(30, gapWidth * 0.48));
-  const busX = Math.max(sourcePoint.x + 12, nearestTargetX - rightBuffer);
+  const busX = sourcePoint.x + Math.max(16, Math.min(34, gapWidth * 0.42));
   const busTop = Math.min(sourcePoint.y, minTargetY);
   const busBottom = Math.max(sourcePoint.y, maxTargetY);
+  const nodeRadius = 4.4;
 
-  setLine(sourceLine, sourcePoint.x, sourcePoint.y - 0.5, Math.max(1, busX - sourcePoint.x), 1.4);
-  setLine(busLine, busX - 0.5, busTop, 1.4, Math.max(1, busBottom - busTop));
+  setLine(sourceLine, sourcePoint, {
+    x: Math.max(sourcePoint.x, busX - nodeRadius - 1.5),
+    y: sourcePoint.y
+  });
+  setLine(busLine, { x: busX, y: busTop }, { x: busX, y: busBottom });
 
-  copyNode.style.left = busX.toFixed(2) + 'px';
-  copyNode.style.top = sourcePoint.y.toFixed(2) + 'px';
-  copyLabel.style.left = busX.toFixed(2) + 'px';
-  copyLabel.style.top = sourcePoint.y.toFixed(2) + 'px';
+  copyNode.setAttribute('cx', busX.toFixed(2));
+  copyNode.setAttribute('cy', sourcePoint.y.toFixed(2));
+  copyNode.setAttribute('r', nodeRadius.toFixed(2));
+  copyLabel.setAttribute('x', busX.toFixed(2));
+  copyLabel.setAttribute('y', (sourcePoint.y - 9).toFixed(2));
 
   targets.forEach((entry) => {
-    setLine(
-      entry.line,
-      Math.min(busX, entry.point.x),
-      entry.point.y - 0.5,
-      Math.abs(entry.point.x - busX),
-      1.4
-    );
+    setLine(entry.branchLine, { x: busX, y: entry.dummyLeft.y }, entry.dummyLeft);
+    setOrthogonalPath(entry.dummyToWLine, entry.dummyRight, entry.wLeft);
+    setOrthogonalPath(entry.wToQkvLine, entry.wRight, entry.qkvLeft);
   });
 }
 
@@ -761,7 +865,12 @@ function resetAttentionMultiHeadVisuals() {
   });
   syncAttentionMultiHeadOutputRows(0);
   clearAttentionMultiHeadActiveRows();
-  ATTN_MHA_HEADS.forEach((head) => setAttentionMultiHeadSourceOutputVisible(head, true));
+  ATTN_MHA_HEADS.forEach((head) => {
+    setAttentionMultiHeadHeadSourceVisible(head, false);
+    setAttentionMultiHeadDummyCopiesVisible(head, false);
+    setAttentionMultiHeadHeadOverlayVisible(head, false);
+    setAttentionMultiHeadSourceOutputVisible(head, true);
+  });
   updateAttentionMultiHeadOverlay();
 }
 
@@ -773,6 +882,9 @@ function settleAttentionMultiHeadSplitState() {
   ATTN_MHA_HEADS.forEach((head) => {
     const card = document.getElementById('attn24-head-card-' + head);
     if (card) card.classList.add('is-split-visible');
+    setAttentionMultiHeadHeadSourceVisible(head, true);
+    setAttentionMultiHeadDummyCopiesVisible(head, false);
+    setAttentionMultiHeadHeadOverlayVisible(head, false);
   });
   state.attentionMultiHead.splitDone = true;
   updateAttentionMultiHeadOverlay();
@@ -785,6 +897,11 @@ function settleAttentionMultiHeadSourceCollapseState() {
   slide.classList.add('attn24-source-collapsed');
   state.attentionMultiHead.splitDone = true;
   state.attentionMultiHead.sourceCollapsedDone = true;
+  ATTN_MHA_HEADS.forEach((head) => {
+    setAttentionMultiHeadHeadSourceVisible(head, true);
+    setAttentionMultiHeadDummyCopiesVisible(head, false);
+    setAttentionMultiHeadHeadOverlayVisible(head, false);
+  });
   updateAttentionMultiHeadOverlay();
 }
 
@@ -797,6 +914,9 @@ function settleAttentionMultiHeadProjectionState() {
     const card = document.getElementById('attn24-head-card-' + head);
     if (!card) return;
     card.classList.add('is-proj-visible', 'is-qkv-visible');
+    setAttentionMultiHeadHeadSourceVisible(head, true);
+    setAttentionMultiHeadDummyCopiesVisible(head, true);
+    setAttentionMultiHeadHeadOverlayVisible(head, true);
   });
   state.attentionMultiHead.splitDone = true;
   state.attentionMultiHead.sourceCollapsedDone = true;
@@ -812,6 +932,9 @@ function settleAttentionMultiHeadAttentionState() {
   ATTN_MHA_HEADS.forEach((head) => {
     const card = document.getElementById('attn24-head-card-' + head);
     if (card) card.classList.add('is-attn-visible');
+    setAttentionMultiHeadHeadSourceVisible(head, true);
+    setAttentionMultiHeadDummyCopiesVisible(head, true);
+    setAttentionMultiHeadHeadOverlayVisible(head, true);
   });
   state.attentionMultiHead.splitDone = true;
   state.attentionMultiHead.sourceCollapsedDone = true;
@@ -828,6 +951,9 @@ function settleAttentionMultiHeadOutputState() {
   ATTN_MHA_HEADS.forEach((head) => {
     const card = document.getElementById('attn24-head-card-' + head);
     if (card) card.classList.add('is-output-visible');
+    setAttentionMultiHeadHeadSourceVisible(head, true);
+    setAttentionMultiHeadDummyCopiesVisible(head, true);
+    setAttentionMultiHeadHeadOverlayVisible(head, true);
   });
   state.attentionMultiHead.splitDone = true;
   state.attentionMultiHead.sourceCollapsedDone = true;
@@ -838,6 +964,11 @@ function settleAttentionMultiHeadOutputState() {
   syncAttentionMultiHeadOutputRows();
   clearAttentionMultiHeadActiveRows();
   ATTN_MHA_HEADS.forEach((head) => setAttentionMultiHeadSourceOutputVisible(head, true));
+  ATTN_MHA_HEADS.forEach((head) => {
+    setAttentionMultiHeadHeadSourceVisible(head, true);
+    setAttentionMultiHeadDummyCopiesVisible(head, true);
+    setAttentionMultiHeadHeadOverlayVisible(head, true);
+  });
   updateAttentionMultiHeadOverlay();
 }
 
@@ -857,6 +988,11 @@ function settleAttentionMultiHeadConcatState() {
   state.attentionMultiHead.combineVisible = true;
   state.attentionMultiHead.outputProjectionDone = false;
   ATTN_MHA_HEADS.forEach((head) => setAttentionMultiHeadSourceOutputVisible(head, true));
+  ATTN_MHA_HEADS.forEach((head) => {
+    setAttentionMultiHeadHeadSourceVisible(head, true);
+    setAttentionMultiHeadDummyCopiesVisible(head, true);
+    setAttentionMultiHeadHeadOverlayVisible(head, true);
+  });
   updateAttentionMultiHeadOverlay();
 }
 
@@ -870,6 +1006,11 @@ function settleAttentionMultiHeadOutputProjectionState() {
   state.attentionMultiHead.outputProjectionDone = true;
   state.attentionMultiHead.sourceCollapsedDone = true;
   ATTN_MHA_HEADS.forEach((head) => setAttentionMultiHeadSourceOutputVisible(head, true));
+  ATTN_MHA_HEADS.forEach((head) => {
+    setAttentionMultiHeadHeadSourceVisible(head, true);
+    setAttentionMultiHeadDummyCopiesVisible(head, true);
+    setAttentionMultiHeadHeadOverlayVisible(head, true);
+  });
   updateAttentionMultiHeadOverlay();
 }
 
@@ -889,12 +1030,18 @@ function runAttentionMultiHeadSplitSequence() {
       animateAttentionMultiHeadGhost(ghost, source, target, ATTN_MHA_SPLIT_MS);
       state.attentionMultiHead.timers.push(setTimeout(() => {
         if (card) card.classList.add('is-split-visible');
+        setAttentionMultiHeadHeadSourceVisible(head, true);
+        setAttentionMultiHeadDummyCopiesVisible(head, false);
+        setAttentionMultiHeadHeadOverlayVisible(head, false);
       }, Math.max(ATTN_MHA_SPLIT_MS - 110, 140) + (idx * 30)));
       state.attentionMultiHead.timers.push(setTimeout(() => {
         ghost.remove();
       }, ATTN_MHA_SPLIT_MS + ATTN_MATRIX_FADE_MS + 40));
     } else if (card) {
       card.classList.add('is-split-visible');
+      setAttentionMultiHeadHeadSourceVisible(head, true);
+      setAttentionMultiHeadDummyCopiesVisible(head, false);
+      setAttentionMultiHeadHeadOverlayVisible(head, false);
     }
   });
 
@@ -938,6 +1085,9 @@ function runAttentionMultiHeadProjectionSequence() {
     if (!card) return;
     state.attentionMultiHead.timers.push(setTimeout(() => {
       card.classList.add('is-split-visible', 'is-proj-visible');
+      setAttentionMultiHeadHeadSourceVisible(head, true);
+      setAttentionMultiHeadDummyCopiesVisible(head, true);
+      setAttentionMultiHeadHeadOverlayVisible(head, true);
     }, idx * ATTN_MHA_PROJ_STAGGER_MS));
     state.attentionMultiHead.timers.push(setTimeout(() => {
       card.classList.add('is-qkv-visible');
