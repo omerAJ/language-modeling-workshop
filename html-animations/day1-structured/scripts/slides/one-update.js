@@ -12,14 +12,6 @@ function revealNTPConcept(btn) {
   if (tag) tag.classList.add('show');
   btn.style.display = 'none';
 }
-function revealAllNTP() {
-  $$('.ntp-blank').forEach(el => {
-    el.textContent = el.dataset.answer;
-    el.classList.add('show');
-  });
-  $$('.ntp-concept-btn').forEach(btn => { btn.style.display = 'none'; });
-  $$('.ntp-tag').forEach(tag => tag.classList.add('show'));
-}
 
 function resetNtpSlide() {
   $$('#slide-16 .ntp-blank').forEach((el) => {

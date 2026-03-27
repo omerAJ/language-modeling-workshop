@@ -648,7 +648,7 @@
   <h2>Cross-entropy loss: how wrong is the model?</h2>
   <p class="small-text">The loss measures the gap between prediction and target. For next-token prediction, we use <span class="hl-yellow">cross-entropy loss</span>.</p>
   <div class="spacer-sm"></div>
-  <div class="math math-big" style="max-width:38rem;" id="lossFormula">
+  <div class="math math-big" style="max-width:56rem;" id="lossFormula">
     \[\mathcal{L} = -\log(P_{\text{model}}(\text{Islamabad})) = -\log(0.08) = 2.53\]
   </div>
   <div class="loss-display">
@@ -870,39 +870,46 @@
   <div class="spacer-sm"></div>
   <div style="display:flex; flex-direction:column; gap:0.625rem;" id="ntpGame">
     <div class="ntp-sentence ntp-card">
-      The Eiffel Tower is located in <span class="ntp-blank"  data-answer="Paris">???</span>
-      <span class="ntp-concept-btn" >type?</span>
-      <span class="ntp-tag fact">world knowledge</span>
+      <div class="ntp-main">
+        The Eiffel Tower is located in <span class="ntp-blank" data-answer="Paris">???</span>
+        <span class="ntp-concept-btn">type?</span>
+        <span class="ntp-tag fact">world knowledge</span>
+      </div>
     </div>
     <div class="ntp-sentence ntp-card">
-      After the rain stopped, the children ran outside to <span class="ntp-blank"  data-answer="play">???</span>
-      <span class="ntp-concept-btn" >type?</span>
-      <span class="ntp-tag lang">common sense</span>
+      <div class="ntp-main">
+        After the rain stopped, the children ran outside to <span class="ntp-blank" data-answer="play">???</span>
+        <span class="ntp-concept-btn">type?</span>
+        <span class="ntp-tag lang">common sense</span>
+      </div>
+    </div>
+    <div class="ntp-sentence ntp-card">
+      <div class="ntp-main">
+        She said "I'm not angry," but the tone of her voice suggested she was actually quite <span class="ntp-blank" data-answer="upset">???</span>
+        <span class="ntp-concept-btn">type?</span>
+        <span class="ntp-tag lang">pragmatics</span>
+      </div>
+    </div>
+    <div class="ntp-sentence ntp-card">
+      <div class="ntp-main">
+        If all roses are flowers, and all flowers need water, then all roses need <span class="ntp-blank" data-answer="water">???</span>
+        <span class="ntp-concept-btn">type?</span>
+        <span class="ntp-tag logic">logic</span>
+      </div>
+    </div>
+    <div class="ntp-sentence ntp-card">
+      <div class="ntp-main">
+        The sum of <span class="ntp-inline-math">\(127\)</span> and <span class="ntp-inline-math">\(385\)</span> is <span class="ntp-blank" data-answer="512">???</span>
+        <span class="ntp-concept-btn">type?</span>
+        <span class="ntp-tag math">arithmetic</span>
+      </div>
     </div>
     <div class="ntp-sentence ntp-card ntp-card-code">
-      def fibonacci(n):<br>&nbsp;&nbsp;if n <= 1: return n<br>&nbsp;&nbsp;return fibonacci(n-1) + <span class="ntp-blank"  data-answer="fibonacci(n-2)">???</span>
-      <span class="ntp-concept-btn" >type?</span>
-      <span class="ntp-tag code">code structure</span>
-    </div>
-    <div class="ntp-sentence ntp-card">
-      If all roses are flowers, and all flowers need water, then all roses need <span class="ntp-blank"  data-answer="water">???</span>
-      <span class="ntp-concept-btn" >type?</span>
-      <span class="ntp-tag logic">logic</span>
-    </div>
-    <div class="ntp-sentence ntp-card">
-      The sum of \(127\) and \(385\) is <span class="ntp-blank"  data-answer="512">???</span>
-      <span class="ntp-concept-btn" >type?</span>
-      <span class="ntp-tag math">arithmetic</span>
-    </div>
-    <div class="ntp-sentence ntp-card">
-      She said "I'm not angry," but the tone of her voice suggested she was actually quite <span class="ntp-blank"  data-answer="upset">???</span>
-      <span class="ntp-concept-btn" >type?</span>
-      <span class="ntp-tag lang">pragmatics</span>
-    </div>
-    <div class="ntp-action-card">
-      <div class="ntp-action-label">Whole-slide reveal</div>
-      <p class="tiny">Use after the audience has tried a few blanks. It reveals both the answer and the capability type for every row.</p>
-      <button class="reveal-btn" data-action="reveal-all-ntp">Reveal all</button>
+      <div class="ntp-main">
+        def fibonacci(n):<br>&nbsp;&nbsp;if n <= 1: return n<br>&nbsp;&nbsp;return fibonacci(n-1) + <span class="ntp-blank" data-answer="fibonacci(n-2)">???</span>
+        <span class="ntp-concept-btn">type?</span>
+        <span class="ntp-tag code">code structure</span>
+      </div>
     </div>
   </div>
   <div class="speaker-notes">

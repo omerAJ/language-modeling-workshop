@@ -72,7 +72,6 @@ function handleDelegatedClick(event) {
       const action = actionBtn.dataset.action;
       if (action === 'reveal-reasoning-pressure') revealReasoningPressure();
       if (action === 'reveal-drama-answer') revealDramaAnswer();
-      if (action === 'reveal-all-ntp') revealAllNTP();
       if (action === 'reveal-dumb-response') revealDumbResponse();
     })) {
       scheduleActiveSlideFit({ reason: 'click-reveal' });

@@ -50,7 +50,7 @@
   .bar-word {
     font-family: 'JetBrains Mono', monospace;
     font-size: var(--fs-sm);
-    min-width: 4rem;
+    width: 6.5rem;
     text-align: right;
     color: var(--text-dim);
     flex-shrink: 0;
@@ -465,4 +465,14 @@
 
 #slide-14 .comparison-arrow {
   font-size: 1rem;
+}
+
+#slide-12 #lossFormula {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  overflow: visible;
+}
+
+#slide-12 #lossFormula mjx-container[display="true"] {
+  line-height: 1.2;
 }
