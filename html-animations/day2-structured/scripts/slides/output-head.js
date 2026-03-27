@@ -15,14 +15,18 @@ var PRED32_BAR_STAGGER_MS = 60;
 var PRED32_CLASSES = ['pred32-show-loop'];
 
 var PRED32_TAKEAWAYS = [
-  'One forward pass, one token. The model never generates more than one token at a time.',
-  'Pick the token, append it to context, and run the full forward pass again.'
+  'One full forward pass predicts one next token.',
+  'Append the chosen token, then run the whole stack again.'
 ];
 
 function buildPred32Zones() {
   // Zone 1: context tokens + last-row label
   var ctxZone = document.getElementById('pred32-ctx-zone');
   if (ctxZone && ctxZone.children.length === 0) {
+    ctxZone.appendChild(createEl('div', {
+      className: 'pred32-zone-title',
+      text: 'Current Context'
+    }));
     var tokensRow = createEl('div', { className: 'pred32-tokens-row' });
     PRED32_TOKENS.forEach(function(tok) {
       tokensRow.appendChild(createEl('span', { className: 'attn19-token-chip', text: tok }));
@@ -30,7 +34,7 @@ function buildPred32Zones() {
     ctxZone.appendChild(tokensRow);
     ctxZone.appendChild(createEl('div', {
       className: 'pred32-zone-note',
-      html: '\\(h_t^{(L)}\\) = last row of \\(R^{(L)}\\)'
+      html: 'Only the last row predicts next token: \\(h_t^{(L)}\\)'
     }));
   }
 
@@ -76,7 +80,7 @@ function buildPred32Zones() {
     }));
     selectZone.appendChild(createEl('div', {
       className: 'pred32-loop-note',
-      html: '&#x21A9; append &amp; repeat'
+      html: '&#x21A9; append to context and run again'
     }));
   }
 }

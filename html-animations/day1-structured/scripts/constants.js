@@ -11,12 +11,14 @@ const INGREDIENT_COLORS = {
 
 const INF_TOKENS = ['Islamabad', '.', '⟨EOS⟩'];
 
+const TRAIN_INTRO_HTML = '<strong>Reveal the loop in order.</strong> Start with the forward pass, then compare with the correct token, compute loss, backpropagate error, and update the weights.';
+
 const TRAIN_EXPLANATIONS = {
-  1: '<strong>Forward pass</strong> — identical to inference. Tokens go in, the Transformer processes them through all its layers, and a probability distribution over possible next tokens comes out. Nothing is different yet.',
-  2: '<strong>The teacher signal</strong> — during training, we already know the correct next token. It\'s simply the next word in the training data. This ground truth is what makes learning possible — the model doesn\'t have to figure out what\'s right on its own.',
-  3: '<strong>Cross-entropy loss</strong> — measures how much probability the model gave to the correct token. High confidence in the right answer \u2192 low loss. Surprised by it \u2192 high loss. Formally: \\(\\mathcal{L} = -\\log P(\\text{correct token})\\).',
-  4: '<strong>Backpropagation</strong> — the chain rule traces the loss backward through every layer. For each of the billions of weights, it answers: \"how much did <em>you</em> contribute to the error?\" This produces a gradient \\(\\frac{\\partial \\mathcal{L}}{\\partial \\theta}\\) for every single parameter.',
-  5: '<strong>Weight update</strong> — each weight is nudged in the direction that reduces the loss. The learning rate \\(\\eta\\) controls step size: \\(\\theta \\leftarrow \\theta - \\eta \\cdot \\nabla \\mathcal{L}\\). After updating, the next batch runs through a slightly better model. Repeat billions of times.'
+  1: '<strong>Forward pass</strong> — this part is identical to inference: context goes in, next-token scores come out.',
+  2: '<strong>Ground truth</strong> — training already knows the correct next token from the dataset, so the model can compare prediction vs. answer.',
+  3: '<strong>Cross-entropy loss</strong> — if the model gave low probability to the correct token, the loss is high: \\(\\mathcal{L} = -\\log P(\\text{correct token})\\).',
+  4: '<strong>Backpropagation</strong> — the chain rule sends that error backward and computes a gradient for every weight.',
+  5: '<strong>Weight update</strong> — move each weight a little in the direction that reduces loss: \\(\\theta \\leftarrow \\theta - \\eta \\cdot \\nabla \\mathcal{L}\\).'
 };
 
 const VOCAB = [
@@ -31,4 +33,4 @@ const VOCAB = [
   { word: '...',       predicted: 0.35, target: 0.00, after: 0.37 },
 ];
 
-const INITIAL_DRAMA_RESULT_HTML = '<span class="icon">?</span><span>Select a suspect. Then check whether your choice satisfies the timing + access constraints.</span>';
+const INITIAL_DRAMA_RESULT_HTML = '<span class="icon">?</span><span>Pick the suspect whose timeline fits every clue.</span>';

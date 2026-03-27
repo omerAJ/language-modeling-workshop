@@ -240,6 +240,11 @@
   line-height: 1.42;
 }
 
+#slide-27 .callout span:last-child {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
 #slide-27 .ffn27-analogy-card {
   margin-top: 0.28rem;
   padding: 0.62rem 0.74rem;

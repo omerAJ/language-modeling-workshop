@@ -59,13 +59,13 @@ Refactor Notes (Zero-Regression):
   <div class="slide" id="slide-1">
     <span class="section-tag">Setup</span>
     <div class="badge day2">Objectives</div>
-    <h2>By the end, you should understand:</h2>
+    <h2>By the end, you'll be able to explain:</h2>
     <div class="spacer-sm"></div>
     <ul class="obj-list">
-      <li data-num="1">How text is converted into <span class="hl">model-ready representations</span>: tokenization, embeddings, and position</li>
-      <li data-num="2">How a decoder-only Transformer block performs its core computation: <span class="hl-purple">attention</span> + <span class="hl-cyan">FFN</span> + residual stream</li>
-      <li data-num="3">How repeated blocks produce next-token <span class="hl-green">logits and probabilities</span>, and how decoding selects outputs</li>
-      <li data-num="4">How the full forward pass connects back to Day 1's training objective: <span class="hl-orange">next-token prediction</span></li>
+      <li data-num="1">How text becomes <span class="hl">model-ready input</span>: tokenization, embeddings, and position</li>
+      <li data-num="2">How one decoder-only block computes: <span class="hl-purple">attention</span> + <span class="hl-cyan">FFN</span> + residual stream</li>
+      <li data-num="3">How stacked blocks produce <span class="hl-green">logits, probabilities, and decoded output</span></li>
+      <li data-num="4">How the full forward pass connects back to Day 1: <span class="hl-orange">next-token prediction</span></li>
     </ul>
   </div>
 
@@ -80,11 +80,11 @@ Refactor Notes (Zero-Regression):
       <!-- DAY 1 -->
       <div class="card" style="border-color: rgba(108,140,255,0.3); opacity:0.6;">
         <div class="badge day1">Day 1 — Completed</div>
-        <h3 style="color:var(--accent);">Why LLMs behave the way they do</h3>
+        <h3 style="color:var(--accent);">Why models learn useful behavior</h3>
         <ul style="list-style:none; margin-top:0.625rem;">
           <li class="small-text" style="padding:0.3rem 0 0.3rem 1.25rem; position:relative;">
             <span style="position:absolute;left:0;color:var(--accent);">→</span>
-            Inference vs. training
+            Training vs. inference
           </li>
           <li class="small-text" style="padding:0.3rem 0 0.3rem 1.25rem; position:relative;">
             <span style="position:absolute;left:0;color:var(--accent);">→</span>
@@ -96,52 +96,40 @@ Refactor Notes (Zero-Regression):
           </li>
           <li class="small-text" style="padding:0.3rem 0 0.3rem 1.25rem; position:relative;">
             <span style="position:absolute;left:0;color:var(--accent);">→</span>
-            Why next-token prediction works
-          </li>
-          <li class="small-text" style="padding:0.3rem 0 0.3rem 1.25rem; position:relative;">
-            <span style="position:absolute;left:0;color:var(--accent);">→</span>
-            From one update to a full training pipeline
-          </li>
-          <li class="small-text" style="padding:0.3rem 0 0.3rem 1.25rem; position:relative;">
-            <span style="position:absolute;left:0;color:var(--accent);">→</span>
-            Data work: collection → filtering → annotation
+            Training pipeline and data work
           </li>
         </ul>
         <div class="callout info" style="margin-top:0.875rem;">
           <span class="icon">i</span>
-          <span>Treat the model as a <strong>system being shaped.</strong></span>
+          <span>Day 1 focused on the <strong>learning process.</strong></span>
         </div>
       </div>
 
       <!-- DAY 2 -->
       <div class="card" style="border-color: rgba(167,139,250,0.25);">
         <div class="badge day2">Day 2 — Today</div>
-        <h3 style="color:var(--purple);">How a Transformer processes text and computes the next word</h3>
+        <h3 style="color:var(--purple);">How one inference step computes the next token</h3>
         <ul style="list-style:none; margin-top:0.625rem;">
           <li class="small-text" style="padding:0.3rem 0 0.3rem 1.25rem; position:relative;">
             <span style="position:absolute;left:0;color:var(--purple);">→</span>
-            Tokenization & embeddings
+            Tokens → embeddings → position
           </li>
           <li class="small-text" style="padding:0.3rem 0 0.3rem 1.25rem; position:relative;">
             <span style="position:absolute;left:0;color:var(--purple);">→</span>
-            Self-attention mechanics
+            Attention routes information
           </li>
           <li class="small-text" style="padding:0.3rem 0 0.3rem 1.25rem; position:relative;">
             <span style="position:absolute;left:0;color:var(--purple);">→</span>
-            Feed-forward layers
+            FFN transforms each token
           </li>
           <li class="small-text" style="padding:0.3rem 0 0.3rem 1.25rem; position:relative;">
             <span style="position:absolute;left:0;color:var(--purple);">→</span>
-            Full forward pass end-to-end
-          </li>
-          <li class="small-text" style="padding:0.3rem 0 0.3rem 1.25rem; position:relative;">
-            <span style="position:absolute;left:0;color:var(--purple);">→</span>
-            Connecting mechanics to behavior
+            Forward pass → logits → decoding
           </li>
         </ul>
         <div class="callout info" style="margin-top:0.875rem;">
           <span class="icon">i</span>
-          <span>Treat it as a <strong>machine executing computation.</strong></span>
+          <span>Today we trace the <strong>computation itself.</strong></span>
         </div>
       </div>
     </div>
@@ -267,7 +255,7 @@ Refactor Notes (Zero-Regression):
         <p class="tiny" style="color:var(--text-dim); margin-top:0.1rem;">Cosma et al., EMNLP 2025 — documented this class of failures systematically.</p>
       </div>
       <div class="card">
-        <h3>What the model actually sees</h3>
+        <h3>What the model sees</h3>
         <div class="token-count-label" style="margin-top:0.5rem;">You write</div>
         <div class="mono text-sm" style="letter-spacing:0.18em; margin-top:0.25rem;">s t r a w b e r r y</div>
         <div class="token-count-label" style="margin-top:0.7rem;">Model receives</div>
@@ -275,16 +263,13 @@ Refactor Notes (Zero-Regression):
           <span class="token-pill main">[straw]</span>
           <span class="token-pill reuse">[berry]</span>
         </div>
-        <p class="small-text" style="margin-top:0.55rem; color:var(--text-dim);">2 token vectors. No individual letter vectors. To count r's, the model must reconstruct character-level structure from subword representations — something it is not built to do directly.</p>
+        <p class="small-text" style="margin-top:0.55rem; color:var(--text-dim);">The model gets <strong>2 token vectors</strong>, not 10 letter vectors. Counting r's means reconstructing character structure from subword pieces.</p>
       </div>
     </div>
 
     <div class="callout info" style="margin-top:0.5rem;">
       <span class="icon">i</span>
-      <span>This is not a bug — it is an architectural property. The next slides explain exactly how it arises and what it means for building reliable models.</span>
-    </div>
-    <div class="template-note" style="margin-top:0.4rem;">
-      here we can show the gpt3.5 live demo and it failing on such tasks
+      <span>This is <strong>architectural</strong>, not a bug. The next slides show where that limitation comes from.</span>
     </div>
     </div>
   </div>
@@ -293,7 +278,7 @@ Refactor Notes (Zero-Regression):
   <div class="slide" id="slide-5">
     <span class="section-tag">Tokenization</span>
     <div class="badge concept">Tokenization</div>
-    <h2>Step 0: before the model reads, it tokenizes</h2>
+    <h2>Before the model reads, it tokenizes</h2>
     <div class="spacer-sm"></div>
 
     <div class="flow token-interface" style="margin-top:0.75rem;">
@@ -313,11 +298,12 @@ Refactor Notes (Zero-Regression):
         </ul>
         <div class="callout info" style="margin-top:0.7rem;">
           <span class="icon">i</span>
-          <span>The vocabulary is learned once and <strong>frozen</strong> — it never changes during fine-tuning or inference. GPT-2: 50,257 tokens. GPT-4 (cl100k): ~100,000 tokens.</span>
+          <span>The vocabulary is learned once and then <strong>frozen</strong>. GPT-2 uses 50,257 tokens; GPT-4 class tokenizers are roughly 100k.</span>
         </div>
       </div>
       <div class="card">
-        <h3>Running example — used across all three approaches</h3>
+        <h3>Running example</h3>
+        <p class="tiny" style="margin-top:0.2rem;">We’ll reuse this sentence across the next three slides.</p>
         <div class="token-count-label" style="margin-top:0.5rem;">Sentence</div>
         <div class="example-sentence text-sm">"researchers fine-tune large-scale models"</div>
         <div class="token-count-label" style="margin-top:0.65rem;">Under subword tokenization</div>
@@ -343,19 +329,19 @@ Refactor Notes (Zero-Regression):
   <div class="slide" id="slide-6">
     <span class="section-tag">Tokenization</span>
     <div class="badge discussion">Word-Level</div>
-    <h2>Approach 1: one word = one token — simple, but brittle</h2>
+    <h2>Approach 1: word-level tokenization — simple, but brittle</h2>
     <div class="spacer-sm"></div>
 
     <div class="card">
       <h3>Running sentence under word-level tokenization</h3>
-      <div class="small-text" style="margin-top:0.4rem;">If all words are in the vocabulary:</div>
+      <div class="small-text" style="margin-top:0.4rem;">If the vocabulary contains every word:</div>
       <div class="token-example" style="margin-top:0.35rem;">
         <span class="token-pill main">[researchers]</span>
         <span class="token-pill main">[fine-tune]</span>
         <span class="token-pill main">[large-scale]</span>
         <span class="token-pill main">[models]</span>
       </div>
-      <div class="small-text" style="margin-top:0.6rem;">Hyphenated compounds like <span class="hl-orange">fine-tune</span> and <span class="hl-orange">large-scale</span> are typically absent from fixed word vocabularies. They collapse to unknown tokens:</div>
+      <div class="small-text" style="margin-top:0.6rem;">But compounds like <span class="hl-orange">fine-tune</span> and <span class="hl-orange">large-scale</span> are often missing. They collapse to unknown tokens:</div>
       <div class="token-example" style="margin-top:0.35rem;">
         <span class="token-pill">[researchers]</span>
         <span class="token-pill flex">[UNK]</span>
@@ -368,16 +354,16 @@ Refactor Notes (Zero-Regression):
       <div class="card tradeoff-card" style="border-color: rgba(90,232,142,0.28);">
         <h3 style="color:var(--green);">What works</h3>
         <ul class="pc-list good">
-          <li>One word = one token. Short sequences for common text.</li>
-          <li>Well-studied words carry full semantic weight as a single unit.</li>
+          <li>Short sequences for familiar text.</li>
+          <li>Common words stay intact as single units.</li>
         </ul>
       </div>
       <div class="card tradeoff-card" style="border-color: rgba(255,123,123,0.3);">
         <h3 style="color:var(--red);">Why it breaks</h3>
         <ul class="pc-list bad">
           <li>Language is open-vocabulary. English Wikipedia alone has ~1.5M unique word forms.</li>
-          <li>New terminology — "GPT-4", "LoRA", "RLHF" — constantly creates unknowns.</li>
-          <li>No reuse of shared pieces: "run", "running", "runner" are all separate vocabulary entries.</li>
+          <li>New terms like "GPT-4", "LoRA", and "RLHF" create unknowns.</li>
+          <li>No reuse of shared pieces: "run", "running", and "runner" all need separate entries.</li>
         </ul>
       </div>
     </div>
@@ -385,7 +371,7 @@ Refactor Notes (Zero-Regression):
     <div class="spacer-sm"></div>
     <div class="callout warn">
       <span class="icon">!</span>
-      <span><strong>Word-level is efficient for familiar words, but brittle.</strong> Any new terminology, hyphenated compound, or non-English text becomes an unknown token.</span>
+      <span><strong>Word-level tokenization is efficient, but brittle.</strong> Anything outside the fixed vocabulary becomes unknown.</span>
     </div>
   </div>
 
@@ -393,7 +379,7 @@ Refactor Notes (Zero-Regression):
   <div class="slide" id="slide-7">
     <span class="section-tag">Tokenization</span>
     <div class="badge discussion">Character-Level</div>
-    <h2>Approach 2: one character = one token — flexible, but expensive</h2>
+    <h2>Approach 2: character-level tokenization — flexible, but expensive</h2>
     <div class="spacer-sm"></div>
 
     <div class="card">
@@ -432,10 +418,10 @@ Refactor Notes (Zero-Regression):
         </ul>
       </div>
       <div class="card tradeoff-card" style="border-color: rgba(255,123,123,0.3);">
-        <h3 style="color:var(--red);">Why it is not the default</h3>
+        <h3 style="color:var(--red);">Why it gets expensive</h3>
         <ul class="pc-list bad">
           <li>Sequences become \(5\text{–}10\times\) longer.</li>
-          <li>Transformer self-attention is \(O(n^2)\) in sequence length, so \(5\times\) longer means roughly \(25\times\) more compute.</li>
+          <li>Self-attention is \(O(n^2)\), so \(5\times\) longer means roughly \(25\times\) more compute.</li>
           <li>The model spends capacity reassembling words from letters on every forward pass.</li>
         </ul>
       </div>
@@ -444,7 +430,7 @@ Refactor Notes (Zero-Regression):
     <div class="spacer-sm"></div>
     <div class="callout warn">
       <span class="icon">!</span>
-      <span><strong>Character-level coverage is perfect, but the compute cost is prohibitive.</strong> Quadratic attention scaling makes this impractical at real sequence lengths.</span>
+      <span><strong>Character-level coverage is perfect, but too expensive.</strong> Quadratic attention scaling makes it impractical at real sequence lengths.</span>
     </div>
   </div>
 
@@ -452,7 +438,7 @@ Refactor Notes (Zero-Regression):
   <div class="slide" id="slide-8">
     <span class="section-tag">Tokenization</span>
     <div class="badge concept">Subword Strategy</div>
-    <h2>Approach 3: subword tokens — the practical default</h2>
+    <h2>Approach 3: subword tokenization — the practical default</h2>
     <div class="spacer-sm"></div>
 
     <div class="card">
@@ -476,29 +462,29 @@ Refactor Notes (Zero-Regression):
       <div class="card tradeoff-card" style="border-color: rgba(255,123,123,0.22);">
         <h3 style="color:var(--red);">Word-level</h3>
         <div class="token-count-number" class="mono text-sm" style="margin:0.4rem 0;">4 tokens</div>
-        <p class="small-text">Short, but brittle. Breaks on hyphens, new jargon, multilingual text.</p>
+        <p class="small-text">Short, but brittle. Breaks on hyphens, new jargon, and multilingual text.</p>
       </div>
       <div class="card tradeoff-card" style="border-color: rgba(255,170,85,0.24);">
         <h3 style="color:var(--orange);">Character-level</h3>
         <div class="token-count-number" class="mono text-sm" style="margin:0.4rem 0;">~40 tokens</div>
-        <p class="small-text">Thorough, but very long. Quadratic attention cost makes it impractical at scale.</p>
+        <p class="small-text">Full coverage, but very long. Quadratic attention cost makes it impractical.</p>
       </div>
       <div class="card tradeoff-card" style="border-color: rgba(90,232,142,0.28);">
         <h3 style="color:var(--green);">Subword</h3>
         <div class="token-count-number" class="mono text-sm" style="margin:0.4rem 0;">~10 tokens</div>
-        <p class="small-text">Near-word efficiency with no unknown tokens. GPT-4 averages ~0.75 words per token for English prose.</p>
+        <p class="small-text">Near-word efficiency with no unknown tokens. English prose averages about 0.75 words per token.</p>
       </div>
     </div>
 
     <div class="spacer-sm"></div>
     <div class="callout success">
       <span class="icon">+</span>
-      <span><strong>Subword gives near-word efficiency for common text and full coverage for rare strings.</strong> This is why it became the universal default in every modern LLM.</span>
+      <span><strong>Subword gives near-word efficiency with broad coverage.</strong> That is why it became the default in modern LLMs.</span>
     </div>
     <div class="hidden-content autostep">
       <div class="callout info" style="margin-top:0.7rem;">
         <span class="icon">i</span>
-        <span>There is one tradeoff: characters that end up inside the same token chunk are no longer individually visible to the model. We will see exactly when this matters at the end of this section.</span>
+        <span>One tradeoff remains: characters inside the same token chunk are no longer individually visible to the model. We will return to that at the end of this section.</span>
       </div>
     </div>
   </div>
@@ -508,10 +494,10 @@ Refactor Notes (Zero-Regression):
     <span class="section-tag">Tokenization</span>
     <div class="slide-header">
       <div class="badge concept">BPE</div>
-      <h2>How does the tokenizer learn these splits?</h2>
+      <h2>How does the tokenizer learn these pieces?</h2>
     </div>
     <div class="slide-body">
-    <p class="token-anchor">Subword splits don't come from rules or dictionaries. They are <strong>learned from data</strong> using Byte Pair Encoding (BPE).</p>
+    <p class="token-anchor">Subword pieces are not hand-written rules. They are <strong>learned from data</strong> using Byte Pair Encoding (BPE).</p>
 
     <div class="flow token-interface" style="margin-top:0.55rem;">
       <div class="flow-box">Start: characters</div>
@@ -523,21 +509,21 @@ Refactor Notes (Zero-Regression):
     <div class="grid-2" style="margin-top:0.5rem;">
       <div class="card">
         <h3>The core rule</h3>
-        <p class="small-text">BPE starts with every word split into individual characters. It repeatedly finds the most frequent adjacent pair in the corpus and merges it into a single new token. After N merges, you have a vocabulary of N reusable subword pieces.</p>
+        <p class="small-text">Start from characters. Repeatedly merge the most frequent adjacent pair in the corpus. After many merges, those reusable pairs become the vocabulary.</p>
       </div>
       <div class="card">
         <h3>Why it works</h3>
-        <p class="small-text">BPE is driven by frequency, not grammar. It discovers meaningful-looking pieces — stems, prefixes, suffixes — not because it understands linguistics, but because those strings appear together often. Compression and language structure happen to align.</p>
+        <p class="small-text">BPE is driven by frequency, not grammar. It finds stems, prefixes, and suffixes because those strings appear together often in real text.</p>
       </div>
     </div>
 
     <div class="callout info" style="margin-top:0.5rem;">
       <span class="icon">i</span>
-      <span><strong>BPE is a frequency-based compression algorithm.</strong> It builds the vocabulary the training data demands, not the one a linguist would design.</span>
+      <span><strong>BPE is a frequency-based compression algorithm.</strong> It builds the vocabulary the data demands, not the one a linguist would design.</span>
     </div>
     <div class="callout question" style="margin-top:0.6rem;">
       <span class="icon">?</span>
-      <span>To see exactly how this works, let's run BPE on a corpus you'll recognise.</span>
+      <span>Now let's run BPE on a tiny corpus and watch the merges happen.</span>
     </div>
     </div>
   </div>
@@ -546,7 +532,7 @@ Refactor Notes (Zero-Regression):
   <div class="slide" id="slide-10">
     <span class="section-tag">Tokenization</span>
     <div class="badge activity">BPE Walkthrough</div>
-    <h2>BPE on a dummy corpus</h2>
+    <h2>BPE on a tiny corpus</h2>
     <div class="spacer-sm"></div>
 
     <div class="grid-2 text-xs" style="font-weight:600; letter-spacing:0.06em; color:var(--text-dim); text-transform:uppercase; margin-bottom:0.4rem;">
@@ -559,7 +545,7 @@ Refactor Notes (Zero-Regression):
       <!-- State 0: character-level corpus -->
       <div class="grid-2 bpe-initial" style="position:absolute; top:0; left:0; right:0;">
         <div class="corpus-card">
-          <div class="corpus-title">Starting state — every character separate (&lt;/w&gt; = word end)</div>
+          <div class="corpus-title">Starting state: every character is separate (&lt;/w&gt; marks word end)</div>
           <div class="corpus-body">h u g &lt;/w&gt;
 h u g s &lt;/w&gt;
 h u g g e d &lt;/w&gt;
@@ -567,7 +553,7 @@ h u g g i n g &lt;/w&gt;
 h u g g i n g f a c e &lt;/w&gt;
 t r a i n i n g &lt;/w&gt;
 l e a r n i n g &lt;/w&gt;</div>
-          <p class="tiny" style="margin-top:0.45rem;">BPE repeatedly merges the most frequent adjacent pair in the corpus.</p>
+          <p class="tiny" style="margin-top:0.45rem;">Count adjacent pairs, merge the most frequent one, then repeat.</p>
         </div>
         <div class="card">
           <div class="token-example" style="flex-wrap:wrap; gap:0.3rem;">
@@ -696,7 +682,7 @@ l e a r n <span class="corpus-discovery">ing</span> &lt;/w&gt;</div>
             </div>
             <div class="callout discovery-callout" style="margin-top:0.55rem;">
               <span class="icon">!</span>
-              <span>“In a real corpus, -ing occurs across thousands of verbs; BPE reliably discovers it.”</span>
+              <span>High-frequency suffixes like <span class="hl">-ing</span> emerge early because they repeat across many words.</span>
             </div>
           </div>
         </div>
@@ -858,7 +844,7 @@ l e a r n ing &lt;/w&gt;</div>
             </div>
             <div class="callout info" style="margin-top:0.55rem;">
               <span class="icon">i</span>
-              <span>From raw characters to reusable subwords to full words: all discovered by counting adjacent pairs.</span>
+              <span>Frequency turns characters into reusable chunks and, sometimes, full words.</span>
             </div>
           </div>
         </div>
@@ -871,12 +857,12 @@ l e a r n ing &lt;/w&gt;</div>
   <div class="slide" id="slide-11">
     <span class="section-tag">Tokenization</span>
     <div class="badge concept">BPE Takeaway</div>
-    <h2>What BPE gives you: a vocabulary of reusable chunks</h2>
+    <h2>BPE builds a vocabulary of reusable chunks</h2>
     <div class="spacer-sm"></div>
 
     <div class="grid-2">
       <div class="card">
-        <h3>Learned vocabulary (after our merges)</h3>
+        <h3>Vocabulary after our merges</h3>
         <div class="token-example" style="margin-top:0.55rem; flex-wrap:wrap; gap:0.38rem;">
           <span class="token-pill">h</span>
           <span class="token-pill">u</span>
@@ -906,7 +892,7 @@ l e a r n ing &lt;/w&gt;</div>
         <p class="tiny" style="margin-top:0.5rem;">Gray = base characters &nbsp;·&nbsp; Blue = primary merges &nbsp;·&nbsp; Green = suffix merges &nbsp;·&nbsp; Orange = full-word tokens</p>
       </div>
       <div class="card">
-        <h3>How the vocabulary applies to any input</h3>
+        <h3>How it applies to new text</h3>
         <div style="margin-top:0.5rem; display:flex; flex-direction:column; gap:0.5rem;">
           <div class="small-text" style="display:flex; align-items:center; gap:0.45rem; flex-wrap:wrap;">
             <span class="hl" style="min-width:5.5rem;">hug</span>
@@ -943,11 +929,11 @@ l e a r n ing &lt;/w&gt;</div>
     <div class="spacer-sm"></div>
     <div class="callout info">
       <span class="icon">i</span>
-      <span>The tokenizer composes words it has never seen from pieces it has seen. <span class="hl-orange">"hugged"</span> was never explicitly in the training corpus, but it tokenizes cleanly from learned pieces.</span>
+      <span>The tokenizer can spell unseen words from learned pieces. <span class="hl-orange">"hugged"</span> never appeared in the corpus, but it still tokenizes cleanly.</span>
     </div>
     <div class="callout success" style="margin-top:0.6rem;">
       <span class="icon">+</span>
-      <span><strong>BPE: start from characters, repeatedly merge the most frequent pair, build a vocabulary of reusable subword chunks.</strong> This is the mechanism behind GPT-2, GPT-3, GPT-4, and most modern LLMs.</span>
+      <span><strong>BPE starts from characters and repeatedly merges the most frequent pair.</strong> That loop builds the reusable subword vocabulary used by most modern LLMs.</span>
     </div>
   </div>
 
@@ -955,25 +941,25 @@ l e a r n ing &lt;/w&gt;</div>
   <div class="slide" id="slide-12">
     <span class="section-tag">Tokenization</span>
     <div class="badge discussion">Why It Matters</div>
-    <h2>Why tokenization shapes what the model can and cannot reason about</h2>
+    <h2>Why tokenization constrains reasoning</h2>
     <div class="spacer-sm"></div>
 
     <div class="card" style="border-color: rgba(123,154,255,0.35);">
       <h3>The mechanism</h3>
-      <p class="small-text">The model's computations run on token vectors — one vector per token piece. There is no separate vector for an individual character. Character-level reasoning requires the model to reconstruct structure from subword representations — something it is not architecturally designed to do.</p>
+      <p class="small-text">The model computes on <strong>token vectors</strong>, not character vectors. If one token covers many letters, character-level reasoning has to be reconstructed from subword pieces.</p>
       <div style="margin-top:0.7rem; display:flex; align-items:center; gap:0.6rem; flex-wrap:wrap;">
         <span class="hl">"strawberry"</span>
         <span class="small-text">→</span>
         <span class="token-pill main" style="display:inline-block;">[straw]</span>
         <span class="token-pill reuse" style="display:inline-block;">[berry]</span>
-        <span class="small-text" style="color:var(--text-dim);">2 token vectors. No individual letter vectors.</span>
+        <span class="small-text" style="color:var(--text-dim);">2 token vectors. No separate letter vectors.</span>
       </div>
       <p class="tiny" style="margin-top:0.55rem;">Cosma et al., <em>"The Strawberry Problem: Emergence of Character-level Understanding in Tokenized Language Models"</em>, EMNLP 2025.</p>
     </div>
 
     <div class="grid-2" style="margin-top:0.8rem;">
       <div class="card">
-        <h3>Tasks where this creates difficulty</h3>
+        <h3>Where this gets hard</h3>
         <ul class="pc-list bad">
           <li>Counting specific letters in a word.</li>
           <li>Extracting the nth character from a string.</li>
@@ -983,18 +969,18 @@ l e a r n ing &lt;/w&gt;</div>
       </div>
       <div class="card">
         <h3>Important nuance</h3>
-        <p class="small-text">Tokenization is a structural contributor, not the only cause. Cosma et al. showed that character-level capabilities <em>can</em> emerge late in training, and a lightweight architectural modification significantly improves them. Tokenization creates a structural disadvantage, not an absolute ceiling.</p>
+        <p class="small-text">Tokenization is a structural disadvantage, not a hard ceiling. Character-level behavior can emerge late in training, and small architectural changes can improve it.</p>
       </div>
     </div>
 
     <div class="spacer-sm"></div>
     <div class="callout warn">
       <span class="icon">!</span>
-      <span><strong>The model is fluent in token pieces. It is only indirectly aware of individual letters.</strong> Keep this in mind when designing prompts, tasks, and evaluations.</span>
+      <span><strong>The model is fluent in token pieces, not letters.</strong> Keep that in mind when designing prompts, tasks, and evaluations.</span>
     </div>
     <div class="callout success" style="margin-top:0.6rem;">
       <span class="icon">+</span>
-      <span>Tokenization is the first design decision in any language model. It defines the vocabulary, shapes the sequence length, and sets the perceptual granularity of every computation that follows.</span>
+      <span>Tokenization defines the vocabulary, shapes sequence length, and sets the granularity of every computation that follows.</span>
     </div>
   </div>
 
@@ -1006,7 +992,7 @@ l e a r n ing &lt;/w&gt;</div>
       <h2>From token IDs to vectors</h2>
     </div>
     <div class="slide-body">
-    <p class="small-text">Token IDs index rows of a learned embedding table.</p>
+    <p class="small-text">A token ID is just a row index into a learned embedding matrix.</p>
     <div class="math">\[
       T\in\{1,\dots,|V|\}^{n},\quad X^{(0)}=E[T]\in\mathbb{R}^{n\times d_{\text{model}}}
     \]</div>
@@ -1019,7 +1005,7 @@ l e a r n ing &lt;/w&gt;</div>
 
     <div class="grid-2" style="margin-top:0.45rem;">
       <div class="card">
-        <h3>Embedding matrix view</h3>
+        <h3>Three retrieved rows</h3>
         <div class="matrix-shape-label">Full table: \(E \in \mathbb{R}^{|V| \times d_{\text{model}}}\)</div>
         <div class="embed-table">
           <div class="embed-row matrix-ellipsis-row">
@@ -1055,12 +1041,12 @@ l e a r n ing &lt;/w&gt;</div>
         </div>
       </div>
       <div class="card">
-        <h3>Embedding table at full scale</h3>
+        <h3>Scale of the full table</h3>
         <div class="math">\[
           E \in \mathbb{R}^{|V|\times d_{\text{model}}}
         \]</div>
         <div class="id-seq" style="margin-top:0.55rem; white-space:pre-wrap; word-break:break-word;">Example (GPT-2 small):<br>\(|V| = 50{,}257,\quad d_{\text{model}} = 768\)<br>\(\lvert E \rvert = 50{,}257 \times 768 = 38{,}597{,}376\)</div>
-        <div class="id-seq" style="margin-top:0.5rem; white-space:pre-wrap; word-break:break-word;">Selected sequence:<br>\([\text{river}, \text{bank}, \text{loan}] \mapsto [812, 1452, 5021]\)<br>\(\mapsto [E[812,:], E[1452,:], E[5021,:]]\)</div>
+        <div class="id-seq" style="margin-top:0.5rem; white-space:pre-wrap; word-break:break-word;">This slide's lookup:<br>\([\text{river}, \text{bank}, \text{loan}] \mapsto [812, 1452, 5021]\)<br>\(\mapsto [E[812,:], E[1452,:], E[5021,:]]\)</div>
         <p class="tiny" style="margin-top:0.5rem;">Token IDs shown here are illustrative; exact values depend on the tokenizer vocabulary.</p>
       </div>
     </div>
@@ -1072,12 +1058,12 @@ l e a r n ing &lt;/w&gt;</div>
     <span class="section-tag">Embeddings</span>
     <div class="slide-header">
       <div class="badge concept">Key Properties</div>
-      <h2>Embeddings establish the layer-0 input state</h2>
+      <h2>What embeddings give you, and what they still lack</h2>
     </div>
     <div class="slide-body">
       <div class="grid-2">
         <div class="card">
-          <h3>What this establishes</h3>
+          <h3>What embeddings already give you</h3>
           <ul class="pc-list good" style="margin-top:0.5rem;">
             <li>Learned table \(E \in \mathbb{R}^{|V| \times d_{\text{model}}}\): one trainable row per token type.</li>
             <li>Often one of the largest parameter blocks, scaling with \(|V| \times d_{\text{model}}\).</li>
@@ -1086,7 +1072,7 @@ l e a r n ing &lt;/w&gt;</div>
           </ul>
         </div>
         <div class="card">
-          <h3>What still needs later layers</h3>
+          <h3>What later layers still have to add</h3>
           <ul class="pc-list bad" style="margin-top:0.5rem;">
             <li>Sense is unresolved: one row can support multiple intended meanings.</li>
             <li>No token-token interaction yet — rows cannot use neighboring words.</li>
@@ -1098,7 +1084,7 @@ l e a r n ing &lt;/w&gt;</div>
 
       <div class="callout info" style="margin-top:0.5rem;">
         <span class="icon">→</span>
-        <span>Next: same vectors, different projections. Then we show why sentence context is needed to pick intended meaning.</span>
+        <span>Next: look at the same vectors through different semantic projections, then show why context is needed to pick the intended meaning.</span>
       </div>
     </div>
   </div>
@@ -1109,11 +1095,11 @@ l e a r n ing &lt;/w&gt;</div>
     <div class="slide-header">
       <div class="badge discussion">Geometry</div>
       <h2>One embedding space, multiple semantic projections</h2>
-      <p class="small-text">Each token has a \(d_{\text{model}}\)-dimensional vector. This plot shows only 2D projections of that same vector space.</p>
+      <p class="small-text">Each token is one high-dimensional vector. These plots show different 2D views of that same space.</p>
     </div>
     <div class="slide-body">
     <div class="card projection-card" style="margin-top:0.5rem;">
-      <h3>Projection controls (same space, different view)</h3>
+      <h3>Change the lens, not the space</h3>
       <div class="projection-toolbar" id="projectionToolbar16">
         <button class="lens-btn active" data-lens="pet" aria-pressed="true">Pet / companionship</button>
         <button class="lens-btn" data-lens="feline" aria-pressed="false">Feline family</button>
@@ -1139,7 +1125,7 @@ l e a r n ing &lt;/w&gt;</div>
             </div>
           </div>
           <div class="math-note" style="margin-top:0.5rem;">\(z^{(\mathrm{lens})} = P_{\mathrm{lens}}x,\; P_{\mathrm{lens}}\in\mathbb{R}^{2\times d_{\text{model}}}\)</div>
-          <p class="projection-note" style="margin-top:0.5rem;">Each lens is a different 2D projection of the same high-dimensional space. The points do not move in high-D — only our 2D view changes. This is why one token row can support multiple potential meanings before context resolves it.</p>
+          <p class="projection-note" style="margin-top:0.5rem;">The underlying vectors do not move. Only the 2D projection changes, so different relationships become visible under different lenses.</p>
         </div>
       </div>
     </div>
@@ -1150,28 +1136,28 @@ l e a r n ing &lt;/w&gt;</div>
   <div class="slide" id="slide-17">
     <span class="section-tag">Transition</span>
     <div class="badge day2">Bridge</div>
-    <h2>Why embeddings are not enough: we need cross-token interaction</h2>
+    <h2>Why embeddings are not enough</h2>
     <div class="spacer-sm"></div>
 
     <div class="card" style="border-color: rgba(123,154,255,0.36);">
-      <h3>Same row, different intended sense</h3>
+      <h3>Same row, different meaning</h3>
       <div class="sense-sentence" style="margin-top:0.55rem;">The fisherman sat on the <span class="sense-focus">bank</span> of the river.</div>
       <div class="sense-sentence" style="margin-top:0.5rem;">She applied for a loan at the <span class="sense-focus">bank</span>.</div>
       <div class="math" style="margin-top:0.68rem;">\[
         h_{\text{bank}}^{(0)} = E[\text{bank}]
       \]</div>
-      <p class="small-text" style="margin-top:0.2rem;">At input, both occurrences start from the same embedding row.</p>
+      <p class="small-text" style="margin-top:0.2rem;">At input, both sentences start from the same <span class="hl">bank</span> row.</p>
       <ul class="pc-list good" style="margin-top:0.65rem;">
-        <li>Embeddings provide token identity priors.</li>
-        <li>Sentence neighbors determine intended sense.</li>
-        <li>Next section explains the routing mechanism.</li>
+        <li>The row tells us which token this is.</li>
+        <li>The neighboring words tell us which sense is intended.</li>
+        <li>Attention is the mechanism that mixes in those neighbors.</li>
       </ul>
     </div>
 
     <div class="spacer-sm"></div>
     <div class="callout info">
       <span class="icon">→</span>
-      <span>Next: attention shows how tokens read from each other to resolve meaning.</span>
+      <span>Next: attention lets a token read from the words around it.</span>
     </div>
   </div>
 
@@ -1179,8 +1165,8 @@ l e a r n ing &lt;/w&gt;</div>
   <div class="slide" id="slide-18">
     <span class="section-tag">Attention</span>
     <div class="badge concept">Mechanism</div>
-    <h2>Attention</h2>
-    <p class="small-text attn18-subtitle">Tokens update each other’s representations</p>
+    <h2>Attention lets tokens read from each other</h2>
+    <p class="small-text attn18-subtitle">Each token can update its representation using the rest of the sequence.</p>
     <p class="tiny attn18-motivation">Embeddings are static — attention makes them context-aware.</p>
 
     <div class="attn18-layout">
@@ -1221,8 +1207,8 @@ l e a r n ing &lt;/w&gt;</div>
   <div class="slide" id="slide-19">
     <span class="section-tag">Attention</span>
     <div class="badge concept">Mechanism</div>
-    <h2>Step 1 — Project into \(Q\), \(K\), and \(V\) roles</h2>
-    <p class="small-text attn19-subtitle">Project embeddings into \(Q\), \(K\), and \(V\) subspaces</p>
+    <h2>Step 1 — Make \(Q\), \(K\), and \(V\) versions of each token</h2>
+    <p class="small-text attn19-subtitle">The same token state is projected into three learned subspaces.</p>
 
     <div class="attn19-layout attn19p1-layout">
       <div class="card attn19-stage attn19p1-stage" id="attn19p1-stage">
@@ -1355,7 +1341,7 @@ l e a r n ing &lt;/w&gt;</div>
     <span class="section-tag">Attention</span>
     <div class="badge concept">Mechanism</div>
     <h2>Step 3 — From scores to attention weights</h2>
-    <p class="small-text attn19-subtitle">Normalize \(\rightarrow\) \(\operatorname{softmax}\) \(\rightarrow\) weights</p>
+    <p class="small-text attn19-subtitle">Scale scores, then softmax them into weights.</p>
 
     <div class="attn21-layout">
       <div class="card attn19-stage attn21-stage" id="attn21-stage">
@@ -1508,8 +1494,8 @@ l e a r n ing &lt;/w&gt;</div>
     <span class="section-tag">Attention</span>
     <div class="slide-header">
       <div class="badge concept">Mechanism</div>
-      <h2>Matrix View of Attention</h2>
-      <p class="small-text attn19-subtitle">Stack tokens, project \(X\) into \(Q\), \(K\), and \(V\), compute scores, mask the future, then normalize and mix values</p>
+      <h2>Attention in matrix form</h2>
+      <p class="small-text attn19-subtitle">Stack tokens into matrices, then compute the whole sequence at once.</p>
     </div>
     <div class="slide-body">
     <div class="attn19-layout">
@@ -1577,7 +1563,7 @@ l e a r n ing &lt;/w&gt;</div>
     <div class="slide-header">
       <div class="badge concept">Mechanism</div>
       <h2>Multi-Head Attention</h2>
-      <p class="small-text attn19-subtitle">Run parallel attention heads on different learned projections of \(X\), then combine them back together</p>
+      <p class="small-text attn19-subtitle">Different heads attend in different learned subspaces, then their outputs are recombined.</p>
     </div>
     <div class="slide-body">
     <div class="attn19-layout">
@@ -1652,21 +1638,21 @@ l e a r n ing &lt;/w&gt;</div>
         <div class="hidden-content autostep">
           <div class="callout question">
             <span class="callout-icon">&#10067;</span>
-            <span>Does attention know which word came first? Think back to what we just built.</span>
+            <span>Does attention know which word came first?</span>
           </div>
         </div>
 
         <div class="hidden-content autostep">
           <div class="pos25-answer-card">
-            <div class="pos25-answer-title">No. Same token vectors lead to the same attention comparisons.</div>
-            <div class="pos25-answer-body">Attention compares token vectors by similarity. If the same vectors appear, it makes the same comparisons &#8212; regardless of order. Shuffling the input rows just shuffles the output rows.</div>
+            <div class="pos25-answer-title">No. The same token vectors produce the same comparisons.</div>
+            <div class="pos25-answer-body">Attention compares vectors, not order. If the same vectors reappear, it makes the same comparisons; shuffling the rows just shuffles the outputs.</div>
           </div>
         </div>
 
         <div class="hidden-content autostep">
           <div class="callout warn">
             <span class="callout-icon">&#9888;&#65039;</span>
-            <span>We need to inject position information <em>before</em> attention sees anything. Then the same word in a different slot becomes a different input vector.</span>
+            <span>Add position <em>before</em> attention. Then the same word in a different slot becomes a different input vector.</span>
           </div>
         </div>
 
@@ -1725,7 +1711,7 @@ l e a r n ing &lt;/w&gt;</div>
               <div class="pos26-panel-header">
                 <div class="pos26-step-label">Step 1 · Design Goals</div>
                 <h3 class="pos26-state-title">What should a good position code do?</h3>
-                <p class="pos26-state-lead">Before choosing a formula, set the criteria every candidate will be judged against.</p>
+                <p class="pos26-state-lead">Before choosing a formula, set the criteria every candidate has to satisfy.</p>
               </div>
               <div class="pos26-state-grid">
                 <div class="pos26-copy-card">
@@ -1735,25 +1721,24 @@ l e a r n ing &lt;/w&gt;</div>
                       <span class="pos26-row-badge">1</span>
                       <div class="pos26-row-body">
                         <strong>Unique positions</strong>
-                        <span>Each position should produce a distinct signal, so attention can tell first, fifth, and hundredth apart.</span>
+                        <span>Each slot needs a distinct signal, so attention can tell first, fifth, and hundredth apart.</span>
                       </div>
                     </div>
                     <div class="pos26-teach-row">
                       <span class="pos26-row-badge">2</span>
                       <div class="pos26-row-body">
                         <strong>Stable meaning across lengths</strong>
-                        <span>Position 5 should still mean "position 5" whether the sequence length is 10 or 10,000.</span>
+                        <span>Position 5 should mean the same thing in sequences of length 10 or 10,000.</span>
                       </div>
                     </div>
                     <div class="pos26-teach-row">
                       <span class="pos26-row-badge">3</span>
                       <div class="pos26-row-body">
                         <strong>Smooth local change</strong>
-                        <span>Nearby positions should produce nearby signals so the model sees predictable, learnable transitions.</span>
+                        <span>Nearby positions should produce nearby signals so the model sees smooth, learnable change.</span>
                       </div>
                     </div>
                   </div>
-                  <div class="pos26-footnote">Workshop compression of the broader design criteria discussed in the Hugging Face article.</div>
                 </div>
                 <div class="pos26-visual-card pos26-visual-flow">
                   <div class="pos26-flow-ribbon">
@@ -1772,7 +1757,7 @@ l e a r n ing &lt;/w&gt;</div>
                       <span class="token-pill">another</span>
                       <span class="token-pill reuse">dog</span>
                     </div>
-                    <div class="pos26-token-note">The two <strong>dog</strong> tokens share token identity. Position has to help attention distinguish their roles in the sentence.</div>
+                    <div class="pos26-token-note">Both <strong>dog</strong> tokens share token identity. Position has to distinguish their roles.</div>
                   </div>
                 </div>
               </div>
@@ -1782,7 +1767,7 @@ l e a r n ing &lt;/w&gt;</div>
               <div class="pos26-panel-header">
                 <div class="pos26-step-label">Step 2 · Attempt 1</div>
                 <h3 class="pos26-state-title">Add the raw index</h3>
-                <p class="pos26-state-lead">The obvious idea is to add the token index itself. It is too large, too crude, and sequence-length normalization breaks consistency.</p>
+                <p class="pos26-state-lead">Add the token index itself. It is too large, too crude, and inconsistent once sequence length changes.</p>
               </div>
               <div class="pos26-state-grid">
                 <div class="pos26-copy-card">
@@ -1799,13 +1784,13 @@ l e a r n ing &lt;/w&gt;</div>
                       <span class="pos26-row-badge">B</span>
                       <div class="pos26-row-body">
                         <strong>Same scalar everywhere</strong>
-                        <span>Repeating one number across every dimension does not give attention a rich positional pattern to work with.</span>
+                        <span>Repeating one number across every dimension gives attention almost no positional structure.</span>
                       </div>
                     </div>
                     <div class="pos26-teach-row">
                       <span class="pos26-row-badge">C</span>
                       <div class="pos26-row-body">
-                        <strong>Normalizing by sequence length changes the meaning</strong>
+                        <strong>Normalizing by length changes the meaning</strong>
                         <span>Position 5 becomes 0.5 in a short sequence and 0.0005 in a long one, so the same slot no longer means the same thing.</span>
                       </div>
                     </div>
@@ -1872,15 +1857,15 @@ l e a r n ing &lt;/w&gt;</div>
                     <div class="pos26-teach-row">
                       <span class="pos26-row-badge">B</span>
                       <div class="pos26-row-body">
-                        <strong>Different bit-dimensions change at different rates</strong>
-                        <span>Fast bit-dimensions flip every token; slower ones flip every 2, 4, 8, ... tokens.</span>
+                        <strong>Different bits change at different rates</strong>
+                        <span>Bit 0 flips every token; slower bits flip every 2, 4, 8, ... tokens.</span>
                       </div>
                     </div>
                     <div class="pos26-teach-row">
                       <span class="pos26-row-badge">C</span>
                       <div class="pos26-row-body">
                         <strong>But jumps are still abrupt</strong>
-                        <span>Crossing one boundary can flip several bit-dimensions at once, so nearby positions are not smooth neighbors.</span>
+                        <span>Crossing one boundary can flip several bits at once, so nearby positions are not smooth neighbors.</span>
                       </div>
                     </div>
                   </div>
@@ -1919,7 +1904,7 @@ l e a r n ing &lt;/w&gt;</div>
                       <line x1="16" y1="12" x2="16" y2="68"></line>
                       <polyline points="20,54 48,46 76,50 104,28 132,56 160,20 188,40 204,18"></polyline>
                     </svg>
-                    <div class="pos26-jump-note">Crossing a bit boundary can produce a sharp jump rather than a gentle drift.</div>
+                    <div class="pos26-jump-note">Bit boundaries create jumps instead of gentle drift.</div>
                   </div>
                 </div>
               </div>
@@ -1929,7 +1914,7 @@ l e a r n ing &lt;/w&gt;</div>
               <div class="pos26-panel-header">
                 <div class="pos26-step-label">Step 4 · Fixed Absolute Code</div>
                 <h3 class="pos26-state-title">Sinusoids keep the multiscale pattern, but make it smooth</h3>
-                <p class="pos26-state-lead">This gives us a workable fixed absolute position code: different dimensions change at different rates, but nearby positions stay close.</p>
+                <p class="pos26-state-lead">Different dimensions still change at different rates, but now nearby positions stay close.</p>
               </div>
               <div class="pos26-state-grid">
                 <div class="pos26-copy-card">
@@ -1938,27 +1923,27 @@ l e a r n ing &lt;/w&gt;</div>
                     <div class="pos26-teach-row">
                       <span class="pos26-row-badge">A</span>
                       <div class="pos26-row-body">
-                        <strong>Each wave row is one fixed dimension</strong>
-                        <span>Hold the dimension fixed and move across positions: that dimension traces a sine or cosine curve.</span>
+                        <strong>Each row is one dimension across positions</strong>
+                        <span>Move across positions and that dimension traces a sine or cosine wave.</span>
                       </div>
                     </div>
                     <div class="pos26-teach-row">
                       <span class="pos26-row-badge">B</span>
                       <div class="pos26-row-body">
                         <strong>Different dimensions capture different scales</strong>
-                        <span>Early dimensions oscillate quickly; later ones more slowly, so one position is described at multiple granularities.</span>
+                        <span>Early rows oscillate quickly; later rows change slowly.</span>
                       </div>
                     </div>
                     <div class="pos26-teach-row">
                       <span class="pos26-row-badge">C</span>
                       <div class="pos26-row-body">
-                        <strong>One position embedding is a vertical stack</strong>
-                        <span>Pick one position, read down the rows, and you get that token's sinusoidal position vector; nearby positions give nearby stacks.</span>
+                        <strong>A vertical slice is one position vector</strong>
+                        <span>Read down one column to get one token's sinusoidal position code.</span>
                       </div>
                     </div>
                   </div>
                   <div class="pos26-formula-card">
-                    <div class="pos26-panel-label">light formula cue</div>
+                    <div class="pos26-panel-label">formula cue</div>
                     <div class="pos26-formula-lines">
                       <div>\(PE(pos, 2i) = \sin\!\left(\frac{pos}{10000^{2i/d}}\right)\)</div>
                       <div>\(PE(pos, 2i+1) = \cos\!\left(\frac{pos}{10000^{2i/d}}\right)\)</div>
@@ -2011,7 +1996,7 @@ l e a r n ing &lt;/w&gt;</div>
                       </div>
                     </div>
                   </div>
-                  <div class="pos26-frequency-note">Each row is one embedding dimension across positions. One vertical slice is one fixed absolute position vector.</div>
+                  <div class="pos26-frequency-note">Each row is one dimension; each vertical slice is one position vector.</div>
                 </div>
               </div>
             </section>
@@ -2020,7 +2005,7 @@ l e a r n ing &lt;/w&gt;</div>
               <div class="pos26-panel-header">
                 <div class="pos26-step-label">Step 5 · Absolute vs Relative</div>
                 <h3 class="pos26-state-title">Absolute codes help, but attention often cares about relative offset</h3>
-                <p class="pos26-state-lead">Fixed sin/cos and learned embeddings are both absolute-position approaches. RoPE keeps the sinusoidal frequency idea, but moves positional information into the attention comparison itself.</p>
+                <p class="pos26-state-lead">Fixed sin/cos and learned embeddings both encode absolute slot. RoPE keeps the multiscale idea, but moves position into the attention comparison.</p>
               </div>
               <div class="pos26-state-grid">
                 <div class="pos26-copy-card">
@@ -2036,15 +2021,15 @@ l e a r n ing &lt;/w&gt;</div>
                     <div class="pos26-teach-row">
                       <span class="pos26-row-badge">B</span>
                       <div class="pos26-row-body">
-                        <strong>But semantics often depend on relative offset</strong>
-                        <span>What matters is usually how far one token is from another token of interest, not just its raw slot.</span>
+                        <strong>Meaning often depends on relative offset</strong>
+                        <span>Attention usually cares how far one token is from another, not just the raw slot.</span>
                       </div>
                     </div>
                     <div class="pos26-teach-row">
                       <span class="pos26-row-badge">C</span>
                       <div class="pos26-row-body">
-                        <strong>Attention decisions happen in \(QK^\top\)</strong>
-                        <span>Because dot products depend on angle, some methods let position shape the comparison itself instead of only being added up front.</span>
+                        <strong>Position can shape the score inside \(QK^\top\)</strong>
+                        <span>Dot products depend on angle, so changing the comparison changes attention.</span>
                       </div>
                     </div>
                   </div>
@@ -2098,8 +2083,8 @@ l e a r n ing &lt;/w&gt;</div>
             <section class="pos26-state-panel" data-step="5" aria-hidden="true">
               <div class="pos26-panel-header">
                 <div class="pos26-step-label">Step 6 · RoPE</div>
-                <h3 class="pos26-state-title">RoPE rotates Q and K by absolute position — the dot product gives you the relative offset</h3>
-                <p class="pos26-state-lead">Instead of adding position to the embedding up front, RoPE injects it inside attention by rotating \(Q\) and \(K\) vectors just before the dot product. The absolute rotations cancel algebraically, leaving a score that depends only on \((m-n)\).</p>
+                <h3 class="pos26-state-title">RoPE turns absolute positions into relative attention scores</h3>
+                <p class="pos26-state-lead">RoPE rotates \(Q\) and \(K\) just before the dot product. The algebra cancels the absolute rotations, so the score depends on \((m-n)\).</p>
               </div>
               <div class="pos26-state-grid">
                 <div class="pos26-copy-card">
@@ -2109,21 +2094,21 @@ l e a r n ing &lt;/w&gt;</div>
                       <span class="pos26-row-badge">A</span>
                       <div class="pos26-row-body">
                         <strong>Position enters during attention, not before it</strong>
-                        <span>Sin/cos adds a position vector to the token embedding before any attention happens. RoPE skips that step and rotates \(Q\) and \(K\) directly, pair by pair, just before the dot product.</span>
+                        <span>Instead of adding a position vector to the embedding, RoPE rotates \(Q\) and \(K\) just before scoring.</span>
                       </div>
                     </div>
                     <div class="pos26-teach-row">
                       <span class="pos26-row-badge">B</span>
                       <div class="pos26-row-body">
-                        <strong>Each 2D pair gets rotated by its token's absolute position</strong>
-                        <span>Split \(Q\) and \(K\) into \(d/2\) pairs of two dimensions. Pair \(i\) at position \(m\) rotates by \(m\theta_i\); the matching key pair at position \(n\) rotates by \(n\theta_i\). The frequency ladder \(\theta_i = \mathrm{base}^{-2i/d}\) is the same exponential ladder sinusoidal PE uses.</span>
+                        <strong>Each 2D pair rotates by \(m\theta_i\) or \(n\theta_i\)</strong>
+                        <span>The same multiscale frequency ladder from sinusoidal PE sets the angle for each pair.</span>
                       </div>
                     </div>
                     <div class="pos26-teach-row">
                       <span class="pos26-row-badge">C</span>
                       <div class="pos26-row-body">
-                        <strong>The dot product collapses absolute rotations into a relative offset</strong>
-                        <span>When rotated \(Q\) and \(K\) meet in \(QK^\top\), the algebra gives \((R_m q)^\top (R_n k) = q^\top R_{m-n} k\). Tokens 5 apart always produce the same score, wherever they sit in the sequence.</span>
+                        <strong>The dot product converts absolute rotation into relative gap</strong>
+                        <span>\((R_m q)^\top (R_n k) = q^\top R_{m-n} k\), so tokens 5 apart get the same score wherever they appear.</span>
                       </div>
                     </div>
                   </div>
@@ -2148,13 +2133,13 @@ l e a r n ing &lt;/w&gt;</div>
                         <text class="pos26-rope-svg-label pos26-rope-k-label" x="138" y="40">K</text>
                         <text class="pos26-rope-svg-label pos26-rope-arc-label" x="130" y="22">(m&#x2212;n)&#x3B8;</text>
                       </svg>
-                      <div class="pos26-rope-angle-note">The angle between \(Q\) and \(K\) equals the relative offset \((m-n)\theta_i\). Score = angle between the two vectors.</div>
+                      <div class="pos26-rope-angle-note">The angle between \(Q\) and \(K\) now encodes the relative offset \((m-n)\theta_i\).</div>
                     </div>
                     <div class="pos26-rope-stage">
                       <div class="pos26-panel-label">2. the dot product makes absolute rotation disappear</div>
                       <div class="pos26-rope-compare">
                         <div class="pos26-rope-score-formula">\((R_m q)^\top (R_n k) \;=\; q^\top R_{m-n}\, k\)</div>
-                        <div class="pos26-rope-score-note">Absolute positions \(m\) and \(n\) cancel. Same relative gap \((m-n)\) always gives the same attention score, no matter where in the sequence the tokens appear.</div>
+                        <div class="pos26-rope-score-note">Absolute slots \(m\) and \(n\) cancel. The same gap \((m-n)\) gives the same attention score anywhere in the sequence.</div>
                       </div>
                     </div>
                   </div>
@@ -2177,7 +2162,7 @@ l e a r n ing &lt;/w&gt;</div>
     <div class="slide-header">
       <div class="badge concept">Mechanism</div>
       <h2>Attention Mixes, FFN Transforms</h2>
-      <p class="small-text">Attention mixes information across tokens. The FFN then transforms each token&#8217;s representation independently.</p>
+      <p class="small-text">Attention shares information across tokens. The FFN then updates each token independently.</p>
     </div>
     <div class="slide-body">
     <div class="story-layout">
@@ -2200,16 +2185,16 @@ l e a r n ing &lt;/w&gt;</div>
         <div class="hidden-content autostep">
           <div class="callout question">
             <span class="callout-icon">&#10067;</span>
-            <span>Why can&#8217;t attention do everything?</span>
+            <span>Why do we need an FFN after attention?</span>
           </div>
           <div class="ffn27-analogy-card">
-            <p>Attention is like a <strong>group discussion</strong> &#8212; everyone shares information. But after the discussion, each person needs time alone to <em>think about what they heard</em> and update their own understanding. That&#8217;s the FFN.</p>
+            <p>Attention is the <strong>group discussion</strong>: tokens share information. The FFN is the private reflection afterward: each token updates its own representation.</p>
           </div>
         </div>
 
         <div class="hidden-content autostep">
           <div class="ffn27-flow-section">
-            <div class="ffn27-flow-title">The mechanism: expand, activate, contract</div>
+            <div class="ffn27-flow-title">Per token: expand, activate, contract</div>
             <div class="ffn27-flow">
               <div class="ffn27-flow-box ffn27-flow-input">
                 <div class="ffn27-flow-label">token row</div>
@@ -2237,21 +2222,21 @@ l e a r n ing &lt;/w&gt;</div>
               </div>
             </div>
             <div class="ffn27-flow-formula">\(\mathrm{FFN}(h_i) = W_2\,\mathrm{GELU}(W_1 h_i + b_1) + b_2\)</div>
-            <div class="ffn27-flow-note">Same small network runs independently on every token position. Same weights, different inputs.</div>
+            <div class="ffn27-flow-note">The same small network runs at every position: shared weights, different token inputs.</div>
           </div>
         </div>
 
         <div class="hidden-content autostep">
           <div class="callout success">
             <span class="callout-icon">&#9989;</span>
-            <span>Interpretability research (Geva et al., 2021) suggests FFN neurons act as <strong>memory cells</strong> &#8212; each fires for specific patterns the model has learned. The 4&times; expansion gives the model more patterns to detect.</span>
+            <span>Interpretability work (Geva et al., 2021) suggests FFN neurons can act like <strong>memory cells</strong>. The 4&times; expansion gives the model more pattern detectors.</span>
           </div>
         </div>
 
       </div>
     </div>
 
-    <div class="story-takeaway" id="ffn27-takeaway">Attention mixes information across tokens. The FFN then transforms each token&#8217;s representation independently.</div>
+    <div class="story-takeaway" id="ffn27-takeaway">Attention shares information across tokens. The FFN then updates each token independently.</div>
     </div>
   </div>
 
@@ -2260,13 +2245,15 @@ l e a r n ing &lt;/w&gt;</div>
        ═══════════════════════════════════════════════════════════════ -->
   <div class="slide" id="slide-28">
     <span class="section-tag">Transformer Block</span>
-    <div class="badge concept">Synthesis</div>
-    <h2>The Block &#8212; Now You Know What&#8217;s Inside</h2>
-    <p class="small-text">You saw this diagram on slide 3. Let&#8217;s walk through it again &#8212; this time you know what every box does.</p>
+    <div class="slide-header">
+      <div class="badge concept">Synthesis</div>
+      <h2>One Transformer Block, Revisited</h2>
+      <p class="small-text">Same diagram as slide 3. This time, every box has a job.</p>
+    </div>
 
+    <div class="slide-body">
     <div class="block28-layout">
       <div class="block28-diagram">
-        <div class="block28-recall-tag">same diagram as slide 3</div>
         <div class="block-detail-panel block28-detail-panel">
           <div class="arch-stack block28-arch">
             <span class="arch-label block28-io-label">Block Output \(R^{(\ell+1)}\)</span>
@@ -2303,24 +2290,28 @@ l e a r n ing &lt;/w&gt;</div>
       </div>
 
       <div class="block28-panel">
+        <div class="block28-orient-card">
+          <div class="block28-note-head">Read One Block Bottom To Top</div>
+          <div class="block28-note-body">LayerNorm &#8594; attention &#8594; residual add &#8594; LayerNorm &#8594; FFN &#8594; residual add. Both sublayers write into the same residual stream.</div>
+        </div>
         <div class="block28-note block28-note-ln">
           <div class="block28-note-head">LayerNorm</div>
-          <div class="block28-note-body">Each row of the residual stream may have a very different scale. LN normalizes every row independently before the sublayer sees it.</div>
+          <div class="block28-note-body">LN normalizes each row before the sublayer reads it.</div>
         </div>
         <div class="block28-note block28-note-attn">
           <div class="block28-note-head">Multi-Head Attention</div>
-          <div class="block28-note-body">Token-to-token mixing. Each token attends to all earlier tokens and gathers relevant context.</div>
+          <div class="block28-note-body">Attention mixes information across earlier tokens and writes a context update.</div>
         </div>
         <div class="block28-note block28-note-add">
           <div class="block28-note-head">Residual Add (+)</div>
-          <div class="block28-note-body">Attention computes a small update \(\Delta_{\mathrm{attn}}\) and adds it back. The stream persists &#8212; neither sublayer rewrites it.</div>
+          <div class="block28-note-body">Residual add writes the attention update back into the same stream.</div>
         </div>
         <div class="block28-note block28-note-ffn">
           <div class="block28-note-head">Feed-Forward Network</div>
-          <div class="block28-note-body">Token-local computation. The same two-layer MLP computes a row-wise update independently for every token&#8217;s updated row.</div>
+          <div class="block28-note-body">The same two-layer MLP updates each row independently.</div>
         </div>
         <div class="block28-note block28-note-eq">
-          <div class="block28-note-head">Compact form</div>
+          <div class="block28-note-head">Two update equations</div>
           <div class="block28-equations">
             <div class="block28-equation">\(R_{\mathrm{mid}} = R^{(\ell)} + \mathrm{MHA}(\mathrm{LN}(R^{(\ell)}))\)</div>
             <div class="block28-equation">\(R^{(\ell+1)} = R_{\mathrm{mid}} + \mathrm{FFN}(\mathrm{LN}(R_{\mathrm{mid}}))\)</div>
@@ -2332,19 +2323,23 @@ l e a r n ing &lt;/w&gt;</div>
     <div class="hidden-content autostep">
       <div class="callout success" style="margin-top:0.8rem;">
         <span class="callout-icon">&#9989;</span>
-        <span>You now understand every component of one Transformer block. Next: stack it \(L\) times to build the full model.</span>
+        <span>You now know one full Transformer block. Next: stack the same block layer after layer.</span>
       </div>
     </div>
 
-    <div class="block28-takeaway" id="block28-takeaway">Attention and FFN both write updates into a shared residual stream &#8212; neither one replaces it.</div>
+    <div class="block28-takeaway" id="block28-takeaway">Attention and FFN both write updates into one shared residual stream.</div>
+    </div>
   </div>
 
   <div class="slide" id="slide-31">
     <span class="section-tag">Model Depth</span>
-    <div class="badge concept">Concept</div>
-    <h2>Stack the Transformer Block \(L\) Times</h2>
-    <p class="small-text">The same Transformer block repeats \(L\) times. The shape stays \(S \times d_{\mathrm{model}}\) throughout &#8212; the representation gets richer with each pass.</p>
+    <div class="slide-header">
+      <div class="badge concept">Concept</div>
+      <h2>Same Block, More Depth</h2>
+      <p class="small-text">The block repeats \(L\) times. The shape stays \(S \times d_{\mathrm{model}}\); each pass refines the residual stream again.</p>
+    </div>
 
+    <div class="slide-body">
     <div class="stack31-layout">
       <div class="stack31-chain">
         <div class="arch-stack stack31-arch-stack">
@@ -2369,32 +2364,39 @@ l e a r n ing &lt;/w&gt;</div>
       </div>
 
       <div class="stack31-notes">
+        <div class="stack31-overview-card">
+          <div class="stack31-overview-head">What depth means</div>
+          <div class="stack31-overview-body">Each layer runs the same transformer block again. The sequence shape stays fixed; the representation gets more refined.</div>
+        </div>
         <div class="hidden-content autostep stack31-depth-reveal">
           <div class="stack31-note-strip">
-            <div class="stack31-note-row"><span class="hl">One block = one refinement round</span> &#8212; each block reads the current residual stream, runs attention and FFN, and writes an update back into that stream.</div>
-            <div class="stack31-note-row"><span class="hl-purple">The next block starts from the improved stream</span> &#8212; later blocks do not start over; they continue from the richer representation built by earlier ones.</div>
-            <div class="stack31-note-row"><span class="hl-green">Depth buys multiple rounds of computation</span> &#8212; stacking blocks lets the model combine and refine information progressively instead of forcing one pass to do everything.</div>
-            <div class="tiny mt-2">Conceptual view &#8212; depth means repeated refinement, not fixed 'early/middle/late' jobs.</div>
+            <div class="stack31-note-row"><span class="hl">One block = one refinement round</span> &#8212; attention and FFN read the current stream and write back an update.</div>
+            <div class="stack31-note-row"><span class="hl-purple">The next block starts from the improved stream</span> &#8212; later layers continue from what earlier layers already built.</div>
+            <div class="stack31-note-row"><span class="hl-green">Depth buys repeated computation</span> &#8212; the model gets multiple chances to combine and refine information.</div>
           </div>
         </div>
         <div class="hidden-content autostep stack31-scale-reveal">
           <div class="callout info">
             <span class="icon">&#x1F4D6;</span>
-            <span>GPT-2 small: <strong>L = 12</strong>. GPT-3: <strong>L = 96</strong>. Same Transformer block &#8212; more rounds of refinement.</span>
+            <span>GPT-2 small uses <strong>12</strong> layers. GPT-3 uses <strong>96</strong>. Same block, more refinement rounds.</span>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="block28-takeaway">The stack refines meaning without changing the sequence shape.</div>
+    <div class="block28-takeaway">Depth keeps the same sequence shape and refines meaning layer by layer.</div>
+    </div>
   </div>
 
   <div class="slide" id="slide-32">
     <span class="section-tag">Output &amp; Generation</span>
-    <div class="badge concept">Mechanism</div>
-    <h2>Predict One Token, Append, Repeat</h2>
-    <p class="small-text">After \(L\) blocks: one linear projection scores the vocabulary. Pick a token, append it, run again.</p>
+    <div class="slide-header">
+      <div class="badge concept">Mechanism</div>
+      <h2>Predict One Token, Append, Repeat</h2>
+      <p class="small-text">Take the last hidden state, score the vocabulary, choose one token, append it, and run again.</p>
+    </div>
 
+    <div class="slide-body">
     <div class="pred32-layout">
       <div class="card pred32-stage" id="pred32-stage">
         <div class="pred32-loop-flow">
@@ -2407,29 +2409,36 @@ l e a r n ing &lt;/w&gt;</div>
       </div>
     </div>
 
-    <div class="block28-takeaway" id="pred32-takeaway">One forward pass, one token. The model never generates more than one token at a time.</div>
+    <div class="block28-takeaway" id="pred32-takeaway">One full forward pass predicts one next token.</div>
+    </div>
   </div>
 
   <div class="slide" id="slide-33">
     <span class="section-tag">Synthesis</span>
-    <div class="badge concept">Closing</div>
-    <h2>You Now Know the Transformer</h2>
+    <div class="slide-header">
+      <div class="badge concept">Closing</div>
+      <h2>You Now Know the Transformer</h2>
+      <p class="small-text">This is the full loop you just unpacked.</p>
+    </div>
 
+    <div class="slide-body">
     <div class="close33-layout">
       <div class="close33-pipeline-wrap">
         <div class="close33-pipeline" id="close33-pipeline"></div>
         <div class="close33-loop-label">&#x21A9; autoregressive loop &#8212; append &amp; repeat</div>
+        <div class="close33-summary-band">Tokenize &#8594; Represent &#8594; Understand &#215; L &#8594; Predict &#8594; append &amp; repeat.</div>
       </div>
       <div class="close33-bottom" id="close33-bottom">
         <div class="close33-insights" id="close33-insights"></div>
         <div class="callout success">
           <span class="icon">&#x2713;</span>
-          <span>From tokens to meaning to prediction &#8212; this is the Transformer.</span>
+          <span>From tokens to meaning to prediction, this is the transformer loop.</span>
         </div>
       </div>
     </div>
 
-    <div class="block28-takeaway" id="close33-takeaway">Every LLM runs this same pipeline. You now know every box.</div>
+    <div class="block28-takeaway" id="close33-takeaway">Tokenize &#8594; Represent &#8594; Understand &#215; L &#8594; Predict &#8594; Repeat.</div>
+    </div>
   </div>
 
 </div>

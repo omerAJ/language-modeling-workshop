@@ -7,12 +7,12 @@ const BLOCK28_CLASSES = [
   'block28-show-eq'
 ];
 const BLOCK28_TAKEAWAYS = [
-  'Attention and FFN both write updates into a shared residual stream \u2014 neither one replaces it.',
-  'LayerNorm normalizes every row independently before the sublayer sees it.',
-  'Multi-head attention gathers context across tokens and produces a small update \\(\\Delta_{\\mathrm{attn}}\\).',
-  'The residual add (+) writes that update back into the stream. The original information is preserved.',
-  'The FFN transforms each row independently, then a second residual add writes \\(\\Delta_{\\mathrm{ffn}}\\).',
-  '\\(R_{\\mathrm{mid}} = R^{(\\ell)} + \\mathrm{MHA}(\\mathrm{LN}(R^{(\\ell)}))\\) &nbsp; \\(R^{(\\ell+1)} = R_{\\mathrm{mid}} + \\mathrm{FFN}(\\mathrm{LN}(R_{\\mathrm{mid}}))\\)'
+  'One block = LayerNorm, attention, residual add, LayerNorm, FFN, residual add.',
+  'LayerNorm normalizes each row before a sublayer reads it.',
+  'Attention mixes across tokens and writes a context update.',
+  'Residual add writes that update back into the same stream.',
+  'The FFN updates each row independently, then writes its own residual update.',
+  'A transformer block is just two update rules: attention writes once, then the FFN writes again.'
 ];
 
 function setGptBlockStep(step) {

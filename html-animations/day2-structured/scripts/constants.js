@@ -406,14 +406,14 @@ const ATTN_P1_MEANINGS = { q: 'what I need', k: 'what I offer', v: 'what I pass 
 const ATTN_P1_MAX_STEP = 8;
 
 const ATTN_P1_TAKEAWAYS = [
-  'Embeddings are static \u2014 attention projects them into new roles',
-  '\\(x_{\\mathrm{sat}}\\) is the static embedding for \\(\\mathrm{sat}\\) from the previous layer.',
-  'Broadcast the same \\(x_{\\mathrm{sat}}\\) into three branch copies.',
-  'Apply the query projection matrix \\(W_Q\\), giving \\(q_{\\mathrm{sat}} = x_{\\mathrm{sat}} W_Q\\).',
+  'Attention turns each token state into three role-specific versions.',
+  'Start from the current token state for \\(\\mathrm{sat}\\): \\(x_{\\mathrm{sat}}\\).',
+  'Copy \\(x_{\\mathrm{sat}}\\) into three branches: one each for Q, K, and V.',
+  'Apply the query matrix \\(W_Q\\) to get \\(q_{\\mathrm{sat}} = x_{\\mathrm{sat}} W_Q\\).',
   'Query \\(q_{\\mathrm{sat}}\\): what information does \\(\\mathrm{sat}\\) need?',
-  'Apply the key projection matrix \\(W_K\\), giving \\(k_{\\mathrm{sat}} = x_{\\mathrm{sat}} W_K\\).',
+  'Apply the key matrix \\(W_K\\) to get \\(k_{\\mathrm{sat}} = x_{\\mathrm{sat}} W_K\\).',
   'Key \\(k_{\\mathrm{sat}}\\): what does \\(\\mathrm{sat}\\) offer to other tokens?',
-  'Apply the value projection matrix \\(W_V\\), giving \\(v_{\\mathrm{sat}} = x_{\\mathrm{sat}} W_V\\).',
+  'Apply the value matrix \\(W_V\\) to get \\(v_{\\mathrm{sat}} = x_{\\mathrm{sat}} W_V\\).',
   'Next: use \\(q_{\\mathrm{sat}}\\) to score every \\(k_j\\), producing \\(s_j = q_{\\mathrm{sat}}^{\\mathsf{T}} k_j\\).'
 ];
 

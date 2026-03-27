@@ -38,6 +38,31 @@
     border: 1px solid var(--border);
     border-radius: var(--radius-md);
     padding: var(--sp-3) var(--sp-4);
+    display: flex;
+    flex-direction: column;
+    gap: 0.32rem;
+  }
+  .drama-line {
+    color: var(--text);
+  }
+  .drama-lead {
+    color: var(--text-dim);
+  }
+  .drama-clue {
+    padding-left: 0.6rem;
+    border-left: 2px solid rgba(108, 140, 255, 0.35);
+  }
+  .drama-question {
+    margin-top: 0.16rem;
+    color: var(--text-bright);
+  }
+  .drama-time {
+    color: var(--yellow);
+    font-weight: 700;
+  }
+  .drama-name {
+    color: var(--cyan);
+    font-weight: 700;
   }
   .drama-choices {
     display: flex;
@@ -78,6 +103,7 @@
     font-size: var(--fs-xs);
     line-height: 1.42;
     padding: 0.56rem 0.72rem;
+    gap: 0.22rem;
   }
 
   #slide-23 .drama-choices {

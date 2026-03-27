@@ -61,9 +61,9 @@
     position: relative;
     display: flex;
     justify-content: center;
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(0.24rem);
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
     transition: opacity 0.22s ease, transform 0.22s ease, visibility 0.22s ease;
 
 }
@@ -271,13 +271,6 @@
 }
 
 .slide.attn18-show-vectors .attn18-vector-wrap {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0);
-
-}
-
-.slide.attn18-show-vectors .attn18-chip-wrap {
     opacity: 1;
     visibility: visible;
     transform: translateY(0);
@@ -851,6 +844,10 @@
 
 }
 
+.attn19-takeaway mjx-container {
+    margin-inline: 0.16em;
+}
+
 .slide.attn19-show-k .attn19-row-label.k {
     opacity: 1;
 
@@ -925,9 +922,9 @@
 .attn19p1-cols {
     width: min(100%, 36rem);
     margin-inline: auto;
-    opacity: 0;
-    visibility: hidden;
-    transform: translateY(0.18rem);
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
     transition: opacity 0.22s ease, transform 0.22s ease, visibility 0.22s ease;
 
 }
@@ -1475,6 +1472,10 @@
 
 }
 
+.attn19p1-takeaway mjx-container {
+    margin-inline: 0.16em;
+}
+
 .attn19-score-caption {
     font-family: 'JetBrains Mono', monospace;
     font-size: var(--fs-2xs);
@@ -1896,6 +1897,10 @@
     line-height: 1.45;
     width: min(100%, 56rem);
 
+}
+
+.attn21-takeaway mjx-container {
+    margin-inline: 0.16em;
 }
 
 @keyframes attn21-weight-sweep {

@@ -36,7 +36,7 @@ function revealDramaAnswer() {
   if (result) {
     result.className = 'callout success';
     result.style.maxWidth = '';
-    result.innerHTML = '<span class="icon">✓</span><span>Best next-token continuation: <strong>Rukhsana thi</strong>, based on timing + access constraints.</span>';
+    result.innerHTML = '<span class="icon">✓</span><span>Best next-token continuation here: <strong>Rukhsana</strong>, based on timing + access constraints.</span>';
   }
 }
 
@@ -53,7 +53,7 @@ function chooseDramaSuspect(choice, btn) {
     result.style.maxWidth = '';
     result.innerHTML = isCorrect
       ? '<span class="icon">✓</span><span>Consistent choice. Timing and pantry-access constraints point to <strong>Rukhsana</strong>.</span>'
-      : '<span class="icon">!</span><span>This choice conflicts with the timeline/access clues. Re-check who could act between 10:20 and 10:30.</span>';
+      : '<span class="icon">!</span><span>This choice conflicts with the clue chain. Re-check who could act between 10:20 and 10:30.</span>';
   }
 
   if (choice === 'Rukhsana') {

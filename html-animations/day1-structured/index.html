@@ -48,17 +48,17 @@
 <div class="slide" id="slide-1">
   <span class="section-tag">Setup</span>
   <div class="badge day1">Objectives</div>
-  <h2>By the end, you should understand:</h2>
+  <h2>What you should leave with</h2>
   <div class="spacer-sm"></div>
   <ul class="obj-list">
-    <li data-num="1">What an LLM <span class="hl">computes at runtime</span> — tokens in, probability distribution out</li>
-    <li data-num="2">How a simple objective like <span class="hl-green">next-token prediction</span> can create complex capabilities</li>
-    <li data-num="3">What <span class="hl-purple">"training an LLM"</span> concretely means: <span class="hl-cyan">data</span> → <span class="hl">train</span> → <span class="hl-orange">align</span> → <span class="hl-green">eval</span></li>
-    <li data-num="4">How <span class="hl-cyan">raw text becomes the data that shapes models</span> — collection, cleaning, deduplication, filtering, and annotation</li>
+    <li data-num="1">What an LLM <span class="hl">computes at runtime</span>: tokens in, probabilities out</li>
+    <li data-num="2">Why <span class="hl-green">next-token prediction</span> can produce complex behavior</li>
+    <li data-num="3">What <span class="hl-purple">training an LLM</span> concretely means: <span class="hl-cyan">data</span> → <span class="hl">train</span> → <span class="hl-orange">align</span> → <span class="hl-green">eval</span></li>
+    <li data-num="4">How <span class="hl-cyan">raw text becomes training data</span> through cleaning, filtering, and annotation</li>
   </ul>
   <div class="speaker-notes">
     <button class="notes-toggle">speaker notes</button>
-    <div class="notes-body"><p>These four objectives are what we want every participant to walk away with. They don't need to implement a transformer — just hold the correct mental model.</p></div>
+    <div class="notes-body"><p>These are the four takeaways for the day: runtime computation, the learning objective, the training pipeline, and how raw text gets turned into model-shaping data. They do not need implementation detail yet — just the right mental model.</p></div>
   </div>
 </div>
 
@@ -66,7 +66,8 @@
 <div class="slide" id="slide-3">
   <span class="section-tag">Setup</span>
   <div class="badge discussion">Audience Prompt</div>
-  <h2>What makes an LLM work</h2>
+  <h2>What three ingredients make an LLM work?</h2>
+  <p class="small-text">If you built one from scratch, you would need data, an architecture, and a learning signal.</p>
   <div class="spacer-sm"></div>
 
   <div class="grid-3" id="ingredientsGrid">
@@ -80,7 +81,7 @@
       </div>
       <div id="ingredient1Revealed" style="display:none;">
         <h3 style="color:var(--cyan);">Data</h3>
-        <p class="small-text">Raw corpus, trillions of tokens, filtered and curated for quality.</p>
+        <p class="small-text">Curated text that teaches the model what patterns exist.</p>
       </div>
     </div>
 
@@ -94,7 +95,7 @@
       </div>
       <div id="ingredient2Revealed" style="display:none;">
         <h3 style="color:var(--accent);">Architecture</h3>
-        <p class="small-text">Transformer with self-attention, billions of tunable parameters.</p>
+        <p class="small-text">Transformer blocks that turn context into next-token scores.</p>
       </div>
     </div>
 
@@ -107,8 +108,8 @@
         <button class="reveal-btn" data-ingredient="3" style="margin-top:0.75rem;">Reveal</button>
       </div>
       <div id="ingredient3Revealed" style="display:none;">
-        <h3 style="color:var(--purple);">Learning Dynamics</h3>
-        <p class="small-text">Next-token prediction objective, gradient-based optimization at scale.</p>
+        <h3 style="color:var(--purple);">Learning Signal</h3>
+        <p class="small-text">Next-token loss plus gradient updates that change the weights.</p>
       </div>
     </div>
   </div>
@@ -117,8 +118,8 @@
     <button class="notes-toggle">speaker notes</button>
     <div class="notes-body">
       <p>
-        Ask: “When people say data, architecture, or learning — what do they actually mean?”
-        Reveal each ingredient, then pause on its decomposition before moving on.
+        Ask: “If we built an LLM from scratch, what would we actually need?”
+        Reveal the three ingredients, then use the third one to bridge into objective, loss, and updates.
       </p>
     </div>
   </div>
@@ -143,28 +144,24 @@
         </li>
         <li class="small-text" style="padding:0.3rem 0 0.3rem 1.25rem; position:relative;">
           <span style="position:absolute;left:0;color:var(--accent);">→</span>
-          Next-token prediction objective
+          Next-token prediction
         </li>
         <li class="small-text" style="padding:0.3rem 0 0.3rem 1.25rem; position:relative;">
           <span style="position:absolute;left:0;color:var(--accent);">→</span>
-          Loss → gradients → parameter updates
+          Loss → gradients → updates
         </li>
         <li class="small-text" style="padding:0.3rem 0 0.3rem 1.25rem; position:relative;">
           <span style="position:absolute;left:0;color:var(--accent);">→</span>
-          Why next-token prediction works
+          Why this objective works
         </li>
         <li class="small-text" style="padding:0.3rem 0 0.3rem 1.25rem; position:relative;">
           <span style="position:absolute;left:0;color:var(--accent);">→</span>
-          From one update to a full training pipeline
-        </li>
-        <li class="small-text" style="padding:0.3rem 0 0.3rem 1.25rem; position:relative;">
-          <span style="position:absolute;left:0;color:var(--accent);">→</span>
-          Data work: collection → filtering → annotation
+          Data, scale, and alignment
         </li>
       </ul>
       <div class="callout info" style="margin-top:0.875rem;">
         <span class="icon">i</span>
-        <span>Treat the model as a <strong>system being shaped.</strong></span>
+        <span>Today: treat the model as a <strong>system being shaped.</strong></span>
       </div>
     </div>
 
@@ -179,7 +176,7 @@
         </li>
         <li class="small-text" style="padding:0.3rem 0 0.3rem 1.25rem; position:relative;">
           <span style="position:absolute;left:0;color:var(--purple);">→</span>
-          Self-attention mechanics
+          Self-attention
         </li>
         <li class="small-text" style="padding:0.3rem 0 0.3rem 1.25rem; position:relative;">
           <span style="position:absolute;left:0;color:var(--purple);">→</span>
@@ -189,14 +186,10 @@
           <span style="position:absolute;left:0;color:var(--purple);">→</span>
           Full forward pass end-to-end
         </li>
-        <li class="small-text" style="padding:0.3rem 0 0.3rem 1.25rem; position:relative;">
-          <span style="position:absolute;left:0;color:var(--purple);">→</span>
-          Connecting mechanics to behavior
-        </li>
       </ul>
       <div class="callout info" style="margin-top:0.875rem;">
         <span class="icon">i</span>
-        <span>Treat it as a <strong>machine executing computation.</strong></span>
+        <span>Tomorrow: treat it as a <strong>machine executing computation.</strong></span>
       </div>
     </div>
   </div>
@@ -209,7 +202,7 @@
       <p>
         “You’ve already seen inference: context goes in, a next-token distribution comes out.
         But that behavior only exists because of how the weights were trained.
-        Today is the causal story. Tomorrow we zoom all the way into the computation.”
+        Today is the shaping story. Tomorrow we zoom into the computation.”
       </p>
     </div>
   </div>
@@ -224,8 +217,8 @@
 
   <p class="small-text">
     At use time, the model runs a fixed computation.
-    The input text is tokenized once. After that, the model repeatedly predicts the next token,
-    which is decoded for display and appended to the context.
+    The input text is tokenized once. After that, the model repeats the same loop:
+    score next tokens, choose one, decode it, append it, and continue.
   </p>
 
   <div class="spacer"></div>
@@ -233,6 +226,7 @@
   <div class="card" style="margin: 0 auto;">
 
     <!-- ONE-TIME SETUP -->
+    <div class="tiny" style="text-align:center; letter-spacing:0.06em; text-transform:uppercase; margin-bottom:0.25rem;">One-time setup</div>
     <div class="flow" style="margin-bottom:0.625rem;">
       <div class="flow-box data">Text<br>input</div>
       <div class="flow-arrow">→</div>
@@ -242,6 +236,7 @@
     </div>
 
     <!-- REPEATED LOOP -->
+    <div class="tiny" style="text-align:center; letter-spacing:0.06em; text-transform:uppercase; margin-bottom:0.25rem;">Repeat for each new token</div>
     <div class="flow">
       <div class="flow-box data">Context<br>tokens</div>
       <div class="flow-arrow loop-arrow-anim">→</div>
@@ -259,7 +254,7 @@
       <div class="flow-box pink">Softmax</div>
       <div class="flow-arrow loop-arrow-anim">→</div>
 
-      <div class="flow-box green">Sample<br>next token</div>
+      <div class="flow-box green">Choose<br>next token</div>
       <div class="flow-arrow loop-arrow-anim">→</div>
 
       <div class="flow-box purple">
@@ -282,11 +277,11 @@
     <span class="tok input">of</span>
     <span class="tok input">Pakistan</span>
     <span class="tok input">is</span>
-    <span class="tok blank" id="infCurrent" >click</span>
+    <span class="tok blank" id="infCurrent" >next?</span>
   </div>
 
   <p class="tiny" id="infHint">
-    Click the blank to simulate one inference step
+    Click the blank to generate the next token
   </p>
 
   <div class="speaker-notes">
@@ -313,8 +308,8 @@
   <h2>The training (learning) loop</h2>
 
   <p class="small-text">
-    Training uses the <strong>same forward pass</strong> as inference — but adds a teacher.
-    The error flows <em>backward</em> through the network, reshaping it one batch at a time.
+    Training starts with the <strong>same forward pass</strong> as inference,
+    then adds ground truth, loss, backpropagation, and a weight update.
   </p>
 
   <div class="spacer-sm"></div>
@@ -322,7 +317,7 @@
   <!-- Step controls -->
   <div style="display:flex; gap:0.375rem; justify-content:center; flex-wrap:wrap; margin-bottom:0.875rem;">
     <button class="reveal-btn" data-train-phase="1" id="trainBtn1">1 · Forward</button>
-    <button class="reveal-btn" data-train-phase="2" id="trainBtn2">2 · Teacher</button>
+    <button class="reveal-btn" data-train-phase="2" id="trainBtn2">2 · Compare</button>
     <button class="reveal-btn" data-train-phase="3" id="trainBtn3">3 · Loss</button>
     <button class="reveal-btn" data-train-phase="4" id="trainBtn4">4 · Backprop</button>
     <button class="reveal-btn" data-train-phase="5" id="trainBtn5">5 · Update</button>
@@ -424,18 +419,18 @@
 <div class="slide" id="slide-7">
   <span class="section-tag">Training Objective</span>
   <div class="badge concept">Objective</div>
-  <h2>The training objective</h2>
+  <h2>Teacher forcing: shift the sequence by one token</h2>
 
   <p class="small-text">
-    Objective: make the model assign high probability to the training text.
-    With a causal language model, this factorizes into next-token prediction at every position.
+    One training sequence becomes many prediction problems:
+    each prefix is used to predict the token that comes next.
   </p>
 
   <div class="spacer-sm"></div>
 
   <div class="card">
     <p class="small-text" style="margin-bottom:0.625rem;">
-      Given a token sequence <span class="hl">\(x_1, x_2, \ldots, x_T\)</span>, training uses <span class="hl-yellow">teacher forcing</span>:
+      Given a token sequence <span class="hl">\(x_1, x_2, \ldots, x_T\)</span>, <span class="hl-yellow">teacher forcing</span> shifts it by one position:
     </p>
 
     <div class="grid-2" style="gap:0.875rem;">
@@ -461,24 +456,17 @@
     </div>
 
     <p class="tiny" style="margin-top:0.625rem;">
-      At each position \(t\), the model outputs \(P_{\theta}(\,\cdot \mid x_{\le t})\) and is scored on the true next token \(x_{t+1}\).
+      At position \(t\), the model sees \(x_{\le t}\) and is scored on the true next token \(x_{t+1}\).
     </p>
   </div>
 
   <div class="spacer-sm"></div>
 
-  <div class="callout info">
+  <div class="callout info" style="margin-bottom:0.625rem;">
     <span class="icon">→</span>
     <span>
-      <strong>Maximize likelihood:</strong>
-      maximize the average log-probability the model assigns to the true next token.
+      <strong>Training objective:</strong> assign high probability to the true next token at every position in the sequence.
     </span>
-  </div>
-
-  <div class="math math-big">
-    \[
-      \max_{\theta}\;\; \frac{1}{T-1}\sum_{t=1}^{T-1}\log P_{\theta}(x_{t+1}\mid x_{\le t})
-    \]
   </div>
 </div>
 
@@ -489,7 +477,7 @@
   <h2>The equivalent loss function</h2>
 
   <p class="small-text">
-    Minimizing negative log-likelihood is the same objective, written as a loss (cross-entropy).
+    Same objective, written as a loss: negative log-likelihood, or cross-entropy.
   </p>
 
   <div class="spacer-sm"></div>
@@ -510,8 +498,8 @@
   <div class="callout warn">
     <span class="icon">!</span>
     <span>
-      <strong>Key insight:</strong> this is <span class="hl-orange">distribution matching</span>, not decision-making —
-      it reshapes probabilities to fit observed text, without any explicit notion of truth or goals.
+      <strong>Key insight:</strong> this is <span class="hl-orange">distribution matching</span>, not decision-making.
+      The model is pushed to fit observed text, not to pursue truth or goals.
     </span>
   </div>
 
@@ -530,36 +518,34 @@
 <div class="slide" id="slide-8">
   <span class="section-tag">Pretraining Objective</span>
   <div class="badge concept">Key Insight</div>
-  <h2>What the loss does <em>not</em> contain</h2>
-  <p class="small-text">After tracing one full iteration, notice what supervision signal the model actually receives. Training has no explicit term for any of these; if they emerge, they must be <em>instrumentally useful for predicting text</em>.</p>
+  <h2>What the loss never names</h2>
+  <p class="small-text">After one full update, the core constraint is visible: training directly rewards only better <span class="hl">next-token prediction</span>. Anything richer has to be <em>useful for prediction</em>, not separately requested.</p>
   <div class="spacer"></div>
   <div class="not-list">
     <div class="not-item">Truth</div>
     <div class="not-item">Reasoning</div>
     <div class="not-item">Helpfulness</div>
     <div class="not-item">Safety</div>
-    <div class="not-item">Intelligence</div>
     <div class="not-item">Goals</div>
-    <div class="not-item">World model</div>
     <div class="not-item">Consistency</div>
   </div>
   <div class="spacer-sm"></div>
   <div class="math">
-    \[\mathcal{L} = -\log P_{\theta}(x_{t+1} \mid x_{\le t})\] <span style="color:var(--text-dim); font-size:0.82rem;"> that's the ENTIRE signal</span>
+    \[\mathcal{L} = -\log P_{\theta}(x_{t+1} \mid x_{\le t})\] <span style="color:var(--text-dim); font-size:0.82rem;"> that is the whole signal</span>
   </div>
   <div class="spacer-sm"></div>
   <div class="callout success">
     <span class="icon">i</span>
-    <span><strong>The narrow bottleneck:</strong> Everything the model learns has to pass through this single constraint — lowering next-token prediction error. This explains both <span class="hl-green">emergence</span> and <span class="hl-red">brittleness</span>.</span>
+    <span><strong>The narrow bottleneck:</strong> everything the model learns has to pass through lowering next-token error. That helps explain both <span class="hl-green">emergent capabilities</span> and <span class="hl-red">brittleness</span>.</span>
   </div>
   <div class="spacer-sm"></div>
   <div class="callout question">
     <span class="icon">?</span>
-    <span><strong>Think about it:</strong> Why would a model learn facts, reasoning, or code from only this signal? Next we'll zoom back out from one step to the full repeated training loop.</span>
+    <span><strong>So why do facts, code, and reasoning show up at all?</strong> Next we zoom out from one update to the broader pressures created by repeating this objective at scale.</span>
   </div>
   <div class="speaker-notes">
     <button class="notes-toggle">speaker notes</button>
-    <div class="notes-body"><p>"There are no terms here for truth, reasoning, helpfulness, safety, goals, or intelligence. Everything the model learns has to pass through this very narrow bottleneck — lowering next-token prediction error."</p></div>
+    <div class="notes-body"><p>"The loss does not explicitly name truth, reasoning, helpfulness, or safety. It only rewards better next-token prediction. So if any richer behavior appears, it has to be instrumentally useful for prediction."</p></div>
   </div>
 </div>
 
@@ -573,7 +559,7 @@
   <span class="section-tag">Deep Dive: One Update</span>
   <div class="badge deepdive">Step 1 — The Task</div>
   <h2>Predict the next token</h2>
-  <p class="small-text">Let's jump in and take a deeper dive into one training iteration. We'll trace one concrete example from input context to parameter update.</p>
+  <p class="small-text">We’ll trace one concrete training example from input context to weight update.</p>
   <div class="spacer-sm"></div>
   <div class="card">
     <div class="context-row">
@@ -587,7 +573,7 @@
     <div class="spacer-sm"></div>
     <div class="callout info" style="margin:0;">
       <span class="icon">i</span>
-      <span>The model receives <span class="hl">input context tokens</span> and must produce a probability for <em>every word in its vocabulary</em> as the next token. The training data already contains the answer — we just hide it and ask the model to guess.</span>
+      <span>The model sees <span class="hl">context tokens</span> and must assign probabilities to possible next tokens. The dataset already contains the answer; we just hide it and ask the model to guess.</span>
     </div>
   </div>
   <div class="speaker-notes">
@@ -601,7 +587,7 @@
   <span class="section-tag">Deep Dive: One Update</span>
   <div class="badge deepdive">Step 2 — Forward Pass</div>
   <h2>The model outputs a probability distribution</h2>
-  <p class="small-text">The input tokens flow through billions of parameters — attention layers, feed-forward networks — and out comes a <span class="hl">probability distribution over the entire vocabulary</span>.</p>
+  <p class="small-text">The prefix runs through the Transformer and becomes a <span class="hl">probability distribution over the vocabulary</span>.</p>
 
   <div class="spacer-sm"></div>
   <div>
@@ -621,13 +607,13 @@
       <span class="param-badge">\(\sim 7 \times 10^9\) params</span>
     </div>
     <div class="arrow-down">↓</div>
-    <div class="chart-title" style="color:var(--text-dim); margin-top:0.5rem;">Model's predicted distribution (softmax output)</div>
+    <div class="chart-title" style="color:var(--text-dim); margin-top:0.5rem;">Predicted distribution over next tokens</div>
     <div id="predictedChart"></div>
   </div>
   <div class="spacer-sm"></div>
   <div class="callout info">
     <span class="icon">i</span>
-    <span>The final layer outputs a <span class="hl">logit</span> for each vocabulary token, then <span class="hl">softmax</span> converts these to probabilities satisfying \(\sum_i p_i = 1\). An untrained model spreads probability almost evenly — basically guessing randomly.</span>
+    <span>The final layer emits <span class="hl">logits</span>, and <span class="hl">softmax</span> turns them into probabilities that sum to 1. Early in training, this still looks a lot like guessing.</span>
   </div>
 </div>
 
@@ -697,8 +683,8 @@
 <div class="slide" id="slide-13">
   <span class="section-tag">Deep Dive: One Update</span>
   <div class="badge deepdive">Step 5 — Backpropagation</div>
-  <h2>Compute gradients and update parameters</h2>
-  <p class="small-text">The loss signal flows <em>backwards</em> through the network. For each parameter, we compute: "how much would changing this parameter reduce the loss?" Then we nudge every parameter in that direction.</p>
+  <h2>Backpropagation computes gradients</h2>
+  <p class="small-text">The loss signal flows <em>backward</em> through the network. For each parameter, we compute how changing it would affect the loss.</p>
   <div class="spacer-sm"></div>
   <div class="update-flow">
     <div class="flow-node loss-node">\(\mathcal{L} = 2.53\)</div>
@@ -716,7 +702,7 @@
   </div>
   <div class="callout info">
     <span class="icon">i</span>
-    <span><span class="hl-purple">\(\eta\) (eta)</span> is the <strong>learning rate</strong> — a small number (e.g., \(10^{-4}\)) that controls step size. The <span class="hl-orange">gradient \(\frac{\partial \mathcal{L}}{\partial \theta}\)</span> tells us the direction and magnitude of adjustment needed for each of the billions of parameters.</span>
+    <span><span class="hl-purple">\(\eta\)</span> is the learning rate. The <span class="hl-orange">gradient</span> tells each parameter which way to move and by how much.</span>
   </div>
   <div class="speaker-notes">
     <button class="notes-toggle">speaker notes</button>
@@ -729,7 +715,7 @@
   <span class="section-tag">Deep Dive: One Update</span>
   <div class="badge deepdive">Step 6 — After Update</div>
   <h2>The model improves!</h2>
-  <p class="small-text">That completes one training iteration: after the update, the model assigns <em>more</em> probability to the correct token. Repeating this loop at scale is how the model learns language.</p>
+  <p class="small-text">After the update, the model assigns <em>more</em> probability to the correct token. Repeat this across many examples, and the model learns.</p>
   <div class="spacer-sm"></div>
   <div class="before-after">
     <div class="ba-col before">
@@ -755,7 +741,7 @@
   </div>
   <div class="callout success">
     <span class="icon">✓</span>
-    <span>The model now assigns <span class="hl-green" id="afterCorrectPct">\(28\%\)</span> to "Islamabad" (up from <span class="hl-red">\(8\%\)</span>). The loss dropped from <span class="hl-red">\(2.53\)</span> to <span class="hl-green" id="afterLossText">\(1.27\)</span>. After many more steps, the model will learn to confidently predict "Islamabad" — and generalize to countless other facts.</span>
+    <span>After one step, "Islamabad" rises from <span class="hl-red">\(8\%\)</span> to <span class="hl-green" id="afterCorrectPct">\(28\%\)</span>, and the loss drops from <span class="hl-red">\(2.53\)</span> to <span class="hl-green" id="afterLossText">\(1.27\)</span>. Scale that up, and the model gradually learns.</span>
   </div>
 </div>
 
@@ -763,38 +749,38 @@
 <div class="slide" id="slide-22">
   <span class="section-tag">Reasoning Emergence</span>
   <div class="badge concept">Key Idea</div>
-  <h2>Why next-token prediction can produce reasoning-like behavior</h2>
-  <p class="small-text"><strong>Local objective, global pressure:</strong> the training signal is local (predict one token), but minimizing that error often requires building global structure over the context.</p>
+  <h2>Why a local objective can create reasoning-like behavior</h2>
+  <p class="small-text"><strong>Local objective, global pressure:</strong> the model is graded one token at a time, but getting that token right often requires a coherent picture of the whole prefix.</p>
   <div class="spacer-sm"></div>
   <div class="card">
     <div class="math" style="margin:0;">
-      \[\text{Objective: } \max_{\theta} \; P_{\theta}(x_{t+1} \mid x_{\le t}) \text{ for each token position}\]
+      \[\text{At each position: raise the probability of the true next token}\]
     </div>
     <div class="spacer-sm"></div>
-    <button class="reveal-btn" data-action="reveal-reasoning-pressure">Reveal what the model often must infer</button>
+    <button class="reveal-btn" data-action="reveal-reasoning-pressure">Reveal the hidden pressures</button>
     <div class="pressure-grid" id="reasoningPressureGrid">
       <div class="pressure-card">
         <div class="title">Entities</div>
-        <p class="small-text">Who or what is being discussed, and how references resolve across sentences.</p>
+        <p class="small-text">Track who is who and how references connect across the passage.</p>
       </div>
       <div class="pressure-card">
         <div class="title">Causal Cues</div>
-        <p class="small-text">What caused what, and which events enable or block later outcomes.</p>
+        <p class="small-text">Infer what caused what, and which outcomes are still possible.</p>
       </div>
       <div class="pressure-card">
         <div class="title">Constraints</div>
-        <p class="small-text">What is consistent or impossible given timing, access, and prior facts.</p>
+        <p class="small-text">Rule out continuations that violate timing, access, or prior facts.</p>
       </div>
       <div class="pressure-card">
         <div class="title">Multi-step Structure</div>
-        <p class="small-text">What comes next in a plan, argument, proof, or narrative arc.</p>
+        <p class="small-text">Maintain the shape of a plan, proof, argument, or story.</p>
       </div>
     </div>
   </div>
   <div class="hidden-content" id="reasoningEmergenceQuote">
     <div class="callout success">
       <span class="icon">i</span>
-      <span><strong>So "reasoning" can emerge as an instrumentally useful strategy for reducing prediction error,</strong> even when it is never explicitly specified as a training target.</span>
+      <span><strong>"Reasoning-like" behavior can be the cheapest way to reduce prediction error,</strong> even when the loss never asks for reasoning explicitly.</span>
     </div>
   </div>
 </div>
@@ -804,40 +790,34 @@
   <span class="section-tag">Reasoning Emergence</span>
   <div class="badge discussion">Interactive Example</div>
   <h2>Next-token prediction in a Pakistani drama</h2>
-  <p class="small-text">Nothing explicitly states the answer. To predict the next words, the model must integrate distributed constraints.</p>
+  <p class="small-text">The answer is implied, not stated. To predict the next token here, the model has to combine timing, access, and entity tracking.</p>
   <div class="spacer-sm"></div>
   <div class="drama-script">
-    Karachi mein aik shaam...<br>
-    10:30 baje Shahbaz Ahmed apne office mein be-harkat mila...<br>
-    thori dair baad pata chala ke maut ki wajah zehr tha...<br>
-    Us waqt office mein sirf teen log thay...<br>
-    Farah, jo us ki secretary thi...<br>
-    Salman, jo us ka business partner tha...<br>
-    aur Rukhsana, jo safai karti thi...<br>
-    Farah 9:50 baje office se nikal chuki thi...<br>
-    Salman 10:00 baje meeting ke liye bahar gaya...<br>
-    10:20 baje Rukhsana ne Shahbaz ke liye chai banayi...<br>
-    Forensic report ke mutabiq zehr 10:20 aur 10:30 ke darmiyan liya gaya...<br>
-    CCTV se yeh bhi clear hua ke 10:00 ke baad sirf aik shakhs pantry mein gaya...<br>
-    ...<br>
-    Investigation ke baad shahbaz ki family ne police walon se pucha keh qatil kon tha.<br>
-    Police ne btaya keh tamaam subuton ke mutabik qatil <span class="ntp-blank" id="dramaKillerBlank" data-answer="Rukhsana thi">___</span>
+    <div class="drama-line drama-lead">Karachi, one evening...</div>
+    <div class="drama-line"><span class="drama-time">10:30</span> Shahbaz Ahmed is found dead in his office. Cause of death: poison.</div>
+    <div class="drama-line">Three people matter in the story: <span class="drama-name">Farah</span> (secretary), <span class="drama-name">Salman</span> (business partner), and <span class="drama-name">Rukhsana</span> (cleaner).</div>
+    <div class="drama-line drama-clue"><span class="drama-time">9:50</span> Farah has already left the office.</div>
+    <div class="drama-line drama-clue"><span class="drama-time">10:00</span> Salman leaves for a meeting.</div>
+    <div class="drama-line drama-clue"><span class="drama-time">10:20</span> Rukhsana makes tea for Shahbaz.</div>
+    <div class="drama-line drama-clue">Forensics: the poison is taken between <span class="drama-time">10:20</span> and <span class="drama-time">10:30</span>.</div>
+    <div class="drama-line drama-clue">CCTV: after <span class="drama-time">10:00</span>, only one person enters the pantry.</div>
+    <div class="drama-line drama-question">Police review the evidence and conclude the killer was <span class="ntp-blank" id="dramaKillerBlank" data-answer="Rukhsana">___</span></div>
   </div>
   <div class="drama-choices" id="dramaChoices">
     <button class="nav-btn drama-choice" data-suspect="Farah">Farah</button>
     <button class="nav-btn drama-choice" data-suspect="Salman">Salman</button>
     <button class="nav-btn drama-choice" data-suspect="Rukhsana">Rukhsana</button>
-    <button class="nav-btn" data-action="reveal-drama-answer">Reveal token</button>
+    <button class="nav-btn" data-action="reveal-drama-answer">Reveal answer</button>
   </div>
   <div class="spacer-sm"></div>
   <div class="callout warn" id="dramaResult">
     <span class="icon">?</span>
-    <span>Select a suspect. Then check whether your choice satisfies the timing + access constraints.</span>
+    <span>Pick the suspect whose timeline fits every clue.</span>
   </div>
   <div class="hidden-content" id="dramaWhy">
     <div class="callout success">
       <span class="icon">→</span>
-      <span><strong>No line explicitly states the answer.</strong> Correct next-token prediction requires integrating entity tracking, timing, and access constraints — exactly the pressure that training creates.</span>
+      <span><strong>No line explicitly states the answer.</strong> Correct next-token prediction requires integrating entity tracking, timing, and access constraints.</span>
     </div>
   </div>
 </div>
@@ -846,19 +826,19 @@
 <div class="slide" id="slide-24">
   <span class="section-tag">Reasoning Emergence</span>
   <div class="badge concept">Takeaway</div>
-  <h2>In the drama, the next token depends on the whole story</h2>
-  <p class="small-text">Nothing explicitly says who the killer is. The correct continuation is implied by timing + access constraints distributed across many lines.</p>
+  <h2>One next token can depend on the whole story</h2>
+  <p class="small-text">The label is still local, but the evidence is distributed across many lines. That is why next-token training can reward richer internal state.</p>
   <div class="spacer-sm"></div>
   <div class="grid-2">
     <div class="card">
-      <h3 style="color:var(--accent);">What the model does</h3>
+      <h3 style="color:var(--accent);">What training still asks for</h3>
       <div class="math" style="margin:0.5rem 0 0;">
         \[\hat{x}_{t+1} \sim P_{\theta}(x_{t+1} \mid x_{\le t})\]
       </div>
-      <p class="tiny" style="margin-top:0.5rem;">Given a prefix, output a distribution over the next token (then sample/choose one). During training, we simply reward higher probability on the true continuation.</p>
+      <p class="tiny" style="margin-top:0.5rem;">Given a prefix, output a distribution over the next token. During training, we reward higher probability on the true continuation.</p>
     </div>
     <div class="card">
-      <h3 style="color:var(--green);">To predict the blank, it must track</h3>
+      <h3 style="color:var(--green);">To predict correctly, it must track</h3>
       <ul class="obj-list" style="margin-top:0.5rem;">
         <li data-num="1"><strong>Time window:</strong> when the poison could have been taken (10:20–10:30)</li>
         <li data-num="2"><strong>Access:</strong> who could have reached the pantry during that window (departures + CCTV)</li>
@@ -869,15 +849,11 @@
   <div class="spacer-sm"></div>
   <div class="callout success">
     <span class="icon">✓</span>
-    <span><strong>Key point:</strong> the supervision is still just the next token — but getting it right rewards internal “case-file” representations (suspects, timing, constraints).</span>
-  </div>
-  <div class="callout info">
-    <span class="icon">i</span>
-    <span>When we call it "reasoning," we’re often pointing at this: a model that maintains a coherent latent state so its next-token distribution respects the story’s global constraints.</span>
+    <span><strong>Key point:</strong> local supervision can reward rich internal state. Here, the model is pushed to build a coherent case file: suspects, timeline, and constraints.</span>
   </div>
   <div class="speaker-notes">
     <button class="notes-toggle">speaker notes</button>
-    <div class="notes-body"><p>Immediately after the drama slide: emphasize that the model is only ever asked to continue text, but the blank forces it to track a coherent timeline + access constraints. The “reasoning” is the internal state that makes the correct continuation likely, not an explicit training label.</p></div>
+    <div class="notes-body"><p>Immediately after the drama slide: the supervision is still only the next token, but getting that token right rewards a coherent internal case file. The “reasoning” is the latent state that makes the correct continuation likely, not an explicit label.</p></div>
   </div>
 </div>
 
@@ -890,45 +866,45 @@
   <span class="section-tag">Activity</span>
   <div class="badge activity">Interactive</div>
   <h2>You Are the Language Model</h2>
-  <p class="small-text">Now you run the same objective yourself: predict the next token. Notice what <em>kind of knowledge</em> each example requires. This is why next-token training yields more than memorization.</p>
+  <p class="small-text">Try each blank first. Then reveal what kind of knowledge it depends on. “Just predict the next token” quietly demands many different capabilities.</p>
   <div class="spacer-sm"></div>
   <div style="display:flex; flex-direction:column; gap:0.625rem;" id="ntpGame">
     <div class="ntp-sentence">
       The Eiffel Tower is located in <span class="ntp-blank"  data-answer="Paris">???</span>
-      <span class="ntp-concept-btn" >concept?</span>
+      <span class="ntp-concept-btn" >type?</span>
       <span class="ntp-tag fact">world knowledge</span>
     </div>
     <div class="ntp-sentence">
       After the rain stopped, the children ran outside to <span class="ntp-blank"  data-answer="play">???</span>
-      <span class="ntp-concept-btn" >concept?</span>
-      <span class="ntp-tag lang">language / common sense</span>
+      <span class="ntp-concept-btn" >type?</span>
+      <span class="ntp-tag lang">common sense</span>
     </div>
     <div class="ntp-sentence">
       def fibonacci(n):<br>&nbsp;&nbsp;if n <= 1: return n<br>&nbsp;&nbsp;return fibonacci(n-1) + <span class="ntp-blank"  data-answer="fibonacci(n-2)">???</span>
-      <span class="ntp-concept-btn" >concept?</span>
-      <span class="ntp-tag code">code understanding</span>
+      <span class="ntp-concept-btn" >type?</span>
+      <span class="ntp-tag code">code structure</span>
     </div>
     <div class="ntp-sentence">
       If all roses are flowers, and all flowers need water, then all roses need <span class="ntp-blank"  data-answer="water">???</span>
-      <span class="ntp-concept-btn" >concept?</span>
-      <span class="ntp-tag logic">logical reasoning</span>
+      <span class="ntp-concept-btn" >type?</span>
+      <span class="ntp-tag logic">logic</span>
     </div>
     <div class="ntp-sentence">
       The sum of \(127\) and \(385\) is <span class="ntp-blank"  data-answer="512">???</span>
-      <span class="ntp-concept-btn" >concept?</span>
+      <span class="ntp-concept-btn" >type?</span>
       <span class="ntp-tag math">arithmetic</span>
     </div>
     <div class="ntp-sentence">
       She said "I'm not angry," but the tone of her voice suggested she was actually quite <span class="ntp-blank"  data-answer="upset">???</span>
-      <span class="ntp-concept-btn" >concept?</span>
-      <span class="ntp-tag lang">pragmatics / subtext</span>
+      <span class="ntp-concept-btn" >type?</span>
+      <span class="ntp-tag lang">pragmatics</span>
     </div>
   </div>
   <div class="spacer-sm"></div>
-  <button class="reveal-btn" data-action="reveal-all-ntp">Reveal all answers</button>
+  <button class="reveal-btn" data-action="reveal-all-ntp">Reveal all</button>
   <div class="speaker-notes">
     <button class="notes-toggle">speaker notes</button>
-    <div class="notes-body"><p>Let participants think about each one before clicking. The point: "just predicting the next word" requires world knowledge, code understanding, logic, arithmetic, pragmatics. To predict well, you must understand deeply.</p></div>
+    <div class="notes-body"><p>Let participants try the blanks first. The point is not memorization; even this simple objective calls on world knowledge, common sense, code structure, logic, arithmetic, and pragmatics.</p></div>
   </div>
 </div>
 
@@ -936,8 +912,8 @@
 <div class="slide" id="slide-29">
   <span class="section-tag">Scale &amp; Data</span>
   <div class="badge concept">Scale</div>
-  <h2>Pretraining at scale: next-token prediction repeated billions of times</h2>
-  <p class="small-text">One objective, huge exposure: the model repeatedly predicts the next token across a massive distribution. This is where the model first learns language itself: structure, syntax, grammar, and broad semantic regularities.</p>
+  <h2>Pretraining at scale repeats the same objective billions of times</h2>
+  <p class="small-text">Same loop, huge exposure. This is where the model first picks up language fluency, broad statistical regularities, and background knowledge useful for continuation.</p>
   <div class="spacer-sm"></div>
   <div class="card">
     <div class="math" style="margin:0;">
@@ -973,7 +949,7 @@
   <div class="spacer-sm"></div>
   <div class="callout success">
     <span class="icon">✓</span>
-    <span><strong>What emerges first:</strong> fluent language modeling (syntax, grammar, coherence) plus broad world/statistical knowledge needed for sensible continuation. Capability is the expected result of broad exposure under a scalable objective.</span>
+    <span><strong>What emerges first:</strong> fluent continuation: syntax, grammar, coherence, and broad background knowledge. Specialization and instruction-following come later.</span>
   </div>
 </div>
 
@@ -981,8 +957,8 @@
 <div class="slide" id="slide-30">
   <span class="section-tag">Scale &amp; Data</span>
   <div class="badge concept">Data Mixture</div>
-  <h2>Data drives capabilities: the training distribution is the lever</h2>
-  <p class="small-text">After the model has base language competence, the next question is: <em>what data mix do we continue training on?</em> Capability profile follows that distributional mixture (often in mid-training).</p>
+  <h2>Capability follows the data mixture</h2>
+  <p class="small-text">Once the model has language foundations, the next lever is the distribution you continue training on. Different mixtures reward different strengths.</p>
   <div class="spacer-sm"></div>
   <div class="grid-2">
     <div class="card">
@@ -993,8 +969,8 @@
       </div>
       <p class="tiny">Example: 80% code + technical text, 20% generic data</p>
       <ul class="obj-list" style="margin-top:0.625rem;">
-        <li data-num="1"><strong>Strength:</strong> stronger symbolic precision, structured problem decomposition, and code-oriented pattern completion.</li>
-        <li data-num="2"><strong>Weakness:</strong> weaker stylistic nuance in narrative or poetic generation.</li>
+        <li data-num="1"><strong>Strength:</strong> better symbolic precision, decomposition, and code completion.</li>
+        <li data-num="2"><strong>Tradeoff:</strong> less stylistic range in narrative or poetic writing.</li>
       </ul>
     </div>
     <div class="card">
@@ -1006,22 +982,22 @@
       <p class="tiny">Example: 80% literary/prose text, 20% generic data</p>
       <ul class="obj-list" style="margin-top:0.625rem;">
         <li data-num="1"><strong>Strength:</strong> richer tone control, narrative fluency, and stylistic variation.</li>
-        <li data-num="2"><strong>Weakness:</strong> lower reliability on formal symbolic tasks such as coding or math-heavy problem solving.</li>
+        <li data-num="2"><strong>Tradeoff:</strong> less reliability on coding and math-heavy symbolic tasks.</li>
       </ul>
     </div>
   </div>
   <div class="spacer-sm"></div>
   <div class="callout warn">
     <span class="icon">!</span>
-    <span>Neither pretraining nor mid-training learns from "intent." Both learn from token statistics in the training distribution.</span>
+    <span>The model is still learning from token statistics, not from “intent.” Change the distribution, and you change what patterns it gets rewarded for.</span>
   </div>
   <div class="callout success">
     <span class="icon">✓</span>
-    <span><strong>Takeaway:</strong> keep pretraining for language foundations, then use mid-training mixture to steer specialization.</span>
+    <span><strong>Takeaway:</strong> use broad pretraining for foundations, then use the data mixture to steer specialization.</span>
   </div>
   <div class="speaker-notes">
     <button class="notes-toggle">speaker notes</button>
-    <div class="notes-body"><p>This answers "what is pretraining learning from?" and introduces mid-training as the specialization dial. Foundation first, then targeted distribution shift.</p></div>
+    <div class="notes-body"><p>This is the specialization dial. Foundations come from broad pretraining; later data mixture changes what the model becomes especially good at.</p></div>
   </div>
 </div>
 
@@ -1030,15 +1006,15 @@
   <span class="section-tag">Alignment</span>
   <div class="badge activity">Interactive</div>
   <h2>It's still just a text completer</h2>
-  <p class="small-text">We've pretrained a powerful model — but it was only ever trained to <span class="hl">predict the next token</span>. What happens when we actually try to use it?</p>
+  <p class="small-text">Pretraining made the model a powerful completer, not automatically a helpful assistant. So what continuation does it find likely here?</p>
   <div class="spacer-sm"></div>
 
   <!-- PHASE 1: the dumb response -->
   <div class="card" id="completionPhase1">
-    <h3 style="color:var(--accent); margin-bottom:0.625rem;">What does the base model do with this prompt?</h3>
+    <h3 style="color:var(--accent); margin-bottom:0.625rem;">What continuation does the base model expect?</h3>
     <div class="prompt-block">What is the capital of France?</div>
     <div class="spacer-sm"></div>
-    <button class="reveal-btn" data-action="reveal-dumb-response">Reveal the actual output</button>
+    <button class="reveal-btn" data-action="reveal-dumb-response">Show likely continuation</button>
     <div class="hidden-content" id="dumbResponseReveal">
       <div class="prompt-block" style="margin-top:0.625rem; border-color:rgba(248,113,113,0.4);"><span style="color:var(--text-dim);">What is the capital of France?</span>
 What is the capital of Germany?
@@ -1047,7 +1023,7 @@ What is the capital of Spain?
 What is the capital of ...</div>
       <div class="callout warn" style="margin-top:0.625rem;">
         <span class="icon">!</span>
-        <span><strong>It continued the pattern, not answered the question.</strong> The model learned to predict text — and quiz lists are common on the internet. It has no concept of "being helpful."</span>
+        <span><strong>It continued a familiar pattern instead of answering.</strong> Quiz lists are common in training data, so the model keeps the list going. Helpfulness is not the default objective.</span>
       </div>
     </div>
   </div>
@@ -1056,7 +1032,7 @@ What is the capital of ...</div>
 
   <div class="speaker-notes">
     <button class="notes-toggle">speaker notes</button>
-    <div class="notes-body"><p>Sequence: (1) show prompt, ask audience to predict output, (2) reveal the dumb continuation — get laughs, then move to the next slide for "can we fix this without changing the model?" and the bridge to post-training.</p></div>
+    <div class="notes-body"><p>Ask the audience what the model finds likely, not what it “should” do. Then reveal the continuation and use it to set up prompt steering versus actual alignment.</p></div>
   </div>
 </div>
 
@@ -1069,7 +1045,7 @@ What is the capital of ...</div>
   <div class="spacer-sm"></div>
 
   <!-- PHASE 2: fix it with formatting -->
-  <div class="hidden-content" id="completionPhase2">
+  <div id="completionPhase2">
     <div class="card">
       <h3 style="color:var(--green);">Prompt shaping can steer behavior</h3>
       <p class="small-text">Same model, same weights. Only context formatting changes what continuation becomes likely.</p>
@@ -1108,7 +1084,7 @@ What is the capital of ...</div>
       <div class="hidden-content" id="fixTakeaway">
         <div class="callout success">
           <span class="icon">✓</span>
-          <span><strong>You're not changing the model.</strong> You're shaping context so the "next token" is naturally the reply. <code>Assistant:</code> makes a reply likely. <code>=</code> makes an answer likely.</span>
+          <span><strong>You are not changing the model.</strong> You are only changing the context so a reply, answer, or function body becomes the most likely continuation.</span>
         </div>
       </div>
     </div>
@@ -1116,7 +1092,7 @@ What is the capital of ...</div>
     <div class="hidden-content" id="fixBridge">
       <div class="callout warn">
         <span class="icon">!</span>
-        <span><strong>But this is brittle.</strong> Formatting tricks steer — they don't <em>align</em>. This is exactly why post-training exists: update the weights so assistant-style responses become the default.</span>
+        <span><strong>But this is brittle.</strong> Prompt tricks steer behavior; they do not make helpfulness the default. That is why post-training exists.</span>
       </div>
     </div>
   </div>
@@ -1132,7 +1108,7 @@ What is the capital of ...</div>
   <span class="section-tag">Final Demo</span>
   <div class="badge activity">Live Demo</div>
   <h2>Common LLM failures, live</h2>
-  <p class="small-text">Challenge a legacy chat model with tasks humans find trivial: repeated-letter counting, word reversal, exact copying, and decimal comparison.</p>
+  <p class="small-text">Even chat-tuned models can still fail on low-level tasks. Try a legacy chat model on letter counting, reversal, exact copying, sorting, and decimal comparison.</p>
   <div class="spacer-sm"></div>
 
   <div class="live-demo-shell">
@@ -1149,17 +1125,16 @@ What is the capital of ...</div>
       </div>
 
       <div>
-        <div class="live-demo-label" style="margin-bottom:0.45rem;">Tap a failure probe to auto-type and send</div>
+        <div class="live-demo-label" style="margin-bottom:0.45rem;">Tap a probe to auto-type and send</div>
       <div class="live-demo-presets">
-        <button class="nav-btn text-xs" type="button" data-demo-preset="How many r letters are in the word strawberry?">Strawberry count</button>
-        <button class="nav-btn text-xs" type="button" data-demo-preset="How many k letters are in the word bookkeeper?">Bookkeeper count</button>
-        <button class="nav-btn text-xs" type="button" data-demo-preset="How many s letters are in the word mississippi?">Mississippi count</button>
+        <button class="nav-btn text-xs" type="button" data-demo-preset="How many r letters are in the word strawberry?">Strawberry letters</button>
+        <button class="nav-btn text-xs" type="button" data-demo-preset="How many s letters are in the word mississippi?">Mississippi letters</button>
         <button class="nav-btn text-xs" type="button" data-demo-preset="Write the word strawberry backwards.">Reverse strawberry</button>
         <button class="nav-btn text-xs" type="button" data-demo-preset="Reverse the word encyclopedia letter by letter.">Reverse encyclopedia</button>
         <button class="nav-btn text-xs" type="button" data-demo-preset="Which number is larger: 9.11 or 9.9?">Decimal compare</button>
         <button class="nav-btn text-xs" type="button" data-demo-preset="Rank these numbers from smallest to largest: 9.11, 9.9, 9.2, 9.02.">Rank decimals</button>
-        <button class="nav-btn text-xs" type="button" data-demo-preset="Repeat the word poem exactly 12 times, separated by commas.">Exact repetition</button>
-        <button class="nav-btn text-xs" type="button" data-demo-preset="Sort these words alphabetically: pear, apple, apricot, banana.">Alphabetical sort</button>
+        <button class="nav-btn text-xs" type="button" data-demo-preset="Repeat the word poem exactly 12 times, separated by commas.">Repeat poem ×12</button>
+        <button class="nav-btn text-xs" type="button" data-demo-preset="Sort these words alphabetically: pear, apple, apricot, banana.">Alphabetize words</button>
       </div>
       </div>
 
@@ -1170,22 +1145,22 @@ What is the capital of ...</div>
       <div class="live-demo-status" id="liveDemoStatus" data-tone="info">Enter an API key, then send a probe.</div>
 
       <form class="live-demo-input-row" id="liveDemoForm" autocomplete="off">
-        <input id="liveDemoInput" class="live-demo-text-input" type="text" placeholder="Ask about counting, reversal, copying, sorting, comparison, or another failure mode..." spellcheck="false" autocomplete="off">
+        <input id="liveDemoInput" class="live-demo-text-input" type="text" placeholder="Try counting, reversal, copying, sorting, comparison, or another probe..." spellcheck="false" autocomplete="off">
         <button class="nav-btn primary" type="submit" data-demo-send>Send</button>
         <button class="nav-btn" type="button" data-demo-clear>Clear context</button>
       </form>
     </div>
 
     <div class="card live-demo-sidebar">
-      <h3 style="color:var(--orange);">What these probes stress-test</h3>
+      <h3 style="color:var(--orange);">What these probes test</h3>
       <ul class="obj-list live-demo-tips">
-        <li data-num="1"><strong>Character control:</strong> repeated-letter counting and letter-by-letter reversal require fine-grained tracking that token predictors often mishandle.</li>
-        <li data-num="2"><strong>Exactness:</strong> copying a word exactly N times or alphabetizing a short list reveals how quickly outputs can drift from precise constraints.</li>
-        <li data-num="3"><strong>Symbolic comparison:</strong> decimals and ranking tasks expose the difference between pattern-matching and exact reasoning.</li>
+        <li data-num="1"><strong>Character control:</strong> counting letters or reversing a word requires finer tracking than many token predictors manage well.</li>
+        <li data-num="2"><strong>Exactness:</strong> copying a word N times or sorting a short list reveals how quickly outputs drift from strict constraints.</li>
+        <li data-num="3"><strong>Symbolic comparison:</strong> decimals and ranking tasks expose the gap between pattern-matching and exact reasoning.</li>
       </ul>
       <div class="callout info live-demo-note">
         <span class="icon">i</span>
-        <span><strong>Context persists across turns.</strong> Use <code>Clear context</code> whenever you want each probe to start from a clean conversation.</span>
+        <span><strong>Context persists across turns.</strong> Use <code>Clear context</code> whenever you want a fresh start.</span>
       </div>
     </div>
   </div>
@@ -1195,16 +1170,12 @@ What is the capital of ...</div>
 <div class="slide" id="slide-33">
   <span class="section-tag">Alignment</span>
   <div class="badge concept">Post-training</div>
-  <h2>Why post-training exists: from context steering to behavior shaping</h2>
-  <p class="small-text">Templates steer behavior at inference time by changing context. Post-training changes behavior at training time by updating parameters so assistant-style responses are more consistent, robust, and policy-constrained.</p>
+  <h2>Why post-training exists</h2>
+  <p class="small-text">Prompt tricks can steer a base model, but they are fragile. Post-training updates the weights so assistant-style behavior becomes more consistent, robust, and policy-constrained.</p>
   <div class="spacer-sm"></div>
-  <div class="callout warn" style="margin:0;">
-    <span class="icon">!</span>
-    <span><strong>Before alignment:</strong> "Assistant:" can steer continuation, but outcomes still drift with phrasing, context, and prompt hacks.</span>
-  </div>
-  <div class="callout info" style="margin-top:0.625rem;">
+  <div class="callout info" style="margin:0;">
     <span class="icon">i</span>
-    <span><strong>Inference-time trick:</strong> shape context. <strong>Post-training:</strong> shape parameters.</span>
+    <span><strong>Prompting:</strong> shape context at inference time. <strong>Post-training:</strong> shape parameters during training.</span>
   </div>
   <div class="spacer-sm"></div>
   <div class="grid-2">
@@ -1212,18 +1183,18 @@ What is the capital of ...</div>
       <div class="badge discussion" style="margin-bottom:0.5rem;">Step 5</div>
       <h3 style="color:var(--orange);">Supervised fine-tuning (SFT)</h3>
       <ul class="obj-list" style="margin-top:0.5rem;">
-        <li data-num="1">Train on chat demonstrations: user turns -> assistant replies.</li>
+        <li data-num="1">Train on chat demonstrations: user turns to assistant replies.</li>
         <li data-num="2">Teach stable instruction-following and response structure.</li>
-        <li data-num="3">Make assistant-style continuation the default, not a formatting coincidence.</li>
+        <li data-num="3">Make assistant-style continuation the default.</li>
       </ul>
     </div>
     <div class="card" style="border-color: rgba(251,146,60,0.3);">
       <div class="badge discussion" style="margin-bottom:0.5rem;">Step 6</div>
       <h3 style="color:var(--orange);">Preference training + RLHF</h3>
       <ul class="obj-list" style="margin-top:0.5rem;">
-        <li data-num="1">Use human rankings to distinguish better vs worse candidate replies.</li>
+        <li data-num="1">Use human rankings to separate better from worse candidate replies.</li>
         <li data-num="2">Push behavior toward helpfulness, policy compliance, and safer refusals.</li>
-        <li data-num="3">Improve robustness beyond specific templates or token tricks.</li>
+        <li data-num="3">Improve robustness beyond specific prompts or formatting tricks.</li>
       </ul>
     </div>
   </div>
@@ -1239,11 +1210,11 @@ What is the capital of ...</div>
   </div>
   <div class="callout info">
     <span class="icon">i</span>
-    <span><strong>The model is still autoregressive next-token generation.</strong> Alignment changes the distribution it learns to generate from.</span>
+    <span><strong>The model is still doing next-token generation.</strong> Alignment changes which continuations it is trained to prefer.</span>
   </div>
   <div class="speaker-notes">
     <button class="notes-toggle">speaker notes</button>
-    <div class="notes-body"><p>Bridge directly from the activity: "We can coerce a reply with suffixes, but that is fragile. SFT and preference training make assistant behavior consistent and constrained." Keep repeating: still autoregressive, now better conditioned by training.</p></div>
+    <div class="notes-body"><p>Bridge directly from the activity: prompting can steer behavior, but post-training changes the default behavior itself. Keep repeating: still autoregressive, now trained to prefer better continuations.</p></div>
   </div>
 </div>
 

@@ -8,7 +8,7 @@ function appendInferenceBlank() {
   const newBlank = document.createElement('span');
   newBlank.className = 'tok blank';
   newBlank.id = 'infCurrent';
-  newBlank.textContent = 'click';
+  newBlank.textContent = 'next?';
   row.appendChild(newBlank);
 }
 
@@ -51,12 +51,12 @@ function resetInferenceDemo() {
       '<span class="tok input">of</span>',
       '<span class="tok input">Pakistan</span>',
       '<span class="tok input">is</span>',
-      '<span class="tok blank" id="infCurrent">click</span>'
+      '<span class="tok blank" id="infCurrent">next?</span>'
     ].join('');
   }
 
   if (hint) {
-    hint.textContent = 'Click the blank to simulate one inference step';
+    hint.textContent = 'Click the blank to generate the next token';
     hint.style.color = '';
   }
 }
@@ -157,7 +157,8 @@ function resetTrainLoop() {
   document.getElementById('trainLoss').style.display = 'none';
   document.getElementById('trainBackprop').style.display = 'none';
   document.getElementById('trainUpdate').style.display = 'none';
-  document.getElementById('trainExplain').style.display = 'none';
+  document.getElementById('trainExplain').style.display = '';
+  document.getElementById('trainExplainText').innerHTML = TRAIN_INTRO_HTML;
   var tfBox = document.getElementById('trainTransformer');
   tfBox.style.borderColor = '';
   tfBox.style.boxShadow = '';

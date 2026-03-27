@@ -3,12 +3,12 @@
 
 const POS26_MAX_STEP = 5;
 const POS26_TAKEAWAYS = [
-  'Before choosing a formula, set the criteria: unique positions, stable meaning across context lengths, and smooth local change.',
-  'Raw integer position is too large, too crude, and inconsistent across sequence lengths when normalized.',
-  'Binary keeps values bounded and reveals the multiscale pattern, but the representation still changes in abrupt jumps.',
-  'Sinusoidal embeddings turn that multiscale pattern into a smooth, fixed absolute position vector.',
-  'Sin/cos gives one fixed absolute code; another common option is to learn the absolute code. But many attention patterns care more about relative offset than absolute slot.',
-  'RoPE rotates each Q/K pair by absolute position; the dot product turns that into a relative-offset signal, so the same gap always gives the same attention score.'
+  'Design goals: unique codes, stable meaning across lengths, and smooth local change.',
+  'Raw indices are too large, too crude, and inconsistent once sequence length changes.',
+  'Binary keeps values bounded and multiscale, but neighboring positions still jump abruptly.',
+  'Sin/cos keeps the multiscale structure and makes nearby positions change smoothly.',
+  'Absolute codes help, but many attention patterns care more about relative offset than raw slot.',
+  'RoPE uses absolute rotations so attention scores depend on relative offset instead of absolute slot.'
 ];
 
 function measurePositionSignalPanelHeight(panel) {

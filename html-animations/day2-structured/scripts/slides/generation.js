@@ -5,8 +5,8 @@ var GEN33_MAX_STEP = 1;
 var GEN33_CLASSES = ['gen33-show-insights'];
 
 var GEN33_TAKEAWAYS = [
-  'Every LLM runs this same pipeline. You now know every box.',
-  'Tokenize \u2192 Represent \u2192 Understand \u00d7 L \u2192 Predict. One token at a time.'
+  'Tokenize \u2192 Represent \u2192 Understand \u00d7 L \u2192 Predict \u2192 Repeat.',
+  'Every LLM runs this same loop. You now know every box.'
 ];
 
 var GEN33_PIPELINE_SEGS = [
@@ -38,22 +38,22 @@ var GEN33_PIPELINE_SEGS = [
 var GEN33_INSIGHTS = [
   {
     title: 'Tokenize',
-    body: 'The model reads subword chunks, not characters or words. Vocabulary boundaries shape what it can and can\'t reason about.',
+    body: 'The model reads subword chunks, not whole words. Vocabulary boundaries shape what it can represent cleanly.',
     color: 'blue'
   },
   {
-    title: 'Attend',
-    body: 'Each token attends to all others. Attention weights are learned, contextual, and computed across multiple heads simultaneously.',
+    title: 'Represent',
+    body: 'Embeddings plus position turn tokens into vectors the model can compare and update.',
     color: 'purple'
   },
   {
-    title: 'Deepen',
-    body: 'L stacked blocks refine meaning layer by layer. Neither attention nor FFN changes the sequence shape \u2014 just what\'s in each row.',
+    title: 'Understand',
+    body: 'Stacked blocks use attention and FFN to refine the residual stream while keeping the sequence shape fixed.',
     color: 'cyan'
   },
   {
     title: 'Predict',
-    body: 'Every output is a probability over the vocabulary. Generation is next-token prediction, repeated one token at a time.',
+    body: 'The LM head scores the vocabulary, picks one token, appends it, and the loop runs again.',
     color: 'green'
   }
 ];

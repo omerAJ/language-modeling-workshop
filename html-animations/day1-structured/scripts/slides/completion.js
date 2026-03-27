@@ -73,12 +73,6 @@ function runCompletionIntroStep() {
 }
 
 function runPromptFixStep() {
-  var phase2 = document.getElementById('completionPhase2');
-  if (phase2 && !phase2.classList.contains('revealed')) {
-    phase2.classList.add('revealed');
-    return true;
-  }
-
   var fixChat = document.getElementById('fixChat');
   if (fixChat && !fixChat.classList.contains('revealed')) {
     revealFix('chat', false);

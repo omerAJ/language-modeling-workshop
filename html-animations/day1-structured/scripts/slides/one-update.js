@@ -21,6 +21,19 @@ function revealAllNTP() {
   $$('.ntp-tag').forEach(tag => tag.classList.add('show'));
 }
 
+function resetNtpSlide() {
+  $$('#slide-16 .ntp-blank').forEach((el) => {
+    el.textContent = '???';
+    el.classList.remove('show');
+  });
+  $$('#slide-16 .ntp-concept-btn').forEach((btn) => {
+    btn.style.display = '';
+  });
+  $$('#slide-16 .ntp-tag').forEach((tag) => {
+    tag.classList.remove('show');
+  });
+}
+
             function runNtpSlideStep() {
               var rows = document.querySelectorAll('#slide-16 .ntp-sentence');
               for (var r = 0; r < rows.length; r++) {

@@ -42,7 +42,9 @@ function defineSlides() {
       init: () => initAfterUpdateSlide()
     }),
     'slide-16': createSlideDescriptor('slide-16', {
-      step: () => runNtpSlideStep()
+      init: () => resetNtpSlide(),
+      step: () => runNtpSlideStep(),
+      reset: () => resetNtpSlide()
     }),
     'slide-22': createSlideDescriptor('slide-22', {
       init: () => resetReasoningPressureSlide(),
