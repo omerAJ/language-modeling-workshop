@@ -119,9 +119,9 @@
 
   .nav-btn {
     font-family: 'Inter', sans-serif;
-    font-size: var(--fs-xs);
+    font-size: 0.72rem;
     font-weight: 600;
-    padding: var(--sp-2) var(--sp-4);
+    padding: 0.38rem 0.82rem;
     border-radius: var(--radius-sm);
     border: 1px solid var(--border);
     background: var(--surface2);
@@ -151,7 +151,7 @@
     right: 0;
     bottom: 0;
     height: var(--deck-nav-height);
-    padding: 0 var(--sp-4);
+    padding: 0 0.85rem;
     box-sizing: border-box;
     background: rgba(10,13,20,0.92);
     backdrop-filter: blur(12px);
@@ -163,10 +163,10 @@
 
   .progress-track {
     flex: 1;
-    height: 0.2rem;
+    height: 0.16rem;
     background: var(--surface2);
     border-radius: 0.2rem;
-    margin: 0 var(--sp-4);
+    margin: 0 0.85rem;
     overflow: hidden;
   }
 
@@ -179,9 +179,9 @@
 
   .slide-counter {
     font-family: 'JetBrains Mono', monospace;
-    font-size: var(--fs-xs);
+    font-size: 0.68rem;
     color: var(--text-dim);
-    min-width: 3.75rem;
+    min-width: 3.1rem;
     text-align: center;
   }
 

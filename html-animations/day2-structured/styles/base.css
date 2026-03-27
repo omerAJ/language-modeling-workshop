@@ -9,7 +9,7 @@
   }
 
   :root {
-    --deck-nav-height: 4.25rem;
+    --deck-nav-height: 3.15rem;
     --deck-takeaway-gap: 0;
     --deck-takeaway-body-gap: 0.18rem;
     --bg: #0a0d14;
@@ -67,7 +67,7 @@
     inset: 0;
     display: none;
     flex-direction: column;
-    padding: 1.75rem 2.8rem 1.75rem;
+    padding: 1.2rem 2.35rem 1rem;
     overflow: hidden;
     animation: fadeSlideIn 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   }
@@ -83,6 +83,7 @@
   /* ── Slide Region System ── */
   .slide-header {
     flex: 0 0 auto;
+    padding-top: 1rem;
   }
 
   .slide-body {
@@ -169,7 +170,7 @@
     font-size: var(--fs-xl);
     font-weight: 700;
     letter-spacing: -0.02em;
-    margin-bottom: var(--sp-3);
+    margin-bottom: var(--sp-2);
   }
 
   h3 {
@@ -188,7 +189,7 @@
   .small-text {
     font-size: var(--fs-sm);
     color: var(--text-dim);
-    line-height: 1.55;
+    line-height: 1.45;
   }
 
   .tiny {
@@ -209,25 +210,48 @@
 
   .section-tag {
     position: absolute;
-    top: 1.125rem;
-    left: 1.75rem;
-    font-size: var(--fs-xs);
+    top: 0.5rem;
+    right: 0.7rem;
+    left: auto;
+    font-size: 0.66rem;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.07em;
     color: var(--text-dim);
-    opacity: 0.5;
+    opacity: 0.42;
   }
 
   .badge {
     display: inline-block;
-    font-size: var(--fs-xs);
+    position: absolute;
+    top: 0.48rem;
+    left: 0.68rem;
+    z-index: 2;
+    font-size: 0.7rem;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.08em;
-    padding: 0.3rem 0.85rem;
+    padding: 0.22rem 0.62rem;
     border-radius: var(--radius-full);
-    margin-bottom: var(--sp-3);
+    margin-bottom: 0;
+  }
+
+  .slide:not(.centered) > h2,
+  .slide:not(.centered) > h1,
+  .slide:not(.centered) > .subtitle,
+  .slide:not(.centered) > .small-text,
+  .slide:not(.centered) > .tiny,
+  .slide:not(.centered) > .spacer,
+  .slide:not(.centered) > .spacer-sm,
+  .slide:not(.centered) > .spacer-lg,
+  .slide:not(.centered) > .gradient-line,
+  .slide:not(.centered) > .grid-2,
+  .slide:not(.centered) > .grid-3,
+  .slide:not(.centered) > .card,
+  .slide:not(.centered) > .attn18-layout,
+  .slide:not(.centered) > .attn19-layout,
+  .slide:not(.centered) > .attn21-layout {
+    margin-top: 0.95rem;
   }
 
   .badge.day1     { background: var(--accent-bg); color: var(--accent); }
