@@ -208,15 +208,20 @@ function createAttentionMultiHeadHeadOverlay(head) {
   const defs = svgEl('defs');
   defs.appendChild(svgEl('marker', {
     id: markerId,
+    viewBox: '0 0 8 10',
     markerWidth: 8,
-    markerHeight: 8,
-    refX: 7,
-    refY: 4,
+    markerHeight: 10,
+    refX: 7.2,
+    refY: 5,
     orient: 'auto',
     markerUnits: 'userSpaceOnUse'
   }, svgEl('path', {
-    d: 'M0,0 L8,4 L0,8 Z',
-    fill: arrowColor
+    d: 'M0.8,0.8 L7.2,5 L0.8,9.2',
+    fill: 'none',
+    stroke: arrowColor,
+    'stroke-width': 1.7,
+    'stroke-linecap': 'round',
+    'stroke-linejoin': 'round'
   })));
   overlay.appendChild(defs);
   overlay.appendChild(svgEl('line', {
@@ -237,7 +242,7 @@ function createAttentionMultiHeadHeadOverlay(head) {
     text: '×3'
   }));
   ATTN_MHA_PROJS.forEach((proj) => {
-    overlay.appendChild(svgEl('line', {
+    overlay.appendChild(svgEl('path', {
       class: 'attn24-head-overlay-line',
       id: 'attn24-head-line-' + proj + '-' + head,
       'marker-end': 'url(#' + markerId + ')'
@@ -698,15 +703,13 @@ function updateAttentionMultiHeadHeadOverlay(head) {
     el.setAttribute('x2', to.x.toFixed(2));
     el.setAttribute('y2', to.y.toFixed(2));
   };
-  const setOrthogonalPath = (el, from, to) => {
+  const setPath = (el, points) => {
     if (!el) return;
-    const midX = from.x + ((to.x - from.x) * 0.5);
     el.setAttribute(
       'd',
-      'M' + from.x.toFixed(2) + ',' + from.y.toFixed(2)
-      + ' L' + midX.toFixed(2) + ',' + from.y.toFixed(2)
-      + ' L' + midX.toFixed(2) + ',' + to.y.toFixed(2)
-      + ' L' + to.x.toFixed(2) + ',' + to.y.toFixed(2)
+      points.map((pt, idx) => (
+        (idx === 0 ? 'M' : ' L') + pt.x.toFixed(2) + ',' + pt.y.toFixed(2)
+      )).join('')
     );
   };
 
@@ -732,20 +735,19 @@ function updateAttentionMultiHeadHeadOverlay(head) {
   }).filter(Boolean);
   if (!targets.length) return;
 
-  const minTargetY = Math.min.apply(null, targets.map((entry) => entry.dummyLeft.y));
   const maxTargetY = Math.max.apply(null, targets.map((entry) => entry.dummyLeft.y));
   const nearestTargetX = Math.min.apply(null, targets.map((entry) => entry.dummyLeft.x));
   const gapWidth = Math.max(1, nearestTargetX - sourcePoint.x);
   const busX = sourcePoint.x + Math.max(16, Math.min(34, gapWidth * 0.42));
-  const busTop = Math.min(sourcePoint.y, minTargetY);
   const busBottom = Math.max(sourcePoint.y, maxTargetY);
   const nodeRadius = 4.4;
+  const arrowInset = 3.2;
 
   setLine(sourceLine, sourcePoint, {
     x: Math.max(sourcePoint.x, busX - nodeRadius - 1.5),
     y: sourcePoint.y
   });
-  setLine(busLine, { x: busX, y: busTop }, { x: busX, y: busBottom });
+  setLine(busLine, { x: busX, y: sourcePoint.y }, { x: busX, y: busBottom });
 
   copyNode.setAttribute('cx', busX.toFixed(2));
   copyNode.setAttribute('cy', sourcePoint.y.toFixed(2));
@@ -753,10 +755,36 @@ function updateAttentionMultiHeadHeadOverlay(head) {
   copyLabel.setAttribute('x', busX.toFixed(2));
   copyLabel.setAttribute('y', (sourcePoint.y - 9).toFixed(2));
 
-  targets.forEach((entry) => {
-    setLine(entry.branchLine, { x: busX, y: entry.dummyLeft.y }, entry.dummyLeft);
-    setOrthogonalPath(entry.dummyToWLine, entry.dummyRight, entry.wLeft);
-    setOrthogonalPath(entry.wToQkvLine, entry.wRight, entry.qkvLeft);
+  const sortedTargets = targets.slice().sort((a, b) => a.dummyLeft.y - b.dummyLeft.y);
+
+  sortedTargets.forEach((entry, idx) => {
+    const dummyEnd = {
+      x: Math.max(busX + 2, entry.dummyLeft.x - arrowInset),
+      y: entry.dummyLeft.y
+    };
+    if (idx === 0) {
+      const elbowX = busX + Math.max(10, Math.min(18, (dummyEnd.x - busX) * 0.42));
+      setPath(entry.branchLine, [
+        { x: busX, y: sourcePoint.y },
+        { x: elbowX, y: sourcePoint.y },
+        { x: elbowX, y: dummyEnd.y },
+        dummyEnd
+      ]);
+    } else {
+      setPath(entry.branchLine, [
+        { x: busX, y: dummyEnd.y },
+        dummyEnd
+      ]);
+    }
+
+    setPath(entry.dummyToWLine, [
+      entry.dummyRight,
+      { x: Math.max(entry.dummyRight.x + 2, entry.wLeft.x - arrowInset), y: entry.wLeft.y }
+    ]);
+    setPath(entry.wToQkvLine, [
+      entry.wRight,
+      { x: Math.max(entry.wRight.x + 2, entry.qkvLeft.x - arrowInset), y: entry.qkvLeft.y }
+    ]);
   });
 }
 

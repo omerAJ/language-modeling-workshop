@@ -2,9 +2,9 @@
 
 .attn24-stage {
     --attn24-source-w: 12.2rem;
-    --attn24-head-gap: 0.92rem;
+    --attn24-head-gap: 1.2rem;
     --attn24-mini-x-w: 7.9rem;
-    --attn24-branch-gap: 1.55rem;
+    --attn24-branch-gap: 2.4rem;
     --attn24-qkv-w: 3.18rem;
     --attn24-proj-shell-w: var(--attn24-qkv-w);
     --attn24-proj-shell-pad: 0.07rem;
@@ -238,7 +238,7 @@
 }
 
 .attn24-head-grid {
-    width: min(100%, 51rem);
+    width: min(calc(100% - 0.6rem), 63rem);
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: var(--attn24-head-gap);
@@ -343,10 +343,10 @@
 
 .attn24-head-overlay-line,
   .attn24-head-overlay-bus {
-    stroke: rgba(var(--attn24-head-rgb), 0.78);
-    stroke-width: 1.52;
+    stroke: rgba(var(--attn24-head-rgb), 0.96);
+    stroke-width: 1.9;
     fill: none;
-    stroke-linecap: round;
+    stroke-linecap: butt;
     stroke-linejoin: round;
     opacity: 0;
     transition: opacity 0.22s ease;
@@ -354,15 +354,16 @@
 }
 
 .attn24-head-overlay-bus {
-    stroke: rgba(var(--attn24-head-rgb), 0.58);
-    stroke-width: 1.28;
+    stroke: rgba(var(--attn24-head-rgb), 0.78);
+    stroke-width: 1.5;
+    stroke-linecap: round;
 
 }
 
 .attn24-head-copy-node {
-    fill: rgba(var(--attn24-head-rgb), 0.24);
-    stroke: rgba(var(--attn24-head-rgb), 0.92);
-    stroke-width: 1.2;
+    fill: rgba(var(--attn24-head-rgb), 0.34);
+    stroke: rgba(var(--attn24-head-rgb), 1);
+    stroke-width: 1.5;
     opacity: 0;
     transition: opacity 0.22s ease;
 
@@ -508,7 +509,7 @@
     display: grid;
     grid-template-columns: max-content max-content minmax(0, 1fr);
     align-items: center;
-    gap: 0.82rem;
+    gap: 1.55rem;
 
 }
 
@@ -1066,7 +1067,7 @@
 }
 
 #slide-24.attn24-source-collapsed .attn24-head-grid {
-    width: min(100%, 57rem);
+    width: min(calc(100% - 0.3rem), 67rem);
     transform: translateY(-0.36rem);
 
 }
