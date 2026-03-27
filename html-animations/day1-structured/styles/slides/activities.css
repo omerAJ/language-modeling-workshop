@@ -74,19 +74,36 @@
 #slide-16 #ntpGame {
   display: grid !important;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.5rem 0.65rem !important;
-  align-items: start;
+  gap: 0.56rem 0.72rem !important;
+  align-items: stretch;
 }
 
-#slide-16 #ntpGame > .ntp-sentence:nth-child(3) {
+#slide-16 #ntpGame > .ntp-card-code {
   grid-column: 1 / -1;
+}
+
+#slide-16 .ntp-card,
+#slide-16 .ntp-action-card {
+  min-height: 0;
 }
 
 #slide-16 .ntp-sentence {
   margin: 0;
-  padding: 0.54rem 0.72rem;
+  padding: 0.64rem 0.9rem;
   font-size: var(--fs-sm);
-  line-height: 1.42;
+  line-height: 1.48;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  gap: 0.18rem 0;
+}
+
+#slide-16 .ntp-card:not(.ntp-card-code) {
+  min-height: 5.1rem;
+}
+
+#slide-16 .ntp-card-code {
+  min-height: 6.9rem;
 }
 
 #slide-16 .ntp-blank {
@@ -102,9 +119,34 @@
   padding: 0.08rem 0.32rem;
 }
 
-#slide-16 > .reveal-btn {
-  margin-top: 0.5rem;
-  align-self: center;
-  padding: 0.38rem 0.72rem;
+#slide-16 .ntp-action-card {
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(167,139,250,0.24);
+  background:
+    linear-gradient(180deg, rgba(167,139,250,0.08), rgba(167,139,250,0.03)),
+    var(--surface2);
+  padding: 0.72rem 0.9rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 0.45rem;
+}
+
+#slide-16 .ntp-action-label {
   font-size: var(--fs-xs);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--purple);
+}
+
+#slide-16 .ntp-action-card .tiny {
+  line-height: 1.45;
+  color: var(--text-dim);
+}
+
+#slide-16 .ntp-action-card .reveal-btn {
+  align-self: flex-start;
+  font-size: var(--fs-xs);
+  padding: 0.38rem 0.72rem;
 }
