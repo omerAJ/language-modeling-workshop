@@ -603,6 +603,11 @@
 
 }
 
+#slide-20 .attn19-score-pill {
+    width: 88%;
+    justify-self: center;
+}
+
 .attn19-vector-label sub,
   .attn19-vector-label-q sub,
   .attn19-score-pill sub {
