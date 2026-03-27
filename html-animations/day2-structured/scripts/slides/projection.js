@@ -248,12 +248,12 @@ function initProjectionSlide() {
       addTrackedListener(btn, 'click', () => {
         if (typeof runMutationWithHistory === 'function') {
           if (runMutationWithHistory(() => setProjectionLens(btn.dataset.lens))) {
-            scheduleActiveSlideFit({ reason: 'projection-lens' });
+            scheduleDeckRefresh({ reason: 'projection-lens', typeset: false });
           }
           return;
         }
         setProjectionLens(btn.dataset.lens);
-        scheduleActiveSlideFit({ reason: 'projection-lens' });
+        scheduleDeckRefresh({ reason: 'projection-lens', typeset: false });
       });
     });
 

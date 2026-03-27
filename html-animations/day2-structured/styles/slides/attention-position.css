@@ -5,7 +5,7 @@
     display: grid;
     justify-items: center;
     align-content: start;
-    gap: clamp(0.9rem, 2.2vh, 1.25rem);
+    gap: 1rem;
     padding-top: 0.88rem;
   
 }
@@ -14,7 +14,7 @@
     width: min(100%, 44rem);
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: clamp(0.72rem, 1.9vw, 1rem);
+    gap: 1rem;
     align-items: start;
   
 }
@@ -593,55 +593,4 @@
     background: rgba(180,157,255,0.14);
     color: rgba(228,220,255,0.96);
   
-}
-
-@media (max-width: 56rem) {
-.attn25-context-row,
-    .attn25-seq-top,
-    .attn25-fix-stage {
-        grid-template-columns: 1fr;
-      
-}
-
-.attn25-problem-body {
-        grid-template-columns: 1fr;
-        justify-items: center;
-      
-}
-
-.attn25-fix-flow {
-        grid-template-columns: auto auto minmax(0, 1fr);
-        justify-items: stretch;
-        align-items: start;
-      
-}
-
-.attn25-bag-wrap,
-    .attn25-fix-input-wrap {
-        width: min(100%, 16rem);
-      
-}
-
-.attn25-pos-source {
-        justify-self: center;
-      
-}
-
-.attn25-mini-panel {
-        min-height: 0;
-      
-}
-
-.attn25-chip-inline {
-        flex-wrap: wrap;
-        justify-content: center;
-      
-}
-
-.attn25-fix-attn-wrap {
-        grid-column: 1 / -1;
-        width: 100%;
-        padding-top: 0;
-      
-}
 }

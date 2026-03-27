@@ -11,6 +11,23 @@ const POS26_TAKEAWAYS = [
   'RoPE rotates each Q/K pair by absolute position; the dot product turns that into a relative-offset signal, so the same gap always gives the same attention score.'
 ];
 
+function measurePositionSignalPanelHeight(panel) {
+  if (!panel) return 0;
+
+  const panelRect = panel.getBoundingClientRect();
+  const children = Array.from(panel.children);
+  if (children.length === 0) return Math.ceil(panelRect.height);
+
+  let maxBottom = 0;
+  children.forEach((child) => {
+    const rect = child.getBoundingClientRect();
+    if (!rect.width && !rect.height) return;
+    maxBottom = Math.max(maxBottom, rect.bottom - panelRect.top);
+  });
+
+  return Math.ceil(maxBottom);
+}
+
 function syncPositionSignalFrameHeight() {
   const slide = document.getElementById('slide-26');
   const frame = document.getElementById('pos26-state-frame');
@@ -18,8 +35,8 @@ function syncPositionSignalFrameHeight() {
   if (!slide || !frame || !activePanel) return;
 
   requestAnimationFrame(() => {
-    frame.style.height = activePanel.offsetHeight + 'px';
-    scheduleActiveSlideFit({ reason: 'pos26-frame' });
+    frame.style.height = measurePositionSignalPanelHeight(activePanel) + 'px';
+    scheduleDeckRefresh({ reason: 'pos26-frame', typeset: false });
   });
 }
 

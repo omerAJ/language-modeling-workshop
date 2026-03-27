@@ -380,19 +380,3 @@
 /* ══════════════════════════════════════════════════════════════════
    Responsive
    ══════════════════════════════════════════════════════════════════ */
-
-@media (max-width: 60rem) {
-  .pred32-loop-flow {
-    grid-template-columns: 1fr;
-    gap: var(--sp-2);
-  }
-
-  .pred32-flow-arrow {
-    transform: rotate(90deg);
-    justify-self: center;
-  }
-
-  .close33-insights {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}

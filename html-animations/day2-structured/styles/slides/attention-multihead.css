@@ -1,25 +1,25 @@
 /* Slide 24: multi-head attention. */
 
 .attn24-stage {
-    --attn24-source-w: clamp(11.8rem, 25vw, 13.6rem);
-    --attn24-head-gap: clamp(0.9rem, 2vw, 1.24rem);
-    --attn24-mini-x-w: clamp(8.2rem, 17vw, 9rem);
-    --attn24-branch-gap: clamp(1.55rem, 3vw, 2.05rem);
-    --attn24-qkv-w: clamp(3.2rem, 7vw, 3.66rem);
-    --attn24-attn-w: clamp(7rem, 15vw, 7.8rem);
-    --attn24-output-w: clamp(6rem, 13vw, 6.8rem);
-    --attn24-concat-w: clamp(10.8rem, 22vw, 12.2rem);
-    --attn24-final-output-w: clamp(10.8rem, 22vw, 12.2rem);
-    --attn24-wo-w: clamp(3rem, 6.4vw, 3.5rem);
-    --attn24-wo-h: clamp(3rem, 6.4vw, 3.5rem);
-    --attn24-combine-gap: clamp(0.56rem, 1.4vw, 0.86rem);
+    --attn24-source-w: 13.6rem;
+    --attn24-head-gap: 1.24rem;
+    --attn24-mini-x-w: 9rem;
+    --attn24-branch-gap: 2.05rem;
+    --attn24-qkv-w: 3.66rem;
+    --attn24-attn-w: 7.8rem;
+    --attn24-output-w: 6.8rem;
+    --attn24-concat-w: 12.2rem;
+    --attn24-final-output-w: 12.2rem;
+    --attn24-wo-w: 3.5rem;
+    --attn24-wo-h: 3.5rem;
+    --attn24-combine-gap: 0.86rem;
     --attn24-struct-row-h: 0.82rem;
     --attn24-output-row-h: 1rem;
     position: relative;
     display: grid;
     justify-items: center;
     align-content: start;
-    gap: clamp(0.9rem, 2.4vh, 1.3rem);
+    gap: 1.08rem;
     padding-top: var(--fs-sm);
 
 }
@@ -699,7 +699,7 @@
     align-content: center;
     justify-items: center;
     gap: var(--attn24-combine-gap);
-    padding: 1rem clamp(0.9rem, 2.4vw, 1.4rem);
+    padding: 1rem 1.4rem;
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
@@ -1048,220 +1048,4 @@
     will-change: transform, opacity;
     opacity: 0.98;
 
-}
-
-@media (max-width: 56rem) {
-.attn24-stage {
-        --attn24-source-w: 10.6rem;
-        --attn24-mini-x-w: 7.4rem;
-        --attn24-branch-gap: 1.74rem;
-        --attn24-qkv-w: 2.9rem;
-        --attn24-output-w: 5.8rem;
-        --attn24-concat-w: 10.8rem;
-        --attn24-final-output-w: 10.8rem;
-        --attn24-wo-w: 3rem;
-        --attn24-wo-h: 3rem;
-        --attn24-w-w: 1.78rem;
-        --attn24-w-h: 2.58rem;
-        --attn24-struct-row-h: 0.72rem;
-        --attn24-output-row-h: 0.88rem;
-        gap: var(--fs-xs);
-        padding-top: 0.84rem;
-
-}
-
-.attn24-source-label {
-        font-size: var(--fs-2xs);
-
-}
-
-.attn24-source-meta,
-    .attn24-head-meta {
-        font-size: var(--fs-2xs);
-
-}
-
-.attn24-head-card {
-        min-height: 18.8rem;
-        padding: var(--fs-2xs) 0.66rem var(--fs-2xs);
-        gap: 0.48rem;
-
-}
-
-.attn24-head-body {
-        grid-template-columns: var(--attn24-mini-x-w) var(--attn24-branch-gap) minmax(0, 1fr);
-
-}
-
-.attn24-head-title {
-        font-size: var(--fs-2xs);
-
-}
-
-.attn24-head-proj-pane {
-        gap: 0.32rem;
-
-}
-
-.attn24-head-proj-row {
-        gap: var(--sp-1);
-
-}
-
-.attn24-head-mini-x-label,
-    .attn24-head-qkv-label,
-    .attn24-head-output-label,
-    .attn24-head-w-label {
-        font-size: var(--fs-2xs);
-
-}
-
-.attn24-head-attn-block-title {
-        font-size: var(--fs-2xs);
-
-}
-
-.attn24-head-attn-block-formula {
-        font-size: var(--fs-2xs);
-
-}
-
-.attn24-concat-label,
-    .attn24-mha-output-label,
-    .attn24-wo-label {
-        font-size: var(--fs-2xs);
-
-}
-
-.attn24-concat-dims,
-    .attn24-mha-output-dims,
-    .attn24-wo-dims {
-        font-size: var(--fs-2xs);
-
-}
-
-.attn24-combine-mul,
-    .attn24-combine-equals {
-        font-size: var(--fs-sm);
-
-}
-}
-
-@media (max-width: 44rem) {
-.attn24-overlay {
-        display: none;
-
-}
-
-.attn24-stage {
-        --attn24-source-w: 10rem;
-        --attn24-mini-x-w: 7rem;
-        --attn24-branch-gap: 1.5rem;
-        --attn24-qkv-w: 2.8rem;
-        --attn24-output-w: 5.5rem;
-        --attn24-concat-w: min(100%, 10.6rem);
-        --attn24-final-output-w: min(100%, 10.6rem);
-        --attn24-wo-w: 2.86rem;
-        --attn24-wo-h: 2.86rem;
-        --attn24-w-w: 1.66rem;
-        --attn24-w-h: 2.34rem;
-        --attn24-struct-row-h: 0.66rem;
-        --attn24-output-row-h: 0.82rem;
-        gap: var(--fs-2xs);
-
-}
-
-.attn24-source-panel {
-        width: min(100%, 10rem);
-
-}
-
-.attn24-head-grid {
-        grid-template-columns: 1fr;
-        width: min(100%, 22.6rem);
-        gap: var(--fs-2xs);
-
-}
-
-.attn24-head-card {
-        min-height: 17.7rem;
-        padding: 0.58rem 0.6rem 0.68rem;
-
-}
-
-.attn24-head-body {
-        grid-template-columns: 1fr;
-        justify-items: center;
-        gap: 0.46rem;
-
-}
-
-.attn24-head-source-col,
-    .attn24-head-proj-pane {
-        grid-column: auto;
-
-}
-
-.attn24-head-overlay {
-        display: none;
-
-}
-
-.attn24-head-proj-pane {
-        width: min(100%, 11.6rem);
-        gap: 0.24rem;
-
-}
-
-.attn24-head-proj-row {
-        grid-template-columns: var(--attn24-w-w) auto minmax(0, 1fr);
-        gap: 0.22rem;
-        justify-content: center;
-
-}
-
-.attn24-head-attn-block {
-        width: min(100%, 11.6rem);
-
-}
-
-.attn24-head-attn-block-formula {
-        font-size: var(--fs-2xs);
-        white-space: normal;
-        line-height: 1.3;
-
-}
-
-.attn24-combine-stage {
-        padding-inline: 0.8rem;
-
-}
-
-#slide-24.attn24-show-wo .attn24-combine-stage {
-        grid-template-columns: 1fr;
-        width: min(100%, 14rem);
-        justify-items: center;
-        align-content: center;
-        gap: 0.28rem;
-
-}
-
-.attn24-concat-wrap,
-    .attn24-wo-wrap,
-    .attn24-mha-output-wrap {
-        width: 100%;
-
-}
-
-.attn24-concat-shell,
-    .attn24-mha-output-shell {
-        width: min(100%, var(--attn24-concat-w));
-
-}
-
-.attn24-combine-mul,
-    .attn24-combine-equals {
-        margin: 0.04rem 0;
-
-}
 }

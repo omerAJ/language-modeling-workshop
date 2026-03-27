@@ -124,11 +124,6 @@
   .projection-body-info .math-note {
     margin-top: 0.5rem;
   }
-  @media (max-width: 56rem) {
-    .projection-body {
-      grid-template-columns: 1fr;
-    }
-  }
   .projection-stage {
     border: 1px solid rgba(123,154,255,0.3);
     border-radius: var(--radius-md);
@@ -188,4 +183,66 @@
     border: 1px solid rgba(123,154,255,0.34);
     background: rgba(123,154,255,0.1);
     margin-top: 0.55rem;
+  }
+
+  /* Projector-safe compaction for slide 16 */
+  #slide-16 h2 {
+    margin-bottom: 0.7rem;
+  }
+
+  #slide-16 .slide-header .small-text {
+    line-height: 1.42;
+  }
+
+  #slide-16 .projection-card {
+    margin-top: 0 !important;
+    padding: 0.9rem 1rem;
+  }
+
+  #slide-16 .projection-card h3 {
+    margin-bottom: 0.45rem;
+  }
+
+  #slide-16 .projection-toolbar {
+    gap: 0.35rem;
+    margin-top: 0.25rem;
+  }
+
+  #slide-16 .lens-btn {
+    padding: 0.32rem 0.58rem;
+  }
+
+  #slide-16 .projection-body {
+    grid-template-columns: minmax(0, 42.5rem) 18rem;
+    justify-content: center;
+    gap: 0.8rem;
+    margin-top: 0.55rem;
+  }
+
+  #slide-16 .projection-stage {
+    min-height: 13.4rem;
+  }
+
+  #slide-16 .projection-readout {
+    padding: 0.54rem 0.62rem;
+  }
+
+  #slide-16 .projection-neighbors {
+    gap: 0.34rem;
+    margin-top: 0.36rem;
+  }
+
+  #slide-16 .neighbor-chip {
+    padding: 0.18rem 0.34rem;
+  }
+
+  #slide-16 .math-note {
+    padding: 0.38rem 0.48rem;
+    margin-top: 0.38rem !important;
+  }
+
+  #slide-16 .projection-note {
+    margin-top: 0.32rem !important;
+    font-size: var(--fs-2xs);
+    line-height: 1.42;
   }

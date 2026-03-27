@@ -298,7 +298,7 @@
 
 .pos26-state-frame {
   position: relative;
-  min-height: 30rem;
+  min-height: 0;
   transition: height 0.28s ease;
 }
 
@@ -969,56 +969,6 @@
   color: #fff1bc;
 }
 
-/* responsive */
-@media (max-width: 56rem) {
-  .pos25-compare {
-    flex-direction: column;
-  }
-
-  .pos25-sentence {
-    width: 100%;
-    min-width: 0;
-  }
-
-  .pos26-progress {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-
-  .pos26-state-grid,
-  .pos26-compare-rail,
-  .pos26-rope-stage-grid,
-  .pos26-attn-bridge {
-    grid-template-columns: 1fr;
-  }
-
-  .pos26-flow-ribbon {
-    flex-direction: column;
-    gap: 0.28rem;
-  }
-
-  .pos26-raw-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .pos26-math-op,
-  .pos26-transition-arrow {
-    justify-self: center;
-  }
-
-  .pos26-normalize-compare {
-    grid-template-columns: 1fr;
-  }
-
-  .pos26-binary-grid {
-    grid-template-columns: auto repeat(8, minmax(1.6rem, 1fr));
-    gap: 0.1rem;
-  }
-
-  .pos26-state-frame {
-    min-height: 36rem;
-  }
-}
-
 /* ── RoPE step 5: angle-arc SVG additions ── */
 
 .pos26-rope-angle-svg {
@@ -1037,6 +987,51 @@
   font-size: 9px;
   font-weight: 700;
   fill: rgba(214, 224, 250, 0.88);
+}
+
+#slide-26[data-pos26-step='5'] .pos26-state-grid {
+  grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr);
+}
+
+#slide-26[data-pos26-step='5'] .pos26-copy-card,
+#slide-26[data-pos26-step='5'] .pos26-visual-card {
+  padding: 0.72rem 0.78rem;
+}
+
+#slide-26[data-pos26-step='5'] .pos26-teach-list {
+  gap: 0.3rem;
+}
+
+#slide-26[data-pos26-step='5'] .pos26-teach-row {
+  padding: 0.4rem 0.48rem;
+}
+
+#slide-26[data-pos26-step='5'] .pos26-row-body span {
+  line-height: 1.4;
+}
+
+#slide-26[data-pos26-step='5'] .pos26-rope-walkthrough {
+  gap: 0.42rem;
+  margin-top: 0.44rem;
+}
+
+#slide-26[data-pos26-step='5'] .pos26-rope-stage {
+  padding: 0.46rem 0.54rem;
+}
+
+#slide-26[data-pos26-step='5'] .pos26-rope-rotate-labels {
+  margin-top: 0.34rem;
+  font-size: 0.64rem;
+}
+
+#slide-26[data-pos26-step='5'] .pos26-rope-rotate-visual {
+  height: 4.4rem;
+}
+
+#pos26-takeaway {
+  padding: 0.46rem 0.62rem;
+  font-size: var(--fs-2xs);
+  line-height: 1.35;
 }
 
 .pos26-rope-q-label { fill: #63d3ff; }

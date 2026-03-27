@@ -189,7 +189,7 @@ function restoreHistorySnapshot(snapshot) {
 
   restoreAutostepRevealCount(activeSlide, snapshot.autostepCount || 0);
   typesetMath(activeSlide);
-  scheduleActiveSlideFit({ reason: 'history-restore' });
+  scheduleDeckRefresh({ reason: 'history-restore' });
   return true;
 }
 
@@ -226,7 +226,7 @@ function goToSlide(index) {
   typesetMath(activeSlide);
   const descriptor = getSlideDescriptorById(activeSlide.id);
   descriptor.init(state, activeSlide);
-  scheduleActiveSlideFit({ reason: 'goToSlide' });
+  scheduleDeckRefresh({ reason: 'goToSlide' });
   captureSnapshot('goToSlide:' + activeSlide.id);
 }
 
@@ -273,14 +273,14 @@ function nextStep() {
   const before = createHistorySnapshot();
   if (descriptor.step(active, state)) {
     commitHistorySnapshot(before);
-    scheduleActiveSlideFit({ reason: 'step' });
+    scheduleDeckRefresh({ reason: 'step' });
     captureSnapshot('nextStep:' + active.id);
     return true;
   }
   const beforeAutoStep = createHistorySnapshot();
   if (runAutoStep(active)) {
     commitHistorySnapshot(beforeAutoStep);
-    scheduleActiveSlideFit({ reason: 'autostep' });
+    scheduleDeckRefresh({ reason: 'autostep' });
     captureSnapshot('nextStep:auto:' + active.id);
     return true;
   }
