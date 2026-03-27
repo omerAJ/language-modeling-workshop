@@ -159,7 +159,19 @@
 }
 
 #slide-33 .grid-2 > .card {
-  padding: 0.76rem 0.84rem;
+  padding: 1rem 0.92rem 0.84rem;
+}
+
+#slide-33 .grid-2 > .card .badge {
+  position: static;
+  top: auto;
+  left: auto;
+  margin-bottom: 0.7rem !important;
+}
+
+#slide-33 .grid-2 > .card h3 {
+  margin-top: 0;
+  margin-bottom: 0.7rem;
 }
 
 #slide-33 .obj-list li {
