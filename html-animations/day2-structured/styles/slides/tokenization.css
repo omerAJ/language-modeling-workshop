@@ -102,6 +102,23 @@
     color: var(--accent);
   }
 
+  /* Slide 9: keep the two BPE intro cards content-sized instead of stretched. */
+  #slide-9 .slide-body {
+    justify-content: flex-start;
+  }
+
+  #slide-9 .slide-body > .grid-2 {
+    flex: 0 0 auto;
+    align-items: start;
+    margin-top: 0.75rem !important;
+  }
+
+  #slide-9 .card {
+    height: fit-content;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+  }
+
   /* BPE walkthrough: each reveal should replace the previous overlay in place. */
   .bpe-initial {
     transition: opacity 0.35s ease;

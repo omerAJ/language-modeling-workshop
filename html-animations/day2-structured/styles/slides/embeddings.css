@@ -185,6 +185,27 @@
     margin-top: 0.55rem;
   }
 
+  /* Slide 14: keep the two comparison cards content-sized instead of stage-sized. */
+  #slide-14 .slide-body {
+    justify-content: flex-start;
+  }
+
+  #slide-14 .slide-body > .grid-2 {
+    flex: 0 0 auto;
+    align-items: start;
+    margin-top: 0.75rem;
+  }
+
+  #slide-14 .card {
+    height: fit-content;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+  }
+
+  #slide-14 .callout.info {
+    margin-top: 0.8rem !important;
+  }
+
   /* Projector-safe compaction for slide 16 */
   #slide-16 h2 {
     margin-bottom: 0.7rem;
