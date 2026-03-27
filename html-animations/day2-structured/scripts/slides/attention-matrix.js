@@ -293,16 +293,25 @@ function createAttentionMatrixScoreKTransposeMatrix() {
     className: 'attn23-score-k-stage',
     id: 'attn23-score-k-stage'
   });
+  const headerRow = createEl('div', {
+    className: 'attn23-score-k-transpose-header-row',
+    id: 'attn23-score-k-transpose-header-row'
+  });
+  headerRow.appendChild(createEl('div', {
+    className: 'attn23-score-k-transpose-header-spacer',
+    'aria-hidden': 'true'
+  }));
   const colHeaders = createEl('div', {
     className: 'attn23-score-col-headers attn23-score-k-col-headers',
     id: 'attn23-score-k-col-headers'
   });
   ATTN_MATRIX_SCORE_TOKENS.forEach((token) => {
     colHeaders.appendChild(createEl('span', {
-      className: 'attn23-score-token-header',
+      className: 'attn23-score-token-header attn23-score-token-header--transpose',
       text: token
     }));
   });
+  headerRow.appendChild(colHeaders);
 
   const bodyArea = createEl('div', {
     className: 'attn23-score-k-body-area',
@@ -345,7 +354,7 @@ function createAttentionMatrixScoreKTransposeMatrix() {
   frame.appendChild(rotate);
   bodyArea.appendChild(rowHeaders);
   bodyArea.appendChild(frame);
-  stage.appendChild(colHeaders);
+  stage.appendChild(headerRow);
   stage.appendChild(bodyArea);
   wrap.appendChild(stage);
   return wrap;
@@ -1040,6 +1049,7 @@ function syncAttentionMatrixScoreStageFromClasses() {
   const equals = document.getElementById('attn23-score-equals');
   const kRotate = document.getElementById('attn23-score-k-rotate');
   const kFrame = document.getElementById('attn23-score-k-body-frame');
+  const kHeaderRow = document.getElementById('attn23-score-k-transpose-header-row');
   const kColHeaders = document.getElementById('attn23-score-k-col-headers');
   const kRowHeaders = document.getElementById('attn23-score-k-row-headers');
 
@@ -1096,11 +1106,15 @@ function syncAttentionMatrixScoreStageFromClasses() {
     kFrame.style.setProperty('width', transposed ? 'var(--attn23-score-k-transpose-frame-w)' : 'var(--attn23-score-operand-w)', 'important');
     kFrame.style.setProperty('height', transposed ? 'var(--attn23-score-k-transpose-frame-h)' : 'var(--attn23-score-operand-h)', 'important');
   }
+  if (kHeaderRow) {
+    kHeaderRow.style.setProperty('max-height', transposed ? 'var(--attn23-score-k-transpose-header-h)' : '0', 'important');
+    kHeaderRow.style.setProperty('opacity', transposed ? '1' : '0', 'important');
+    kHeaderRow.style.setProperty('visibility', transposed ? 'visible' : 'hidden', 'important');
+    kHeaderRow.style.setProperty('transform', transposed ? 'translateY(0)' : 'translateY(0.08rem)', 'important');
+  }
   if (kColHeaders) {
-    kColHeaders.style.setProperty('max-height', transposed ? '1rem' : '0', 'important');
     kColHeaders.style.setProperty('opacity', transposed ? '1' : '0', 'important');
     kColHeaders.style.setProperty('visibility', transposed ? 'visible' : 'hidden', 'important');
-    kColHeaders.style.setProperty('transform', transposed ? 'translateY(0)' : 'translateY(0.08rem)', 'important');
   }
   if (kRowHeaders) {
     kRowHeaders.style.setProperty('opacity', transposed ? '0' : '1', 'important');
