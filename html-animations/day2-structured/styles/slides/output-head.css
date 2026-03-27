@@ -1,539 +1,305 @@
-/* Slides 32–33: prediction (LM head) and generation (decoding loop). */
+/* Slides 32–33: prediction loop and closing synthesis. */
 
 /* ══════════════════════════════════════════════════════════════════
-   Slide 32: From Hidden State to Next Word
+   Slide 32: Predict One Token, Append, Repeat
    ══════════════════════════════════════════════════════════════════ */
 
 .pred32-layout {
   margin-top: var(--sp-3);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 .pred32-stage {
   padding: var(--sp-4);
-  display: grid;
-  gap: var(--sp-3);
-}
-
-/* — Prompt row — */
-.pred32-prompt-row {
+  flex: 1;
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: var(--sp-2);
-  flex-wrap: wrap;
 }
 
-.pred32-next-label {
-  font-size: var(--fs-xs);
+/* — 3-zone horizontal flow — */
+.pred32-loop-flow {
+  display: grid;
+  grid-template-columns: 1fr auto 1.5fr auto 1fr;
+  gap: var(--sp-3);
+  align-items: center;
+  width: 100%;
+}
+
+.pred32-flow-arrow {
+  font-size: var(--fs-xl);
+  color: var(--text-dim);
+  opacity: 0.45;
+  text-align: center;
+  padding: 0 var(--sp-1);
+  user-select: none;
+}
+
+/* — Zone shared styles — */
+.pred32-ctx-zone,
+.pred32-head-zone,
+.pred32-select-zone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: var(--sp-3) var(--sp-3);
+  border-radius: var(--radius-md);
+  text-align: center;
+}
+
+/* — Zone 1: Context — */
+.pred32-ctx-zone {
+  border: 1px solid var(--border);
+  background: var(--surface2);
+}
+
+.pred32-tokens-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-1);
+  justify-content: center;
+}
+
+.pred32-zone-note {
+  font-size: var(--fs-2xs);
   color: var(--text-dim);
   font-style: italic;
+  margin-top: var(--sp-1);
 }
 
-/* — Pipeline (4 zones + 3 arrows) — */
-.pred32-pipeline {
-  display: grid;
-  grid-template-columns: minmax(0, 1.1fr) auto minmax(0, 0.9fr) auto minmax(0, 0.9fr) auto minmax(0, 1.3fr);
-  gap: var(--sp-2);
-  align-items: center;
+/* — Zone 2: LM Head — */
+.pred32-head-zone {
+  border: 1px solid rgba(123, 154, 255, 0.3);
+  background: rgba(123, 154, 255, 0.05);
 }
 
-/* — Arrow zones between pipeline stages — */
-.pred32-arrow-zone {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--text-dim);
-  font-size: var(--fs-lg);
-  opacity: 0.4;
-  transition: opacity 0.28s ease;
-}
-
-.pred32-arrow-zone::after {
-  content: '\2192';
-}
-
-/* — Matrix zone (reuses head-* classes) — */
-.pred32-matrix-card {
-  border-radius: var(--radius-md);
-  border: 1px solid var(--border);
-  background: var(--surface2);
-  padding: var(--sp-3);
-  transition: opacity 0.28s ease;
-}
-
-.head-card-title {
-  font-size: var(--fs-2xs);
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  color: rgba(214, 224, 250, 0.9);
-  text-align: center;
-}
-
-.head-matrix {
-  margin-top: var(--sp-2);
-  display: grid;
-  gap: 0.3rem;
-}
-
-.head-row {
-  display: grid;
-  grid-template-columns: max-content minmax(0, 1fr);
-  gap: var(--sp-2);
-  align-items: center;
-  color: rgba(220, 230, 252, 0.92);
-  transition: opacity 0.28s ease, transform 0.28s ease;
-}
-
-.head-row span {
-  font-family: 'JetBrains Mono', monospace;
-  font-size: var(--fs-2xs);
-}
-
-.head-bar {
-  height: 0.88rem;
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--accent-border);
-  background: var(--accent-bg);
-  transition: border-color 0.28s ease, box-shadow 0.28s ease, background 0.28s ease;
-}
-
-.head-row.is-focus .head-bar {
-  border-color: rgba(90, 232, 142, 0.34);
-  background: rgba(90, 232, 142, 0.12);
-}
-
-/* — Extract zone — */
-.pred32-extract-zone {
-  border-radius: var(--radius-md);
-  border: 1px solid var(--border);
-  background: var(--surface2);
-  padding: var(--sp-3);
-  display: grid;
-  gap: var(--sp-2);
-  align-content: center;
-  text-align: center;
-  opacity: 0;
-  transform: translateY(0.2rem);
-  transition: opacity 0.32s ease, transform 0.32s ease, border-color 0.32s ease;
-}
-
-.pred32-step-label {
-  font-size: var(--fs-2xs);
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  color: rgba(214, 224, 250, 0.9);
-}
-
-.pred32-extract-chip {
-  align-self: center;
-  justify-self: center;
-  padding: 0.28rem 0.6rem;
-  border-radius: var(--radius-full);
-  border: 1px solid rgba(90, 232, 142, 0.28);
-  background: rgba(90, 232, 142, 0.1);
-  color: #d4f6df;
+.pred32-zone-title {
   font-size: var(--fs-xs);
+  font-weight: 700;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
 }
 
-.pred32-extract-note {
-  font-size: var(--fs-2xs);
-  color: var(--text-dim);
-}
-
-/* — W_U zone — */
-.pred32-wu-zone {
-  border-radius: var(--radius-md);
-  border: 1px solid var(--border);
-  background: var(--surface2);
-  padding: var(--sp-3);
-  display: grid;
-  gap: var(--sp-2);
-  align-content: center;
-  text-align: center;
-  opacity: 0;
-  transform: translateY(0.2rem);
-  transition: opacity 0.32s ease, transform 0.32s ease, border-color 0.32s ease, box-shadow 0.32s ease;
+.pred32-zone-title-green {
+  color: var(--green);
 }
 
 .pred32-formula {
   font-size: var(--fs-sm);
-  color: #e1ebff;
-}
-
-.pred32-dims {
-  font-size: var(--fs-2xs);
+  color: rgba(214, 224, 250, 0.9);
   font-family: 'JetBrains Mono', monospace;
-  color: var(--text-dim);
-}
-
-/* — Bars zone — */
-.pred32-bars-zone {
-  opacity: 0;
-  transform: translateY(0.2rem);
-  transition: opacity 0.32s ease, transform 0.32s ease;
-  display: grid;
-  gap: var(--sp-2);
+  padding: 0.2rem 0.7rem;
+  background: rgba(123, 154, 255, 0.08);
+  border-radius: var(--radius-sm);
 }
 
 .pred32-softmax-label {
   font-size: var(--fs-2xs);
-  font-weight: 700;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  color: rgba(214, 224, 250, 0.9);
-  text-align: center;
+  color: var(--text-dim);
+  font-style: italic;
 }
 
+/* — Probability bars — */
 .pred32-bars-row {
   display: flex;
-  align-items: flex-end;
-  justify-content: center;
   gap: var(--sp-2);
-  min-height: 7rem;
+  align-items: flex-end;
+  height: 5.5rem;
 }
 
 .pred32-bar-item {
-  display: grid;
-  justify-items: center;
-  gap: 0.28rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
 }
 
 .pred32-bar-item strong {
   font-size: var(--fs-2xs);
-  color: rgba(220, 230, 252, 0.9);
+  color: var(--text-dim);
+}
+
+.pred32-bar {
+  width: 1.75rem;
+  background: var(--border);
+  border-radius: 3px 3px 0 0;
+  transition: height 0.4s ease;
+}
+
+.pred32-bar.is-top {
+  background: var(--accent);
+  box-shadow: 0 0 8px rgba(123, 154, 255, 0.35);
 }
 
 .pred32-bar-label {
   font-size: var(--fs-2xs);
-  color: rgba(214, 224, 250, 0.9);
-}
-
-.pred32-bar {
-  width: 1.4rem;
-  border-radius: var(--radius-sm) var(--radius-sm) 0.1rem 0.1rem;
-  background: linear-gradient(180deg, rgba(185, 196, 224, 0.96), rgba(101, 116, 156, 0.72));
-  transition: height 0.44s ease;
-}
-
-.pred32-bar.is-top {
-  background: linear-gradient(180deg, rgba(90, 232, 142, 0.94), rgba(59, 170, 102, 0.8));
-  box-shadow: 0 0 12px rgba(90, 232, 142, 0.35);
-}
-
-/* — Tying note — */
-.pred32-tying-note {
-  opacity: 0;
-  max-height: 0;
-  overflow: hidden;
-  transition: opacity 0.32s ease, max-height 0.36s ease;
-}
-
-/* — Contrast section — */
-.pred32-contrast {
-  opacity: 0;
-  max-height: 0;
-  overflow: hidden;
-  transition: opacity 0.32s ease, max-height 0.36s ease;
-}
-
-.pred32-contrast-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--sp-3);
-  margin-top: var(--sp-2);
-}
-
-.pred32-contrast-card {
-  border-radius: var(--radius-md);
-  border: 1px solid var(--border);
-  background: var(--surface2);
-  padding: var(--sp-3);
-  display: grid;
-  gap: var(--sp-1);
-}
-
-.pred32-contrast-title {
-  font-size: var(--fs-xs);
-  font-weight: 700;
-}
-
-.pred32-contrast-body {
-  font-size: var(--fs-sm);
   color: var(--text-dim);
-  line-height: 1.5;
+  font-family: 'JetBrains Mono', monospace;
 }
 
-/* ── Slide 32 state classes ── */
+/* — Zone 3: Selected token — */
+.pred32-select-zone {
+  border: 1px solid rgba(90, 232, 142, 0.25);
+  background: rgba(90, 232, 142, 0.04);
+}
 
-/* Step 1: show extract */
-.slide.pred32-show-extract .pred32-extract-zone {
+.pred32-selected-token {
+  background: rgba(90, 232, 142, 0.15) !important;
+  border-color: rgba(90, 232, 142, 0.4) !important;
+  color: var(--green) !important;
+  font-size: var(--fs-base) !important;
+  padding: 0.3rem 0.8rem !important;
+}
+
+.pred32-loop-note {
+  font-size: var(--fs-sm);
+  color: var(--accent);
+  font-style: italic;
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+
+/* — State class — */
+#slide-32.pred32-show-loop .pred32-loop-note {
   opacity: 1;
-  transform: translateY(0);
-  border-color: rgba(90, 232, 142, 0.28);
-}
-
-.slide.pred32-show-extract .pred32-arrow-zone:nth-child(2) {
-  opacity: 1;
-}
-
-.slide.pred32-show-extract .head-row:not(.is-focus) {
-  opacity: 0.3;
-}
-
-.slide.pred32-show-extract .head-row.is-focus .head-bar {
-  box-shadow: 0 0 10px rgba(90, 232, 142, 0.3);
-}
-
-/* Step 2: show W_U */
-.slide.pred32-show-wu .pred32-wu-zone {
-  opacity: 1;
-  transform: translateY(0);
-  border-color: var(--accent-border);
-  box-shadow: 0 0 14px rgba(123, 154, 255, 0.18);
-}
-
-.slide.pred32-show-wu .pred32-arrow-zone:nth-child(4) {
-  opacity: 1;
-}
-
-/* Step 3: show bars + tying note */
-.slide.pred32-show-bars .pred32-bars-zone {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.slide.pred32-show-bars .pred32-arrow-zone:nth-child(6) {
-  opacity: 1;
-}
-
-.slide.pred32-show-bars .pred32-tying-note {
-  opacity: 1;
-  max-height: 8rem;
-}
-
-/* Step 4: show contrast */
-.slide.pred32-show-contrast .pred32-contrast {
-  opacity: 1;
-  max-height: 20rem;
 }
 
 
 /* ══════════════════════════════════════════════════════════════════
-   Slide 33: Generate, Append, Repeat
+   Slide 33: You Now Know the Transformer
    ══════════════════════════════════════════════════════════════════ */
 
-.gen33-layout {
+.close33-layout {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  gap: var(--sp-4);
   margin-top: var(--sp-3);
 }
 
-.gen33-stage {
-  padding: var(--sp-4);
-  display: grid;
-  gap: var(--sp-3);
-}
-
-/* — Arena (context → transformer → dist → selected) — */
-.gen33-arena {
-  display: grid;
-  grid-template-columns: minmax(0, 2fr) auto auto auto minmax(0, 1.5fr) auto auto;
-  gap: var(--sp-2);
+/* — Pipeline diagram — */
+.close33-pipeline-wrap {
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  min-height: 6rem;
+  gap: var(--sp-2);
 }
 
-.gen33-context {
+.close33-pipeline {
   display: flex;
+  align-items: center;
   flex-wrap: wrap;
-  gap: var(--sp-1);
+  gap: 0.3rem;
+  justify-content: center;
 }
 
-.gen33-arrow-zone {
-  color: var(--text-dim);
-  font-size: var(--fs-base);
-  opacity: 0.5;
-}
-
-.gen33-transformer-box {
-  border: 2px solid var(--purple);
-  border-radius: var(--radius-md);
-  background: var(--purple-bg);
-  padding: var(--sp-2) var(--sp-3);
-  text-align: center;
+/* Larger segments for the closing slide */
+.close33-pipeline .gen33-seg {
   font-size: var(--fs-sm);
-  font-weight: 600;
-  color: #e8e0ff;
-  transition: box-shadow 0.3s ease;
+  padding: 0.3rem 0.65rem;
 }
 
-.gen33-dist-panel {
-  display: flex;
-  align-items: flex-end;
-  gap: 0.18rem;
-  min-height: 4rem;
-  opacity: 0;
-  transition: opacity 0.28s ease;
-}
-
-.gen33-bar-item {
-  display: grid;
-  justify-items: center;
-  gap: 0.2rem;
-}
-
-.gen33-bar-item strong {
-  font-size: var(--fs-2xs);
-  color: rgba(220, 230, 252, 0.9);
-}
-
-.gen33-bar-label {
-  font-size: var(--fs-2xs);
-  color: rgba(214, 224, 250, 0.8);
-}
-
-.gen33-bar {
-  width: 1.8rem;
-  border-radius: var(--radius-sm) var(--radius-sm) 0.1rem 0.1rem;
-  background: linear-gradient(180deg, rgba(185, 196, 224, 0.96), rgba(101, 116, 156, 0.72));
-  transition: height 0.38s ease;
-}
-
-.gen33-bar.is-selected {
-  background: linear-gradient(180deg, rgba(90, 232, 142, 0.94), rgba(59, 170, 102, 0.8));
-  box-shadow: 0 0 10px rgba(90, 232, 142, 0.3);
-}
-
-.gen33-selected {
-  opacity: 0;
-  transition: opacity 0.28s ease;
-}
-
-.gen33-new-token {
-  border-color: rgba(90, 232, 142, 0.32);
-  background: rgba(90, 232, 142, 0.14);
-  color: #caf8db;
-}
-
-@keyframes gen33-token-pop {
-  from { opacity: 0; transform: scale(0.7) translateY(4px); }
-  to { opacity: 1; transform: none; }
-}
-
-.gen33-token-new {
-  animation: gen33-token-pop 0.36s ease both;
-}
-
-/* — Loop annotation — */
-.gen33-loop-annotation {
-  text-align: center;
+.close33-pipeline .gen33-seg-arrow,
+.close33-pipeline .gen33-seg-arrow-sm {
   font-size: var(--fs-xs);
-  color: var(--yellow);
-  font-style: italic;
-  opacity: 0;
-  transform: translateY(0.2rem);
-  transition: opacity 0.32s ease, transform 0.32s ease;
+  padding: 0;
 }
 
-/* — Strategies — */
-.gen33-strategies-panel {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+.close33-pipeline .gen33-seg-bracket {
+  font-size: var(--fs-sm);
+}
+
+.close33-loop-label {
+  font-size: var(--fs-xs);
+  color: var(--text-dim);
+  font-style: italic;
+  text-align: center;
+}
+
+/* — Bottom section (insights + question) — */
+.close33-bottom {
+  display: flex;
+  flex-direction: column;
   gap: var(--sp-3);
   opacity: 0;
-  transform: translateY(0.2rem);
-  transition: opacity 0.32s ease, transform 0.32s ease;
+  max-height: 0;
+  overflow: hidden;
+  transition: opacity 0.4s ease, max-height 0.5s ease;
+  pointer-events: none;
 }
 
-.gen33-strategy {
-  border-radius: var(--radius-md);
+#slide-33.gen33-show-insights .close33-bottom {
+  opacity: 1;
+  max-height: 50rem;
+  pointer-events: auto;
+}
+
+/* — Insight cards grid — */
+.close33-insights {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--sp-3);
+}
+
+.close33-insight-card {
   border: 1px solid var(--border);
+  border-radius: var(--radius-md);
   background: var(--surface2);
   padding: var(--sp-3);
-  display: grid;
+  display: flex;
+  flex-direction: column;
   gap: var(--sp-2);
 }
 
-.gen33-strategy-title {
-  font-size: var(--fs-xs);
-  font-weight: 700;
-  color: var(--text);
-}
-
-.gen33-strategy-body {
+.close33-insight-title {
   font-size: var(--fs-sm);
+  font-weight: 700;
+  letter-spacing: 0.03em;
+}
+
+.close33-insight-body {
+  font-size: var(--fs-xs);
   color: var(--text-dim);
-  line-height: 1.5;
+  line-height: 1.55;
 }
 
-.gen33-strategy-formula {
-  font-size: var(--fs-2xs);
-  color: rgba(214, 224, 250, 0.78);
-  font-family: 'JetBrains Mono', monospace;
-  padding: 0.28rem 0.5rem;
-  border-radius: var(--radius-sm);
-  background: rgba(123, 154, 255, 0.06);
-  text-align: center;
+/* — Per-topic accent colors — */
+.close33-insight-blue {
+  border-color: rgba(123, 154, 255, 0.3);
+}
+.close33-insight-blue .close33-insight-title {
+  color: var(--accent);
 }
 
-/* — Temperature slider — */
-.gen33-temp-wrap {
-  display: flex;
-  align-items: center;
-  gap: var(--sp-2);
-  margin-top: var(--sp-1);
+.close33-insight-purple {
+  border-color: rgba(180, 157, 255, 0.3);
+}
+.close33-insight-purple .close33-insight-title {
+  color: var(--purple);
 }
 
-.gen33-temp-slider {
-  flex: 1;
-  -webkit-appearance: none;
-  appearance: none;
-  height: 4px;
-  background: var(--border);
-  border-radius: 2px;
-  outline: none;
-  cursor: pointer;
+.close33-insight-cyan {
+  border-color: rgba(51, 224, 245, 0.3);
+}
+.close33-insight-cyan .close33-insight-title {
+  color: var(--cyan);
 }
 
-.gen33-temp-slider::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  background: var(--green);
-  border: 2px solid rgba(90, 232, 142, 0.5);
-  cursor: pointer;
-  box-shadow: 0 0 6px rgba(90, 232, 142, 0.3);
+.close33-insight-green {
+  border-color: rgba(90, 232, 142, 0.3);
 }
-
-.gen33-temp-slider::-moz-range-thumb {
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  background: var(--green);
-  border: 2px solid rgba(90, 232, 142, 0.5);
-  cursor: pointer;
-  box-shadow: 0 0 6px rgba(90, 232, 142, 0.3);
-}
-
-.gen33-temp-value {
-  font-size: var(--fs-2xs);
-  font-family: 'JetBrains Mono', monospace;
+.close33-insight-green .close33-insight-title {
   color: var(--green);
-  min-width: 4rem;
 }
 
-/* — Pipeline recap — */
-.gen33-pipeline-recap {
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
-  flex-wrap: wrap;
-  justify-content: center;
-  opacity: 0;
-  transform: translateY(0.2rem);
-  transition: opacity 0.32s ease, transform 0.32s ease;
-}
+
+/* ══════════════════════════════════════════════════════════════════
+   Pipeline segment colors (used by both slides)
+   ══════════════════════════════════════════════════════════════════ */
 
 .gen33-seg {
   font-size: var(--fs-2xs);
@@ -610,97 +376,23 @@
   padding: 0;
 }
 
-/* — Question — */
-.gen33-question {
-  opacity: 0;
-  max-height: 0;
-  overflow: hidden;
-  transition: opacity 0.32s ease, max-height 0.36s ease;
-}
-
-/* ── Slide 33 state classes ── */
-
-/* Step 1: show pass 1 */
-.slide.gen33-show-pass1 .gen33-dist-panel {
-  opacity: 1;
-}
-
-.slide.gen33-show-pass1 .gen33-selected {
-  opacity: 1;
-}
-
-.slide.gen33-show-pass1 .gen33-transformer-box {
-  box-shadow: 0 0 16px rgba(180, 157, 255, 0.25);
-}
-
-/* Step 2: show loop annotation */
-.slide.gen33-show-loop .gen33-loop-annotation {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* Step 3: show strategies */
-.slide.gen33-show-strategies .gen33-strategies-panel {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* Step 4: show temp (slider becomes interactive — bars already visible from pass1) */
-.slide.gen33-show-temp .gen33-temp-wrap {
-  opacity: 1;
-}
-
-/* Step 5: show recap + question */
-.slide.gen33-show-recap .gen33-pipeline-recap {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.slide.gen33-show-recap .gen33-question {
-  opacity: 1;
-  max-height: 8rem;
-}
-
 
 /* ══════════════════════════════════════════════════════════════════
    Responsive
    ══════════════════════════════════════════════════════════════════ */
 
 @media (max-width: 60rem) {
-  .pred32-pipeline {
+  .pred32-loop-flow {
     grid-template-columns: 1fr;
     gap: var(--sp-2);
   }
 
-  .pred32-arrow-zone {
+  .pred32-flow-arrow {
     transform: rotate(90deg);
     justify-self: center;
   }
 
-  .pred32-contrast-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .gen33-arena {
-    grid-template-columns: 1fr;
-    gap: var(--sp-2);
-    text-align: center;
-  }
-
-  .gen33-arena .gen33-arrow-zone {
-    transform: rotate(90deg);
-    justify-self: center;
-  }
-
-  .gen33-context {
-    justify-content: center;
-  }
-
-  .gen33-dist-panel {
-    justify-content: center;
-  }
-
-  .gen33-strategies-panel {
-    grid-template-columns: 1fr;
+  .close33-insights {
+    grid-template-columns: repeat(2, 1fr);
   }
 }

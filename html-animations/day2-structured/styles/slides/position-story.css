@@ -111,12 +111,21 @@
    ═══════════════════════════════════════════════════════ */
 
 .pos25-stage {
+  flex: 1 1 auto;
+  min-height: 0;
   display: grid;
   gap: 0.8rem;
   background:
     radial-gradient(circle at 84% 14%, rgba(255, 123, 123, 0.08), transparent 30%),
     radial-gradient(circle at 14% 18%, rgba(90, 232, 142, 0.06), transparent 34%),
     var(--surface);
+}
+
+#pos25-takeaway,
+#pos26-takeaway {
+  width: 100%;
+  margin-left: 0;
+  margin-right: 0;
 }
 
 .pos25-compare {
@@ -202,6 +211,9 @@
    ═══════════════════════════════════════════════════════ */
 
 .pos26-stage {
+  flex: 1 1 auto;
+  min-height: 0;
+  width: 100%;
   display: block;
   background:
     radial-gradient(circle at 82% 12%, rgba(51, 224, 245, 0.08), transparent 34%),
@@ -224,6 +236,7 @@
 .pos26-jump-card,
 .pos26-normalize-card,
 .pos26-bridge-card,
+.pos26-rope-stage,
 .pos26-rope-box,
 .pos26-rope-score-card {
   border-radius: var(--radius-md);
@@ -842,28 +855,32 @@
 .pos26-angle-visual line:nth-of-type(3) { stroke: #8be9ae; }
 .pos26-angle-visual path { stroke: #ffb86c; }
 
-.pos26-rope-layout {
+.pos26-rope-walkthrough {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(13rem, 1.05fr) minmax(0, 1fr);
-  gap: 0.72rem;
-  align-items: stretch;
+  gap: 0.56rem;
   margin-top: 0.58rem;
 }
 
-.pos26-rope-box {
-  padding: 0.64rem 0.7rem;
+.pos26-rope-stage {
+  padding: 0.56rem 0.64rem;
 }
 
-.pos26-rope-box-center {
+.pos26-rope-stage-grid {
   display: grid;
-  align-content: center;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.5rem;
+  margin-top: 0.44rem;
+}
+
+.pos26-rope-box {
+  padding: 0.56rem 0.6rem;
 }
 
 .pos26-rope-pair-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 0.32rem;
-  margin: 0.48rem 0;
+  margin: 0.44rem 0 0;
 }
 
 .pos26-rope-pair-grid span {
@@ -877,25 +894,79 @@
   font-weight: 700;
 }
 
-.pos26-rope-arrow,
+.pos26-rope-rotate-labels {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.5rem;
+  margin-top: 0.42rem;
+  font-size: 0.67rem;
+  color: #fff1bc;
+  text-align: center;
+}
+
+.pos26-rope-rotate-visual {
+  width: 100%;
+  height: 4.9rem;
+  margin-top: 0.2rem;
+}
+
+.pos26-rope-rotate-visual circle,
+.pos26-rope-rotate-visual line,
+.pos26-rope-rotate-visual polyline {
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.pos26-rope-rotate-visual circle {
+  stroke: rgba(184, 194, 221, 0.34);
+}
+
+.pos26-rope-rotate-ref {
+  stroke: rgba(184, 194, 221, 0.52);
+}
+
+.pos26-rope-rotate-q {
+  stroke: #63d3ff;
+}
+
+.pos26-rope-rotate-k {
+  stroke: #8be9ae;
+}
+
+.pos26-rope-stage-note,
+.pos26-rope-stage-kicker,
+.pos26-rope-mini-note,
 .pos26-rope-score-note {
   font-size: 0.67rem;
   line-height: 1.45;
   color: rgba(198, 209, 235, 0.82);
 }
 
-.pos26-rope-arrow {
+.pos26-rope-stage-kicker {
+  margin-top: 0.24rem;
   color: #fff1bc;
+}
+
+.pos26-rope-stage-note {
+  margin-top: 0.08rem;
+}
+
+.pos26-rope-mini-note {
+  display: block;
+  margin-top: 0.28rem;
+}
+
+.pos26-rope-compare {
+  display: grid;
+  gap: 0.18rem;
+  margin-top: 0.42rem;
 }
 
 .pos26-rope-score-formula {
   font-size: var(--fs-xs);
   color: #fff1bc;
-}
-
-.pos26-rope-score-card {
-  margin-top: 0.62rem;
-  padding: 0.6rem 0.68rem;
 }
 
 /* responsive */
@@ -915,7 +986,7 @@
 
   .pos26-state-grid,
   .pos26-compare-rail,
-  .pos26-rope-layout,
+  .pos26-rope-stage-grid,
   .pos26-attn-bridge {
     grid-template-columns: 1fr;
   }
@@ -946,4 +1017,35 @@
   .pos26-state-frame {
     min-height: 36rem;
   }
+}
+
+/* ── RoPE step 5: angle-arc SVG additions ── */
+
+.pos26-rope-angle-svg {
+  height: 6rem;
+}
+
+.pos26-rope-angle-arc {
+  fill: none;
+  stroke: #ffb86c;
+  stroke-width: 2;
+  stroke-linecap: round;
+}
+
+.pos26-rope-svg-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  font-weight: 700;
+  fill: rgba(214, 224, 250, 0.88);
+}
+
+.pos26-rope-q-label { fill: #63d3ff; }
+.pos26-rope-k-label { fill: #8be9ae; }
+.pos26-rope-arc-label { fill: #ffb86c; font-size: 8px; }
+
+.pos26-rope-angle-note {
+  margin-top: 0.28rem;
+  font-size: 0.67rem;
+  line-height: 1.45;
+  color: rgba(198, 209, 235, 0.82);
 }

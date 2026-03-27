@@ -1614,11 +1614,10 @@ l e a r n ing &lt;/w&gt;</div>
     <div class="slide-header">
       <div class="badge concept">Problem</div>
       <h2>Shuffle the Words, Break the Meaning</h2>
-      <p class="small-text">Self-attention compares token vectors by dot-product similarity. It never asks <em>where</em> a token sits.</p>
+      <p class="small-text">Self-attention compares token vectors by similarity. By itself, it has no built-in sense of sequence order.</p>
     </div>
     <div class="slide-body">
-    <div class="story-layout">
-      <div class="card story-stage pos25-stage">
+      <div class="card pos25-stage">
 
         <div class="pos25-compare">
           <div class="pos25-sentence">
@@ -1657,27 +1656,26 @@ l e a r n ing &lt;/w&gt;</div>
 
         <div class="hidden-content autostep">
           <div class="pos25-answer-card">
-            <div class="pos25-answer-title">No. Attention treats tokens as a set, not a sequence.</div>
-            <div class="pos25-answer-body">Attention computes dot-product similarity between embedding vectors. If the same vectors appear, the same scores appear &#8212; regardless of order. Shuffling the input rows just shuffles the output rows.</div>
+            <div class="pos25-answer-title">No. Same token vectors lead to the same attention comparisons.</div>
+            <div class="pos25-answer-body">Attention compares token vectors by similarity. If the same vectors appear, it makes the same comparisons &#8212; regardless of order. Shuffling the input rows just shuffles the output rows.</div>
           </div>
         </div>
 
         <div class="hidden-content autostep">
           <div class="callout warn">
             <span class="callout-icon">&#9888;&#65039;</span>
-            <span>We need to inject position information <em>before</em> attention sees anything. That way, the same word in a different slot becomes a different input vector.</span>
+            <span>We need to inject position information <em>before</em> attention sees anything. Then the same word in a different slot becomes a different input vector.</span>
           </div>
         </div>
 
       </div>
-    </div>
 
-    <div class="story-takeaway" id="pos25-takeaway">Without position, &#8220;the dog chased the cat&#8221; and &#8220;the cat chased the dog&#8221; look the same to attention.</div>
+      <div class="story-takeaway" id="pos25-takeaway">Position has to be injected before attention, so the same word in a different slot becomes a different input.</div>
     </div>
   </div>
 
   <!-- ═══════════════════════════════════════════════════════════════
-       SLIDE 26 — From Position Codes to RoPE
+       SLIDE 26 — Designing Positional Encoding
        Pedagogy adapted from Hugging Face's
        "You could have designed state of the art positional encoding" (2024),
        compressed for workshop pacing. Technical grounding:
@@ -1687,12 +1685,11 @@ l e a r n ing &lt;/w&gt;</div>
     <span class="section-tag">Input Representation</span>
     <div class="slide-header">
       <div class="badge concept">Design Journey</div>
-      <h2>From Position Codes to RoPE</h2>
-      <p class="small-text">We already know we need position before attention. Now build a position signal the way you would design it from scratch.</p>
+      <h2>Designing Positional Encoding</h2>
+      <p class="small-text">We already know attention needs order. Now build a position signal from first principles.</p>
     </div>
     <div class="slide-body">
-    <div class="story-layout">
-      <div class="card story-stage pos26-stage">
+      <div class="card pos26-stage">
         <div class="pos26-shell">
           <div class="pos26-progress" aria-label="Slide 26 progress">
             <div class="pos26-progress-step is-active">
@@ -1724,19 +1721,19 @@ l e a r n ing &lt;/w&gt;</div>
           <div class="pos26-state-frame" id="pos26-state-frame">
             <section class="pos26-state-panel is-active" data-step="0" aria-hidden="false">
               <div class="pos26-panel-header">
-                <div class="pos26-step-label">Step 1 · Design Target</div>
-                <h3 class="pos26-state-title">We need a position code attention can use</h3>
-                <p class="pos26-state-lead">Before picking a formula, define what a good position signal should do for the model.</p>
+                <div class="pos26-step-label">Step 1 · Design Goals</div>
+                <h3 class="pos26-state-title">What should a good position code do?</h3>
+                <p class="pos26-state-lead">Before choosing a formula, set the criteria every candidate will be judged against.</p>
               </div>
               <div class="pos26-state-grid">
                 <div class="pos26-copy-card">
-                  <div class="pos26-copy-title">Three practical tests</div>
+                  <div class="pos26-copy-title">Three design goals</div>
                   <div class="pos26-teach-list">
                     <div class="pos26-teach-row">
                       <span class="pos26-row-badge">1</span>
                       <div class="pos26-row-body">
-                        <strong>Unique slots</strong>
-                        <span>The first, fifth, and hundredth token should not look identical to attention.</span>
+                        <strong>Unique positions</strong>
+                        <span>Each position should produce a distinct signal, so attention can tell first, fifth, and hundredth apart.</span>
                       </div>
                     </div>
                     <div class="pos26-teach-row">
@@ -1750,7 +1747,7 @@ l e a r n ing &lt;/w&gt;</div>
                       <span class="pos26-row-badge">3</span>
                       <div class="pos26-row-body">
                         <strong>Smooth local change</strong>
-                        <span>Nearby positions should produce nearby signals so the model sees predictable transitions.</span>
+                        <span>Nearby positions should produce nearby signals so the model sees predictable, learnable transitions.</span>
                       </div>
                     </div>
                   </div>
@@ -1773,7 +1770,7 @@ l e a r n ing &lt;/w&gt;</div>
                       <span class="token-pill">another</span>
                       <span class="token-pill reuse">dog</span>
                     </div>
-                    <div class="pos26-token-note">The two <strong>dog</strong> tokens share content features. Position has to help attention distinguish their roles in the sentence.</div>
+                    <div class="pos26-token-note">The two <strong>dog</strong> tokens share token identity. Position has to help attention distinguish their roles in the sentence.</div>
                   </div>
                 </div>
               </div>
@@ -1783,7 +1780,7 @@ l e a r n ing &lt;/w&gt;</div>
               <div class="pos26-panel-header">
                 <div class="pos26-step-label">Step 2 · Attempt 1</div>
                 <h3 class="pos26-state-title">Add the raw index</h3>
-                <p class="pos26-state-lead">The obvious first idea is to add the token index itself. It fails for two separate reasons.</p>
+                <p class="pos26-state-lead">The obvious idea is to add the token index itself. It is too large, too crude, and sequence-length normalization breaks consistency.</p>
               </div>
               <div class="pos26-state-grid">
                 <div class="pos26-copy-card">
@@ -1793,21 +1790,21 @@ l e a r n ing &lt;/w&gt;</div>
                       <span class="pos26-row-badge">A</span>
                       <div class="pos26-row-body">
                         <strong>Scale mismatch</strong>
-                        <span>Embedding components usually live near 0. A position like 252 is orders of magnitude larger.</span>
+                        <span>Embedding components usually live near 0. A position like 252 is much larger.</span>
                       </div>
                     </div>
                     <div class="pos26-teach-row">
                       <span class="pos26-row-badge">B</span>
                       <div class="pos26-row-body">
-                        <strong>Signal gets swamped</strong>
-                        <span>After addition, attention mostly sees the position magnitude rather than the original token semantics.</span>
+                        <strong>Same scalar everywhere</strong>
+                        <span>Repeating one number across every dimension does not give attention a rich positional pattern to work with.</span>
                       </div>
                     </div>
                     <div class="pos26-teach-row">
                       <span class="pos26-row-badge">C</span>
                       <div class="pos26-row-body">
-                        <strong>Normalizing by sequence length is inconsistent</strong>
-                        <span>Position 5 becomes 0.5 in a short sequence and 0.0005 in a long one, so the same slot means different things.</span>
+                        <strong>Normalizing by sequence length changes the meaning</strong>
+                        <span>Position 5 becomes 0.5 in a short sequence and 0.0005 in a long one, so the same slot no longer means the same thing.</span>
                       </div>
                     </div>
                   </div>
@@ -1856,8 +1853,8 @@ l e a r n ing &lt;/w&gt;</div>
             <section class="pos26-state-panel" data-step="2" aria-hidden="true">
               <div class="pos26-panel-header">
                 <div class="pos26-step-label">Step 3 · Attempt 2</div>
-                <h3 class="pos26-state-title">Binary fixes the range and reveals the right intuition</h3>
-                <p class="pos26-state-lead">Binary is not the final answer, but it teaches us the important structure we want to keep.</p>
+                <h3 class="pos26-state-title">Binary fixes the range and reveals the multiscale pattern</h3>
+                <p class="pos26-state-lead">Binary is not the final answer, but it shows the structure worth keeping.</p>
               </div>
               <div class="pos26-state-grid">
                 <div class="pos26-copy-card">
@@ -1866,22 +1863,22 @@ l e a r n ing &lt;/w&gt;</div>
                     <div class="pos26-teach-row">
                       <span class="pos26-row-badge">A</span>
                       <div class="pos26-row-body">
-                        <strong>Values stay bounded</strong>
-                        <span>Every component is just 0 or 1, so the position code no longer explodes in magnitude.</span>
+                        <strong>Bounded values</strong>
+                        <span>Each dimension now stays in a small range, instead of exploding with the raw index.</span>
                       </div>
                     </div>
                     <div class="pos26-teach-row">
                       <span class="pos26-row-badge">B</span>
                       <div class="pos26-row-body">
-                        <strong>Different dimensions change at different rates</strong>
-                        <span>Fast bits flip every token; slower bits flip every 2, 4, 8, ... tokens.</span>
+                        <strong>Different bit-dimensions change at different rates</strong>
+                        <span>Fast bit-dimensions flip every token; slower ones flip every 2, 4, 8, ... tokens.</span>
                       </div>
                     </div>
                     <div class="pos26-teach-row">
                       <span class="pos26-row-badge">C</span>
                       <div class="pos26-row-body">
-                        <strong>But the geometry is jumpy</strong>
-                        <span>Moving from one position to the next can flip several bits at once, so nearby positions are not smooth neighbors.</span>
+                        <strong>But jumps are still abrupt</strong>
+                        <span>Crossing one boundary can flip several bit-dimensions at once, so nearby positions are not smooth neighbors.</span>
                       </div>
                     </div>
                   </div>
@@ -1928,9 +1925,9 @@ l e a r n ing &lt;/w&gt;</div>
 
             <section class="pos26-state-panel" data-step="3" aria-hidden="true">
               <div class="pos26-panel-header">
-                <div class="pos26-step-label">Step 4 · Attempt 3</div>
-                <h3 class="pos26-state-title">Replace bit flips with smooth sinusoids</h3>
-                <p class="pos26-state-lead">Keep the multirate pattern from binary, but make each dimension change smoothly instead of abruptly.</p>
+                <div class="pos26-step-label">Step 4 · Fixed Absolute Code</div>
+                <h3 class="pos26-state-title">Sinusoids keep the multiscale pattern, but make it smooth</h3>
+                <p class="pos26-state-lead">This gives us a workable fixed absolute position code: different dimensions change at different rates, but nearby positions stay close.</p>
               </div>
               <div class="pos26-state-grid">
                 <div class="pos26-copy-card">
@@ -1939,22 +1936,22 @@ l e a r n ing &lt;/w&gt;</div>
                     <div class="pos26-teach-row">
                       <span class="pos26-row-badge">A</span>
                       <div class="pos26-row-body">
-                        <strong>Same hierarchy, smoother motion</strong>
-                        <span>Early dimensions wiggle quickly; later dimensions change slowly, but now every step is continuous.</span>
+                        <strong>Each wave row is one fixed dimension</strong>
+                        <span>Hold the dimension fixed and move across positions: that dimension traces a sine or cosine curve.</span>
                       </div>
                     </div>
                     <div class="pos26-teach-row">
                       <span class="pos26-row-badge">B</span>
                       <div class="pos26-row-body">
-                        <strong>Bounded values</strong>
-                        <span>Sin and cos stay between -1 and 1, so position remains on a controlled scale.</span>
+                        <strong>Different dimensions capture different scales</strong>
+                        <span>Early dimensions oscillate quickly; later ones more slowly, so one position is described at multiple granularities.</span>
                       </div>
                     </div>
                     <div class="pos26-teach-row">
                       <span class="pos26-row-badge">C</span>
                       <div class="pos26-row-body">
-                        <strong>Local similarity</strong>
-                        <span>Nearby positions now look similar, which is much easier for optimization to learn.</span>
+                        <strong>One position embedding is a vertical stack</strong>
+                        <span>Pick one position, read down the rows, and you get that token's sinusoidal position vector; nearby positions give nearby stacks.</span>
                       </div>
                     </div>
                   </div>
@@ -1967,7 +1964,7 @@ l e a r n ing &lt;/w&gt;</div>
                   </div>
                 </div>
                 <div class="pos26-visual-card">
-                  <div class="pos26-panel-label">same multirate idea, smoother geometry</div>
+                  <div class="pos26-panel-label">rows = fixed dimensions, x-axis = position</div>
                   <div class="pos26-compare-rail">
                     <div class="pos26-mini-strip-card">
                       <div class="pos26-panel-label">binary intuition</div>
@@ -2012,40 +2009,40 @@ l e a r n ing &lt;/w&gt;</div>
                       </div>
                     </div>
                   </div>
-                  <div class="pos26-frequency-note">Early dimensions wiggle quickly, later ones drift slowly. Every position gets a distinct but smooth fingerprint.</div>
+                  <div class="pos26-frequency-note">Each row is one embedding dimension across positions. One vertical slice is one fixed absolute position vector.</div>
                 </div>
               </div>
             </section>
 
             <section class="pos26-state-panel" data-step="4" aria-hidden="true">
               <div class="pos26-panel-header">
-                <div class="pos26-step-label">Step 5 · Attention Context</div>
-                <h3 class="pos26-state-title">Meaning depends more on relative position than absolute index</h3>
-                <p class="pos26-state-lead">Sinusoids are already good absolute encodings. The next question is: where should position act inside attention?</p>
+                <div class="pos26-step-label">Step 5 · Absolute vs Relative</div>
+                <h3 class="pos26-state-title">Absolute codes help, but attention often cares about relative offset</h3>
+                <p class="pos26-state-lead">Fixed sin/cos and learned embeddings are both absolute-position approaches. RoPE keeps the sinusoidal frequency idea, but moves positional information into the attention comparison itself.</p>
               </div>
               <div class="pos26-state-grid">
                 <div class="pos26-copy-card">
-                  <div class="pos26-copy-title">The bridge to RoPE</div>
+                  <div class="pos26-copy-title">Absolute vs relative position</div>
                   <div class="pos26-teach-list">
                     <div class="pos26-teach-row">
                       <span class="pos26-row-badge">A</span>
                       <div class="pos26-row-body">
-                        <strong>Absolute slot is rarely the main semantic fact</strong>
-                        <span>What matters is usually how far one token is from another token of interest.</span>
+                        <strong>Absolute position can be fixed or learned</strong>
+                        <span>Sin/cos is hand-designed; learned positional embeddings let the model train the absolute code directly.</span>
                       </div>
                     </div>
                     <div class="pos26-teach-row">
                       <span class="pos26-row-badge">B</span>
                       <div class="pos26-row-body">
-                        <strong>Attention compares tokens through \(QK^\top\)</strong>
-                        <span>If positional information should change comparisons, the dot product is the critical place to look.</span>
+                        <strong>But semantics often depend on relative offset</strong>
+                        <span>What matters is usually how far one token is from another token of interest, not just its raw slot.</span>
                       </div>
                     </div>
                     <div class="pos26-teach-row">
                       <span class="pos26-row-badge">C</span>
                       <div class="pos26-row-body">
-                        <strong>Dot products depend on angle</strong>
-                        <span>Changing angle changes the attention score without having to overwrite the norm that carries token content.</span>
+                        <strong>Attention decisions happen in \(QK^\top\)</strong>
+                        <span>Because dot products depend on angle, some methods let position shape the comparison itself instead of only being added up front.</span>
                       </div>
                     </div>
                   </div>
@@ -2099,76 +2096,74 @@ l e a r n ing &lt;/w&gt;</div>
             <section class="pos26-state-panel" data-step="5" aria-hidden="true">
               <div class="pos26-panel-header">
                 <div class="pos26-step-label">Step 6 · RoPE</div>
-                <h3 class="pos26-state-title">RoPE moves the sinusoidal idea into the comparison itself</h3>
-                <p class="pos26-state-lead">Instead of adding position into \(x\), rotate each 2D pair of \(Q\) and \(K\) before attention computes the dot product.</p>
+                <h3 class="pos26-state-title">RoPE rotates Q and K by absolute position — the dot product gives you the relative offset</h3>
+                <p class="pos26-state-lead">Instead of adding position to the embedding up front, RoPE injects it inside attention by rotating \(Q\) and \(K\) vectors just before the dot product. The absolute rotations cancel algebraically, leaving a score that depends only on \((m-n)\).</p>
               </div>
               <div class="pos26-state-grid">
                 <div class="pos26-copy-card">
-                  <div class="pos26-copy-title">What changes in RoPE?</div>
+                  <div class="pos26-copy-title">How RoPE works</div>
                   <div class="pos26-teach-list">
                     <div class="pos26-teach-row">
                       <span class="pos26-row-badge">A</span>
                       <div class="pos26-row-body">
-                        <strong>Reuse the same frequency ladder</strong>
-                        <span>The fast and slow sinusoidal frequencies are still there; they now become rotation angles.</span>
+                        <strong>Position enters during attention, not before it</strong>
+                        <span>Sin/cos adds a position vector to the token embedding before any attention happens. RoPE skips that step and rotates \(Q\) and \(K\) directly, pair by pair, just before the dot product.</span>
                       </div>
                     </div>
                     <div class="pos26-teach-row">
                       <span class="pos26-row-badge">B</span>
                       <div class="pos26-row-body">
-                        <strong>Operate on 2D pairs</strong>
-                        <span>Each pair like \((q_1, q_2)\) or \((k_1, k_2)\) is rotated according to that token's position.</span>
+                        <strong>Each 2D pair gets rotated by its token's absolute position</strong>
+                        <span>Split \(Q\) and \(K\) into \(d/2\) pairs of two dimensions. Pair \(i\) at position \(m\) rotates by \(m\theta_i\); the matching key pair at position \(n\) rotates by \(n\theta_i\). The frequency ladder \(\theta_i = \mathrm{base}^{-2i/d}\) is the same exponential ladder sinusoidal PE uses.</span>
                       </div>
                     </div>
                     <div class="pos26-teach-row">
                       <span class="pos26-row-badge">C</span>
                       <div class="pos26-row-body">
-                        <strong>Relative position shows up through angle</strong>
-                        <span>Attention scores change because the rotated queries and keys meet at different angles, while norms stay intact.</span>
+                        <strong>The dot product collapses absolute rotations into a relative offset</strong>
+                        <span>When rotated \(Q\) and \(K\) meet in \(QK^\top\), the algebra gives \((R_m q)^\top (R_n k) = q^\top R_{m-n} k\). Tokens 5 apart always produce the same score, wherever they sit in the sequence.</span>
                       </div>
-                    </div>
-                  </div>
-                  <div class="pos26-formula-card">
-                    <div class="pos26-panel-label">compact notation</div>
-                    <div class="pos26-formula-lines">
-                      <div>\(Q, K \xrightarrow{\text{rotate by position}} Q', K'\)</div>
-                      <div>\(\text{attention score comes from } Q'K'^\top\)</div>
                     </div>
                   </div>
                 </div>
                 <div class="pos26-visual-card">
-                  <div class="pos26-rope-topline">Same sinusoidal frequency idea, but used multiplicatively inside attention.</div>
-                  <div class="pos26-rope-layout">
-                    <div class="pos26-rope-box">
-                      <div class="pos26-panel-label">query pair</div>
-                      <div class="pos26-rope-pair-grid"><span>\(q_1\)</span><span>\(q_2\)</span></div>
-                      <div class="pos26-rope-arrow">&#8635; rotate by \(p\theta_i\)</div>
+                  <div class="pos26-rope-walkthrough">
+                    <div class="pos26-rope-stage">
+                      <div class="pos26-panel-label">1. rotate Q and K by their absolute positions</div>
+                      <div class="pos26-rope-rotate-labels">
+                        <span>query at position \(m\): rotate by \(m\theta_i\)</span>
+                        <span>key at position \(n\): rotate by \(n\theta_i\)</span>
+                      </div>
+                      <svg class="pos26-rope-rotate-visual pos26-rope-angle-svg" viewBox="0 0 200 90" aria-hidden="true">
+                        <circle cx="100" cy="52" r="34"></circle>
+                        <line class="pos26-rope-rotate-ref" x1="100" y1="52" x2="100" y2="18"></line>
+                        <line class="pos26-rope-rotate-q" x1="100" y1="52" x2="112" y2="20"></line>
+                        <polyline class="pos26-rope-rotate-q" points="112,20 107,24 113,26"></polyline>
+                        <line class="pos26-rope-rotate-k" x1="100" y1="52" x2="132" y2="42"></line>
+                        <polyline class="pos26-rope-rotate-k" points="132,42 126,41 127,48"></polyline>
+                        <path class="pos26-rope-angle-arc" d="M 112,20 A 34,34 0 0,1 132,42"></path>
+                        <text class="pos26-rope-svg-label pos26-rope-q-label" x="115" y="12">Q</text>
+                        <text class="pos26-rope-svg-label pos26-rope-k-label" x="138" y="40">K</text>
+                        <text class="pos26-rope-svg-label pos26-rope-arc-label" x="130" y="22">(m&#x2212;n)&#x3B8;</text>
+                      </svg>
+                      <div class="pos26-rope-angle-note">The angle between \(Q\) and \(K\) equals the relative offset \((m-n)\theta_i\). Score = angle between the two vectors.</div>
                     </div>
-                    <div class="pos26-rope-box pos26-rope-box-center">
-                      <div class="pos26-panel-label">position acts here</div>
-                      <div class="pos26-rope-score-formula">\(\big(q_1, q_2\big)\), \(\big(k_1, k_2\big)\)</div>
-                      <div class="pos26-rope-score-note">same frequency bank, different position angles</div>
+                    <div class="pos26-rope-stage">
+                      <div class="pos26-panel-label">2. the dot product makes absolute rotation disappear</div>
+                      <div class="pos26-rope-compare">
+                        <div class="pos26-rope-score-formula">\((R_m q)^\top (R_n k) \;=\; q^\top R_{m-n}\, k\)</div>
+                        <div class="pos26-rope-score-note">Absolute positions \(m\) and \(n\) cancel. Same relative gap \((m-n)\) always gives the same attention score, no matter where in the sequence the tokens appear.</div>
+                      </div>
                     </div>
-                    <div class="pos26-rope-box">
-                      <div class="pos26-panel-label">key pair</div>
-                      <div class="pos26-rope-pair-grid"><span>\(k_1\)</span><span>\(k_2\)</span></div>
-                      <div class="pos26-rope-arrow">&#8635; rotate by \(p\theta_i\)</div>
-                    </div>
-                  </div>
-                  <div class="pos26-rope-score-card">
-                    <div class="pos26-panel-label">teaching takeaway</div>
-                    <div class="pos26-rope-text">RoPE is the sinusoidal idea moved into the right computational place: not "add position and hope attention learns it," but "rotate \(Q\) and \(K\) so relative position directly changes the comparison."</div>
                   </div>
                 </div>
               </div>
             </section>
           </div>
         </div>
-
       </div>
-    </div>
 
-    <div class="story-takeaway" id="pos26-takeaway">Before choosing a position method, define what success looks like: unique slots, stable meanings across context lengths, and smooth local change.</div>
+      <div class="story-takeaway" id="pos26-takeaway">Before choosing a formula, set the criteria: unique positions, stable meaning across context lengths, and smooth local change.</div>
     </div>
   </div>
 
@@ -2386,12 +2381,6 @@ l e a r n ing &lt;/w&gt;</div>
             <span>GPT-2 small: <strong>L = 12</strong>. GPT-3: <strong>L = 96</strong>. Same Transformer block &#8212; more rounds of refinement.</span>
           </div>
         </div>
-        <div class="hidden-content autostep stack31-insight-reveal">
-          <div class="callout success">
-            <span class="icon">&#x2705;</span>
-            <span>Every block preserves shape \(S \times d_{\mathrm{model}}\). Depth changes what the vectors represent, not their dimensions.</span>
-          </div>
-        </div>
       </div>
     </div>
 
@@ -2399,56 +2388,46 @@ l e a r n ing &lt;/w&gt;</div>
   </div>
 
   <div class="slide" id="slide-32">
-    <span class="section-tag">Output Head</span>
+    <span class="section-tag">Output &amp; Generation</span>
     <div class="badge concept">Mechanism</div>
-    <h2>From Hidden State to Next Word</h2>
-    <p class="small-text">After \(L\) blocks you have \(R^{(L)}\). To predict the next token, read the last row and score the vocabulary.</p>
+    <h2>Predict One Token, Append, Repeat</h2>
+    <p class="small-text">After \(L\) blocks: one linear projection scores the vocabulary. Pick a token, append it, run again.</p>
 
     <div class="pred32-layout">
       <div class="card pred32-stage" id="pred32-stage">
-        <div class="pred32-prompt-row" id="pred32-prompt-row"></div>
-        <div class="pred32-pipeline" id="pred32-pipeline">
-          <div class="pred32-matrix-zone" id="pred32-matrix-zone"></div>
-          <div class="pred32-arrow-zone"></div>
-          <div class="pred32-extract-zone" id="pred32-extract-zone"></div>
-          <div class="pred32-arrow-zone"></div>
-          <div class="pred32-wu-zone" id="pred32-wu-zone"></div>
-          <div class="pred32-arrow-zone"></div>
-          <div class="pred32-bars-zone" id="pred32-bars-zone"></div>
+        <div class="pred32-loop-flow">
+          <div class="pred32-ctx-zone" id="pred32-ctx-zone"></div>
+          <div class="pred32-flow-arrow">&#8594;</div>
+          <div class="pred32-head-zone" id="pred32-head-zone"></div>
+          <div class="pred32-flow-arrow">&#8594;</div>
+          <div class="pred32-select-zone" id="pred32-select-zone"></div>
         </div>
-        <div class="pred32-tying-note" id="pred32-tying-note"></div>
-        <div class="pred32-contrast" id="pred32-contrast"></div>
       </div>
     </div>
 
-    <div class="block28-takeaway" id="pred32-takeaway">After L blocks, the residual matrix holds one contextualized row per token.</div>
+    <div class="block28-takeaway" id="pred32-takeaway">One forward pass, one token. The model never generates more than one token at a time.</div>
   </div>
 
   <div class="slide" id="slide-33">
-    <span class="section-tag">Generation</span>
-    <div class="badge concept">Synthesis</div>
-    <h2>Generate, Append, Repeat</h2>
-    <p class="small-text">The model predicts one token at a time. Generation is an autoregressive loop.</p>
+    <span class="section-tag">Synthesis</span>
+    <div class="badge concept">Closing</div>
+    <h2>You Now Know the Transformer</h2>
 
-    <div class="gen33-layout">
-      <div class="card gen33-stage" id="gen33-stage">
-        <div class="gen33-arena" id="gen33-arena">
-          <div class="gen33-context" id="gen33-context"></div>
-          <div class="gen33-arrow-zone">&#8594;</div>
-          <div class="gen33-transformer-box" id="gen33-transformer-box">Transformer &#215; L</div>
-          <div class="gen33-arrow-zone">&#8594;</div>
-          <div class="gen33-dist-panel" id="gen33-dist-panel"></div>
-          <div class="gen33-arrow-zone">&#8594;</div>
-          <div class="gen33-selected" id="gen33-selected"></div>
+    <div class="close33-layout">
+      <div class="close33-pipeline-wrap">
+        <div class="close33-pipeline" id="close33-pipeline"></div>
+        <div class="close33-loop-label">&#x21A9; autoregressive loop &#8212; append &amp; repeat</div>
+      </div>
+      <div class="close33-bottom" id="close33-bottom">
+        <div class="close33-insights" id="close33-insights"></div>
+        <div class="callout success">
+          <span class="icon">&#x2713;</span>
+          <span>From tokens to meaning to prediction &#8212; this is the Transformer.</span>
         </div>
-        <div class="gen33-loop-annotation" id="gen33-loop-annotation">&#x21A9; autoregressive loop &#8212; append &amp; repeat</div>
-        <div class="gen33-strategies-panel" id="gen33-strategies-panel"></div>
-        <div class="gen33-pipeline-recap" id="gen33-pipeline-recap"></div>
-        <div class="gen33-question" id="gen33-question"></div>
       </div>
     </div>
 
-    <div class="block28-takeaway" id="gen33-takeaway">Generation starts from a prompt. The model predicts one token at a time.</div>
+    <div class="block28-takeaway" id="close33-takeaway">Every LLM runs this same pipeline. You now know every box.</div>
   </div>
 
 </div>

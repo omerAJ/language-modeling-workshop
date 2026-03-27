@@ -1,14 +1,14 @@
-/* Slide 26 — From Position Codes to RoPE
+/* Slide 26 — Designing Positional Encoding
    Replace-mode teaching flow with one visible state at a time. */
 
 const POS26_MAX_STEP = 5;
 const POS26_TAKEAWAYS = [
-  'Before choosing a position method, define what success looks like: unique slots, stable meanings across context lengths, and smooth local change.',
-  'Raw integer position is too large relative to the embedding values, and length-normalized position breaks cross-sequence consistency.',
-  'Binary codes fix the range problem and reveal the multirate pattern, but the representation changes too abruptly from one position to the next.',
-  'Sinusoids keep that fast/slow hierarchy while making nearby positions change smoothly and predictably.',
-  'Absolute position is not the whole story: attention compares tokens through dot products, so relative position should shape the comparison itself.',
-  'RoPE reuses sinusoidal frequencies to rotate Q/K pairs before attention, letting relative position appear through angle while preserving vector norms.'
+  'Before choosing a formula, set the criteria: unique positions, stable meaning across context lengths, and smooth local change.',
+  'Raw integer position is too large, too crude, and inconsistent across sequence lengths when normalized.',
+  'Binary keeps values bounded and reveals the multiscale pattern, but the representation still changes in abrupt jumps.',
+  'Sinusoidal embeddings turn that multiscale pattern into a smooth, fixed absolute position vector.',
+  'Sin/cos gives one fixed absolute code; another common option is to learn the absolute code. But many attention patterns care more about relative offset than absolute slot.',
+  'RoPE rotates each Q/K pair by absolute position; the dot product turns that into a relative-offset signal, so the same gap always gives the same attention score.'
 ];
 
 function syncPositionSignalFrameHeight() {

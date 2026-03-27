@@ -80,7 +80,7 @@ Slide IDs are part of the code contract. To jump to one: search `id="slide-23"` 
 | 23 | Matrix view of attention |
 | 24 | Multi-head attention |
 | 25 | Order problem: attention is position-blind |
-| 26 | Replace-mode position lesson: target -> integer -> binary -> sin/cos -> relative attention -> RoPE |
+| 26 | Replace-mode positional-encoding lesson: target -> integer -> binary -> sin/cos -> absolute vs relative -> RoPE example |
 | 27 | Attention gathers, FFN computes |
 | 28 | The block — walk through the slide-3 diagram now that every piece is understood |
 | 29–30 | Intentionally absent |
@@ -98,8 +98,8 @@ Plain-language teaching arc used on slide 26:
 - raw integer addition fails because of scale mismatch and sequence-length inconsistency
 - binary counters reveal the key multirate intuition, but remain too discontinuous
 - sin/cos preserves that fast/slow structure while making local changes smooth
-- attention cares about relative position through \(QK^\top\), which motivates moving position into the comparison itself
-- RoPE reuses the sinusoidal frequency idea by rotating \(Q/K\) pairs before attention
+- attention often cares about relative position through \(QK^\top\), which motivates methods that move position into the comparison itself
+- RoPE appears as one modern example that reuses the sinusoidal frequency idea by rotating neighboring \(Q/K\) dimensions before attention
 
 ## Where To Edit What
 
