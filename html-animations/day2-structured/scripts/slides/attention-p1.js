@@ -175,7 +175,7 @@ function updateAttentionP1Overlay() {
   const minCopyX = Math.min.apply(null, branchTargets.map((entry) => entry.target.x));
   const maxCopyX = Math.max.apply(null, branchTargets.map((entry) => entry.target.x));
   const nodeX = xBottom.x;
-  const nodeRadius = Math.max(stageRect.height * 0.018, 6.4);
+  const nodeRadius = Math.max(stageRect.height * 0.021, 7.4);
   const minNodeGap = Math.max(stageRect.height * 0.3, 84);
   const maxNodeY = nearestMatrixY - nodeRadius - Math.max(stageRect.height * 0.045, 9);
   const nodeY = Math.max(

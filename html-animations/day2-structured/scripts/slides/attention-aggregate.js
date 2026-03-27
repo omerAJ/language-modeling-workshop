@@ -383,14 +383,14 @@ function resetAttentionStep4MergeVisuals() {
 function createAttentionStep4MergeGhost(token) {
   const stage = document.getElementById('attn22-stage');
   const layer = document.getElementById('attn22-merge-layer');
-  const sourceWrap = document.getElementById('attn22-vector-wrap-v-' + token);
-  if (!stage || !layer || !sourceWrap) return null;
+  const sourceVector = document.getElementById('attn22-vector-v-' + token);
+  if (!stage || !layer || !sourceVector) return null;
 
   const stageRect = stage.getBoundingClientRect();
-  const sourceRect = sourceWrap.getBoundingClientRect();
+  const sourceRect = sourceVector.getBoundingClientRect();
   if (stageRect.width < 1 || stageRect.height < 1 || sourceRect.width < 1 || sourceRect.height < 1) return null;
 
-  const ghost = sourceWrap.cloneNode(true);
+  const ghost = sourceVector.cloneNode(true);
   const stripIds = (node) => {
     if (!node || node.nodeType !== 1) return;
     node.removeAttribute('id');
@@ -436,11 +436,11 @@ function animateAttentionStep4MergeToken(token, delayMs, runningFrom, runningTo,
 
     const slide = document.getElementById('slide-22');
     const stage = document.getElementById('attn22-stage');
-    const sourceWrap = document.getElementById('attn22-vector-wrap-v-' + token);
+    const sourceVector = document.getElementById('attn22-vector-v-' + token);
     const sourceCol = document.getElementById('attn22-col-' + token);
-    const targetWrap = document.getElementById('attn22-vector-wrap-v-' + ATTN_STEP4_MERGE_TARGET);
+    const targetVector = document.getElementById('attn22-vector-v-' + ATTN_STEP4_MERGE_TARGET);
     const targetCol = document.getElementById('attn22-col-' + ATTN_STEP4_MERGE_TARGET);
-    if (!stage || !sourceWrap || !targetWrap || !targetCol) return;
+    if (!stage || !sourceVector || !targetVector || !targetCol) return;
 
     targetCol.classList.add('is-merge-target');
     setAttentionStep4ValueLabelForToken(ATTN_STEP4_MERGE_TARGET, 'aggregate');
@@ -451,8 +451,8 @@ function animateAttentionStep4MergeToken(token, delayMs, runningFrom, runningTo,
       ghost = createAttentionStep4MergeGhost(token);
       if (ghost) {
         const stageRect = stage.getBoundingClientRect();
-        const sourceRect = sourceWrap.getBoundingClientRect();
-        const targetRect = targetWrap.getBoundingClientRect();
+        const sourceRect = sourceVector.getBoundingClientRect();
+        const targetRect = targetVector.getBoundingClientRect();
         const fromX = sourceRect.left - stageRect.left + sourceRect.width * 0.5;
         const fromY = sourceRect.top - stageRect.top + sourceRect.height * 0.5;
         const toX = targetRect.left - stageRect.left + targetRect.width * 0.5;
@@ -597,14 +597,14 @@ function resetAttentionStep4ResidualVisuals(options = {}) {
 function createAttentionStep4ResidualGhost() {
   const stage = document.getElementById('attn22-stage');
   const layer = document.getElementById('attn22-merge-layer');
-  const sourceWrap = document.getElementById('attn22-vector-wrap-v-' + ATTN_STEP4_MERGE_TARGET);
-  if (!stage || !layer || !sourceWrap) return null;
+  const sourceVector = document.getElementById('attn22-vector-v-' + ATTN_STEP4_MERGE_TARGET);
+  if (!stage || !layer || !sourceVector) return null;
 
   const stageRect = stage.getBoundingClientRect();
-  const sourceRect = sourceWrap.getBoundingClientRect();
+  const sourceRect = sourceVector.getBoundingClientRect();
   if (stageRect.width < 1 || stageRect.height < 1 || sourceRect.width < 1 || sourceRect.height < 1) return null;
 
-  const ghost = sourceWrap.cloneNode(true);
+  const ghost = sourceVector.cloneNode(true);
   const stripIds = (node) => {
     if (!node || node.nodeType !== 1) return;
     node.removeAttribute('id');
@@ -636,9 +636,9 @@ function settleAttentionStep4ResidualState() {
 function runAttentionStep4ResidualSequence() {
   const stage = document.getElementById('attn22-stage');
   const satCol = document.getElementById('attn22-col-' + ATTN_STEP4_FOCUS);
-  const satVWrap = document.getElementById('attn22-vector-wrap-v-' + ATTN_STEP4_FOCUS);
-  const satXWrap = document.getElementById('attn22-vector-wrap-x-' + ATTN_STEP4_FOCUS);
-  if (!stage || !satCol || !satVWrap || !satXWrap) {
+  const satVVector = document.getElementById('attn22-vector-v-' + ATTN_STEP4_FOCUS);
+  const satXVector = document.getElementById('attn22-vector-x-' + ATTN_STEP4_FOCUS);
+  if (!stage || !satCol || !satVVector || !satXVector) {
     settleAttentionStep4ResidualState();
     return;
   }
@@ -652,8 +652,8 @@ function runAttentionStep4ResidualSequence() {
   const ghost = createAttentionStep4ResidualGhost();
   if (ghost) {
     const stageRect = stage.getBoundingClientRect();
-    const vRect = satVWrap.getBoundingClientRect();
-    const xRect = satXWrap.getBoundingClientRect();
+    const vRect = satVVector.getBoundingClientRect();
+    const xRect = satXVector.getBoundingClientRect();
     const fromX = vRect.left - stageRect.left + vRect.width * 0.5;
     const fromY = vRect.top - stageRect.top + vRect.height * 0.5;
     const toX = xRect.left - stageRect.left + xRect.width * 0.5;
@@ -955,27 +955,13 @@ function updateAttentionStep4Overlay() {
   };
 
   const rowLabels = document.getElementById('attn22-row-labels');
-  const rowXLabel = document.getElementById('attn22-row-x-label');
   const rowQLabel = document.getElementById('attn22-row-q-label');
-  const rowSLabel = document.getElementById('attn22-row-s-label');
-  const rowKLabel = document.getElementById('attn22-row-k-label');
-  const rowVLabel = document.getElementById('attn22-row-v-label');
-  const syncRowLabelY = (label, targetRect) => {
-    if (!rowLabels || !label || !targetRect) return;
-    const rowLabelsRect = rowLabels.getBoundingClientRect();
-    const y = stageY(targetRect, 0.5) - (rowLabelsRect.top - stageRect.top);
-    label.style.top = y.toFixed(2) + 'px';
-  };
 
   const satChipRect = satChip.getBoundingClientRect();
-  const satXRect = satXVector.getBoundingClientRect();
-  const satDotRect = satDotNode.getBoundingClientRect();
-  const satScoreRect = satScorePill.getBoundingClientRect();
-  const satKRect = satKVector.getBoundingClientRect();
-  const satVRect = vSatVector.getBoundingClientRect();
+  const satScoreWrapRect = satDotNode.getBoundingClientRect();
   const satCenterX = satChipRect.left - stageRect.left + satChipRect.width * 0.5;
   const xSatBottom = anchor(satXVector, 0.5, 1);
-  const dotSatTop = satDotRect.top - stageRect.top;
+  const dotSatTop = satScoreWrapRect.top - stageRect.top;
   const qCalloutRect = qCallout.getBoundingClientRect();
   const gapFromX = Math.max(stageH * 0.03, 10);
   const gapToDotNode = Math.max(stageH * 0.018, 7);
@@ -983,29 +969,29 @@ function updateAttentionStep4Overlay() {
   const qTopDesired = xSatBottom.y + gapFromX + qDownNudge;
   const qTopMax = dotSatTop - qCalloutRect.height - gapToDotNode;
   const qTop = Math.max(stageH * 0.02, Math.min(qTopDesired, qTopMax));
-  qCallout.style.left = satCenterX.toFixed(2) + 'px';
+  // Align callout left edge with sat chip left edge (no arrow needed)
+  const satChipLeft = satChipRect.left - stageRect.left;
+  qCallout.style.left = satChipLeft.toFixed(2) + 'px';
   qCallout.style.top = qTop.toFixed(2) + 'px';
-  const qRect = qVector.getBoundingClientRect();
-  syncRowLabelY(rowXLabel, satXRect);
-  syncRowLabelY(rowQLabel, qRect);
-  syncRowLabelY(rowSLabel, satDotRect || satScoreRect);
-  syncRowLabelY(rowKLabel, satKRect);
-  syncRowLabelY(rowVLabel, satVRect);
+  qCallout.style.removeProperty('--attn19-q-nudge');
 
-  const qVectorTop = anchor(qVector, 0.5, 0);
-  const qBottom = anchor(qVector, 0.5, 1);
-  const qLink = document.getElementById('attn22-q-link');
-  if (qLink) {
-    const pad = Math.max(stageH * 0.007, 3.4);
-    qLink.setAttribute('x1', xSatBottom.x.toFixed(2));
-    qLink.setAttribute('y1', (xSatBottom.y + pad).toFixed(2));
-    qLink.setAttribute('x2', qVectorTop.x.toFixed(2));
-    qLink.setAttribute('y2', (qVectorTop.y - pad).toFixed(2));
+  // Q label follows the floating callout (X/S/K/V labels are CSS grid items and auto-align)
+  if (rowQLabel && rowLabels) {
+    const rowLabelsRect = rowLabels.getBoundingClientRect();
+    const qLabelCenter = (stageRect.top + qTop + qCalloutRect.height * 0.5) - rowLabelsRect.top;
+    rowQLabel.style.top = qLabelCenter.toFixed(2) + 'px';
   }
 
-  const compareSource = { x: qBottom.x, y: qBottom.y };
+  const qBottom = anchor(qVector, 0.5, 1);
+  const compareSource = { x: satCenterX, y: qBottom.y };
   const headLenMain = Math.max(stageH * 0.02, 4.8);
   const headLenMinor = Math.max(stageH * 0.017, 4.2);
+
+  const spineRefWrap = document.getElementById('attn22-score-op-wrap-' + ATTN_STEP4_COMPARE_TOKENS[0]);
+  const spineRefTop = spineRefWrap ? anchor(spineRefWrap, 0.5, 0) : null;
+  const spineY = spineRefTop
+    ? compareSource.y + (spineRefTop.y - compareSource.y) * 0.5
+    : compareSource.y + Math.max(stageH * 0.06, 12);
 
   ATTN_STEP4_COMPARE_TOKENS.forEach((token) => {
     const dotNode = document.getElementById('attn22-score-op-wrap-' + token);
@@ -1028,33 +1014,24 @@ function updateAttentionStep4Overlay() {
       x: dotTop.x,
       y: dotTop.y + Math.max(stageH * 0.0024, 1)
     };
-    const distanceX = Math.abs(compareSource.x - qTarget.x);
-    const distanceY = qTarget.y - compareSource.y;
-    const curveFactor = ATTN_STEP4_COMPARE_CURVE_FACTORS[token] || 0.5;
-    let controlY = compareSource.y + distanceY * curveFactor + distanceX * 0.01;
-    const controlYMax = qTarget.y - Math.max(stageH * 0.004, 1.2);
-    if (controlY > controlYMax) controlY = controlYMax;
-    const cp1x = compareSource.x + (qTarget.x - compareSource.x) * 0.3;
-    const cp2x = compareSource.x + (qTarget.x - compareSource.x) * 0.72;
     const qPathD = 'M ' + compareSource.x.toFixed(2) + ' ' + compareSource.y.toFixed(2)
-      + ' C ' + cp1x.toFixed(2) + ' ' + controlY.toFixed(2)
-      + ' ' + cp2x.toFixed(2) + ' ' + controlY.toFixed(2)
-      + ' ' + qTarget.x.toFixed(2) + ' ' + qTarget.y.toFixed(2);
+      + ' L ' + compareSource.x.toFixed(2) + ' ' + spineY.toFixed(2)
+      + ' L ' + dotTop.x.toFixed(2) + ' ' + spineY.toFixed(2)
+      + ' L ' + dotTop.x.toFixed(2) + ' ' + qTarget.y.toFixed(2);
     qPath.setAttribute('d', qPathD);
-    setArrowHeadPoints(qHead, { x: cp2x, y: controlY }, qTarget, headLenMain);
+    setArrowHeadPoints(qHead, { x: dotTop.x, y: spineY }, qTarget, headLenMain);
 
     const kPad = Math.max(stageH * 0.0035, 1.2);
     const kSource = { x: kTop.x, y: kTop.y - kPad };
-    const kTarget = { x: dotBottom.x, y: dotBottom.y + kPad };
-    const kControlY = kSource.y + (kTarget.y - kSource.y) * 0.54;
-    const kCp1x = kSource.x + (kTarget.x - kSource.x) * 0.3;
-    const kCp2x = kSource.x + (kTarget.x - kSource.x) * 0.72;
+    const kTarget = { x: dotBottom.x, y: dotBottom.y };
+    const kMidY = kSource.y + (kTarget.y - kSource.y) * 0.5;
+    // 3-segment orthogonal: up → horizontal → up
     const kPathD = 'M ' + kSource.x.toFixed(2) + ' ' + kSource.y.toFixed(2)
-      + ' C ' + kCp1x.toFixed(2) + ' ' + kControlY.toFixed(2)
-      + ' ' + kCp2x.toFixed(2) + ' ' + kControlY.toFixed(2)
-      + ' ' + kTarget.x.toFixed(2) + ' ' + kTarget.y.toFixed(2);
+      + ' L ' + kSource.x.toFixed(2) + ' ' + kMidY.toFixed(2)
+      + ' L ' + kTarget.x.toFixed(2) + ' ' + kMidY.toFixed(2)
+      + ' L ' + kTarget.x.toFixed(2) + ' ' + kTarget.y.toFixed(2);
     kPath.setAttribute('d', kPathD);
-    setArrowHeadPoints(kHead, { x: kCp2x, y: kControlY }, kTarget, headLenMain);
+    setArrowHeadPoints(kHead, { x: kTarget.x, y: kMidY }, kTarget, headLenMain);
 
     const outPad = Math.max(stageH * 0.0035, 1.2);
     const outSource = { x: dotRight.x + outPad, y: dotRight.y };
@@ -1204,6 +1181,11 @@ function initAttentionStep4Slide() {
     if (!state.attentionStep4.resizeBound) {
       addTrackedListener(window, 'resize', () => {
         if (!state.attentionStep4.initialized) return;
+        if (layoutState.syntheticResizeGuard) {
+          updateAttentionStep4Overlay();
+          syncAttentionStep4CompareVisuals(state.attentionStep4.compareVisibleCount);
+          return;
+        }
         clearAttentionStep4CompareTimers();
         if (state.attentionStep4.step >= 4) {
           state.attentionStep4.compareDone = true;

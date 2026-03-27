@@ -322,15 +322,16 @@
 .attn19-stage {
     --attn19-source-rgb: 90, 232, 142;
     --attn19-focus-rgb: 123, 154, 255;
-    --attn19-label-col: 10.2rem;
+    --attn19-label-col: 8.9rem;
+    --attn19-vector-label-col: 2.18rem;
     --attn19-chip-row: auto;
-    --attn19-vector-row: 1.06rem;
-    --attn19-score-row: 1.02rem;
+    --attn19-vector-row: 1.16rem;
+    --attn19-score-row: 1.04rem;
     --attn19-gap-xq-row: 5.49rem;
     --attn19-gap-sk-row: 1.44rem;
     --attn19-gap-kv-row: 1.26rem;
     position: relative;
-    width: min(100%, 56rem);
+    width: min(100%, 61rem);
     padding: 1.4rem 1.7rem;
     border-color: rgba(123,154,255,0.34);
     background:
@@ -346,7 +347,7 @@
     width: 100%;
     display: grid;
     grid-template-columns: var(--attn19-label-col) minmax(0, 1fr);
-    gap: 0.72rem;
+    gap: 0.78rem;
     align-items: start;
     padding-top: 1.89rem;
 
@@ -370,40 +371,46 @@
 }
 
 .attn19-row-label {
-    position: absolute;
-    left: 0;
-    top: 0;
-    transform: translateY(-50%);
     font-size: var(--fs-2xs);
     line-height: 1.15;
     letter-spacing: 0.01em;
     color: rgba(182,194,223,0.84);
     white-space: nowrap;
     transition: opacity 0.2s ease;
+    align-self: center;
 
 }
 
 .attn19-row-label.x {
+    grid-row: 2;
     opacity: 1;
 
 }
 
+/* Q floats with the callout — positioned by JS */
 .attn19-row-label.q {
+    position: absolute;
+    left: 0;
+    top: 0;
+    transform: translateY(-50%);
     opacity: 0;
 
 }
 
 .attn19-row-label.s {
+    grid-row: 4;
     opacity: 0;
 
 }
 
 .attn19-row-label.k {
+    grid-row: 6;
     opacity: 0;
 
 }
 
 .attn19-row-label.v {
+    grid-row: 8;
     opacity: 0;
 
 }
@@ -411,7 +418,7 @@
 .attn19-cols {
     display: grid;
     grid-template-columns: repeat(5, minmax(0, 1fr));
-    gap: 0.64rem;
+    gap: 0.7rem;
     align-items: start;
 
 }
@@ -436,8 +443,11 @@
 .attn19-chip-wrap {
     grid-row: 1;
     position: relative;
-    display: flex;
-    justify-content: center;
+    width: 100%;
+    display: grid;
+    grid-template-columns: var(--attn19-vector-label-col) minmax(0, 1fr);
+    column-gap: 0.34rem;
+    align-items: center;
     opacity: 1;
 
 }
@@ -458,6 +468,8 @@
 }
 
 .attn19-token-chip {
+    grid-column: 2;
+    justify-self: stretch;
     width: 100%;
     text-align: center;
     border: 1px solid var(--border);
@@ -490,10 +502,10 @@
 .attn19-vector-wrap {
     width: 100%;
     display: grid;
-    grid-template-columns: 2.72rem minmax(0, 1fr);
+    grid-template-columns: var(--attn19-vector-label-col) minmax(0, 1fr);
     align-items: center;
-    column-gap: 0.28rem;
-    min-height: 1rem;
+    column-gap: 0.34rem;
+    min-height: 1.08rem;
     transition: opacity 0.22s ease, transform 0.22s ease, visibility 0.22s ease;
 
 }
@@ -508,9 +520,10 @@
 .attn19-score-op-wrap {
     grid-row: 4;
     display: grid;
-    grid-template-columns: 1.24rem minmax(2rem, max-content);
-    column-gap: 0.66rem;
-    justify-content: start;
+    grid-template-columns: var(--attn19-vector-label-col) minmax(0, 1fr);
+    column-gap: 0.54rem;
+    justify-content: stretch;
+    width: 100%;
     align-items: center;
     opacity: 0;
     visibility: hidden;
@@ -520,8 +533,9 @@
 }
 
 .attn19-dot-node {
-    width: 1.24rem;
-    height: 1.24rem;
+    width: 1.62rem;
+    height: 1.62rem;
+    justify-self: end;
     border-radius: 999px;
     border: 1px solid rgba(var(--attn19-focus-rgb), 0.66);
     background: rgba(var(--attn19-focus-rgb), 0.14);
@@ -558,31 +572,34 @@
 }
 
 .attn19-score-op-wrap.no-dot {
-    grid-template-columns: minmax(2rem, max-content);
+    grid-template-columns: minmax(0, 1fr);
     column-gap: 0;
 
 }
 
 .attn19-score-op-wrap.no-dot .attn19-score-pill {
-    justify-self: start;
+    justify-self: stretch;
 
 }
 
 .attn19-score-pill {
-    min-width: 2.24rem;
+    width: 100%;
+    min-width: 0;
     border-radius: 999px;
     border: 1px solid rgba(var(--attn19-focus-rgb), 0.62);
     background: rgba(var(--attn19-focus-rgb), 0.14);
     color: rgba(213,225,255,0.96);
     font-family: 'JetBrains Mono', monospace;
     font-size: var(--fs-2xs);
+    font-variant-numeric: tabular-nums;
     line-height: 1;
-    display: inline-flex;
+    display: flex;
     align-items: center;
     justify-content: center;
     gap: 0;
     text-align: center;
     padding: 0.18rem 0.38rem;
+    box-sizing: border-box;
 
 }
 
@@ -658,7 +675,7 @@
 
 .attn19-vector {
     position: relative;
-    height: 0.9rem;
+    height: 0.98rem;
     border-radius: var(--radius-sm);
     border: 1px solid rgba(184,194,221,0.4);
     background: rgba(184,194,221,0.08);
@@ -673,19 +690,29 @@
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
     align-items: center;
-    justify-items: center;
-    padding: 0 0.08rem;
+    justify-items: stretch;
+    padding: 0 0.1rem;
     font-family: 'JetBrains Mono', monospace;
-    font-size: var(--fs-2xs);
+    font-size: 0.57rem;
+    font-variant-numeric: tabular-nums;
     line-height: 1;
-    letter-spacing: -0.01em;
+    letter-spacing: -0.015em;
     color: rgba(213,223,246,0.5);
     pointer-events: none;
 
 }
 
 .attn19-vector-value {
-    opacity: 0.78;
+    width: 100%;
+    min-width: 0;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    opacity: 0.82;
+    white-space: nowrap;
+    overflow: hidden;
 
 }
 
@@ -759,6 +786,17 @@
 
 }
 
+.attn19-compare-line.k-input {
+    stroke: rgba(var(--attn19-source-rgb), 0.58);
+    stroke-width: 1.02;
+
+}
+
+.attn19-compare-head.k-input {
+    fill: rgba(var(--attn19-source-rgb), 0.82);
+
+}
+
 .attn19-compare-head {
     fill: rgba(var(--attn19-focus-rgb), 0.84);
     opacity: 0;
@@ -796,8 +834,7 @@
     gap: 0.16rem;
     opacity: 0;
     visibility: hidden;
-    transform: translate(-50%, -0.2rem);
-    transition: opacity 0.22s ease, transform 0.22s ease, visibility 0.22s ease;
+    transition: opacity 0.22s ease, visibility 0.22s ease;
 
 }
 
@@ -1885,7 +1922,7 @@
 }
 
 .attn21-takeaway {
-    margin-top: 0.82rem;
+    margin: 0.82rem auto 0;
     border: 1px solid var(--accent-border);
     border-radius: var(--radius-md);
     background: var(--accent-bg);
@@ -1895,7 +1932,7 @@
     font-size: var(--fs-xs);
     color: #dbe4ff;
     line-height: 1.45;
-    width: min(100%, 56rem);
+    width: min(100%, 62rem);
 
 }
 

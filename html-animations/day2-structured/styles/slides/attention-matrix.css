@@ -120,7 +120,7 @@
 }
 
 .attn23-source-row {
-    width: min(100%, 34rem);
+    width: min(100%, 40rem);
     display: grid;
     grid-template-columns: repeat(5, minmax(0, 1fr));
     gap: 0.52rem;
@@ -154,6 +154,12 @@
 
 }
 
+.attn23-token-chip-wrap {
+    display: flex;
+    justify-content: center;
+
+}
+
 .attn23-source-item .attn19-token-chip,
   .attn23-token-item .attn19-token-chip {
     width: 100%;
@@ -166,6 +172,11 @@
     opacity: 1;
     visibility: visible;
     transform: none;
+
+}
+
+.attn23-source-vector-wrap .attn19-vector-values {
+    font-size: 0.53rem;
 
 }
 
@@ -204,7 +215,7 @@
 }
 
 .attn23-rail {
-    width: min(100%, 34rem);
+    width: min(100%, 40rem);
     display: grid;
     grid-template-columns:
       minmax(0, var(--attn23-token-col-w))
@@ -401,6 +412,7 @@
 
 .attn23-mini-x-shell {
     padding: 0.08rem;
+    background: rgba(var(--attn19-focus-rgb), 0.06);
 
 }
 
@@ -460,9 +472,9 @@
 }
 
 .attn23-mini-x-row .attn19-vector {
-    height: 0.56rem;
-    border-color: rgba(184,194,221,0.28);
-    background: rgba(184,194,221,0.09);
+    height: 0.78rem;
+    border-color: rgba(184,194,221,0.34);
+    background: rgba(var(--attn19-focus-rgb), 0.11);
 
 }
 
@@ -499,11 +511,26 @@
 
 .attn23-proj-output-shell {
     padding: 0.08rem;
+    background: rgba(184,194,221,0.07);
 
 }
 
 .attn23-proj-output-row .attn19-vector {
-    height: 0.62rem;
+    height: 0.84rem;
+
+}
+
+.attn23-mini-x-row .attn19-vector-values {
+    font-size: 0.43rem;
+    padding: 0 0.06rem;
+    letter-spacing: -0.02em;
+
+}
+
+.attn23-proj-output-row .attn19-vector-values {
+    font-size: 0.48rem;
+    padding: 0 0.06rem;
+    letter-spacing: -0.02em;
 
 }
 

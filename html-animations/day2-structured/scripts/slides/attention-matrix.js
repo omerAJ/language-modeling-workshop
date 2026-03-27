@@ -96,13 +96,21 @@ function createAttentionMatrixMiniX(proj) {
       className: 'attn19-vector-wrap attn19-vector-wrap-x'
     }, createAttentionQkvVectorRect(
       'attn23-mini-x-vector-' + proj + '-' + token,
-      ''
+      '',
+      ATTN_QKV_X_VECTORS[token] || ATTN_QKV_QUERY_VECTOR
     )));
     slots.appendChild(row);
   });
   shell.appendChild(slots);
   wrap.appendChild(shell);
   return wrap;
+}
+
+function getAttentionMatrixProjectionValues(proj, token) {
+  if (proj === 'q') return ATTN_MATRIX_Q_VECTORS[token] || ATTN_QKV_QUERY_VECTOR;
+  if (proj === 'k') return ATTN_QKV_KEY_VECTORS[token] || ATTN_QKV_QUERY_VECTOR;
+  if (proj === 'v') return ATTN_QKV_VALUE_VECTORS[token] || ATTN_QKV_QUERY_VECTOR;
+  return ATTN_QKV_QUERY_VECTOR;
 }
 
 function createAttentionMatrixProjectionMatrix(proj) {
@@ -147,7 +155,8 @@ function createAttentionMatrixProjectionOutputRow(proj, token) {
     className: 'attn19-vector-wrap attn19-vector-wrap-x'
   }, createAttentionQkvVectorRect(
     'attn23-proj-output-vector-' + proj + '-' + token,
-    ''
+    '',
+    getAttentionMatrixProjectionValues(proj, token)
   )));
   return row;
 }

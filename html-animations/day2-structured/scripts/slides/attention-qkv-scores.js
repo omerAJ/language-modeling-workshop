@@ -166,7 +166,9 @@ function updateAttentionQkvOverlay() {
   const satChip = document.getElementById('attn19-chip-' + ATTN_QKV_FOCUS);
   const satXVector = document.getElementById('attn19-vector-x-' + ATTN_QKV_FOCUS);
   const satKVector = document.getElementById('attn19-vector-k-' + ATTN_QKV_FOCUS);
-  if (!stage || !overlay || !qCallout || !qVector || !satDotNode || !satScorePill || !vSatVector || !satChip || !satXVector || !satKVector) return;
+  const satScoreWrap = document.getElementById('attn19-score-op-wrap-' + ATTN_QKV_FOCUS);
+  if (!stage || !overlay || !qCallout || !qVector || !satDotNode || !satScorePill || !vSatVector || !satChip || !satXVector || !satKVector
+    || !satScoreWrap) return;
 
   const stageRect = stage.getBoundingClientRect();
   if (stageRect.width < 1 || stageRect.height < 1) return;
@@ -200,27 +202,13 @@ function updateAttentionQkvOverlay() {
   };
 
   const rowLabels = document.getElementById('attn19-row-labels');
-  const rowXLabel = document.getElementById('attn19-row-x-label');
   const rowQLabel = document.getElementById('attn19-row-q-label');
-  const rowSLabel = document.getElementById('attn19-row-s-label');
-  const rowKLabel = document.getElementById('attn19-row-k-label');
-  const rowVLabel = document.getElementById('attn19-row-v-label');
-  const syncRowLabelY = (label, targetRect) => {
-    if (!rowLabels || !label || !targetRect) return;
-    const rowLabelsRect = rowLabels.getBoundingClientRect();
-    const y = stageY(targetRect, 0.5) - (rowLabelsRect.top - stageRect.top);
-    label.style.top = y.toFixed(2) + 'px';
-  };
 
   const satChipRect = satChip.getBoundingClientRect();
-  const satXRect = satXVector.getBoundingClientRect();
-  const satDotRect = satDotNode.getBoundingClientRect();
-  const satScoreRect = satScorePill.getBoundingClientRect();
-  const satKRect = satKVector.getBoundingClientRect();
-  const satVRect = vSatVector.getBoundingClientRect();
+  const satScoreWrapRect = satScoreWrap.getBoundingClientRect();
   const satCenterX = satChipRect.left - stageRect.left + satChipRect.width * 0.5;
   const xSatBottom = anchor(satXVector, 0.5, 1);
-  const dotSatTop = satDotRect.top - stageRect.top;
+  const dotSatTop = satScoreWrapRect.top - stageRect.top;
   const qCalloutRect = qCallout.getBoundingClientRect();
   const gapFromX = Math.max(stageH * 0.03, 10);
   const gapToDotNode = Math.max(stageH * 0.018, 7);
@@ -228,29 +216,29 @@ function updateAttentionQkvOverlay() {
   const qTopDesired = xSatBottom.y + gapFromX + qDownNudge;
   const qTopMax = dotSatTop - qCalloutRect.height - gapToDotNode;
   const qTop = Math.max(stageH * 0.02, Math.min(qTopDesired, qTopMax));
-  qCallout.style.left = satCenterX.toFixed(2) + 'px';
+  // Align callout left edge with sat chip left edge (no arrow needed)
+  const satChipLeft = satChipRect.left - stageRect.left;
+  qCallout.style.left = satChipLeft.toFixed(2) + 'px';
   qCallout.style.top = qTop.toFixed(2) + 'px';
-  const qRect = qVector.getBoundingClientRect();
-  syncRowLabelY(rowXLabel, satXRect);
-  syncRowLabelY(rowQLabel, qRect);
-  syncRowLabelY(rowSLabel, satDotRect || satScoreRect);
-  syncRowLabelY(rowKLabel, satKRect);
-  syncRowLabelY(rowVLabel, satVRect);
+  qCallout.style.removeProperty('--attn19-q-nudge');
 
-  const qVectorTop = anchor(qVector, 0.5, 0);
-  const qBottom = anchor(qVector, 0.5, 1);
-  const qLink = document.getElementById('attn19-q-link');
-  if (qLink) {
-    const pad = Math.max(stageH * 0.007, 3.4);
-    qLink.setAttribute('x1', xSatBottom.x.toFixed(2));
-    qLink.setAttribute('y1', (xSatBottom.y + pad).toFixed(2));
-    qLink.setAttribute('x2', qVectorTop.x.toFixed(2));
-    qLink.setAttribute('y2', (qVectorTop.y - pad).toFixed(2));
+  // Q label follows the floating callout (X/S/K/V labels are CSS grid items and auto-align)
+  if (rowQLabel && rowLabels) {
+    const rowLabelsRect = rowLabels.getBoundingClientRect();
+    const qLabelCenter = (stageRect.top + qTop + qCalloutRect.height * 0.5) - rowLabelsRect.top;
+    rowQLabel.style.top = qLabelCenter.toFixed(2) + 'px';
   }
 
-  const compareSource = { x: qBottom.x, y: qBottom.y };
+  const qBottom = anchor(qVector, 0.5, 1);
+  const compareSource = { x: satCenterX, y: qBottom.y };
   const headLenMain = Math.max(stageH * 0.02, 4.8);
   const headLenMinor = Math.max(stageH * 0.017, 4.2);
+
+  const spineRefDot = document.getElementById('attn19-dot-node-' + ATTN_QKV_COMPARE_TOKENS[0]);
+  const spineRefTop = spineRefDot ? anchor(spineRefDot, 0.5, 0) : null;
+  const spineY = spineRefTop
+    ? compareSource.y + (spineRefTop.y - compareSource.y) * 0.5
+    : compareSource.y + Math.max(stageH * 0.06, 12);
 
   ATTN_QKV_COMPARE_TOKENS.forEach((token) => {
     const dotNode = document.getElementById('attn19-dot-node-' + token);
@@ -273,33 +261,25 @@ function updateAttentionQkvOverlay() {
       x: dotTop.x,
       y: dotTop.y + Math.max(stageH * 0.0024, 1)
     };
-    const distanceX = Math.abs(compareSource.x - qTarget.x);
-    const distanceY = qTarget.y - compareSource.y;
-    const curveFactor = ATTN_QKV_COMPARE_CURVE_FACTORS[token] || 0.5;
-    let controlY = compareSource.y + distanceY * curveFactor + distanceX * 0.01;
-    const controlYMax = qTarget.y - Math.max(stageH * 0.004, 1.2);
-    if (controlY > controlYMax) controlY = controlYMax;
-    const cp1x = compareSource.x + (qTarget.x - compareSource.x) * 0.3;
-    const cp2x = compareSource.x + (qTarget.x - compareSource.x) * 0.72;
     const qPathD = 'M ' + compareSource.x.toFixed(2) + ' ' + compareSource.y.toFixed(2)
-      + ' C ' + cp1x.toFixed(2) + ' ' + controlY.toFixed(2)
-      + ' ' + cp2x.toFixed(2) + ' ' + controlY.toFixed(2)
-      + ' ' + qTarget.x.toFixed(2) + ' ' + qTarget.y.toFixed(2);
+      + ' L ' + compareSource.x.toFixed(2) + ' ' + spineY.toFixed(2)
+      + ' L ' + dotTop.x.toFixed(2) + ' ' + spineY.toFixed(2)
+      + ' L ' + dotTop.x.toFixed(2) + ' ' + qTarget.y.toFixed(2);
     qPath.setAttribute('d', qPathD);
-    setArrowHeadPoints(qHead, { x: cp2x, y: controlY }, qTarget, headLenMain);
+    setArrowHeadPoints(qHead, { x: dotTop.x, y: spineY }, qTarget, headLenMain);
 
     const kPad = Math.max(stageH * 0.0035, 1.2);
+    // kSource: slightly above k-vector top; kTarget: at dot-bottom centre
     const kSource = { x: kTop.x, y: kTop.y - kPad };
-    const kTarget = { x: dotBottom.x, y: dotBottom.y + kPad };
-    const kControlY = kSource.y + (kTarget.y - kSource.y) * 0.54;
-    const kCp1x = kSource.x + (kTarget.x - kSource.x) * 0.3;
-    const kCp2x = kSource.x + (kTarget.x - kSource.x) * 0.72;
+    const kTarget = { x: dotBottom.x, y: dotBottom.y };
+    const kMidY = kSource.y + (kTarget.y - kSource.y) * 0.5;
+    // 3-segment orthogonal: up → horizontal → up
     const kPathD = 'M ' + kSource.x.toFixed(2) + ' ' + kSource.y.toFixed(2)
-      + ' C ' + kCp1x.toFixed(2) + ' ' + kControlY.toFixed(2)
-      + ' ' + kCp2x.toFixed(2) + ' ' + kControlY.toFixed(2)
-      + ' ' + kTarget.x.toFixed(2) + ' ' + kTarget.y.toFixed(2);
+      + ' L ' + kSource.x.toFixed(2) + ' ' + kMidY.toFixed(2)
+      + ' L ' + kTarget.x.toFixed(2) + ' ' + kMidY.toFixed(2)
+      + ' L ' + kTarget.x.toFixed(2) + ' ' + kTarget.y.toFixed(2);
     kPath.setAttribute('d', kPathD);
-    setArrowHeadPoints(kHead, { x: kCp2x, y: kControlY }, kTarget, headLenMain);
+    setArrowHeadPoints(kHead, { x: kTarget.x, y: kMidY }, kTarget, headLenMain);
 
     const outPad = Math.max(stageH * 0.0035, 1.2);
     const outSource = { x: dotRight.x + outPad, y: dotRight.y };
@@ -383,6 +363,11 @@ function initAttentionQkvSlide() {
     if (!state.attentionQkv.resizeBound) {
       addTrackedListener(window, 'resize', () => {
         if (!state.attentionQkv.initialized) return;
+        if (layoutState.syntheticResizeGuard) {
+          updateAttentionQkvOverlay();
+          syncAttentionQkvCompareVisuals(state.attentionQkv.compareVisibleCount);
+          return;
+        }
         clearAttentionQkvCompareTimers();
         if (state.attentionQkv.step === 4) {
           state.attentionQkv.compareDone = true;

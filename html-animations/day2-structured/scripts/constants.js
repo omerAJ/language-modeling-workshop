@@ -144,14 +144,6 @@ const ATTN_QKV_X_VECTORS = {
 
 const ATTN_QKV_COMPARE_TOKENS = ['cat', 'sat', 'on', 'the', 'mat'];
 
-const ATTN_QKV_COMPARE_CURVE_FACTORS = {
-  cat: 0.4,
-  sat: 0.52,
-  on: 0.58,
-  the: 0.64,
-  mat: 0.46
-};
-
 const ATTN_QKV_SCORE_QUAL = {
   cat: { tier: 'strongest' },
   sat: { tier: 'medium' },
@@ -184,14 +176,6 @@ const ATTN_STEP4_TOKENS = ['cat', 'sat', 'on', 'the', 'mat'];
 const ATTN_STEP4_FOCUS = 'sat';
 
 const ATTN_STEP4_COMPARE_TOKENS = ['cat', 'sat', 'on', 'the', 'mat'];
-
-const ATTN_STEP4_COMPARE_CURVE_FACTORS = {
-  cat: 0.4,
-  sat: 0.52,
-  on: 0.58,
-  the: 0.64,
-  mat: 0.46
-};
 
 const ATTN_STEP4_SCORE_QUAL = {
   cat: { tier: 'strongest' },
