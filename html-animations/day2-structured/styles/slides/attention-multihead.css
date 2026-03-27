@@ -21,6 +21,7 @@
     align-content: start;
     gap: 0.88rem;
     padding-top: 0.68rem;
+    transition: gap 0.26s ease, padding-top 0.26s ease;
 
 }
 
@@ -82,11 +83,11 @@
 
 }
 
-#slide-24.attn24-show-split .attn24-overlay,
-  #slide-24.attn24-show-split .attn24-overlay-line,
-  #slide-24.attn24-show-split .attn24-overlay-bus,
-  #slide-24.attn24-show-split .attn24-copy-node,
-  #slide-24.attn24-show-split .attn24-copy-label {
+#slide-24.attn24-show-split:not(.attn24-source-collapsed) .attn24-overlay,
+  #slide-24.attn24-show-split:not(.attn24-source-collapsed) .attn24-overlay-line,
+  #slide-24.attn24-show-split:not(.attn24-source-collapsed) .attn24-overlay-bus,
+  #slide-24.attn24-show-split:not(.attn24-source-collapsed) .attn24-copy-node,
+  #slide-24.attn24-show-split:not(.attn24-source-collapsed) .attn24-copy-label {
     opacity: 1;
 
 }
@@ -105,6 +106,19 @@
 .attn24-source-wrap,
   .attn24-head-grid {
     transition: opacity 0.24s ease, transform 0.24s ease;
+
+}
+
+.attn24-source-wrap {
+    width: 100%;
+    display: grid;
+    justify-items: center;
+    align-content: start;
+    max-height: 12rem;
+    overflow: hidden;
+    opacity: 1;
+    transform: translateY(0);
+    transition: max-height 0.28s ease, opacity 0.24s ease, transform 0.24s ease;
 
 }
 
@@ -226,6 +240,8 @@
     align-items: start;
     position: relative;
     z-index: 1;
+    transform: translateY(0);
+    transition: width 0.28s ease, opacity 0.24s ease, transform 0.24s ease;
 
 }
 
@@ -928,6 +944,37 @@
 #slide-24.attn24-show-wo .attn24-combine-stage {
     grid-template-columns: var(--attn24-concat-w) auto var(--attn24-wo-w) auto var(--attn24-final-output-w);
     align-items: start;
+
+}
+
+#slide-24.attn24-source-collapsed .attn24-stage {
+    gap: 0.18rem;
+    padding-top: 0.24rem;
+
+}
+
+#slide-24.attn24-source-collapsed .attn24-source-wrap {
+    max-height: 0;
+    opacity: 0;
+    transform: translateY(-0.42rem);
+    pointer-events: none;
+
+}
+
+#slide-24.attn24-source-collapsed .attn24-overlay,
+  #slide-24.attn24-source-collapsed .attn24-overlay-line,
+  #slide-24.attn24-source-collapsed .attn24-overlay-bus,
+  #slide-24.attn24-source-collapsed .attn24-copy-node,
+  #slide-24.attn24-source-collapsed .attn24-copy-label {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+
+}
+
+#slide-24.attn24-source-collapsed .attn24-head-grid {
+    width: min(100%, 57rem);
+    transform: translateY(-0.36rem);
 
 }
 

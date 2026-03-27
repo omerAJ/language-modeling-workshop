@@ -746,6 +746,7 @@ function resetAttentionMultiHeadVisuals() {
   clearAttentionMultiHeadTimers();
   clearAttentionMultiHeadGhosts();
   state.attentionMultiHead.splitDone = false;
+  state.attentionMultiHead.sourceCollapsedDone = false;
   state.attentionMultiHead.projDone = false;
   state.attentionMultiHead.attnDone = false;
   state.attentionMultiHead.outputDone = false;
@@ -754,7 +755,7 @@ function resetAttentionMultiHeadVisuals() {
   state.attentionMultiHead.combineVisible = false;
   state.attentionMultiHead.outputVisibleCount = 0;
   if (!slide) return;
-  slide.classList.remove('attn24-show-split', 'attn24-show-proj', 'attn24-show-attn', 'attn24-show-output', 'attn24-show-concat', 'attn24-show-concat-ready', 'attn24-show-wo');
+  slide.classList.remove('attn24-show-split', 'attn24-source-collapsed', 'attn24-show-proj', 'attn24-show-attn', 'attn24-show-output', 'attn24-show-concat', 'attn24-show-concat-ready', 'attn24-show-wo');
   slide.querySelectorAll('.attn24-head-card').forEach((card) => {
     card.classList.remove('is-split-visible', 'is-proj-visible', 'is-qkv-visible', 'is-attn-visible', 'is-output-visible');
   });
@@ -777,9 +778,19 @@ function settleAttentionMultiHeadSplitState() {
   updateAttentionMultiHeadOverlay();
 }
 
-function settleAttentionMultiHeadProjectionState() {
+function settleAttentionMultiHeadSourceCollapseState() {
   const slide = document.getElementById('slide-24');
   settleAttentionMultiHeadSplitState();
+  if (!slide) return;
+  slide.classList.add('attn24-source-collapsed');
+  state.attentionMultiHead.splitDone = true;
+  state.attentionMultiHead.sourceCollapsedDone = true;
+  updateAttentionMultiHeadOverlay();
+}
+
+function settleAttentionMultiHeadProjectionState() {
+  const slide = document.getElementById('slide-24');
+  settleAttentionMultiHeadSourceCollapseState();
   if (!slide) return;
   slide.classList.add('attn24-show-proj');
   ATTN_MHA_HEADS.forEach((head) => {
@@ -788,6 +799,7 @@ function settleAttentionMultiHeadProjectionState() {
     card.classList.add('is-proj-visible', 'is-qkv-visible');
   });
   state.attentionMultiHead.splitDone = true;
+  state.attentionMultiHead.sourceCollapsedDone = true;
   state.attentionMultiHead.projDone = true;
   updateAttentionMultiHeadOverlay();
 }
@@ -802,6 +814,7 @@ function settleAttentionMultiHeadAttentionState() {
     if (card) card.classList.add('is-attn-visible');
   });
   state.attentionMultiHead.splitDone = true;
+  state.attentionMultiHead.sourceCollapsedDone = true;
   state.attentionMultiHead.projDone = true;
   state.attentionMultiHead.attnDone = true;
   updateAttentionMultiHeadOverlay();
@@ -817,6 +830,7 @@ function settleAttentionMultiHeadOutputState() {
     if (card) card.classList.add('is-output-visible');
   });
   state.attentionMultiHead.splitDone = true;
+  state.attentionMultiHead.sourceCollapsedDone = true;
   state.attentionMultiHead.projDone = true;
   state.attentionMultiHead.attnDone = true;
   state.attentionMultiHead.outputDone = true;
@@ -834,6 +848,7 @@ function settleAttentionMultiHeadConcatState() {
   slide.classList.add('attn24-show-concat', 'attn24-show-concat-ready');
   slide.classList.remove('attn24-show-wo');
   state.attentionMultiHead.splitDone = true;
+  state.attentionMultiHead.sourceCollapsedDone = true;
   state.attentionMultiHead.projDone = true;
   state.attentionMultiHead.attnDone = true;
   state.attentionMultiHead.outputDone = true;
@@ -852,6 +867,7 @@ function settleAttentionMultiHeadOutputProjectionState() {
   state.attentionMultiHead.concatDone = true;
   state.attentionMultiHead.combineVisible = true;
   state.attentionMultiHead.outputProjectionDone = true;
+  state.attentionMultiHead.sourceCollapsedDone = true;
   ATTN_MHA_HEADS.forEach((head) => setAttentionMultiHeadSourceOutputVisible(head, true));
   updateAttentionMultiHeadOverlay();
 }
@@ -886,7 +902,7 @@ function runAttentionMultiHeadSplitSequence() {
   }, ATTN_MHA_SPLIT_MS + ATTN_MATRIX_FADE_MS + 80));
 }
 
-function runAttentionMultiHeadProjectionSequence() {
+function runAttentionMultiHeadSourceCollapseSequence() {
   const slide = document.getElementById('slide-24');
   if (!slide) return;
   if (!state.attentionMultiHead.splitDone) {
@@ -895,6 +911,25 @@ function runAttentionMultiHeadProjectionSequence() {
   clearAttentionMultiHeadTimers();
   clearAttentionMultiHeadGhosts();
   slide.classList.add('attn24-show-split');
+
+  state.attentionMultiHead.timers.push(setTimeout(() => {
+    slide.classList.add('attn24-source-collapsed');
+  }, 30));
+
+  state.attentionMultiHead.timers.push(setTimeout(() => {
+    settleAttentionMultiHeadSourceCollapseState();
+  }, ATTN_MATRIX_FADE_MS + 120));
+}
+
+function runAttentionMultiHeadProjectionSequence() {
+  const slide = document.getElementById('slide-24');
+  if (!slide) return;
+  if (!state.attentionMultiHead.sourceCollapsedDone) {
+    settleAttentionMultiHeadSourceCollapseState();
+  }
+  clearAttentionMultiHeadTimers();
+  clearAttentionMultiHeadGhosts();
+  slide.classList.add('attn24-show-split', 'attn24-source-collapsed');
   slide.classList.add('attn24-show-proj');
 
   ATTN_MHA_HEADS.forEach((head, idx) => {
@@ -1050,16 +1085,18 @@ function initAttentionMultiHeadSlide() {
     if (!state.attentionMultiHead.resizeBound) {
       addTrackedListener(window, 'resize', () => {
         if (!state.attentionMultiHead.initialized) return;
-        if (state.attentionMultiHead.step >= 6) {
+        if (state.attentionMultiHead.step >= 7) {
           settleAttentionMultiHeadOutputProjectionState();
-        } else if (state.attentionMultiHead.step >= 5) {
+        } else if (state.attentionMultiHead.step >= 6) {
           settleAttentionMultiHeadConcatState();
-        } else if (state.attentionMultiHead.step >= 4) {
+        } else if (state.attentionMultiHead.step >= 5) {
           settleAttentionMultiHeadOutputState();
-        } else if (state.attentionMultiHead.step >= 3) {
+        } else if (state.attentionMultiHead.step >= 4) {
           settleAttentionMultiHeadAttentionState();
-        } else if (state.attentionMultiHead.step >= 2) {
+        } else if (state.attentionMultiHead.step >= 3) {
           settleAttentionMultiHeadProjectionState();
+        } else if (state.attentionMultiHead.step >= 2) {
+          settleAttentionMultiHeadSourceCollapseState();
         } else if (state.attentionMultiHead.step >= 1) {
           settleAttentionMultiHeadSplitState();
         } else {
@@ -1076,16 +1113,18 @@ function initAttentionMultiHeadSlide() {
   if (takeaway) setMathHTML(takeaway, ATTN_MHA_TAKEAWAYS[state.attentionMultiHead.step] || ATTN_MHA_TAKEAWAYS[0]);
   typesetMath(slide);
 
-  if (state.attentionMultiHead.step >= 6) {
+  if (state.attentionMultiHead.step >= 7) {
     settleAttentionMultiHeadOutputProjectionState();
-  } else if (state.attentionMultiHead.step >= 5) {
+  } else if (state.attentionMultiHead.step >= 6) {
     settleAttentionMultiHeadConcatState();
-  } else if (state.attentionMultiHead.step >= 4) {
+  } else if (state.attentionMultiHead.step >= 5) {
     settleAttentionMultiHeadOutputState();
-  } else if (state.attentionMultiHead.step >= 3) {
+  } else if (state.attentionMultiHead.step >= 4) {
     settleAttentionMultiHeadAttentionState();
-  } else if (state.attentionMultiHead.step >= 2) {
+  } else if (state.attentionMultiHead.step >= 3) {
     settleAttentionMultiHeadProjectionState();
+  } else if (state.attentionMultiHead.step >= 2) {
+    settleAttentionMultiHeadSourceCollapseState();
   } else if (state.attentionMultiHead.step >= 1) {
     settleAttentionMultiHeadSplitState();
   } else {
@@ -1122,6 +1161,18 @@ function setAttentionMultiHeadStep(step) {
     settleAttentionMultiHeadSplitState();
   }
   if (clamped === 2) {
+    if (!state.attentionMultiHead.sourceCollapsedDone && animateStep) {
+      runAttentionMultiHeadSourceCollapseSequence();
+    } else {
+      settleAttentionMultiHeadSourceCollapseState();
+    }
+    return;
+  }
+
+  if (!state.attentionMultiHead.sourceCollapsedDone) {
+    settleAttentionMultiHeadSourceCollapseState();
+  }
+  if (clamped === 3) {
     if (!state.attentionMultiHead.projDone && animateStep) {
       runAttentionMultiHeadProjectionSequence();
     } else {
@@ -1133,7 +1184,7 @@ function setAttentionMultiHeadStep(step) {
   if (!state.attentionMultiHead.projDone) {
     settleAttentionMultiHeadProjectionState();
   }
-  if (clamped === 3) {
+  if (clamped === 4) {
     if (!state.attentionMultiHead.attnDone && animateStep) {
       runAttentionMultiHeadAttentionSequence();
     } else {
@@ -1145,7 +1196,7 @@ function setAttentionMultiHeadStep(step) {
   if (!state.attentionMultiHead.attnDone) {
     settleAttentionMultiHeadAttentionState();
   }
-  if (clamped === 4) {
+  if (clamped === 5) {
     if (!state.attentionMultiHead.outputDone && animateStep) {
       runAttentionMultiHeadOutputSequence();
     } else {
@@ -1157,7 +1208,7 @@ function setAttentionMultiHeadStep(step) {
   if (!state.attentionMultiHead.outputDone) {
     settleAttentionMultiHeadOutputState();
   }
-  if (clamped === 5) {
+  if (clamped === 6) {
     if (!state.attentionMultiHead.concatDone && animateStep) {
       runAttentionMultiHeadConcatSequence();
     } else {
@@ -1169,7 +1220,7 @@ function setAttentionMultiHeadStep(step) {
   if (!state.attentionMultiHead.concatDone) {
     settleAttentionMultiHeadConcatState();
   }
-  if (clamped === 6) {
+  if (clamped === 7) {
     if (!state.attentionMultiHead.outputProjectionDone && animateStep) {
       runAttentionMultiHeadOutputProjectionSequence();
     } else {

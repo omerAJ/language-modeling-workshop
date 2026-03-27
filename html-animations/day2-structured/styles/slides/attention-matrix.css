@@ -1,30 +1,30 @@
 /* Slide 23: matrix view of attention. */
 
 .attn23-stage {
-    --attn23-row-h: 2.15rem;
-    --attn23-rail-gap: 1.25rem;
-    --attn23-token-col-w: 6.8rem;
-    --attn23-x-col-w: 11.6rem;
-    --attn23-proj-col-w: 17.8rem;
-    --attn23-score-operand-w: 4.7rem;
-    --attn23-score-operand-row-h: 0.82rem;
+    --attn23-row-h: 2.56rem;
+    --attn23-rail-gap: 1.55rem;
+    --attn23-token-col-w: 8.4rem;
+    --attn23-x-col-w: 14.2rem;
+    --attn23-proj-col-w: 24rem;
+    --attn23-score-operand-w: 5.35rem;
+    --attn23-score-operand-row-h: 0.93rem;
     --attn23-score-operand-row-count: 5;
     --attn23-score-operand-h: calc(var(--attn23-score-operand-row-h) * var(--attn23-score-operand-row-count));
-    --attn23-score-k-header-col-w: 1rem;
+    --attn23-score-k-header-col-w: 1.08rem;
     --attn23-score-k-wrap-w: calc(var(--attn23-score-k-header-col-w) + var(--attn23-score-operand-w));
     --attn23-score-k-transpose-frame-w: var(--attn23-score-operand-h);
     --attn23-score-k-transpose-frame-h: var(--attn23-score-operand-w);
-    --attn23-score-k-transpose-header-h: 2.32rem;
-    --attn23-score-s-w: 15.8rem;
-    --attn23-score-cell-h: 1.38rem;
-    --attn23-postscore-main-w: 22.6rem;
-    --attn23-postscore-vector-w: 13.8rem;
-    --attn23-postscore-cell-h: 1.72rem;
+    --attn23-score-k-transpose-header-h: 2.56rem;
+    --attn23-score-s-w: 18.2rem;
+    --attn23-score-cell-h: 1.52rem;
+    --attn23-postscore-main-w: 25.8rem;
+    --attn23-postscore-vector-w: 15.6rem;
+    --attn23-postscore-cell-h: 1.9rem;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 1.35rem;
-    padding-top: 0.92rem;
+    gap: 1.1rem;
+    padding-top: 0.58rem;
 
 }
 
@@ -121,10 +121,10 @@
 }
 
 .attn23-source-row {
-    width: min(100%, 40rem);
+    width: min(100%, 53.5rem);
     display: grid;
     grid-template-columns: repeat(5, minmax(0, 1fr));
-    gap: 0.52rem;
+    gap: 0.62rem;
 
 }
 
@@ -177,7 +177,7 @@
 }
 
 .attn23-source-vector-wrap .attn19-vector-values {
-    font-size: 0.53rem;
+    font-size: 0.6rem;
 
 }
 
@@ -216,7 +216,7 @@
 }
 
 .attn23-rail {
-    width: min(100%, 40rem);
+    width: min(100%, 53.5rem);
     display: grid;
     grid-template-columns:
       minmax(0, var(--attn23-token-col-w))
@@ -231,7 +231,7 @@
 
 .attn23-col {
     display: grid;
-    gap: 0.34rem;
+    gap: 0.42rem;
     align-content: start;
 
 }
@@ -245,7 +245,7 @@
 
 .attn23-col-label {
     font-family: 'JetBrains Mono', monospace;
-    font-size: var(--fs-2xs);
+    font-size: 0.78rem;
     font-weight: 700;
     letter-spacing: 0.03em;
     text-align: center;
@@ -280,7 +280,7 @@
 
 .attn23-col-meta {
     font-family: 'JetBrains Mono', monospace;
-    font-size: var(--fs-2xs);
+    font-size: 0.68rem;
     color: rgba(189,204,240,0.72);
     opacity: 0.42;
     transform: translateY(0.04rem);
@@ -296,13 +296,17 @@
 
 }
 
+#slide-23:not(.attn23-show-score-mode) .attn23-stage {
+    justify-content: center;
+}
+
 .attn23-shell {
     position: relative;
     width: 100%;
     border-radius: var(--radius-md);
     border: 1px solid rgba(184,194,221,0.24);
     background: rgba(184,194,221,0.04);
-    padding: 0.44rem 0.46rem;
+    padding: 0.52rem 0.56rem;
     overflow: hidden;
     transition: opacity 0.24s ease, border-color 0.24s ease, background 0.24s ease, box-shadow 0.24s ease;
 
@@ -315,7 +319,7 @@
 
 .attn23-col-x .attn23-shell {
     opacity: 0.52;
-    padding: 0.2rem 0.28rem;
+    padding: 0.26rem 0.36rem;
 
 }
 
@@ -387,8 +391,9 @@
 .attn23-mini-x-wrap {
     display: grid;
     gap: 0.16rem;
-    justify-items: stretch;
-    width: 100%;
+    justify-items: start;
+    width: calc(100% - 0.9rem);
+    margin-left: 0.9rem;
 
 }
 
@@ -396,9 +401,9 @@
     font-family: 'JetBrains Mono', monospace;
     font-size: var(--fs-2xs);
     color: rgba(188,205,250,0.82);
-    text-align: center;
+    text-align: left;
     letter-spacing: 0.03em;
-
+    transform: translateX(0.85rem);
 }
 
 .attn23-mini-x-shell,
@@ -414,6 +419,7 @@
 .attn23-mini-x-shell {
     padding: 0.08rem;
     background: rgba(var(--attn19-focus-rgb), 0.06);
+    width: 100%;
 
 }
 
@@ -727,6 +733,12 @@
 
 }
 
+#slide-23.attn23-show-x-matrix #attn23-x-label,
+  #slide-23.attn23-show-projections #attn23-x-label {
+    transform: translateX(0.36rem);
+
+}
+
 #slide-23.attn23-show-token-matrix .attn23-col-token .attn23-shell {
     opacity: 1;
     border-color: rgba(var(--attn19-focus-rgb), 0.38);
@@ -894,7 +906,7 @@
     display: grid;
     grid-template-columns: max-content auto max-content auto max-content;
     gap: 0.8rem;
-    align-items: start;
+    align-items: stretch;
     justify-content: center;
     transition: opacity 0.24s ease, transform 0.24s ease, visibility 0.24s ease, max-height 0.24s ease;
 
@@ -902,8 +914,11 @@
 
 .attn23-score-matrix-wrap {
     display: grid;
+    grid-template-rows: auto auto minmax(0, 1fr);
     gap: 0.16rem;
     justify-items: center;
+    align-self: stretch;
+    align-content: start;
     min-width: 0;
     opacity: 0;
     visibility: hidden;
@@ -951,6 +966,7 @@
     grid-template-columns: max-content minmax(0, 1fr);
     gap: 0.16rem;
     align-items: start;
+    align-self: center;
 
 }
 
@@ -1083,6 +1099,7 @@
     display: grid;
     gap: 0.14rem;
     justify-items: start;
+    align-self: center;
 
 }
 
@@ -1164,6 +1181,7 @@
     grid-template-columns: max-content minmax(0, var(--attn23-score-s-w));
     gap: 0.18rem 0.22rem;
     align-items: start;
+    align-self: center;
 
 }
 
@@ -1292,6 +1310,7 @@
     font-family: 'JetBrains Mono', monospace;
     font-size: var(--fs-lg);
     font-weight: 600;
+    align-self: center;
     color: rgba(214,226,252,0.9);
     line-height: 1;
     opacity: 0;
@@ -1802,7 +1821,7 @@
     width: min(100%, 49rem);
     grid-template-columns: max-content auto max-content auto max-content;
     gap: 0.72rem;
-    align-items: start;
+    align-items: center;
     justify-content: center;
 
 }
@@ -1823,7 +1842,7 @@
   #slide-23.attn23-show-postscore-output .attn23-postscore-v-wrap,
   #slide-23.attn23-show-postscore-output .attn23-postscore-o-wrap {
     grid-template-rows: minmax(1.1rem, auto) minmax(1rem, auto) auto;
-    align-self: start;
+    align-self: center;
     align-content: start;
 
 }

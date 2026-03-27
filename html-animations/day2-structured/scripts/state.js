@@ -117,6 +117,7 @@ const state = {
     timers: [],
     rafIds: [],
     splitDone: false,
+    sourceCollapsedDone: false,
     projDone: false,
     attnDone: false,
     outputDone: false,

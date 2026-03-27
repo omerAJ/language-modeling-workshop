@@ -317,6 +317,7 @@ const ATTN_MATRIX_OUTPUT_ROW_MS = 240;
 const ATTN_MHA_TAKEAWAYS = [
   'Multi-head attention runs several smaller attention mechanisms in parallel on different learned projections of the same embedding matrix \\(X\\).',
   'Split the same embedding matrix \\(X\\) into two parallel heads. Both heads see the full sequence, but each head will work in its own smaller learned subspace.',
+  'Once both heads have their own copy of \\(X\\), the shared source matrix is no longer needed on-screen. Remove it and use the space to focus on the per-head computation.',
   'Each head applies its own learned projection matrices \\(W_Q\\), \\(W_K\\), and \\(W_V\\) to the same \\(X\\), producing different head-specific \\(Q\\), \\(K\\), and \\(V\\).',
   'Each head now runs its own masked attention mechanism in parallel. Because the heads use different learned projections, they can focus on different relationships or features in the same sequence.',
   'Instead of one attention-based summary, the model now has multiple context representations, one per head.',
@@ -340,7 +341,7 @@ const ATTN_MHA_WO_DIMS = { rows: 4, cols: 4 };
 
 const ATTN_MHA_HEAD_SLICES = { h1: [0, 1], h2: [2, 3] };
 
-const ATTN_MHA_MAX_STEP = 6;
+const ATTN_MHA_MAX_STEP = 7;
 
 const ATTN_MHA_PROJS = ['q', 'k', 'v'];
 

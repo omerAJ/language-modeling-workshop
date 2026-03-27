@@ -345,6 +345,63 @@
 
 }
 
+#slide-20 .attn19-layout {
+    align-items: center;
+}
+
+#slide-20 .attn19-stage {
+    --attn19-label-col: 10.6rem;
+    --attn19-vector-label-col: 2.45rem;
+    --attn19-vector-row: 1.3rem;
+    --attn19-score-row: 1.18rem;
+    --attn19-gap-xq-row: 6.8rem;
+    --attn19-gap-sk-row: 1.9rem;
+    --attn19-gap-kv-row: 1.62rem;
+    width: min(100%, 76rem);
+    padding: 1.9rem 2.2rem 1.7rem;
+}
+
+#slide-20 .attn19-frame {
+    gap: 1rem;
+    padding-top: 2.2rem;
+}
+
+#slide-20 .attn19-cols {
+    gap: 0.95rem;
+}
+
+#slide-20 .attn19-row-label {
+    font-size: 0.78rem;
+}
+
+#slide-20 .attn19-token-chip {
+    padding: 0.4rem 0.36rem;
+    font-size: 0.78rem;
+}
+
+#slide-20 .attn19-vector-wrap {
+    min-height: 1.22rem;
+    column-gap: 0.42rem;
+}
+
+#slide-20 .attn19-vector {
+    height: 1.14rem;
+}
+
+#slide-20 .attn19-vector-values {
+    font-size: 0.64rem;
+}
+
+#slide-20 .attn19-dot-node {
+    width: 1.84rem;
+    height: 1.84rem;
+    font-size: 0.74rem;
+}
+
+#slide-20 .attn19-score-op-wrap {
+    column-gap: 0.66rem;
+}
+
 .attn19-frame {
     position: relative;
     z-index: 1;
