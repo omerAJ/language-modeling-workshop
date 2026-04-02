@@ -51,7 +51,7 @@
     padding: var(--sp-3) var(--sp-4);
     border-radius: var(--radius-md);
     font-size: var(--fs-sm);
-    line-height: 1.00;
+    line-height: 1.55;
   }
   .callout.info    { background: var(--accent-bg);  border: 1px solid var(--accent-border); color: #c2d0ff; }
   .callout.warn    { background: var(--orange-bg);   border: 1px solid var(--orange-border);  color: #ffd4a8; }
