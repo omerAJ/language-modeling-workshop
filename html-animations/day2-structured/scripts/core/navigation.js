@@ -9,6 +9,10 @@ function refreshSlides() {
 }
 
 const STEP_STATE_CONTROLLERS = {
+  'slide-3': {
+    get: () => architectureOverviewState.step,
+    set: (step) => setArchitectureOverviewStep(step)
+  },
   'slide-18': {
     get: () => attentionIntroState.step,
     set: (step) => setAttentionIntroStep(step)

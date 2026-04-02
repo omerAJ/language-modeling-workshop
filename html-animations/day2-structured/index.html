@@ -14,6 +14,7 @@ Refactor Notes (Zero-Regression):
 <link rel="stylesheet" href="./styles/base.css">
 <link rel="stylesheet" href="./styles/layout.css">
 <link rel="stylesheet" href="./styles/components.css">
+<link rel="stylesheet" href="./styles/slides/architecture-overview.css">
 <link rel="stylesheet" href="./styles/slides/tokenization.css">
 <link rel="stylesheet" href="./styles/slides/embeddings.css">
 <link rel="stylesheet" href="./styles/slides/attention.css">
@@ -53,22 +54,6 @@ Refactor Notes (Zero-Regression):
     <p class="subtitle">From tokenization to decoding: the full forward-pass computation</p>
     <div class="spacer-lg"></div>
     <div class="gradient-line" style="width:12.5rem;"></div>
-  </div>
-
-  <!-- ═══════ SLIDE 1 — OBJECTIVES ═══════ -->
-  <div class="slide" id="slide-1">
-    <span class="section-tag">Setup</span>
-    <div class="slide-header">
-      <div class="badge day2">Objectives</div>
-      <h2>By the end, you'll be able to explain:</h2>
-    </div>
-    <div class="spacer-sm"></div>
-    <ul class="obj-list">
-      <li data-num="1">How text becomes <span class="hl">model-ready input</span>: tokenization, embeddings, and position</li>
-      <li data-num="2">How one decoder-only block computes: <span class="hl-purple">attention</span> + <span class="hl-cyan">FFN</span> + residual stream</li>
-      <li data-num="3">How stacked blocks produce <span class="hl-green">logits, probabilities, and decoded output</span></li>
-      <li data-num="4">How the full forward pass connects back to Day 1: <span class="hl-orange">next-token prediction</span></li>
-    </ul>
   </div>
 
   <!-- ═══════ SLIDE 2 — WORKSHOP ROADMAP ═══════ -->
@@ -152,10 +137,10 @@ Refactor Notes (Zero-Regression):
     </div>
     <div class="spacer-sm"></div>
 
-    <div class="arch-wrapper">
+    <div class="arch-wrapper arch3-layout">
 
       <!-- ── LEFT: Overall model stack ── -->
-      <div class="arch-col">
+      <div class="arch-col arch3-overview-col">
         <div class="arch-stack">
 
           <span class="arch-label">Output</span>
@@ -176,7 +161,7 @@ Refactor Notes (Zero-Regression):
             <div class="arch-dots">⋮</div>
             <div class="arch-box block">Transformer Block</div>
             <span class="arch-label">Layer 1</span>
-            <div class="arch-brace-label">× L layers</div>
+            <div class="arch-brace-label">× L</div>
           </div>
 
           <div class="arch-arrow">↑</div>
@@ -199,42 +184,52 @@ Refactor Notes (Zero-Regression):
       </div>
 
       <!-- ── RIGHT: Inside one Transformer Block (zoom-in panel) ── -->
-      <div class="block-detail-panel">
-        <span class="block-detail-title">Inside One Transformer Block</span>
-        <div class="arch-stack" style="margin-top:1rem;">
+      <div class="arch3-block-shell" aria-hidden="true">
+        <div class="block-detail-panel arch3-block-detail">
+          <span class="block-detail-title">Inside One Transformer Block</span>
+          <div class="arch-stack" style="margin-top:1rem;">
 
-          <span class="arch-label">Block Output</span>
-          <div class="arch-arrow">↑</div>
+            <span class="arch-label">Block Output</span>
+            <div class="arch-arrow">↑</div>
 
-          <!-- Residual 2: FFN sub-block -->
-          <div class="residual-group">
-            <div class="bypass"></div>
-            <div class="arch-plus">+</div>
+            <!-- Residual 2: FFN sub-block -->
+            <div class="residual-group">
+              <div class="bypass"></div>
+              <div class="arch-plus">+</div>
+              <div class="arch-arrow">↑</div>
+              <div class="arch-box drop" style="min-width:8rem;">Dropout</div>
+              <div class="arch-arrow">↑</div>
+              <div class="arch-box ffn">Feed-Forward Network</div>
+              <div class="arch-arrow">↑</div>
+              <div class="arch-box norm" style="min-width:8rem;">LayerNorm</div>
+            </div>
+
             <div class="arch-arrow">↑</div>
-            <div class="arch-box drop" style="min-width:8rem;">Dropout</div>
+
+            <!-- Residual 1: Attention sub-block -->
+            <div class="residual-group">
+              <div class="bypass"></div>
+              <div class="arch-plus">+</div>
+              <div class="arch-arrow">↑</div>
+              <div class="arch-box drop" style="min-width:8rem;">Dropout</div>
+              <div class="arch-arrow">↑</div>
+              <div class="arch-box attn arch3-attn-focus">Multi-Head Attention</div>
+              <div class="arch-arrow">↑</div>
+              <div class="arch-box norm" style="min-width:8rem;">LayerNorm</div>
+            </div>
+
             <div class="arch-arrow">↑</div>
-            <div class="arch-box ffn">Feed-Forward Network</div>
-            <div class="arch-arrow">↑</div>
-            <div class="arch-box norm" style="min-width:8rem;">LayerNorm</div>
+            <span class="arch-label">Block Input</span>
+
           </div>
+        </div>
+      </div>
 
-          <div class="arch-arrow">↑</div>
-
-          <!-- Residual 1: Attention sub-block -->
-          <div class="residual-group">
-            <div class="bypass"></div>
-            <div class="arch-plus">+</div>
-            <div class="arch-arrow">↑</div>
-            <div class="arch-box drop" style="min-width:8rem;">Dropout</div>
-            <div class="arch-arrow">↑</div>
-            <div class="arch-box attn">Multi-Head Attention</div>
-            <div class="arch-arrow">↑</div>
-            <div class="arch-box norm" style="min-width:8rem;">LayerNorm</div>
-          </div>
-
-          <div class="arch-arrow">↑</div>
-          <span class="arch-label">Block Input</span>
-
+      <div class="arch3-equation-shell" aria-hidden="true" data-math-ready="false">
+        <div class="arch3-equation-panel">
+          <div class="arch3-equation-kicker">Self-Attention In One Line</div>
+          <div class="arch3-equation-main" id="arch3-equation-main" aria-live="polite"></div>
+          <div class="arch3-equation-caption">The core primitive that gives transformers their power across language, reasoning, and generation.</div>
         </div>
       </div>
 
@@ -299,7 +294,7 @@ Refactor Notes (Zero-Regression):
       <div class="flow-box embed">Embeddings</div>
     </div>
 
-    <div class="grid-2" style="margin-top:0.75rem;">
+    <div class="grid-2 slide5-stage" style="margin-top:0.75rem;">
       <div class="card">
         <h3>Three concrete steps</h3>
         <ul class="pc-list good">
@@ -312,26 +307,28 @@ Refactor Notes (Zero-Regression):
           <span>The vocabulary is learned once and then <strong>frozen</strong>. GPT-2 uses 50,257 tokens; GPT-4 class tokenizers are roughly 100k.</span>
         </div>
       </div>
-      <div class="card">
-        <h3>Running example</h3>
-        <p class="tiny" style="margin-top:0.2rem;">We’ll reuse this sentence across the next three slides.</p>
-        <div class="token-count-label" style="margin-top:0.5rem;">Sentence</div>
-        <div class="example-sentence text-sm">"researchers fine-tune large-scale models"</div>
-        <div class="token-count-label" style="margin-top:0.65rem;">Under subword tokenization</div>
-        <div class="token-example" style="margin-top:0.4rem; flex-wrap:wrap;">
-          <span class="token-pill main">[research]</span>
-          <span class="token-pill reuse">[ers]</span>
-          <span class="token-pill main">[fine]</span>
-          <span class="token-pill">[-]</span>
-          <span class="token-pill main">[tune]</span>
-          <span class="token-pill main">[large]</span>
-          <span class="token-pill">[-]</span>
-          <span class="token-pill main">[scale]</span>
-          <span class="token-pill main">[model]</span>
-          <span class="token-pill reuse">[s]</span>
+      <div class="hidden-content autostep slide5-right-reveal">
+        <div class="card">
+          <h3>Running example</h3>
+          <p class="tiny" style="margin-top:0.2rem;">We’ll reuse this sentence across the next three slides.</p>
+          <div class="token-count-label" style="margin-top:0.5rem;">Sentence</div>
+          <div class="example-sentence text-sm">"researchers fine-tune large-scale models"</div>
+          <div class="token-count-label" style="margin-top:0.65rem;">Under subword tokenization</div>
+          <div class="token-example" style="margin-top:0.4rem; flex-wrap:wrap;">
+            <span class="token-pill main">[research]</span>
+            <span class="token-pill reuse">[ers]</span>
+            <span class="token-pill main">[fine]</span>
+            <span class="token-pill">[-]</span>
+            <span class="token-pill main">[tune]</span>
+            <span class="token-pill main">[large]</span>
+            <span class="token-pill">[-]</span>
+            <span class="token-pill main">[scale]</span>
+            <span class="token-pill main">[model]</span>
+            <span class="token-pill reuse">[s]</span>
+          </div>
+          <div class="id-seq" style="margin-top:0.5rem;">[3245, 891, 4680, 12, 10812, 3267, 12, 5649, 219, 82]</div>
+          <p class="tiny" style="margin-top:0.4rem;">IDs are illustrative; exact values depend on the tokenizer vocabulary.</p>
         </div>
-        <div class="id-seq" style="margin-top:0.5rem;">[3245, 891, 4680, 12, 10812, 3267, 12, 5649, 219, 82]</div>
-        <p class="tiny" style="margin-top:0.4rem;">IDs are illustrative; exact values depend on the tokenizer vocabulary.</p>
       </div>
     </div>
   </div>
@@ -2490,6 +2487,7 @@ l e a r n ing &lt;/w&gt;</div>
 <script src="./scripts/slides/order-problem.js"></script>
 <script src="./scripts/slides/position-signal.js"></script>
 <script src="./scripts/slides/ffn-combined.js"></script>
+<script src="./scripts/slides/architecture-overview.js"></script>
 <script src="./scripts/slides/gpt-block.js"></script>
 <script src="./scripts/slides/output-head.js"></script>
 <script src="./scripts/slides/generation.js"></script>

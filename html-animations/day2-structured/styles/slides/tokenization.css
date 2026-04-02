@@ -4,6 +4,35 @@
     flex-wrap: wrap;
     margin: 0.95rem 0 0.6rem;
   }
+
+  #slide-5 .slide5-stage {
+    grid-template-columns: minmax(0, 1fr) 0fr;
+    transition: grid-template-columns 0.42s ease;
+    align-items: stretch;
+  }
+
+  #slide-5 .slide5-right-reveal {
+    margin-top: 0 !important;
+    max-height: none;
+    opacity: 0;
+    overflow: hidden;
+    transform: translateX(1rem);
+    transition: opacity 0.3s ease, transform 0.36s ease;
+  }
+
+  #slide-5 .slide5-right-reveal .card {
+    width: 100%;
+  }
+
+  #slide-5 .slide5-right-reveal.revealed {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  #slide-5 .slide5-stage:has(.slide5-right-reveal.revealed) {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+
   .flow-box.raw      { border-color: rgba(255,170,85,0.45); color: var(--orange); background: rgba(255,170,85,0.08); }
   .flow-box.tokzr    { border-color: rgba(180,157,255,0.45); color: var(--purple); background: rgba(180,157,255,0.08); }
   .flow-box.ids      { border-color: rgba(123,154,255,0.5);  color: var(--accent); background: rgba(123,154,255,0.1); }

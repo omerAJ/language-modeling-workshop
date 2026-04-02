@@ -1,7 +1,7 @@
 const $ = s => document.querySelector(s);
 const $$ = s => document.querySelectorAll(s);
 
-const SLIDE_ORDER = [0, 1, 3, 4, 5, 6, 7, '7b', 9, 10, 11, 12, 13, 14, 8, 22, 23, 24, 16, 29, 30, 31, 32, 33, '32b'];
+const SLIDE_ORDER = [0, 3, 4, 5, 6, 7, '7b', 9, 10, 11, 12, 13, 14, 8, 22, 23, 24, 16, 29, 30, 31, 32, 33, '32b'];
 
 const INGREDIENT_COLORS = {
   1: 'rgba(0,255,255,0.35)',

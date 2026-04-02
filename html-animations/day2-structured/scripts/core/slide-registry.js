@@ -12,6 +12,11 @@ function createSlideDescriptor(id, overrides) {
 function defineSlides() {
   const descriptors = [];
   const interactive = {
+    'slide-3': createSlideDescriptor('slide-3', {
+      init: () => initArchitectureOverviewSlide(),
+      step: () => runArchitectureOverviewStep(),
+      reset: () => resetArchitectureOverviewSlide()
+    }),
     'slide-16': createSlideDescriptor('slide-16', {
       init: () => {
         initProjectionSlide();

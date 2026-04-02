@@ -20,6 +20,7 @@ function captureSnapshot(label) {
     currentIndex: state.nav.current,
     currentSlideId: activeSlide ? activeSlide.id : null,
     projectionLens: projectionState.activeLens,
+    architectureOverviewStep: architectureOverviewState.step,
     attentionIntroStep: attentionIntroState.step,
     attentionP1Step: attentionP1State.step,
     attentionQkvStep: attentionQkvState.step,

@@ -25,6 +25,10 @@ const state = {
     resizeBound: false,
     readoutTimer: null
   },
+  architectureOverview: {
+    initialized: false,
+    step: 0
+  },
   attentionIntro: {
     initialized: false,
     step: 0,
@@ -172,6 +176,7 @@ const state = {
 };
 
 const projectionState = state.projection;
+const architectureOverviewState = state.architectureOverview;
 const attentionIntroState = state.attentionIntro;
 const attentionP1State = state.attentionP1;
 const attentionQkvState = state.attentionQkv;
