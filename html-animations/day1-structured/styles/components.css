@@ -56,3 +56,20 @@
     font-weight: 700;
     color: #fff;
   }
+
+/* ── Slide 3: ingredient images ── */
+#slide-3 .ingredient-image-wrap {
+    margin-top: 0.75rem;
+    padding-top: 0.2rem;
+  }
+
+#slide-3 .ingredient-image {
+    display: block;
+    width: 100%;
+    max-width: 11rem;
+    height: auto;
+    margin: 0 auto;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border);
+    background: rgba(255,255,255,0.03);
+  }
