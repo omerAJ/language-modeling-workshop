@@ -1,5 +1,5 @@
 // ══════════════════════════════════════
-//  Ingredient reveal (all three)
+//  Ingredient reveal (all four)
 // ══════════════════════════════════════
 function revealIngredient(n) {
   document.getElementById('ingredient' + n + 'Hidden').style.display = 'none';
@@ -8,7 +8,7 @@ function revealIngredient(n) {
 }
 
 function resetIngredients() {
-  for (var i = 1; i <= 3; i++) {
+  for (var i = 1; i <= 4; i++) {
     document.getElementById('ingredient' + i + 'Hidden').style.display = '';
     document.getElementById('ingredient' + i + 'Revealed').style.display = 'none';
     document.getElementById('ingredient' + i + 'Card').style.borderColor = '';
@@ -16,7 +16,7 @@ function resetIngredients() {
 }
 
 function runIngredientsStep() {
-  for (var i = 1; i <= 3; i++) {
+  for (var i = 1; i <= 4; i++) {
     var hidden = document.getElementById('ingredient' + i + 'Hidden');
     if (hidden && hidden.style.display !== 'none') {
       revealIngredient(i);

@@ -6,7 +6,8 @@ const SLIDE_ORDER = [0, 3, 4, 5, 6, 7, '7b', 9, 10, 11, 12, 13, 14, 8, 22, 23, 2
 const INGREDIENT_COLORS = {
   1: 'rgba(0,255,255,0.35)',
   2: 'rgba(108,140,255,0.35)',
-  3: 'rgba(167,139,250,0.4)'
+  3: 'rgba(167,139,250,0.4)',
+  4: 'rgba(255,170,85,0.4)'
 };
 
 const INF_TOKENS = ['Islamabad', '.', '⟨EOS⟩'];

@@ -129,7 +129,7 @@ function setAttentionStep4SatXLabel(mode = 'base') {
   const label = document.getElementById('attn22-x-label-' + ATTN_STEP4_FOCUS);
   if (!label) return;
   if (mode === 'residual') {
-    setMathHTML(label, formatTokenMath('y', ATTN_STEP4_FOCUS));
+    setMathHTML(label, inlineMath("x'_{" + ATTN_STEP4_FOCUS + "}"));
     return;
   }
   setMathHTML(label, formatTokenMath('x', ATTN_STEP4_FOCUS));

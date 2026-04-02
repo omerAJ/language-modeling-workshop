@@ -360,27 +360,31 @@ Refactor Notes (Zero-Regression):
       </div>
     </div>
 
-    <div class="grid-2" style="margin-top:0.8rem;">
-      <div class="card tradeoff-card" style="border-color: rgba(90,232,142,0.28);">
-        <h3 style="color:var(--green);">What works</h3>
-        <ul class="pc-list good">
-          <li>Short sequences for familiar text.</li>
-          <li>Common words stay intact as single units.</li>
-        </ul>
-      </div>
-      <div class="card tradeoff-card" style="border-color: rgba(255,123,123,0.3);">
-        <h3 style="color:var(--red);">Why it breaks</h3>
-        <ul class="pc-list bad">
-          <li>Language is open-vocabulary. English Wikipedia alone has ~1.5M unique word forms.</li>
-          <li>New terms like "GPT-4", "LoRA", and "RLHF" create unknowns.</li>
-        </ul>
+    <div class="hidden-content autostep">
+      <div class="grid-2" style="margin-top:0.8rem;">
+        <div class="card tradeoff-card" style="border-color: rgba(90,232,142,0.28);">
+          <h3 style="color:var(--green);">What works</h3>
+          <ul class="pc-list good">
+            <li>Short sequences for familiar text.</li>
+            <li>Common words stay intact as single units.</li>
+          </ul>
+        </div>
+        <div class="card tradeoff-card" style="border-color: rgba(255,123,123,0.3);">
+          <h3 style="color:var(--red);">Why it breaks</h3>
+          <ul class="pc-list bad">
+            <li>Language is open-vocabulary. English Wikipedia alone has ~1.5M unique word forms.</li>
+            <li>New terms like "GPT-4", "LoRA", and "RLHF" create unknowns.</li>
+          </ul>
+        </div>
       </div>
     </div>
 
-    <div class="spacer-sm"></div>
-    <div class="callout warn">
-      <span class="icon">!</span>
-      <span><strong>Word-level tokenization is efficient, but brittle.</strong> Anything outside the fixed vocabulary becomes unknown.</span>
+    <div class="hidden-content autostep">
+      <div class="spacer-sm"></div>
+      <div class="callout warn">
+        <span class="icon">!</span>
+        <span><strong>Word-level tokenization is efficient, but brittle.</strong> Anything outside the fixed vocabulary becomes unknown.</span>
+      </div>
     </div>
   </div>
 
@@ -420,28 +424,32 @@ Refactor Notes (Zero-Regression):
       </div>
     </div>
 
-    <div class="grid-2" style="margin-top:0.75rem;">
-      <div class="card tradeoff-card" style="border-color: rgba(90,232,142,0.28);">
-        <h3 style="color:var(--green);">What works</h3>
-        <ul class="pc-list good">
-          <li>No unknown tokens — ever.</li>
-          <li>Handles new words, typos, code, any language.</li>
-        </ul>
-      </div>
-      <div class="card tradeoff-card" style="border-color: rgba(255,123,123,0.3);">
-        <h3 style="color:var(--red);">Why it gets expensive</h3>
-        <ul class="pc-list bad">
-          <li>Sequences become \(5\text{–}10\times\) longer.</li>
-          <li>Self-attention is \(O(n^2)\), so \(5\times\) longer means roughly \(25\times\) more compute.</li>
-          <li>The model spends capacity reassembling words from letters on every forward pass.</li>
-        </ul>
+    <div class="hidden-content autostep">
+      <div class="grid-2" style="margin-top:0.75rem;">
+        <div class="card tradeoff-card" style="border-color: rgba(90,232,142,0.28);">
+          <h3 style="color:var(--green);">What works</h3>
+          <ul class="pc-list good">
+            <li>No unknown tokens — ever.</li>
+            <li>Handles new words, typos, code, any language.</li>
+          </ul>
+        </div>
+        <div class="card tradeoff-card" style="border-color: rgba(255,123,123,0.3);">
+          <h3 style="color:var(--red);">Why it gets expensive</h3>
+          <ul class="pc-list bad">
+            <li>Sequences become \(5\text{–}10\times\) longer.</li>
+            <li>Self-attention is \(O(n^2)\), so \(5\times\) longer means roughly \(25\times\) more compute.</li>
+            <li>The model spends capacity reassembling words from letters on every forward pass.</li>
+          </ul>
+        </div>
       </div>
     </div>
 
-    <div class="spacer-sm"></div>
-    <div class="callout warn">
-      <span class="icon">!</span>
-      <span><strong>Character-level coverage is perfect, but too expensive.</strong> Quadratic attention scaling makes it impractical at real sequence lengths.</span>
+    <div class="hidden-content autostep">
+      <div class="spacer-sm"></div>
+      <div class="callout warn">
+        <span class="icon">!</span>
+        <span><strong>Character-level coverage is perfect, but too expensive.</strong> Quadratic attention scaling makes it impractical at real sequence lengths.</span>
+      </div>
     </div>
   </div>
 
@@ -471,28 +479,32 @@ Refactor Notes (Zero-Regression):
       <p class="small-text" style="margin-top:0.5rem;">Frequent stems become single tokens. Hyphens, prefixes, and suffixes are their own reusable pieces — no word is ever fully unknown.</p>
     </div>
 
-    <div class="grid-3" style="margin-top:0.75rem;">
-      <div class="card tradeoff-card" style="border-color: rgba(255,123,123,0.22);">
-        <h3 style="color:var(--red);">Word-level</h3>
-        <div class="token-count-number" class="mono text-sm" style="margin:0.4rem 0;">4 tokens</div>
-        <p class="small-text">Short, but brittle. Breaks on hyphens, new jargon, and multilingual text.</p>
-      </div>
-      <div class="card tradeoff-card" style="border-color: rgba(255,170,85,0.24);">
-        <h3 style="color:var(--orange);">Character-level</h3>
-        <div class="token-count-number" class="mono text-sm" style="margin:0.4rem 0;">~40 tokens</div>
-        <p class="small-text">Full coverage, but very long. Quadratic attention cost makes it impractical.</p>
-      </div>
-      <div class="card tradeoff-card" style="border-color: rgba(90,232,142,0.28);">
-        <h3 style="color:var(--green);">Subword</h3>
-        <div class="token-count-number" class="mono text-sm" style="margin:0.4rem 0;">~10 tokens</div>
-        <p class="small-text">Near-word efficiency with no unknown tokens. English prose averages about 0.75 words per token.</p>
+    <div class="hidden-content autostep">
+      <div class="grid-3" style="margin-top:0.75rem;">
+        <div class="card tradeoff-card" style="border-color: rgba(255,123,123,0.22);">
+          <h3 style="color:var(--red);">Word-level</h3>
+          <div class="token-count-number" class="mono text-sm" style="margin:0.4rem 0;">4 tokens</div>
+          <p class="small-text">Short, but brittle. Breaks on hyphens, new jargon, and multilingual text.</p>
+        </div>
+        <div class="card tradeoff-card" style="border-color: rgba(255,170,85,0.24);">
+          <h3 style="color:var(--orange);">Character-level</h3>
+          <div class="token-count-number" class="mono text-sm" style="margin:0.4rem 0;">~40 tokens</div>
+          <p class="small-text">Full coverage, but very long. Quadratic attention cost makes it impractical.</p>
+        </div>
+        <div class="card tradeoff-card" style="border-color: rgba(90,232,142,0.28);">
+          <h3 style="color:var(--green);">Subword</h3>
+          <div class="token-count-number" class="mono text-sm" style="margin:0.4rem 0;">~10 tokens</div>
+          <p class="small-text">Near-word efficiency with no unknown tokens. English prose averages about 0.75 words per token.</p>
+        </div>
       </div>
     </div>
 
-    <div class="spacer-sm"></div>
-    <div class="callout success">
-      <span class="icon">+</span>
-      <span><strong>Subword gives near-word efficiency with broad coverage.</strong> That is why it became the default in modern LLMs.</span>
+    <div class="hidden-content autostep">
+      <div class="spacer-sm"></div>
+      <div class="callout success">
+        <span class="icon">+</span>
+        <span><strong>Subword gives near-word efficiency with broad coverage.</strong> That is why it became the default in modern LLMs.</span>
+      </div>
     </div>
     <div class="hidden-content autostep">
       <div class="callout info" style="margin-top:0.7rem;">
