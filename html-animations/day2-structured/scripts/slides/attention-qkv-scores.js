@@ -218,19 +218,24 @@ function updateAttentionQkvOverlay() {
   const qTop = Math.max(stageH * 0.02, Math.min(qTopDesired, qTopMax));
   // Align callout left edge with sat chip left edge (no arrow needed)
   const satChipLeft = satChipRect.left - stageRect.left;
-  qCallout.style.left = satChipLeft.toFixed(2) + 'px';
-  qCallout.style.top = qTop.toFixed(2) + 'px';
+  const scale = layoutState.currentScale || 1;
+  qCallout.style.left = (satChipLeft / scale).toFixed(2) + 'px';
+  qCallout.style.top = (qTop / scale).toFixed(2) + 'px';
   qCallout.style.removeProperty('--attn19-q-nudge');
 
   // Q label follows the floating callout (X/S/K/V labels are CSS grid items and auto-align)
   if (rowQLabel && rowLabels) {
     const rowLabelsRect = rowLabels.getBoundingClientRect();
     const qLabelCenter = (stageRect.top + qTop + qCalloutRect.height * 0.5) - rowLabelsRect.top;
-    rowQLabel.style.top = qLabelCenter.toFixed(2) + 'px';
+    rowQLabel.style.top = (qLabelCenter / scale).toFixed(2) + 'px';
   }
 
-  const qBottom = anchor(qVector, 0.5, 1);
-  const compareSource = { x: satCenterX, y: qBottom.y };
+  const qCalloutBottom = anchor(qCallout, 0.5, 1);
+  const calloutEdgePad = Math.max(stageH * 0.0035, 1.2);
+  const compareSource = {
+    x: qCalloutBottom.x,
+    y: qCalloutBottom.y + calloutEdgePad
+  };
   const headLenMain = Math.max(stageH * 0.02, 4.8);
   const headLenMinor = Math.max(stageH * 0.017, 4.2);
 

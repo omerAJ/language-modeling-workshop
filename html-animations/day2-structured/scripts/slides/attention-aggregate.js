@@ -172,10 +172,11 @@ function animateAttentionStep4FlyPill(token) {
   const colRect = col.getBoundingClientRect();
   const scoreRect = scorePill.getBoundingClientRect();
   const vRect = vVector.getBoundingClientRect();
-  const startX = scoreRect.left - colRect.left + scoreRect.width * 0.5;
-  const startY = scoreRect.top - colRect.top + scoreRect.height * 0.5;
-  const endX = vRect.left - colRect.left + vRect.width * 0.5;
-  const endY = vRect.top - colRect.top + vRect.height * 0.5;
+  const scale = layoutState.currentScale || 1;
+  const startX = (scoreRect.left - colRect.left + scoreRect.width * 0.5) / scale;
+  const startY = (scoreRect.top - colRect.top + scoreRect.height * 0.5) / scale;
+  const endX = (vRect.left - colRect.left + vRect.width * 0.5) / scale;
+  const endY = (vRect.top - colRect.top + vRect.height * 0.5) / scale;
   const duration = Math.max(ATTN_STEP4_PAIR_ANIM_MS, 780);
   const fadeDuration = 180;
   const fadeStart = Math.max(Math.floor(duration * 0.82), duration - fadeDuration);
@@ -397,11 +398,12 @@ function createAttentionStep4MergeGhost(token) {
     Array.from(node.children).forEach(stripIds);
   };
   stripIds(ghost);
+  const mergeGhostScale = layoutState.currentScale || 1;
   ghost.classList.add('attn22-merge-ghost');
-  ghost.style.left = (sourceRect.left - stageRect.left).toFixed(2) + 'px';
-  ghost.style.top = (sourceRect.top - stageRect.top).toFixed(2) + 'px';
-  ghost.style.width = sourceRect.width.toFixed(2) + 'px';
-  ghost.style.height = sourceRect.height.toFixed(2) + 'px';
+  ghost.style.left = ((sourceRect.left - stageRect.left) / mergeGhostScale).toFixed(2) + 'px';
+  ghost.style.top = ((sourceRect.top - stageRect.top) / mergeGhostScale).toFixed(2) + 'px';
+  ghost.style.width = (sourceRect.width / mergeGhostScale).toFixed(2) + 'px';
+  ghost.style.height = (sourceRect.height / mergeGhostScale).toFixed(2) + 'px';
   ghost.style.opacity = '0.94';
   ghost.style.transform = 'translate3d(0, 0, 0)';
   layer.appendChild(ghost);
@@ -453,10 +455,11 @@ function animateAttentionStep4MergeToken(token, delayMs, runningFrom, runningTo,
         const stageRect = stage.getBoundingClientRect();
         const sourceRect = sourceVector.getBoundingClientRect();
         const targetRect = targetVector.getBoundingClientRect();
-        const fromX = sourceRect.left - stageRect.left + sourceRect.width * 0.5;
-        const fromY = sourceRect.top - stageRect.top + sourceRect.height * 0.5;
-        const toX = targetRect.left - stageRect.left + targetRect.width * 0.5;
-        const toY = targetRect.top - stageRect.top + targetRect.height * 0.5;
+        const mergeScale = layoutState.currentScale || 1;
+        const fromX = (sourceRect.left - stageRect.left + sourceRect.width * 0.5) / mergeScale;
+        const fromY = (sourceRect.top - stageRect.top + sourceRect.height * 0.5) / mergeScale;
+        const toX = (targetRect.left - stageRect.left + targetRect.width * 0.5) / mergeScale;
+        const toY = (targetRect.top - stageRect.top + targetRect.height * 0.5) / mergeScale;
         const dx = toX - fromX;
         const dy = toY - fromY;
         requestAnimationFrame(() => {
@@ -611,11 +614,12 @@ function createAttentionStep4ResidualGhost() {
     Array.from(node.children).forEach(stripIds);
   };
   stripIds(ghost);
+  const residualGhostScale = layoutState.currentScale || 1;
   ghost.classList.add('attn22-residual-ghost');
-  ghost.style.left = (sourceRect.left - stageRect.left).toFixed(2) + 'px';
-  ghost.style.top = (sourceRect.top - stageRect.top).toFixed(2) + 'px';
-  ghost.style.width = sourceRect.width.toFixed(2) + 'px';
-  ghost.style.height = sourceRect.height.toFixed(2) + 'px';
+  ghost.style.left = ((sourceRect.left - stageRect.left) / residualGhostScale).toFixed(2) + 'px';
+  ghost.style.top = ((sourceRect.top - stageRect.top) / residualGhostScale).toFixed(2) + 'px';
+  ghost.style.width = (sourceRect.width / residualGhostScale).toFixed(2) + 'px';
+  ghost.style.height = (sourceRect.height / residualGhostScale).toFixed(2) + 'px';
   layer.appendChild(ghost);
   return ghost;
 }
@@ -654,10 +658,11 @@ function runAttentionStep4ResidualSequence() {
     const stageRect = stage.getBoundingClientRect();
     const vRect = satVVector.getBoundingClientRect();
     const xRect = satXVector.getBoundingClientRect();
-    const fromX = vRect.left - stageRect.left + vRect.width * 0.5;
-    const fromY = vRect.top - stageRect.top + vRect.height * 0.5;
-    const toX = xRect.left - stageRect.left + xRect.width * 0.5;
-    const toY = xRect.top - stageRect.top + xRect.height * 0.5;
+    const residualScale = layoutState.currentScale || 1;
+    const fromX = (vRect.left - stageRect.left + vRect.width * 0.5) / residualScale;
+    const fromY = (vRect.top - stageRect.top + vRect.height * 0.5) / residualScale;
+    const toX = (xRect.left - stageRect.left + xRect.width * 0.5) / residualScale;
+    const toY = (xRect.top - stageRect.top + xRect.height * 0.5) / residualScale;
     const dx = toX - fromX;
     const dy = toY - fromY;
     requestAnimationFrame(() => {
@@ -971,15 +976,16 @@ function updateAttentionStep4Overlay() {
   const qTop = Math.max(stageH * 0.02, Math.min(qTopDesired, qTopMax));
   // Align callout left edge with sat chip left edge (no arrow needed)
   const satChipLeft = satChipRect.left - stageRect.left;
-  qCallout.style.left = satChipLeft.toFixed(2) + 'px';
-  qCallout.style.top = qTop.toFixed(2) + 'px';
+  const scale = layoutState.currentScale || 1;
+  qCallout.style.left = (satChipLeft / scale).toFixed(2) + 'px';
+  qCallout.style.top = (qTop / scale).toFixed(2) + 'px';
   qCallout.style.removeProperty('--attn19-q-nudge');
 
   // Q label follows the floating callout (X/S/K/V labels are CSS grid items and auto-align)
   if (rowQLabel && rowLabels) {
     const rowLabelsRect = rowLabels.getBoundingClientRect();
     const qLabelCenter = (stageRect.top + qTop + qCalloutRect.height * 0.5) - rowLabelsRect.top;
-    rowQLabel.style.top = qLabelCenter.toFixed(2) + 'px';
+    rowQLabel.style.top = (qLabelCenter / scale).toFixed(2) + 'px';
   }
 
   const qBottom = anchor(qVector, 0.5, 1);
@@ -1054,18 +1060,10 @@ function updateAttentionStep4Overlay() {
 
 function renderAttentionStep4ScoreMode(step) {
   const scoreLabel = document.getElementById('attn22-row-s-label');
-  const scoreCaption = document.getElementById('attn22-score-caption');
   const useWeights = step >= 1;
 
   if (scoreLabel) {
     setMathHTML(scoreLabel, useWeights ? 'Attention Weights \\(\\mathbf{a}\\)' : 'Scores \\(\\mathbf{s}\\)');
-  }
-  if (scoreCaption) {
-    if (useWeights) {
-      setMathHTML(scoreCaption, '\\(a_j = \\frac{\\exp(z_j)}{\\sum_{\\ell} \\exp(z_{\\ell})},\\; z_j = \\frac{s_j}{\\sqrt{d_k}}\\)');
-    } else {
-      setMathHTML(scoreCaption, '\\(s_j = q_{\\mathrm{sat}}^{\\mathsf{T}} k_j\\)');
-    }
   }
 
   ATTN_STEP4_TOKENS.forEach((token) => {

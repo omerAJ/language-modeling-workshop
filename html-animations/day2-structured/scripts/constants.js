@@ -186,12 +186,12 @@ const ATTN_STEP4_SCORE_QUAL = {
 };
 
 const ATTN_STEP4_TAKEAWAYS = [
-  'Start from Step 3 scores \\(s_j = q_{\\mathrm{sat}}^{\\mathsf{T}} k_j\\) for each token.',
-  'Convert scores into scaled logits \\(z_j = \\frac{s_j}{\\sqrt{d_k}}\\), then normalize: \\(a_j = \\frac{\\exp(z_j)}{\\sum_{\\ell} \\exp(z_{\\ell})}\\).',
-  'First multiplication: pair the first weight with its value vector and scale it.',
-  'Now apply the remaining attention multiplications across the other tokens.',
-  'Aggregate all weighted values: \\(o_{\\mathrm{sat}} = \\sum_j a_j v_j\\).',
-  'Residual addition: \\(y_{\\mathrm{sat}} = x_{\\mathrm{sat}} + o_{\\mathrm{sat}}\\).'
+  'Start from the Step 3 scores for \\(q_{\\mathrm{sat}}\\).',
+  'Normalize them into attention weights \\(a_j\\).',
+  'Apply the first weight to its value vector.',
+  'Apply the remaining weights to the other value vectors.',
+  'Sum the weighted values into \\(o_{\\mathrm{sat}}\\).',
+  'Add the residual: \\(y_{\\mathrm{sat}} = x_{\\mathrm{sat}} + o_{\\mathrm{sat}}\\).'
 ];
 
 const ATTN_STEP4_COMPARE_DRAW_MS = 360;
