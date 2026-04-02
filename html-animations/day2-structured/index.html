@@ -58,8 +58,10 @@ Refactor Notes (Zero-Regression):
   <!-- ═══════ SLIDE 1 — OBJECTIVES ═══════ -->
   <div class="slide" id="slide-1">
     <span class="section-tag">Setup</span>
-    <div class="badge day2">Objectives</div>
-    <h2>By the end, you'll be able to explain:</h2>
+    <div class="slide-header">
+      <div class="badge day2">Objectives</div>
+      <h2>By the end, you'll be able to explain:</h2>
+    </div>
     <div class="spacer-sm"></div>
     <ul class="obj-list">
       <li data-num="1">How text becomes <span class="hl">model-ready input</span>: tokenization, embeddings, and position</li>
@@ -72,8 +74,10 @@ Refactor Notes (Zero-Regression):
   <!-- ═══════ SLIDE 2 — WORKSHOP ROADMAP ═══════ -->
   <div class="slide" id="slide-2">
     <span class="section-tag">Setup</span>
-    <div class="badge day2">Roadmap</div>
-    <h2>Workshop roadmap</h2>
+    <div class="slide-header">
+      <div class="badge day2">Roadmap</div>
+      <h2>Workshop roadmap</h2>
+    </div>
     <div class="spacer-sm"></div>
 
     <div class="grid-2">
@@ -142,8 +146,10 @@ Refactor Notes (Zero-Regression):
   <!-- ═══════ SLIDE 3 — GPT ARCHITECTURE OVERVIEW ═══════ -->
   <div class="slide" id="slide-3">
     <span class="section-tag">Architecture</span>
-    <div class="badge concept">Architecture</div>
-    <h2>Decoder-Only Transformer — High-Level View</h2>
+    <div class="slide-header">
+      <div class="badge concept">Architecture</div>
+      <h2>Decoder-Only Transformer — High-Level View</h2>
+    </div>
     <div class="spacer-sm"></div>
 
     <div class="arch-wrapper">
@@ -280,8 +286,10 @@ Refactor Notes (Zero-Regression):
   <!-- ═══════ SLIDE 5 — TOKENIZATION CONCEPT ═══════ -->
   <div class="slide" id="slide-5">
     <span class="section-tag">Tokenization</span>
-    <div class="badge concept">Tokenization</div>
-    <h2>Before the model reads, it tokenizes</h2>
+    <div class="slide-header">
+      <div class="badge concept">Tokenization</div>
+      <h2>Before the model reads, it tokenizes</h2>
+    </div>
     <div class="spacer-sm"></div>
 
     <div class="flow token-interface" style="margin-top:0.75rem;">
@@ -331,8 +339,10 @@ Refactor Notes (Zero-Regression):
   <!-- ═══════ SLIDE 6 — WORD-LEVEL ═══════ -->
   <div class="slide" id="slide-6">
     <span class="section-tag">Tokenization</span>
-    <div class="badge discussion">Word-Level</div>
-    <h2>Approach 1: word-level tokenization — simple, but brittle</h2>
+    <div class="slide-header">
+      <div class="badge discussion">Word-Level</div>
+      <h2>Approach 1: word-level tokenization — simple, but brittle</h2>
+    </div>
     <div class="spacer-sm"></div>
 
     <div class="card">
@@ -366,7 +376,6 @@ Refactor Notes (Zero-Regression):
         <ul class="pc-list bad">
           <li>Language is open-vocabulary. English Wikipedia alone has ~1.5M unique word forms.</li>
           <li>New terms like "GPT-4", "LoRA", and "RLHF" create unknowns.</li>
-          <li>No reuse of shared pieces: "run", "running", and "runner" all need separate entries.</li>
         </ul>
       </div>
     </div>
@@ -381,8 +390,10 @@ Refactor Notes (Zero-Regression):
   <!-- ═══════ SLIDE 7 — CHARACTER-LEVEL ═══════ -->
   <div class="slide" id="slide-7">
     <span class="section-tag">Tokenization</span>
-    <div class="badge discussion">Character-Level</div>
-    <h2>Approach 2: character-level tokenization — flexible, but expensive</h2>
+    <div class="slide-header">
+      <div class="badge discussion">Character-Level</div>
+      <h2>Approach 2: character-level tokenization — flexible, but expensive</h2>
+    </div>
     <div class="spacer-sm"></div>
 
     <div class="card">
@@ -440,8 +451,10 @@ Refactor Notes (Zero-Regression):
   <!-- ═══════ SLIDE 8 — SUBWORD STRATEGY ═══════ -->
   <div class="slide" id="slide-8">
     <span class="section-tag">Tokenization</span>
-    <div class="badge concept">Subword Strategy</div>
-    <h2>Approach 3: subword tokenization — the practical default</h2>
+    <div class="slide-header">
+      <div class="badge concept">Subword Strategy</div>
+      <h2>Approach 3: subword tokenization — the practical default</h2>
+    </div>
     <div class="spacer-sm"></div>
 
     <div class="card">
@@ -534,8 +547,10 @@ Refactor Notes (Zero-Regression):
   <!-- ═══════ SLIDE 10 — BPE FULL WALKTHROUGH ═══════ -->
   <div class="slide" id="slide-10">
     <span class="section-tag">Tokenization</span>
-    <div class="badge activity">BPE Walkthrough</div>
-    <h2>BPE on a tiny corpus</h2>
+    <div class="slide-header">
+      <div class="badge activity">BPE Walkthrough</div>
+      <h2>BPE on a tiny corpus</h2>
+    </div>
     <div class="spacer-sm"></div>
 
     <div class="grid-2 text-xs" style="font-weight:600; letter-spacing:0.06em; color:var(--text-dim); text-transform:uppercase; margin-bottom:0.4rem;">
@@ -859,8 +874,10 @@ l e a r n ing &lt;/w&gt;</div>
   <!-- ═══════ SLIDE 11 — BPE TAKEAWAY ═══════ -->
   <div class="slide" id="slide-11">
     <span class="section-tag">Tokenization</span>
-    <div class="badge concept">BPE Takeaway</div>
-    <h2>BPE builds a vocabulary of reusable chunks</h2>
+    <div class="slide-header">
+      <div class="badge concept">BPE Takeaway</div>
+      <h2>BPE builds a vocabulary of reusable chunks</h2>
+    </div>
     <div class="spacer-sm"></div>
 
     <div class="grid-2">
@@ -943,8 +960,10 @@ l e a r n ing &lt;/w&gt;</div>
   <!-- ═══════ SLIDE 12 — WHY TOKENIZATION MATTERS ═══════ -->
   <div class="slide" id="slide-12">
     <span class="section-tag">Tokenization</span>
-    <div class="badge discussion">Why It Matters</div>
-    <h2>Why tokenization constrains reasoning</h2>
+    <div class="slide-header">
+      <div class="badge discussion">Why It Matters</div>
+      <h2>Why tokenization constrains reasoning</h2>
+    </div>
     <div class="spacer-sm"></div>
 
     <div class="card" style="border-color: rgba(123,154,255,0.35);">
@@ -977,11 +996,8 @@ l e a r n ing &lt;/w&gt;</div>
     </div>
 
     <div class="spacer-sm"></div>
-    <div class="callout warn">
-      <span class="icon">!</span>
-      <span><strong>The model is fluent in token pieces, not letters.</strong> Keep that in mind when designing prompts, tasks, and evaluations.</span>
-    </div>
-    <div class="callout success" style="margin-top:0.6rem;">
+    <div class="callout success" style="margin-top:-0.3rem; font-size: 0.98rem;">
+
       <span class="icon">+</span>
       <span>Tokenization defines the vocabulary, shapes sequence length, and sets the granularity of every computation that follows.</span>
     </div>
@@ -1000,7 +1016,7 @@ l e a r n ing &lt;/w&gt;</div>
       T\in\{1,\dots,|V|\}^{n},\quad X^{(0)}=E[T]\in\mathbb{R}^{n\times d_{\text{model}}}
     \]</div>
 
-    <div class="flow token-interface" style="margin-top:0.45rem;">
+    <div class="flow token-interface" style="margin-top:-1.5rem;">
       <div class="flow-box ids">Token IDs: [812, 1452, 5021]</div>
       <div class="flow-box embed">Row lookup in \(E\)</div>
       <div class="flow-box" style="border-color: rgba(90,232,142,0.45); color: var(--green); background: rgba(90,232,142,0.1);">Output: \(x_1,x_2,x_3 \in \mathbb{R}^{d_{\text{model}}}\)</div>
@@ -1009,7 +1025,6 @@ l e a r n ing &lt;/w&gt;</div>
     <div class="grid-2" style="margin-top:0.45rem;">
       <div class="card">
         <h3>Three retrieved rows</h3>
-        <div class="matrix-shape-label">Full table: \(E \in \mathbb{R}^{|V| \times d_{\text{model}}}\)</div>
         <div class="embed-table">
           <div class="embed-row matrix-ellipsis-row">
             <span class="embed-key dim">⋮</span>
@@ -1138,8 +1153,10 @@ l e a r n ing &lt;/w&gt;</div>
   <!-- ═══════ SLIDE 17 — BRIDGE TO ATTENTION ═══════ -->
   <div class="slide" id="slide-17">
     <span class="section-tag">Transition</span>
-    <div class="badge day2">Bridge</div>
-    <h2>Why embeddings are not enough</h2>
+    <div class="slide-header">
+      <div class="badge day2">Bridge</div>
+      <h2>Why embeddings are not enough</h2>
+    </div>
     <div class="spacer-sm"></div>
 
     <div class="card" style="border-color: rgba(123,154,255,0.36);">
@@ -1167,10 +1184,12 @@ l e a r n ing &lt;/w&gt;</div>
   <!-- ═══════ SLIDE 18 — ATTENTION INTRO ═══════ -->
   <div class="slide slide-has-takeaway" id="slide-18">
     <span class="section-tag">Attention</span>
-    <div class="badge concept">Mechanism</div>
-    <h2>Attention lets tokens read from each other</h2>
-    <p class="small-text attn18-subtitle">Each token can update its representation using the rest of the sequence.</p>
-    <p class="tiny attn18-motivation">Embeddings are static — attention makes them context-aware.</p>
+    <div class="slide-header">
+      <div class="badge concept">Mechanism</div>
+      <h2>Attention lets tokens read from each other</h2>
+      <p class="small-text attn18-subtitle">Each token can update its representation using the rest of the sequence.</p>
+      <p class="tiny attn18-motivation">Embeddings are static — attention makes them context-aware.</p>
+    </div>
 
     <div class="attn18-layout">
       <div class="card attn18-stage" id="attn18-stage">
@@ -1209,9 +1228,11 @@ l e a r n ing &lt;/w&gt;</div>
 
   <div class="slide slide-has-takeaway" id="slide-19">
     <span class="section-tag">Attention</span>
-    <div class="badge concept">Mechanism</div>
-    <h2>Step 1 — Make \(Q\), \(K\), and \(V\) versions of each token</h2>
-    <p class="small-text attn19-subtitle">The same token state is projected into three learned subspaces.</p>
+    <div class="slide-header">
+      <div class="badge concept">Mechanism</div>
+      <h2>Step 1 — Make \(Q\), \(K\), and \(V\) versions of each token</h2>
+      <p class="small-text attn19-subtitle">The same token state is projected into three learned subspaces.</p>
+    </div>
 
     <div class="attn19-layout attn19p1-layout">
       <div class="card attn19-stage attn19p1-stage" id="attn19p1-stage">
@@ -1258,9 +1279,11 @@ l e a r n ing &lt;/w&gt;</div>
 
   <div class="slide slide-has-takeaway" id="slide-20">
     <span class="section-tag">Attention</span>
-    <div class="badge concept">Mechanism</div>
-    <h2>Step 2 — Compute scores</h2>
-    <p class="small-text attn19-subtitle">Compare \(q_{\mathrm{sat}}\) against every key \(k_j\)</p>
+    <div class="slide-header">
+      <div class="badge concept">Mechanism</div>
+      <h2>Step 2 — Compute scores</h2>
+      <p class="small-text attn19-subtitle">Compare \(q_{\mathrm{sat}}\) against every key \(k_j\)</p>
+    </div>
 
     <div class="attn19-layout">
       <div class="card attn19-stage" id="attn19-stage">
@@ -1340,9 +1363,11 @@ l e a r n ing &lt;/w&gt;</div>
 
   <div class="slide slide-has-takeaway" id="slide-21">
     <span class="section-tag">Attention</span>
-    <div class="badge concept">Mechanism</div>
-    <h2>Step 3 — From scores to attention weights</h2>
-    <p class="small-text attn19-subtitle">Scale scores, then softmax them into weights.</p>
+    <div class="slide-header">
+      <div class="badge concept">Mechanism</div>
+      <h2>Step 3 — From scores to attention weights</h2>
+      <p class="small-text attn19-subtitle">Scale scores, then softmax them into weights.</p>
+    </div>
 
     <div class="attn21-layout">
       <div class="card attn19-stage attn21-stage" id="attn21-stage">

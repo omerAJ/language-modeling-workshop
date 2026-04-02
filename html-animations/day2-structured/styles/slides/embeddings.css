@@ -267,3 +267,7 @@
     font-size: var(--fs-2xs);
     line-height: 1.42;
   }
+
+  #slide-13 .slide-body {
+  gap: 0rem; 
+}

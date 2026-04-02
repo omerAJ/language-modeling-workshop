@@ -286,16 +286,16 @@
 
   /* Projector-safe compaction for slide 3 */
   #slide-3 h2 {
-    margin-bottom: 1rem;
+    margin-bottom: 0.0rem;
   }
 
   #slide-3 .spacer-sm {
-    height: 0.55rem;
+    height: 0.0rem;
   }
 
   #slide-3 .arch-wrapper {
     gap: 3rem;
-    margin-top: 0.7rem;
+    margin-top: 0.00rem;
     align-items: flex-start;
   }
 

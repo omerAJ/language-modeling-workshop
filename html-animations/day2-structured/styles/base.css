@@ -3,13 +3,13 @@
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
   html {
-    font-size: 24px;
+    font-size: 31px;
     width: 100%;
     height: 100%;
   }
 
   :root {
-    --deck-nav-height: 3.15rem;
+    --deck-nav-height: 1.8rem;
     --deck-takeaway-gap: 0;
     --deck-takeaway-body-gap: 0.18rem;
     --bg: #0a0d14;
@@ -83,7 +83,7 @@
   /* ── Slide Region System ── */
   .slide-header {
     flex: 0 0 auto;
-    padding-top: 1rem;
+    padding-top: 0.55rem;
   }
 
   .slide-body {

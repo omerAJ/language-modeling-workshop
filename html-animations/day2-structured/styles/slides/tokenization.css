@@ -197,3 +197,42 @@
     border: 1px solid var(--border);
     background: var(--surface2);
   }
+
+  #slide-6 .spacer-sm,
+#slide-7 .spacer-sm,
+#slide-8 .spacer-sm {
+  height: 0.0rem;
+}
+
+#slide-6 .slide-header h2,
+#slide-7 .slide-header h2,
+#slide-8 .slide-header h2,
+#slide-11 .slide-header h2,
+#slide-12 .slide-header h2 {
+  margin-bottom: -1.5rem;
+}
+
+#slide-5 .slide-header h2 {
+  margin-bottom: -1.5rem;
+}
+
+#slide-10 .corpus-body,
+#slide-10 .token-pill,
+#slide-10 .pair-chip {
+  font-size: 0.92rem;
+}
+
+/* Slide 13: From token IDs to vectors — vertical spacing control */
+#slide-13 .small-text {
+  margin-bottom: -1.8rem;  /* intro text → math */
+}
+#slide-13 .math {
+  margin: 0.5rem 0;  /* math spacing */
+}
+#slide-13 .flow.token-interface {
+  margin-top: -6.8rem;  /* math → flow */
+  margin-bottom: -0.25rem;  /* flow → grid */
+}
+#slide-13 .grid-2 {
+  margin-top: -0.5rem;
+}
