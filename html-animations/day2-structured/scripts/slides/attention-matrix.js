@@ -1177,6 +1177,7 @@ function resetAttentionMatrixVisuals() {
   slide.classList.remove('attn23-show-x-matrix');
   slide.classList.remove('attn23-token-settled');
   slide.classList.remove('attn23-full-settled');
+  slide.classList.remove('attn23-show-matrix-focus');
   slide.classList.remove('attn23-show-projections');
   slide.classList.remove('attn23-show-copies');
   slide.classList.remove('attn23-show-proj-matrices');
@@ -1221,6 +1222,7 @@ function settleAttentionMatrixTokenState() {
   slide.classList.add('attn23-token-settled');
   slide.classList.remove('attn23-show-x-matrix');
   slide.classList.remove('attn23-full-settled');
+  slide.classList.remove('attn23-show-matrix-focus');
   slide.classList.remove('attn23-show-projections');
   slide.classList.remove('attn23-show-copies');
   slide.classList.remove('attn23-show-proj-matrices');
@@ -1265,6 +1267,7 @@ function settleAttentionMatrixFullState() {
   slide.classList.add('attn23-show-x-matrix');
   slide.classList.add('attn23-token-settled');
   slide.classList.add('attn23-full-settled');
+  slide.classList.remove('attn23-show-matrix-focus');
   slide.classList.remove('attn23-show-projections');
   slide.classList.remove('attn23-show-copies');
   slide.classList.remove('attn23-show-proj-matrices');
@@ -1279,6 +1282,25 @@ function settleAttentionMatrixFullState() {
     col.classList.remove('is-output-visible');
   });
   syncAttentionMatrixScoreStageFromClasses();
+}
+
+function settleAttentionMatrixMatrixFocusState() {
+  const slide = document.getElementById('slide-23');
+  settleAttentionMatrixFullState();
+  if (!slide) return;
+  slide.classList.add('attn23-show-matrix-focus');
+}
+
+function runAttentionMatrixMatrixFocusSequence() {
+  const slide = document.getElementById('slide-23');
+  settleAttentionMatrixFullState();
+  if (!slide) return;
+  slide.classList.remove('attn23-show-matrix-focus');
+  void slide.getBoundingClientRect();
+  requestAnimationFrame(() => {
+    if (state.attentionMatrix.step < 4) return;
+    slide.classList.add('attn23-show-matrix-focus');
+  });
 }
 
 function updateAttentionMatrixProjectionOverlay() {
@@ -1412,7 +1434,7 @@ function resetAttentionMatrixProjectionVisuals() {
 
 function settleAttentionMatrixProjectionState() {
   const slide = document.getElementById('slide-23');
-  settleAttentionMatrixFullState();
+  settleAttentionMatrixMatrixFocusState();
   clearAttentionMatrixProjectionTimers();
   state.attentionMatrix.projectionDone = true;
   state.attentionMatrix.projectionVisible = true;
@@ -1445,7 +1467,7 @@ function settleAttentionMatrixProjectionState() {
 
 function runAttentionMatrixProjectionSequence() {
   const slide = document.getElementById('slide-23');
-  settleAttentionMatrixFullState();
+  settleAttentionMatrixMatrixFocusState();
   resetAttentionMatrixProjectionVisuals();
   if (!slide) return;
   slide.classList.add('attn23-show-projections');
@@ -1454,14 +1476,14 @@ function runAttentionMatrixProjectionSequence() {
   state.attentionMatrix.projectionRafIds.push(requestAnimationFrame(updateAttentionMatrixProjectionOverlay));
 
   const showCopiesTimer = setTimeout(() => {
-    if (state.attentionMatrix.step < 3) return;
+    if (state.attentionMatrix.step < 4) return;
     slide.classList.add('attn23-show-copies');
     updateAttentionMatrixProjectionOverlay();
   }, 40);
   state.attentionMatrix.projectionTimers.push(showCopiesTimer);
 
   const showMatricesTimer = setTimeout(() => {
-    if (state.attentionMatrix.step < 3) return;
+    if (state.attentionMatrix.step < 4) return;
     slide.classList.add('attn23-show-proj-matrices');
   }, 40 + ATTN_MATRIX_PROJ_ANIM_MS);
   state.attentionMatrix.projectionTimers.push(showMatricesTimer);
@@ -1470,7 +1492,7 @@ function runAttentionMatrixProjectionSequence() {
     const col = document.getElementById('attn23-proj-col-' + proj);
     if (!col) return;
     const outputTimer = setTimeout(() => {
-      if (state.attentionMatrix.step < 3) return;
+      if (state.attentionMatrix.step < 4) return;
       slide.classList.add('attn23-show-proj-outputs');
       col.classList.add('is-output-visible');
       if (idx === ATTN_MATRIX_PROJS.length - 1) {
@@ -1481,7 +1503,7 @@ function runAttentionMatrixProjectionSequence() {
   });
 
   const settleTimer = setTimeout(() => {
-    if (state.attentionMatrix.step < 3) return;
+    if (state.attentionMatrix.step < 4) return;
     settleAttentionMatrixProjectionState();
   }, 40 + ATTN_MATRIX_PROJ_ANIM_MS + ATTN_MATRIX_PROJ_FADE_MS + ((ATTN_MATRIX_PROJS.length - 1) * ATTN_MATRIX_PROJ_STAGGER_MS) + ATTN_MATRIX_PROJ_ANIM_MS);
   state.attentionMatrix.projectionTimers.push(settleTimer);
@@ -1750,7 +1772,7 @@ function runAttentionMatrixScoreCenterSequence() {
 
   const liftDelay = 24;
   const moveTimer = setTimeout(() => {
-    if (state.attentionMatrix.step < 4) return;
+    if (state.attentionMatrix.step < 5) return;
     const qMoved = runAttentionMatrixSharedElementMove(
       qGhost,
       qSource,
@@ -1772,7 +1794,7 @@ function runAttentionMatrixScoreCenterSequence() {
   state.attentionMatrix.scoreTimers.push(moveTimer);
 
   const operandTimer = setTimeout(() => {
-    if (state.attentionMatrix.step < 4) return;
+    if (state.attentionMatrix.step < 5) return;
     slide.classList.add('attn23-show-score-mode');
     slide.classList.add('attn23-show-score-operands');
     state.attentionMatrix.scoreVisible = true;
@@ -1789,7 +1811,7 @@ function runAttentionMatrixScoreCenterSequence() {
   state.attentionMatrix.scoreTimers.push(cleanupGhostTimer);
 
   const settleTimer = setTimeout(() => {
-    if (state.attentionMatrix.step < 4) return;
+    if (state.attentionMatrix.step < 5) return;
     settleAttentionMatrixScoreCenterState();
   }, liftDelay + ATTN_MATRIX_SCORE_CENTER_MS + ATTN_MATRIX_FADE_MS + 80);
   state.attentionMatrix.scoreTimers.push(settleTimer);
@@ -1805,7 +1827,7 @@ function runAttentionMatrixScoreTransposeSequence() {
   setAttentionMatrixScoreKState(false);
 
   const transposeTimer = setTimeout(() => {
-    if (state.attentionMatrix.step < 5) return;
+    if (state.attentionMatrix.step < 6) return;
     slide.classList.add('attn23-show-score-transposed');
     setAttentionMatrixScoreKState(true);
     syncAttentionMatrixScoreStageFromClasses();
@@ -1813,7 +1835,7 @@ function runAttentionMatrixScoreTransposeSequence() {
   state.attentionMatrix.scoreTimers.push(transposeTimer);
 
   const settleTimer = setTimeout(() => {
-    if (state.attentionMatrix.step < 5) return;
+    if (state.attentionMatrix.step < 6) return;
     settleAttentionMatrixScoreTransposeState();
   }, 30 + ATTN_MATRIX_SCORE_TRANSPOSE_MS);
   state.attentionMatrix.scoreTimers.push(settleTimer);
@@ -1833,14 +1855,14 @@ function runAttentionMatrixScoreMatrixSequence() {
   syncAttentionMatrixScoreStageFromClasses();
 
   const formulaTimer = setTimeout(() => {
-    if (state.attentionMatrix.step < 6) return;
+    if (state.attentionMatrix.step < 7) return;
     slide.classList.add('attn23-show-score-formula');
     syncAttentionMatrixScoreStageFromClasses();
   }, 40);
   state.attentionMatrix.scoreTimers.push(formulaTimer);
 
   const matrixTimer = setTimeout(() => {
-    if (state.attentionMatrix.step < 6) return;
+    if (state.attentionMatrix.step < 7) return;
     slide.classList.add('attn23-show-score-matrix');
     syncAttentionMatrixScoreStageFromClasses();
   }, 40 + ATTN_MATRIX_SCORE_FADE_MS);
@@ -1848,7 +1870,7 @@ function runAttentionMatrixScoreMatrixSequence() {
 
   ATTN_MATRIX_SCORE_TOKENS.forEach((token, idx) => {
     const rowTimer = setTimeout(() => {
-      if (state.attentionMatrix.step < 6) return;
+      if (state.attentionMatrix.step < 7) return;
       state.attentionMatrix.scoreVisibleCount = Math.max(state.attentionMatrix.scoreVisibleCount, idx + 1);
       syncAttentionMatrixScoreRows(state.attentionMatrix.scoreVisibleCount);
     }, 40 + ATTN_MATRIX_SCORE_FADE_MS + 70 + (idx * ATTN_MATRIX_SCORE_ROW_STAGGER_MS));
@@ -1856,7 +1878,7 @@ function runAttentionMatrixScoreMatrixSequence() {
   });
 
   const settleTimer = setTimeout(() => {
-    if (state.attentionMatrix.step < 6) return;
+    if (state.attentionMatrix.step < 7) return;
     settleAttentionMatrixScoreMatrixState();
   }, 40 + ATTN_MATRIX_SCORE_FADE_MS + 70 + ((ATTN_MATRIX_SCORE_TOKENS.length - 1) * ATTN_MATRIX_SCORE_ROW_STAGGER_MS) + ATTN_MATRIX_SCORE_FADE_MS);
   state.attentionMatrix.scoreTimers.push(settleTimer);
@@ -1941,7 +1963,7 @@ function runAttentionMatrixMaskProblemSequence() {
 
   ATTN_MATRIX_SCORE_TOKENS.forEach((token, idx) => {
     const timer = setTimeout(() => {
-      if (state.attentionMatrix.step < 7) return;
+      if (state.attentionMatrix.step < 8) return;
       state.attentionMatrix.maskVisibleCount = Math.max(state.attentionMatrix.maskVisibleCount, idx + 1);
       syncAttentionMatrixScoreMaskRows('problem', state.attentionMatrix.maskVisibleCount);
     }, 40 + (idx * ATTN_MATRIX_MASK_ROW_STAGGER_MS));
@@ -1949,7 +1971,7 @@ function runAttentionMatrixMaskProblemSequence() {
   });
 
   const settleTimer = setTimeout(() => {
-    if (state.attentionMatrix.step < 7) return;
+    if (state.attentionMatrix.step < 8) return;
     settleAttentionMatrixMaskProblemState();
   }, 40 + ((ATTN_MATRIX_SCORE_TOKENS.length - 1) * ATTN_MATRIX_MASK_ROW_STAGGER_MS) + ATTN_MATRIX_MASK_FADE_MS);
   state.attentionMatrix.scoreTimers.push(settleTimer);
@@ -1973,7 +1995,7 @@ function runAttentionMatrixCausalMaskSequence() {
 
   ATTN_MATRIX_SCORE_TOKENS.forEach((token, idx) => {
     const timer = setTimeout(() => {
-      if (state.attentionMatrix.step < 8) return;
+      if (state.attentionMatrix.step < 9) return;
       state.attentionMatrix.maskVisibleCount = Math.max(state.attentionMatrix.maskVisibleCount, idx + 1);
       syncAttentionMatrixScoreMaskRows('mask', state.attentionMatrix.maskVisibleCount);
     }, 40 + (idx * ATTN_MATRIX_MASK_ROW_STAGGER_MS));
@@ -1981,7 +2003,7 @@ function runAttentionMatrixCausalMaskSequence() {
   });
 
   const settleTimer = setTimeout(() => {
-    if (state.attentionMatrix.step < 8) return;
+    if (state.attentionMatrix.step < 9) return;
     settleAttentionMatrixCausalMaskState();
   }, 40 + ((ATTN_MATRIX_SCORE_TOKENS.length - 1) * ATTN_MATRIX_MASK_ROW_STAGGER_MS) + ATTN_MATRIX_MASK_FADE_MS);
   state.attentionMatrix.scoreTimers.push(settleTimer);
@@ -2002,7 +2024,7 @@ function runAttentionMatrixMaskQuestionSequence() {
 
   ATTN_MATRIX_SCORE_TOKENS.forEach((token, idx) => {
     const timer = setTimeout(() => {
-      if (state.attentionMatrix.step < 9) return;
+      if (state.attentionMatrix.step < 10) return;
       state.attentionMatrix.maskVisibleCount = Math.max(state.attentionMatrix.maskVisibleCount, idx + 1);
       setAttentionMatrixScoreMaskRowState(token, 'question');
       syncAttentionMatrixScoreMaskCellStyles();
@@ -2012,7 +2034,7 @@ function runAttentionMatrixMaskQuestionSequence() {
   });
 
   const settleTimer = setTimeout(() => {
-    if (state.attentionMatrix.step < 9) return;
+    if (state.attentionMatrix.step < 10) return;
     settleAttentionMatrixMaskQuestionState();
   }, 40 + ((ATTN_MATRIX_SCORE_TOKENS.length - 1) * ATTN_MATRIX_MASK_ROW_STAGGER_MS) + ATTN_MATRIX_MASK_FADE_MS);
   state.attentionMatrix.scoreTimers.push(settleTimer);
@@ -2216,7 +2238,7 @@ function runAttentionMatrixPostScoreCenterSequence() {
 
   const liftDelay = 24;
   const moveTimer = setTimeout(() => {
-    if (state.attentionMatrix.step < 10) return;
+    if (state.attentionMatrix.step < 11) return;
     const moved = runAttentionMatrixSharedElementMove(
       ghost,
       sourceWrap,
@@ -2229,7 +2251,7 @@ function runAttentionMatrixPostScoreCenterSequence() {
   state.attentionMatrix.scoreTimers.push(moveTimer);
 
   const landingTimer = setTimeout(() => {
-    if (state.attentionMatrix.step < 10) return;
+    if (state.attentionMatrix.step < 11) return;
     slide.classList.remove('attn23-show-score-operands');
     slide.classList.remove('attn23-show-score-transposed');
     slide.classList.remove('attn23-show-score-formula');
@@ -2250,7 +2272,7 @@ function runAttentionMatrixPostScoreCenterSequence() {
   state.attentionMatrix.scoreTimers.push(cleanupGhostTimer);
 
   const settleTimer = setTimeout(() => {
-    if (state.attentionMatrix.step < 10) return;
+    if (state.attentionMatrix.step < 11) return;
     settleAttentionMatrixPostScoreCenterState();
   }, liftDelay + ATTN_MATRIX_POSTSCORE_CENTER_MS + ATTN_MATRIX_FADE_MS + 60);
   state.attentionMatrix.scoreTimers.push(settleTimer);
@@ -2269,7 +2291,7 @@ function runAttentionMatrixScaleSequence() {
   syncAttentionMatrixScoreStageFromClasses();
 
   const scaleTimer = setTimeout(() => {
-    if (state.attentionMatrix.step < 11) return;
+    if (state.attentionMatrix.step < 12) return;
     slide.classList.add('attn23-show-postscore-scale');
     syncAttentionMatrixPostScoreMatrix('scaled');
     syncAttentionMatrixScoreStageFromClasses();
@@ -2277,7 +2299,7 @@ function runAttentionMatrixScaleSequence() {
   state.attentionMatrix.scoreTimers.push(scaleTimer);
 
   const settleTimer = setTimeout(() => {
-    if (state.attentionMatrix.step < 11) return;
+    if (state.attentionMatrix.step < 12) return;
     settleAttentionMatrixScaleState();
   }, 30 + ATTN_MATRIX_SCALE_FADE_MS);
   state.attentionMatrix.scoreTimers.push(settleTimer);
@@ -2306,7 +2328,7 @@ function runAttentionMatrixSoftmaxSequence() {
 
   ATTN_MATRIX_SCORE_TOKENS.forEach((token, idx) => {
     const timer = setTimeout(() => {
-      if (state.attentionMatrix.step < 12) return;
+      if (state.attentionMatrix.step < 13) return;
       clearAttentionMatrixPostScoreRowActivity();
       const row = document.getElementById('attn23-postscore-row-' + token);
       if (row) row.classList.add('is-softmax-active');
@@ -2324,7 +2346,7 @@ function runAttentionMatrixSoftmaxSequence() {
   });
 
   const settleTimer = setTimeout(() => {
-    if (state.attentionMatrix.step < 12) return;
+    if (state.attentionMatrix.step < 13) return;
     settleAttentionMatrixSoftmaxState();
   }, 40 + ((ATTN_MATRIX_SCORE_TOKENS.length - 1) * ATTN_MATRIX_SOFTMAX_ROW_STAGGER_MS) + ATTN_MATRIX_SOFTMAX_ROW_MS + 80);
   state.attentionMatrix.scoreTimers.push(settleTimer);
@@ -2346,14 +2368,14 @@ function runAttentionMatrixValueEntrySequence() {
   syncAttentionMatrixScoreStageFromClasses();
 
   const entryTimer = setTimeout(() => {
-    if (state.attentionMatrix.step < 13) return;
+    if (state.attentionMatrix.step < 14) return;
     slide.classList.add('attn23-show-postscore-av');
     syncAttentionMatrixScoreStageFromClasses();
   }, 30);
   state.attentionMatrix.scoreTimers.push(entryTimer);
 
   const settleTimer = setTimeout(() => {
-    if (state.attentionMatrix.step < 13) return;
+    if (state.attentionMatrix.step < 14) return;
     settleAttentionMatrixValueEntryState();
   }, 30 + ATTN_MATRIX_VALUE_ENTRY_MS);
   state.attentionMatrix.scoreTimers.push(settleTimer);
@@ -2375,7 +2397,7 @@ function runAttentionMatrixOutputSequence() {
 
   ATTN_MATRIX_TOKENS.forEach((token, idx) => {
     const timer = setTimeout(() => {
-      if (state.attentionMatrix.step < 14) return;
+      if (state.attentionMatrix.step < 15) return;
       clearAttentionMatrixPostScoreRowActivity();
       const row = document.getElementById('attn23-postscore-row-' + token);
       if (row) row.classList.add('is-output-active');
@@ -2387,7 +2409,7 @@ function runAttentionMatrixOutputSequence() {
   });
 
   const settleTimer = setTimeout(() => {
-    if (state.attentionMatrix.step < 14) return;
+    if (state.attentionMatrix.step < 15) return;
     settleAttentionMatrixOutputState();
   }, 40 + ((ATTN_MATRIX_TOKENS.length - 1) * ATTN_MATRIX_OUTPUT_ROW_STAGGER_MS) + ATTN_MATRIX_OUTPUT_ROW_MS + 60);
   state.attentionMatrix.scoreTimers.push(settleTimer);
@@ -2551,30 +2573,32 @@ function initAttentionMatrixSlide() {
     if (!state.attentionMatrix.resizeBound) {
       addTrackedListener(window, 'resize', () => {
         if (!state.attentionMatrix.initialized) return;
-        if (state.attentionMatrix.step >= 14) {
+        if (state.attentionMatrix.step >= 15) {
           settleAttentionMatrixOutputState();
-        } else if (state.attentionMatrix.step >= 13) {
+        } else if (state.attentionMatrix.step >= 14) {
           settleAttentionMatrixValueEntryState();
-        } else if (state.attentionMatrix.step >= 12) {
+        } else if (state.attentionMatrix.step >= 13) {
           settleAttentionMatrixSoftmaxState();
-        } else if (state.attentionMatrix.step >= 11) {
+        } else if (state.attentionMatrix.step >= 12) {
           settleAttentionMatrixScaleState();
-        } else if (state.attentionMatrix.step >= 10) {
+        } else if (state.attentionMatrix.step >= 11) {
           settleAttentionMatrixPostScoreCenterState();
-        } else if (state.attentionMatrix.step >= 9) {
+        } else if (state.attentionMatrix.step >= 10) {
           settleAttentionMatrixMaskQuestionState();
-        } else if (state.attentionMatrix.step >= 8) {
+        } else if (state.attentionMatrix.step >= 9) {
           settleAttentionMatrixCausalMaskState();
-        } else if (state.attentionMatrix.step >= 7) {
+        } else if (state.attentionMatrix.step >= 8) {
           settleAttentionMatrixMaskProblemState();
-        } else if (state.attentionMatrix.step >= 6) {
+        } else if (state.attentionMatrix.step >= 7) {
           settleAttentionMatrixScoreMatrixState();
-        } else if (state.attentionMatrix.step >= 5) {
+        } else if (state.attentionMatrix.step >= 6) {
           settleAttentionMatrixScoreTransposeState();
-        } else if (state.attentionMatrix.step >= 4) {
+        } else if (state.attentionMatrix.step >= 5) {
           settleAttentionMatrixScoreCenterState();
-        } else if (state.attentionMatrix.step >= 3) {
+        } else if (state.attentionMatrix.step >= 4) {
           settleAttentionMatrixProjectionState();
+        } else if (state.attentionMatrix.step >= 3) {
+          settleAttentionMatrixMatrixFocusState();
         } else if (state.attentionMatrix.step >= 2) {
           settleAttentionMatrixFullState();
         } else if (state.attentionMatrix.step >= 1) {
@@ -2593,30 +2617,32 @@ function initAttentionMatrixSlide() {
   if (takeaway) setMathHTML(takeaway, ATTN_MATRIX_TAKEAWAYS[state.attentionMatrix.step] || ATTN_MATRIX_TAKEAWAYS[0]);
   typesetMath(slide);
 
-  if (state.attentionMatrix.step >= 14) {
+  if (state.attentionMatrix.step >= 15) {
     settleAttentionMatrixOutputState();
-  } else if (state.attentionMatrix.step >= 13) {
+  } else if (state.attentionMatrix.step >= 14) {
     settleAttentionMatrixValueEntryState();
-  } else if (state.attentionMatrix.step >= 12) {
+  } else if (state.attentionMatrix.step >= 13) {
     settleAttentionMatrixSoftmaxState();
-  } else if (state.attentionMatrix.step >= 11) {
+  } else if (state.attentionMatrix.step >= 12) {
     settleAttentionMatrixScaleState();
-  } else if (state.attentionMatrix.step >= 10) {
+  } else if (state.attentionMatrix.step >= 11) {
     settleAttentionMatrixPostScoreCenterState();
-  } else if (state.attentionMatrix.step >= 9) {
+  } else if (state.attentionMatrix.step >= 10) {
     settleAttentionMatrixMaskQuestionState();
-  } else if (state.attentionMatrix.step >= 8) {
+  } else if (state.attentionMatrix.step >= 9) {
     settleAttentionMatrixCausalMaskState();
-  } else if (state.attentionMatrix.step >= 7) {
+  } else if (state.attentionMatrix.step >= 8) {
     settleAttentionMatrixMaskProblemState();
-  } else if (state.attentionMatrix.step >= 6) {
+  } else if (state.attentionMatrix.step >= 7) {
     settleAttentionMatrixScoreMatrixState();
-  } else if (state.attentionMatrix.step >= 5) {
+  } else if (state.attentionMatrix.step >= 6) {
     settleAttentionMatrixScoreTransposeState();
-  } else if (state.attentionMatrix.step >= 4) {
+  } else if (state.attentionMatrix.step >= 5) {
     settleAttentionMatrixScoreCenterState();
-  } else if (state.attentionMatrix.step >= 3) {
+  } else if (state.attentionMatrix.step >= 4) {
     settleAttentionMatrixProjectionState();
+  } else if (state.attentionMatrix.step >= 3) {
+    settleAttentionMatrixMatrixFocusState();
   } else if (state.attentionMatrix.step >= 2) {
     settleAttentionMatrixFullState();
   } else if (state.attentionMatrix.step >= 1) {
@@ -2637,16 +2663,16 @@ function setAttentionMatrixStep(step) {
   setMathHTML(takeaway, ATTN_MATRIX_TAKEAWAYS[clamped] || ATTN_MATRIX_TAKEAWAYS[0]);
   const animateStep = clamped === prevStep + 1;
 
-  if (clamped < 3) {
+  if (clamped < 4) {
     resetAttentionMatrixProjectionVisuals();
   }
-  if (clamped < 4) {
+  if (clamped < 5) {
     resetAttentionMatrixScoreVisuals();
   }
-  if (clamped < 7) {
+  if (clamped < 8) {
     resetAttentionMatrixScoreMaskVisuals();
   }
-  if (clamped < 10) {
+  if (clamped < 11) {
     resetAttentionMatrixPostScoreVisuals();
   }
 
@@ -2676,13 +2702,25 @@ function setAttentionMatrixStep(step) {
     return;
   }
 
+  if (clamped === 3) {
+    if (!state.attentionMatrix.xMatrixDone) {
+      settleAttentionMatrixFullState();
+    }
+    if (animateStep) {
+      runAttentionMatrixMatrixFocusSequence();
+    } else {
+      settleAttentionMatrixMatrixFocusState();
+    }
+    return;
+  }
+
   if (!state.attentionMatrix.tokenMatrixDone) {
     settleAttentionMatrixTokenState();
   }
   if (!state.attentionMatrix.xMatrixDone) {
     settleAttentionMatrixFullState();
   }
-  if (clamped === 3) {
+  if (clamped === 4) {
     if (!state.attentionMatrix.projectionDone && animateStep) {
       runAttentionMatrixProjectionSequence();
     } else {
@@ -2694,7 +2732,7 @@ function setAttentionMatrixStep(step) {
   if (!state.attentionMatrix.projectionDone) {
     settleAttentionMatrixProjectionState();
   }
-  if (clamped === 4) {
+  if (clamped === 5) {
     if (!state.attentionMatrix.scoreCenteredDone && animateStep) {
       runAttentionMatrixScoreCenterSequence();
     } else {
@@ -2706,7 +2744,7 @@ function setAttentionMatrixStep(step) {
   if (!state.attentionMatrix.scoreCenteredDone) {
     settleAttentionMatrixScoreCenterState();
   }
-  if (clamped === 5) {
+  if (clamped === 6) {
     if (!state.attentionMatrix.scoreTransposedDone && animateStep) {
       runAttentionMatrixScoreTransposeSequence();
     } else {
@@ -2719,7 +2757,7 @@ function setAttentionMatrixStep(step) {
     settleAttentionMatrixScoreTransposeState();
   }
 
-  if (clamped === 6) {
+  if (clamped === 7) {
     if (!state.attentionMatrix.scoreMatrixDone && animateStep) {
       runAttentionMatrixScoreMatrixSequence();
     } else {
@@ -2732,7 +2770,7 @@ function setAttentionMatrixStep(step) {
     settleAttentionMatrixScoreMatrixState();
   }
 
-  if (clamped === 7) {
+  if (clamped === 8) {
     if (!state.attentionMatrix.maskProblemDone && animateStep) {
       runAttentionMatrixMaskProblemSequence();
     } else {
@@ -2744,7 +2782,7 @@ function setAttentionMatrixStep(step) {
   if (!state.attentionMatrix.maskProblemDone) {
     settleAttentionMatrixMaskProblemState();
   }
-  if (clamped === 8) {
+  if (clamped === 9) {
     if (!state.attentionMatrix.maskAppliedDone && animateStep) {
       runAttentionMatrixCausalMaskSequence();
     } else {
@@ -2756,7 +2794,7 @@ function setAttentionMatrixStep(step) {
   if (!state.attentionMatrix.maskAppliedDone) {
     settleAttentionMatrixCausalMaskState();
   }
-  if (clamped === 9) {
+  if (clamped === 10) {
     if (!state.attentionMatrix.maskQuestionDone && animateStep) {
       runAttentionMatrixMaskQuestionSequence();
     } else {
@@ -2768,7 +2806,7 @@ function setAttentionMatrixStep(step) {
   if (!state.attentionMatrix.maskQuestionDone) {
     settleAttentionMatrixMaskQuestionState();
   }
-  if (clamped === 10) {
+  if (clamped === 11) {
     if (!state.attentionMatrix.postScoreCenteredDone && animateStep) {
       runAttentionMatrixPostScoreCenterSequence();
     } else {
@@ -2780,7 +2818,7 @@ function setAttentionMatrixStep(step) {
   if (!state.attentionMatrix.postScoreCenteredDone) {
     settleAttentionMatrixPostScoreCenterState();
   }
-  if (clamped === 11) {
+  if (clamped === 12) {
     if (!state.attentionMatrix.scaledMatrixDone && animateStep) {
       runAttentionMatrixScaleSequence();
     } else {
@@ -2792,7 +2830,7 @@ function setAttentionMatrixStep(step) {
   if (!state.attentionMatrix.scaledMatrixDone) {
     settleAttentionMatrixScaleState();
   }
-  if (clamped === 12) {
+  if (clamped === 13) {
     if (!state.attentionMatrix.attentionMatrixDone && animateStep) {
       runAttentionMatrixSoftmaxSequence();
     } else {
@@ -2804,7 +2842,7 @@ function setAttentionMatrixStep(step) {
   if (!state.attentionMatrix.attentionMatrixDone) {
     settleAttentionMatrixSoftmaxState();
   }
-  if (clamped === 13) {
+  if (clamped === 14) {
     if (!state.attentionMatrix.valueMatrixVisibleDone && animateStep) {
       runAttentionMatrixValueEntrySequence();
     } else {
@@ -2816,7 +2854,7 @@ function setAttentionMatrixStep(step) {
   if (!state.attentionMatrix.valueMatrixVisibleDone) {
     settleAttentionMatrixValueEntryState();
   }
-  if (clamped === 14) {
+  if (clamped === 15) {
     if (!state.attentionMatrix.outputMatrixDone && animateStep) {
       runAttentionMatrixOutputSequence();
     } else {

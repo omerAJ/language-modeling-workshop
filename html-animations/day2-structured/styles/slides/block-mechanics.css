@@ -215,6 +215,10 @@
   gap: 0;
 }
 
+#slide-31 .arch-brace-label {
+  transform: translateY(-50%) translateX(calc(100% - 0.8rem));
+}
+
 .stack31-io-label {
   text-align: center;
 }

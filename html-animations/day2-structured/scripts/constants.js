@@ -236,6 +236,7 @@ const ATTN_MATRIX_TAKEAWAYS = [
   'Start from the same sequence: tokens plus their embedding rows.',
   'First collect the sequence tokens into a compact token matrix \\(T\\).',
   'Then collect the embedding rows into the embedding matrix \\(X\\).',
+  'Clear the original sequence view and keep the compact matrices ready at the top.',
   'Now apply the same Step 1 projection to the whole matrix: \\(X\\) is copied into three branches and projected into \\(Q\\), \\(K\\), and \\(V\\).',
   'Bring \\(Q\\) and \\(K\\) to the center as the matrices used for score computation.',
   'Transpose \\(K\\) so the matrix dimensions line up for multiplication.',
@@ -250,7 +251,7 @@ const ATTN_MATRIX_TAKEAWAYS = [
   'Compute the weighted sum for the whole sequence: \\(O = AV\\).<br>Each output row is a weighted combination of value rows, using the attention weights from the matching row of \\(A\\).'
 ];
 
-const ATTN_MATRIX_MAX_STEP = 14;
+const ATTN_MATRIX_MAX_STEP = 15;
 
 const ATTN_MATRIX_ROW_STAGGER_MS = 140;
 
