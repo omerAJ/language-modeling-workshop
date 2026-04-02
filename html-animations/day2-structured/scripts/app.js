@@ -5,6 +5,7 @@ initializeDeckScaleSystem();
 addTrackedListener(state.ui.btnNext, 'click', nextWithInteractions);
 addTrackedListener(state.ui.btnSkip, 'click', nextSlide);
 addTrackedListener(state.ui.btnPrev, 'click', prevWithInteractions);
+addTrackedListener(window, 'hashchange', handleHashNavigation);
 
 addTrackedListener(document, 'keydown', (e) => {
   const tag = e.target && e.target.tagName;
@@ -32,5 +33,5 @@ addTrackedListener(document, 'transitionend', (e) => {
 });
 
 runDevStartupChecks();
-goToSlide(0);
+goToSlide(getInitialSlideIndex());
 captureSnapshot('init');

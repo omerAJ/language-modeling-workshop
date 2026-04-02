@@ -59,12 +59,38 @@ function getCurrentSlide() {
   return state.nav.slides[state.nav.current] || null;
 }
 
+function getSlideIndexById(slideId) {
+  if (!slideId) return -1;
+  return state.nav.slides.findIndex((slide) => slide.id === slideId);
+}
+
+function syncSlideHash(slideEl) {
+  if (!slideEl || !slideEl.id) return;
+  const nextHash = '#' + slideEl.id;
+  if (window.location.hash === nextHash) return;
+  window.history.replaceState(null, '', window.location.pathname + window.location.search + nextHash);
+}
+
+function getInitialSlideIndex() {
+  const hash = window.location.hash.replace(/^#/, '');
+  if (!hash) return 0;
+  const slideId = decodeURIComponent(hash);
+  const matchIndex = getSlideIndexById(slideId);
+  return matchIndex >= 0 ? matchIndex : 0;
+}
+
+function handleHashNavigation() {
+  const nextIndex = getInitialSlideIndex();
+  if (nextIndex === state.nav.current) return;
+  goToSlide(nextIndex);
+}
+
 function getStepController(slideId) {
   return STEP_STATE_CONTROLLERS[slideId] || null;
 }
 
 function updateNavigationUi() {
-  state.ui.btnPrev.disabled = state.nav.history.length === 0;
+  state.ui.btnPrev.disabled = state.nav.history.length === 0 && state.nav.current === 0;
   state.ui.btnNext.textContent = state.nav.current === state.nav.total - 1 ? 'Restart ↺' : 'Next →';
   state.ui.btnSkip.textContent = state.nav.current === state.nav.total - 1 ? 'Restart ↺' : 'Skip Slide →';
   state.ui.slideCounter.textContent = (state.nav.current + 1) + ' / ' + state.nav.total;
@@ -220,6 +246,7 @@ function goToSlide(index) {
   const activeSlide = state.nav.slides[index];
   activeSlide.classList.add('active');
   state.nav.current = index;
+  syncSlideHash(activeSlide);
 
   updateNavigationUi();
 
@@ -251,6 +278,11 @@ function prevSlide() {
 
 function prevWithInteractions() {
   if (state.nav.history.length === 0) {
+    if (state.nav.current > 0) {
+      prevSlide();
+      updateNavigationUi();
+      return true;
+    }
     updateNavigationUi();
     return false;
   }
