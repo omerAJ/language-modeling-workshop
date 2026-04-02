@@ -231,12 +231,12 @@
 
 #slide-32b .live-demo-main,
 #slide-32b .live-demo-sidebar {
-  gap: 0.5rem;
+  gap: 0.38rem;
 }
 
 #slide-32b .card.live-demo-main,
 #slide-32b .card.live-demo-sidebar {
-  padding: 0.76rem 0.82rem;
+  padding: 0.62rem 0.72rem;
 }
 
 #slide-32b .live-demo-connection {
@@ -249,13 +249,13 @@
 
 #slide-32b .live-demo-chip {
   font-size: var(--fs-xs);
-  padding: 0.48rem 0.62rem;
+  padding: 0.4rem 0.54rem;
 }
 
 #slide-32b .live-demo-field input,
 #slide-32b .live-demo-text-input {
   font-size: var(--fs-xs);
-  padding: 0.48rem 0.62rem;
+  padding: 0.38rem 0.54rem;
 }
 
 #slide-32b .live-demo-presets {
@@ -268,14 +268,14 @@
 }
 
 #slide-32b .live-demo-chat {
-  min-height: 12rem;
-  max-height: 12rem;
-  padding: 0.56rem 0.64rem;
+  min-height: 10.6rem;
+  max-height: 10.6rem;
+  padding: 0.48rem 0.56rem;
 }
 
 #slide-32b .live-demo-empty,
 #slide-32b .live-demo-message {
-  padding: 0.56rem 0.64rem;
+  padding: 0.46rem 0.54rem;
 }
 
 #slide-32b .live-demo-message-body,
@@ -295,17 +295,18 @@
 }
 
 #slide-32b .live-demo-status {
-  min-height: 1rem;
-  font-size: 0.68rem;
+  min-height: 0.82rem;
+  font-size: 0.64rem;
 }
 
 #slide-32b .live-demo-input-row {
-  gap: 0.38rem;
+  gap: 0.32rem;
 }
 
 #slide-32b .live-demo-input-row .nav-btn {
-  padding: 0.42rem 0.56rem;
-  font-size: var(--fs-xs);
+  padding: 0.3rem 0.44rem;
+  font-size: 0.74rem;
+  line-height: 1.1;
 }
 
 #slide-32b .live-demo-note {

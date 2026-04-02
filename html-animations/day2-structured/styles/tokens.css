@@ -7,16 +7,16 @@
   --fs-2xl:  2.8rem;    /* h1, title slides */
   --fs-xl:   1.8rem;    /* h2, section headings */
   --fs-lg:   1.25rem;   /* h3, card titles, display math */
-  --fs-base: 1.05rem;   /* body text, callouts, flow-boxes */
-  --fs-sm:   0.92rem;   /* secondary text, captions */
-  --fs-xs:   0.82rem;   /* badges, section-tags, nav buttons */
-  --fs-2xs:  0.72rem;   /* absolute floor — dense diagram labels only */
+  --fs-base: 1.10rem;   /* body text, callouts, flow-boxes */
+  --fs-sm:   0.98rem;   /* secondary text, captions */
+  --fs-xs:   0.88rem;   /* badges, section-tags, nav buttons */
+  --fs-2xs:  0.80rem;   /* absolute floor — dense diagram labels only */
 
   /* ── Spacing scale ── */
   --sp-1: 0.25rem;      /* tight inner gaps (vector cells) */
   --sp-2: 0.5rem;       /* small gaps within components */
-  --sp-3: 0.75rem;      /* standard inner padding */
-  --sp-4: 1.25rem;      /* card padding, grid gaps */
+  --sp-3: 0.70rem;      /* standard inner padding */
+  --sp-4: 1.20rem;      /* card padding, grid gaps */
   --sp-5: 2rem;         /* major section breaks */
   --sp-6: 3rem;         /* hero spacing */
 

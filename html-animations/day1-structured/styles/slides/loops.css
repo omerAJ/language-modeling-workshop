@@ -37,17 +37,17 @@
 
 #slide-6 > div[style*='justify-content:center'] {
   gap: 0.28rem !important;
-  margin-bottom: 0.55rem !important;
+  margin-bottom: 0.25rem !important;
 }
 
 #slide-6 .reveal-btn {
   margin-top: 0;
-  padding: 0.36rem 0.62rem;
+  padding: 0.15rem 0.62rem;
   font-size: var(--fs-xs);
 }
 
 #slide-6 > .card {
-  padding: 0.7rem 0.85rem;
+  padding: 0.30rem 0.85rem;
 }
 
 #slide-6 .flow {
@@ -62,17 +62,31 @@
   line-height: 1.25;
 }
 
+/* Separate control for MathJax-rendered equations/symbols inside slide 6 stage boxes. */
+#slide-6 .flow-box mjx-container {
+  font-size: 1.38em !important;
+}
+
 #slide-6 .flow .flow-box ~ .flow-box {
   margin-left: 0.95rem;
 }
 
 #slide-6 .flow .flow-box ~ .flow-box::before {
   right: calc(100% + 0.1rem);
-  font-size: 0.72rem;
+  font-size: 1.3rem;
+  font-weight: 1000;
+}
+
+/* Slide 6 down-arrow controls */
+#slide-6 .train-down-arrow {
+  color: var(--text-dim);
+  font-size: 1.0rem;
+  font-weight: 700;
+  line-height: 1;
 }
 
 #slide-6 .tiny {
-  font-size: 0.62rem;
+  font-size: 0.80rem;
   line-height: 1.3;
 }
 
@@ -95,11 +109,6 @@
   margin-top: 0.28rem !important;
 }
 
-#slide-6 #trainLoss > div:first-child,
-#slide-6 #trainUpdate > div:first-child {
-  font-size: 0.9rem !important;
-}
-
 #slide-6 #trainBackprop > p {
   margin-bottom: 0.18rem !important;
 }
@@ -109,7 +118,7 @@
 }
 
 #slide-6 #trainExplain {
-  margin-top: 0.5rem !important;
+  margin-top: 0.175rem !important;
   padding: 0.52rem 0.66rem;
   gap: 0.45rem;
   font-size: var(--fs-xs);

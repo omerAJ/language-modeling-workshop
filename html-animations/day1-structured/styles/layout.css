@@ -51,7 +51,7 @@
     padding: var(--sp-3) var(--sp-4);
     border-radius: var(--radius-md);
     font-size: var(--fs-sm);
-    line-height: 1.55;
+    line-height: 1.00;
   }
   .callout.info    { background: var(--accent-bg);  border: 1px solid var(--accent-border); color: #c2d0ff; }
   .callout.warn    { background: var(--orange-bg);   border: 1px solid var(--orange-border);  color: #ffd4a8; }
@@ -194,7 +194,7 @@
     font-family: 'Inter', sans-serif;
     font-size: 0.72rem;
     font-weight: 600;
-    padding: 0.38rem 0.82rem;
+    padding: 0.19rem 0.70rem;
     border-radius: var(--radius-sm);
     border: 1px solid var(--border);
     background: var(--surface2);
@@ -256,9 +256,6 @@
 
   .slide:not(.centered) > h2,
   .slide:not(.centered) > h1,
-  .slide:not(.centered) > .subtitle,
-  .slide:not(.centered) > .small-text,
-  .slide:not(.centered) > .tiny,
   .slide:not(.centered) > .spacer,
   .slide:not(.centered) > .spacer-sm,
   .slide:not(.centered) > .spacer-lg,
@@ -267,5 +264,5 @@
   .slide:not(.centered) > .grid-3,
   .slide:not(.centered) > .grid-4,
   .slide:not(.centered) > .card {
-    margin-top: 0.95rem;
+    margin-top: 0.60rem;
   }

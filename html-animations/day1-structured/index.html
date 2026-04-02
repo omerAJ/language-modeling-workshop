@@ -54,11 +54,10 @@
     <li data-num="1">What an LLM <span class="hl">computes at runtime</span>: tokens in, probabilities out</li>
     <li data-num="2">Why <span class="hl-green">next-token prediction</span> can produce complex behavior</li>
     <li data-num="3">What <span class="hl-purple">training an LLM</span> concretely means: <span class="hl-cyan">data</span> → <span class="hl">train</span> → <span class="hl-orange">align</span> → <span class="hl-green">eval</span></li>
-    <li data-num="4">How <span class="hl-cyan">raw text becomes training data</span> through cleaning, filtering, and annotation</li>
   </ul>
   <div class="speaker-notes">
     <button class="notes-toggle">speaker notes</button>
-    <div class="notes-body"><p>These are the four takeaways for the day: runtime computation, the learning objective, the training pipeline, and how raw text gets turned into model-shaping data. They do not need implementation detail yet — just the right mental model.</p></div>
+    <div class="notes-body"><p>These are the three takeaways for the day: runtime computation, the learning objective, and the training pipeline. They do not need implementation detail yet — just the right mental model.</p></div>
   </div>
 </div>
 
@@ -280,10 +279,6 @@
     <span class="tok blank" id="infCurrent" >next?</span>
   </div>
 
-  <p class="tiny" id="infHint">
-    Click the blank to generate the next token
-  </p>
-
   <div class="speaker-notes">
     <button class="notes-toggle">
       speaker notes
@@ -352,41 +347,33 @@
 
     <!-- ── PHASE 3: LOSS COMPUTATION ── -->
     <div id="trainLoss" style="display:none; text-align:center; margin:0.5rem 0;">
-      <div style="color:var(--text-dim); font-size:1.1rem;">&#x2193;</div>
+      <div class="train-down-arrow">&#x2193;</div>
       <div class="flow-box loss" style="display:inline-block;">
         Cross-Entropy Loss<br>
         <span class="tiny">\(\mathcal{L} = -\log P(\text{correct token})\)</span>
       </div>
-      <p class="tiny" style="color:var(--red); margin:0.25rem 0 0;">
+      <p class="tiny" style="color:var(--red); margin:0.20rem 0 0;">
         "How surprised was the model by the right answer?"
       </p>
     </div>
 
     <!-- ── PHASE 4: BACKPROPAGATION ── -->
     <div id="trainBackprop" style="display:none; margin-top:0.5rem;">
-      <p class="tiny" style="text-align:center; color:var(--orange); margin:0 0 0.375rem;">
-        &#x2193; error signal flows backward through every layer (chain rule)
-      </p>
       <div class="flow flow-backward">
-        <div class="flow-box param">\(\frac{\partial \mathcal{L}}{\partial \theta}\)<br><span class="tiny">gradient for<br>every weight</span></div>
+        <div class="flow-box param">\(\frac{\partial \mathcal{L}}{\partial \theta}\)<br><span class="tiny">gradients</span></div>
         <div class="flow-arrow">&larr;</div>
         <div class="flow-box grad">Backpropagate<br><span class="tiny">layer \(N \to N-1 \to \dots \to 1\)</span></div>
         <div class="flow-arrow">&larr;</div>
-        <div class="flow-box loss">\(\mathcal{L}\)<br><span class="tiny">error at<br>output</span></div>
+        <div class="flow-box loss">\(\mathcal{L}\)<br><span class="tiny">error</span></div>
       </div>
     </div>
 
     <!-- ── PHASE 5: WEIGHT UPDATE + FEEDBACK LOOP ── -->
     <div id="trainUpdate" style="display:none; text-align:center; margin-top:0.5rem;">
-      <div style="color:var(--text-dim); font-size:1.1rem;">&#x2193;</div>
+      <div class="train-down-arrow">&#x2193;</div>
       <div class="flow-box param" style="display:inline-block; border-width:2px;">
         \(\theta \leftarrow \theta - \eta \cdot \nabla \mathcal{L}\)<br>
         <span class="tiny">nudge every weight to reduce the loss</span>
-      </div>
-      <div style="margin-top:0.75rem;">
-        <span style="color:var(--orange); font-size:1rem;">
-          &#x21BB; updated weights feed back into the Transformer — repeat with next batch
-        </span>
       </div>
     </div>
 
@@ -455,7 +442,7 @@
       </div>
     </div>
 
-    <p class="tiny" style="margin-top:0.625rem;">
+    <p class="small-text" style="margin-top:0.625rem;">
       At position \(t\), the model sees \(x_{\le t}\) and is scored on the true next token \(x_{t+1}\).
     </p>
   </div>

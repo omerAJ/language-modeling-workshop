@@ -1,7 +1,5 @@
 # Day 1 Structured Deck
 
-The working version of the Day 1 presentation. `../Day1.html` is reference only — make all future changes here.
-
 ## Quick Start
 
 Open `day1-structured/index.html` directly in a browser. For a local server:
