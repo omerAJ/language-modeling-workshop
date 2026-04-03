@@ -1346,8 +1346,13 @@
 }
 
 .attn24-head-card.is-attn-visible .attn24-head-proj-pane {
-    opacity: 0.52;
-    transition: opacity 0.22s ease;
+    opacity: 1;
+
+}
+
+.attn24-head-card.is-attn-visible .attn24-head-body {
+    opacity: 0.28;
+    transition: opacity 0.28s ease;
 
 }
 

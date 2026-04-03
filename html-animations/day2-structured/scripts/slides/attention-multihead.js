@@ -213,7 +213,7 @@ function createAttentionMultiHeadHeadOverlay(head) {
     class: 'attn24-head-overlay-line',
     id: 'attn24-head-line-source-' + head
   }));
-  overlay.appendChild(svgEl('line', {
+  overlay.appendChild(svgEl('path', {
     class: 'attn24-head-overlay-bus',
     id: 'attn24-head-line-bus-' + head
   }));
@@ -718,11 +718,22 @@ function updateAttentionMultiHeadHeadOverlay(head) {
   const pillLeft = busX;
   const pillRight = busX + pillW;
   const pillTop = sourcePoint.y - pillH * 0.5;
+  const stubLen = Math.max(remPx * 0.55, 9);
+  const busColX = pillRight + stubLen;
   const yTrunkTop = Math.min(sourcePoint.y, minTargetY);
   const yTrunkBot = Math.max(sourcePoint.y, maxTargetY);
 
   setLine(sourceLine, sourcePoint, { x: pillLeft, y: sourcePoint.y });
-  setLine(busLine, { x: pillRight, y: yTrunkTop }, { x: pillRight, y: yTrunkBot });
+  /* L-shaped bus: short horizontal stub from pill right, then vertical trunk */
+  {
+    const sy = sourcePoint.y.toFixed(2);
+    const ex = busColX.toFixed(2);
+    let d = `M ${pillRight.toFixed(2)},${sy} L ${ex},${sy} L ${ex},${yTrunkBot.toFixed(2)}`;
+    if (yTrunkTop < sourcePoint.y) {
+      d += ` M ${ex},${sourcePoint.y.toFixed(2)} L ${ex},${yTrunkTop.toFixed(2)}`;
+    }
+    busLine.setAttribute('d', d);
+  }
 
   copyPill.setAttribute('x', pillLeft.toFixed(2));
   copyPill.setAttribute('y', pillTop.toFixed(2));
@@ -738,7 +749,7 @@ function updateAttentionMultiHeadHeadOverlay(head) {
     const y = entry.dummyLeft.y;
     const xEnd = entry.dummyLeft.x;
     setPath(entry.branchLine, [
-      { x: pillRight, y },
+      { x: busColX, y },
       { x: xEnd, y }
     ]);
   });
