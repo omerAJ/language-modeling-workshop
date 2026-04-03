@@ -7,7 +7,7 @@
   border-radius: var(--radius-md);
   border: 1px solid var(--accent-border);
   background: var(--accent-bg);
-  color: #dbe4ff;
+  color: #0d1020;
   font-size: var(--fs-xs);
   line-height: 1.45;
 }
@@ -69,8 +69,8 @@
 }
 
 .block28-orient-card {
-  border-color: rgba(123, 154, 255, 0.22);
-  background: rgba(123, 154, 255, 0.08);
+  border-color: rgba(42, 79, 214, 0.22);
+  background: rgba(42, 79, 214, 0.08);
 }
 
 .block28-note {
@@ -105,7 +105,7 @@
   border-radius: var(--radius-sm);
   border: 1px solid var(--accent-border);
   background: var(--accent-bg);
-  color: #e1ebff;
+  color: #0d1020;
   font-size: var(--fs-2xs);
   text-align: center;
 }
@@ -156,7 +156,7 @@
 }
 
 #slide-28.block28-show-attn .block28-attn-box {
-  border-color: rgba(180,157,255,0.55) !important;
+  border-color: rgba(90,48,200,0.55) !important;
   box-shadow: 0 0 0 0.06rem var(--purple-bg);
 }
 
@@ -233,8 +233,8 @@
 .stack31-overview-card {
   padding: 0.68rem 0.84rem;
   border-radius: var(--radius-md);
-  border: 1px solid rgba(123, 154, 255, 0.22);
-  background: rgba(123, 154, 255, 0.08);
+  border: 1px solid rgba(42, 79, 214, 0.22);
+  background: rgba(42, 79, 214, 0.08);
 }
 
 .stack31-overview-head {
@@ -242,7 +242,7 @@
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: #dbe4ff;
+  color: #0d1020;
   margin-bottom: 0.18rem;
 }
 

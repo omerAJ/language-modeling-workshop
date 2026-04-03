@@ -20,7 +20,7 @@
   .pressure-grid.revealed .pressure-card {
     opacity: 1;
     transform: translateY(0);
-    border-color: rgba(123,154,255,0.4);
+    border-color: rgba(26,69,200,0.50);
   }
   .pressure-card .title {
     font-size: var(--fs-xs);
@@ -50,7 +50,7 @@
   }
   .drama-clue {
     padding-left: 0.6rem;
-    border-left: 2px solid rgba(108, 140, 255, 0.35);
+    border-left: 2px solid rgba(26,69,200,0.45);
   }
   .drama-question {
     margin-top: 0.16rem;
@@ -71,13 +71,13 @@
     margin-top: var(--sp-2);
   }
   .drama-choice.correct {
-    background: rgba(90,232,142,0.18);
-    border-color: rgba(90,232,142,0.45);
+    background: rgba(21,116,60,0.10);
+    border-color: rgba(21,116,60,0.50);
     color: var(--green);
   }
   .drama-choice.wrong {
-    background: rgba(255,123,123,0.15);
-    border-color: rgba(255,123,123,0.4);
+    background: rgba(184,24,24,0.08);
+    border-color: rgba(184,24,24,0.45);
     color: var(--red);
   }
 

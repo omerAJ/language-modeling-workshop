@@ -33,10 +33,10 @@
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   }
 
-  .flow-box.raw      { border-color: rgba(255,170,85,0.45); color: var(--orange); background: rgba(255,170,85,0.08); }
-  .flow-box.tokzr    { border-color: rgba(180,157,255,0.45); color: var(--purple); background: rgba(180,157,255,0.08); }
-  .flow-box.ids      { border-color: rgba(123,154,255,0.5);  color: var(--accent); background: rgba(123,154,255,0.1); }
-  .flow-box.embed    { border-color: rgba(90,232,142,0.45);  color: var(--green);  background: rgba(90,232,142,0.08); }
+  .flow-box.raw      { border-color: rgba(160,80,0,0.45); color: var(--orange); background: rgba(160,80,0,0.08); }
+  .flow-box.tokzr    { border-color: rgba(90,48,200,0.45); color: var(--purple); background: rgba(90,48,200,0.08); }
+  .flow-box.ids      { border-color: rgba(42,79,214,0.5);  color: var(--accent); background: rgba(42,79,214,0.1); }
+  .flow-box.embed    { border-color: rgba(15,110,47,0.45);  color: var(--green);  background: rgba(15,110,47,0.08); }
 
   .tradeoff-card {
     border-width: 1.25px;
@@ -54,7 +54,7 @@
     margin: 0.3rem 0;
     font-size: var(--fs-xs);
     line-height: 1.45;
-    color: #cfd4e8;
+    color: #1a2050;
   }
   .pc-list.good li::before,
   .pc-list.bad li::before {
@@ -90,7 +90,7 @@
   .token-count-number {
     font-family: 'JetBrains Mono', monospace;
     font-size: var(--fs-xs);
-    color: #dfe4ff;
+    color: #0d1020;
   }
 
   .corpus-card {
@@ -110,7 +110,7 @@
     font-family: 'JetBrains Mono', monospace;
     font-size: var(--fs-2xs);
     line-height: 1.58;
-    color: #dee3f8;
+    color: #0d1020;
     white-space: pre-line;
   }
   .pair-grid {
@@ -124,8 +124,8 @@
     border: 1px solid var(--border);
     border-radius: var(--radius-md);
     padding: 0.45rem 0.55rem;
-    background: rgba(123,154,255,0.08);
-    color: #d2dbff;
+    background: rgba(42,79,214,0.08);
+    color: #0f1a60;
   }
   .pair-chip strong {
     color: var(--accent);
@@ -182,45 +182,45 @@
     border-radius: var(--radius-sm);
     padding: 0.3rem 0.5rem;
     background: var(--surface2);
-    color: #dbe1f6;
+    color: #0d1020;
   }
-  .token-pill.main { border-color: rgba(123,154,255,0.55); color: #d8e0ff; background: rgba(123,154,255,0.12); }
-  .token-pill.reuse { border-color: rgba(90,232,142,0.5); color: #baf5cf; background: rgba(90,232,142,0.12); }
-  .token-pill.flex { border-color: rgba(255,170,85,0.5); color: #ffd8b5; background: rgba(255,170,85,0.12); }
+  .token-pill.main { border-color: rgba(42,79,214,0.55); color: #0d1020; background: rgba(42,79,214,0.12); }
+  .token-pill.reuse { border-color: rgba(15,110,47,0.5); color: #0a3e1a; background: rgba(15,110,47,0.12); }
+  .token-pill.flex { border-color: rgba(160,80,0,0.5); color: #5a2800; background: rgba(160,80,0,0.12); }
   .example-sentence {
     font-family: 'JetBrains Mono', monospace;
     font-size: var(--fs-xs);
     line-height: 1.6;
-    color: #e0e6fb;
+    color: #0f1a60;
     padding: 0.65rem 0.75rem;
     border-radius: var(--radius-md);
     border: 1px solid var(--border);
-    background: rgba(123,154,255,0.08);
+    background: rgba(42,79,214,0.08);
   }
   .sense-sentence {
     font-family: 'JetBrains Mono', monospace;
     font-size: var(--fs-xs);
     line-height: 1.62;
-    color: #e8ecff;
+    color: #0f1a60;
     padding: 0.62rem 0.74rem;
     border-radius: var(--radius-md);
-    border: 1px solid rgba(123,154,255,0.32);
-    background: rgba(123,154,255,0.12);
+    border: 1px solid rgba(42,79,214,0.32);
+    background: rgba(42,79,214,0.12);
   }
   .sense-focus {
     display: inline-block;
     padding: 0.08rem 0.26rem;
     border-radius: var(--radius-sm);
-    border: 1px solid rgba(255,214,68,0.48);
-    background: rgba(255,214,68,0.16);
-    color: #ffe89a;
+    border: 1px solid rgba(106,79,0,0.48);
+    background: rgba(106,79,0,0.16);
+    color: #4a3200;
     font-weight: 700;
   }
   .id-seq {
     font-family: 'JetBrains Mono', monospace;
     font-size: var(--fs-2xs);
     line-height: 1.55;
-    color: #d5deff;
+    color: #0d1020;
     padding: 0.6rem 0.7rem;
     border-radius: var(--radius-md);
     border: 1px solid var(--border);

@@ -13,38 +13,38 @@ html {
   --deck-nav-height: 1.8rem;
 
   /* ── Colours ── */
-  --bg: #0a0d14;
-  --surface: #161923;
-  --surface2: #1e2231;
-  --border: #2a2f42;
-  --text: #f0f1f4;
-  --text-dim: #99a0b8;
-  --accent: #7b9aff;
-  --accent-glow: rgba(123,154,255,0.28);
-  --green: #5ae88e;
-  --green-glow: rgba(90,232,142,0.22);
-  --red: #ff7b7b;
-  --orange: #ffaa55;
-  --purple: #b49dff;
-  --yellow: #ffd644;
-  --cyan: #33e0f5;
-  --pink: #ff82c4;
+  --bg: #ffffff;
+  --surface: #f2f4fc;
+  --surface2: #e4e8f5;
+  --border: #5a6490;
+  --text: #0c0e1c;
+  --text-dim: #3a4268;
+  --accent: #1a45c8;
+  --accent-glow: rgba(26,69,200,0.20);
+  --green: #15743c;
+  --green-glow: rgba(21,116,60,0.18);
+  --red: #b81818;
+  --orange: #9e4a00;
+  --purple: #5828b8;
+  --yellow: #8c6c00;
+  --cyan: #006880;
+  --pink: #aa1868;
 
   /* ── Semantic colour backgrounds & borders ── */
-  --accent-bg: rgba(123,154,255,0.08);
-  --accent-border: rgba(123,154,255,0.25);
-  --green-bg: rgba(90,232,142,0.08);
-  --green-border: rgba(90,232,142,0.25);
-  --red-bg: rgba(255,123,123,0.08);
-  --red-border: rgba(255,123,123,0.25);
-  --orange-bg: rgba(255,170,85,0.08);
-  --orange-border: rgba(255,170,85,0.25);
-  --purple-bg: rgba(180,157,255,0.08);
-  --purple-border: rgba(180,157,255,0.25);
-  --cyan-bg: rgba(51,224,245,0.08);
-  --cyan-border: rgba(51,224,245,0.25);
-  --yellow-bg: rgba(255,214,68,0.08);
-  --yellow-border: rgba(255,214,68,0.25);
+  --accent-bg: rgba(26,69,200,0.07);
+  --accent-border: rgba(26,69,200,0.32);
+  --green-bg: rgba(21,116,60,0.07);
+  --green-border: rgba(21,116,60,0.32);
+  --red-bg: rgba(184,24,24,0.07);
+  --red-border: rgba(184,24,24,0.32);
+  --orange-bg: rgba(158,74,0,0.07);
+  --orange-border: rgba(158,74,0,0.32);
+  --purple-bg: rgba(88,40,184,0.07);
+  --purple-border: rgba(88,40,184,0.32);
+  --cyan-bg: rgba(0,104,128,0.07);
+  --cyan-border: rgba(0,104,128,0.32);
+  --yellow-bg: rgba(140,108,0,0.07);
+  --yellow-border: rgba(140,108,0,0.32);
 
   /* ── Typography scale (7 stops) ── */
   --fs-2xl: 2.8rem;   /* h1, hero titles */

@@ -28,7 +28,7 @@
     min-height: 7rem;
     padding: 0.8rem 0.82rem 0.9rem;
     border-radius: var(--radius-lg);
-    border: 1px solid rgba(184,194,221,0.22);
+    border: 1px solid rgba(40,60,130,0.22);
     background:
       radial-gradient(circle at top, rgba(255,255,255,0.025), transparent 54%),
       rgba(10,14,24,0.44);
@@ -119,8 +119,8 @@
     min-height: 1.9rem;
     padding: 0.34rem 0.78rem;
     border-radius: 999px;
-    border: 1px solid rgba(184,194,221,0.22);
-    background: rgba(184,194,221,0.06);
+    border: 1px solid rgba(40,60,130,0.22);
+    background: rgba(40,60,130,0.06);
     color: rgba(219,229,255,0.94);
     font-family: 'JetBrains Mono', monospace;
     font-size: var(--fs-2xs);
@@ -234,9 +234,9 @@
     position: relative;
     width: 100%;
     padding: 0.16rem;
-    border: 1px solid rgba(184,194,221,0.28);
+    border: 1px solid rgba(40,60,130,0.28);
     border-radius: var(--radius-md);
-    background: rgba(184,194,221,0.05);
+    background: rgba(40,60,130,0.05);
     overflow: hidden;
   
 }
@@ -313,15 +313,15 @@
 
 .attn25-bag-row[data-token="on"] .attn19-token-chip,
   .attn25-fix-row[data-token="on"] .attn19-token-chip {
-    border-color: rgba(255,214,68,0.46);
-    background: rgba(255,214,68,0.08);
+    border-color: rgba(106,79,0,0.46);
+    background: rgba(106,79,0,0.08);
   
 }
 
 .attn25-bag-row[data-token="mat"] .attn19-token-chip,
   .attn25-fix-row[data-token="mat"] .attn19-token-chip {
-    border-color: rgba(51,224,245,0.44);
-    background: rgba(51,224,245,0.08);
+    border-color: rgba(0,120,144,0.44);
+    background: rgba(0,120,144,0.08);
   
 }
 
@@ -335,8 +335,8 @@
 }
 
 #attn25-note-bag {
-    border-color: rgba(255,214,68,0.34);
-    background: rgba(255,214,68,0.1);
+    border-color: rgba(106,79,0,0.34);
+    background: rgba(106,79,0,0.1);
     color: rgba(255,235,164,0.92);
   
 }
@@ -348,8 +348,8 @@
 }
 
 #attn25-note-formula {
-    border-color: rgba(255,214,68,0.38);
-    background: rgba(255,214,68,0.1);
+    border-color: rgba(106,79,0,0.38);
+    background: rgba(106,79,0,0.1);
     color: rgba(255,235,164,0.92);
   
 }
@@ -362,8 +362,8 @@
 }
 
 #attn25-note-saviour {
-    border-color: rgba(255,214,68,0.36);
-    background: rgba(90,232,142,0.1);
+    border-color: rgba(106,79,0,0.36);
+    background: rgba(15,110,47,0.1);
     color: rgba(205,250,221,0.96);
   
 }
@@ -386,7 +386,7 @@
     gap: 0.56rem;
     padding: 0.84rem 0.88rem 0.94rem;
     border-radius: var(--radius-lg);
-    border: 1px solid rgba(184,194,221,0.22);
+    border: 1px solid rgba(40,60,130,0.22);
     background:
       radial-gradient(circle at top, rgba(255,255,255,0.03), transparent 54%),
       rgba(9,13,22,0.44);
@@ -446,8 +446,8 @@
     min-width: 2.7rem;
     padding: 0.18rem 0.28rem;
     border-radius: var(--radius-sm);
-    border: 1px solid rgba(184,194,221,0.22);
-    background: rgba(184,194,221,0.06);
+    border: 1px solid rgba(40,60,130,0.22);
+    background: rgba(40,60,130,0.06);
     color: rgba(206,216,241,0.78);
     font-family: 'JetBrains Mono', monospace;
     font-size: var(--fs-2xs);
@@ -497,14 +497,14 @@
 }
 
 .attn25-fix-row[data-pos-index="3"] .attn19-vector {
-    border-color: rgba(255,214,68,0.5);
-    background: rgba(255,214,68,0.1);
+    border-color: rgba(106,79,0,0.5);
+    background: rgba(106,79,0,0.1);
   
 }
 
 .attn25-fix-row[data-pos-index="4"] .attn19-vector {
-    border-color: rgba(180,157,255,0.52);
-    background: rgba(180,157,255,0.12);
+    border-color: rgba(90,48,200,0.52);
+    background: rgba(90,48,200,0.12);
   
 }
 
@@ -589,8 +589,8 @@
 }
 
 #slide-25.attn25-show-fix .attn25-pos-row[data-pos-index="4"] {
-    border-color: rgba(180,157,255,0.54);
-    background: rgba(180,157,255,0.14);
+    border-color: rgba(90,48,200,0.54);
+    background: rgba(90,48,200,0.14);
     color: rgba(228,220,255,0.96);
   
 }

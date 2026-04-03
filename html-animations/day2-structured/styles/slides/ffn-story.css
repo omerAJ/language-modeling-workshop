@@ -4,8 +4,8 @@
   display: grid;
   gap: 0.84rem;
   background:
-    radial-gradient(circle at 82% 12%, rgba(51, 224, 245, 0.08), transparent 32%),
-    radial-gradient(circle at 18% 14%, rgba(180, 157, 255, 0.06), transparent 34%),
+    radial-gradient(circle at 82% 12%, rgba(0, 120, 144, 0.08), transparent 32%),
+    radial-gradient(circle at 18% 14%, rgba(90, 48, 200, 0.06), transparent 34%),
     var(--surface);
 }
 
@@ -29,13 +29,13 @@
 }
 
 .ffn27-role-attn {
-  border: 1px solid rgba(180, 157, 255, 0.32);
-  background: rgba(180, 157, 255, 0.1);
+  border: 1px solid rgba(90, 48, 200, 0.32);
+  background: rgba(90, 48, 200, 0.1);
 }
 
 .ffn27-role-ffn {
-  border: 1px solid rgba(51, 224, 245, 0.3);
-  background: rgba(51, 224, 245, 0.08);
+  border: 1px solid rgba(0, 120, 144, 0.3);
+  background: rgba(0, 120, 144, 0.08);
 }
 
 .ffn27-role-title {
@@ -46,26 +46,26 @@
   text-transform: uppercase;
 }
 
-.ffn27-role-attn .ffn27-role-title { color: #d4c8ff; }
-.ffn27-role-ffn .ffn27-role-title { color: #dff7ff; }
+.ffn27-role-attn .ffn27-role-title { color: #2e1a80; }
+.ffn27-role-ffn .ffn27-role-title { color: #003844; }
 
 .ffn27-role-desc {
   font-size: var(--fs-xs);
-  color: rgba(226, 235, 255, 0.92);
+  color: rgba(10, 20, 80, 0.92);
   line-height: 1.45;
 }
 
 .ffn27-role-detail {
   font-size: var(--fs-2xs);
   font-style: italic;
-  color: rgba(196, 206, 230, 0.72);
+  color: rgba(30, 50, 120, 0.72);
 }
 
 .ffn27-role-arrow {
   font-family: 'JetBrains Mono', monospace;
   font-size: 1.2rem;
   font-weight: 700;
-  color: rgba(194, 205, 230, 0.62);
+  color: rgba(30, 50, 120, 0.62);
   flex: 0 0 auto;
 }
 
@@ -73,15 +73,15 @@
 .ffn27-analogy-card {
   padding: 0.78rem 0.92rem;
   border-radius: var(--radius-md);
-  border: 1px solid rgba(123, 154, 255, 0.2);
-  background: rgba(18, 24, 40, 0.5);
+  border: 1px solid rgba(42, 79, 214, 0.2);
+  background: rgba(210, 218, 244, 0.5);
   margin-top: 0.42rem;
 }
 
 .ffn27-analogy-card p {
   font-size: var(--fs-xs);
   line-height: 1.6;
-  color: rgba(216, 226, 248, 0.9);
+  color: rgba(10, 20, 80, 0.9);
   margin: 0;
 }
 
@@ -89,8 +89,8 @@
 .ffn27-flow-section {
   padding: 0.78rem 0.88rem;
   border-radius: var(--radius-md);
-  border: 1px solid rgba(51, 224, 245, 0.22);
-  background: rgba(18, 24, 40, 0.48);
+  border: 1px solid rgba(0, 120, 144, 0.22);
+  background: rgba(210, 218, 244, 0.48);
   display: grid;
   gap: 0.52rem;
 }
@@ -101,7 +101,7 @@
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  color: rgba(214, 224, 250, 0.94);
+  color: rgba(10, 20, 80, 0.94);
   text-align: center;
 }
 
@@ -130,56 +130,56 @@
 
 .ffn27-flow-dim {
   font-size: 0.62rem;
-  color: rgba(196, 206, 230, 0.72);
+  color: rgba(30, 50, 120, 0.72);
 }
 
 .ffn27-flow-input,
 .ffn27-flow-output {
-  border: 1px solid rgba(123, 154, 255, 0.28);
-  background: rgba(123, 154, 255, 0.1);
-  color: #dbe4ff;
+  border: 1px solid rgba(42, 79, 214, 0.28);
+  background: rgba(42, 79, 214, 0.1);
+  color: #0d1020;
 }
 
 .ffn27-flow-expand {
-  border: 1px solid rgba(51, 224, 245, 0.28);
-  background: rgba(51, 224, 245, 0.1);
-  color: #dff7ff;
+  border: 1px solid rgba(0, 120, 144, 0.28);
+  background: rgba(0, 120, 144, 0.1);
+  color: #003844;
 }
 
 .ffn27-flow-act {
-  border: 1px solid rgba(255, 214, 112, 0.28);
-  background: rgba(255, 214, 112, 0.08);
-  color: #fff1bc;
+  border: 1px solid rgba(100, 75, 0, 0.28);
+  background: rgba(100, 75, 0, 0.08);
+  color: #4a3000;
 }
 
 .ffn27-flow-contract {
-  border: 1px solid rgba(180, 157, 255, 0.28);
-  background: rgba(180, 157, 255, 0.08);
-  color: #d4c8ff;
+  border: 1px solid rgba(90, 48, 200, 0.28);
+  background: rgba(90, 48, 200, 0.08);
+  color: #2e1a80;
 }
 
 .ffn27-flow-arrow {
   font-family: 'JetBrains Mono', monospace;
   font-size: 0.9rem;
   font-weight: 700;
-  color: rgba(194, 205, 230, 0.62);
+  color: rgba(30, 50, 120, 0.62);
   flex: 0 0 auto;
 }
 
 .ffn27-flow-formula {
   text-align: center;
   font-size: var(--fs-xs);
-  color: #f3fbff;
+  color: #0d1020;
   padding: 0.32rem 0.56rem;
   border-radius: var(--radius-sm);
-  border: 1px solid rgba(123, 154, 255, 0.18);
-  background: rgba(123, 154, 255, 0.06);
+  border: 1px solid rgba(42, 79, 214, 0.18);
+  background: rgba(42, 79, 214, 0.06);
 }
 
 .ffn27-flow-note {
   text-align: center;
   font-size: var(--fs-2xs);
-  color: rgba(216, 226, 248, 0.82);
+  color: rgba(10, 20, 80, 0.82);
   line-height: 1.5;
 }
 

@@ -17,8 +17,8 @@
     border: 1px solid var(--border);
     white-space: nowrap;
   }
-  .tok.input  { border-color: var(--accent); background: rgba(123,154,255,0.12); }
-  .tok.target { border-color: var(--green);  background: rgba(90,232,142,0.12); color: var(--green); font-weight: 600; }
+  .tok.input  { border-color: var(--accent); background: rgba(26,69,200,0.08); }
+  .tok.target { border-color: var(--green);  background: rgba(21,116,60,0.08); color: var(--green); font-weight: 600; }
   .tok.blank  { border: 2px dashed var(--orange); color: var(--orange); min-width: 3.75rem; justify-content: center; cursor: pointer; }
 .tok.done   { border: 1px solid var(--text-dim); color: var(--text-dim); cursor: default; opacity: 0.5; }
 

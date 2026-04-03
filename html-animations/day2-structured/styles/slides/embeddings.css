@@ -6,7 +6,7 @@
   .matrix-shape-label {
     font-family: 'JetBrains Mono', monospace;
     font-size: var(--fs-2xs);
-    color: #d5dcf7;
+    color: #1a2050;
     margin-top: 0.55rem;
     margin-bottom: 0.05rem;
   }
@@ -19,8 +19,8 @@
   .embed-row.selected-row {
     padding: 0.3rem 0.35rem;
     border-radius: var(--radius-md);
-    border: 1px solid rgba(123,154,255,0.34);
-    background: rgba(123,154,255,0.08);
+    border: 1px solid rgba(42,79,214,0.34);
+    background: rgba(42,79,214,0.08);
   }
   .embed-row.matrix-ellipsis-row {
     opacity: 0.58;
@@ -28,17 +28,17 @@
   .embed-key {
     font-family: 'JetBrains Mono', monospace;
     font-size: var(--fs-2xs);
-    color: #d8e0ff;
-    border: 1px solid rgba(123,154,255,0.42);
-    background: rgba(123,154,255,0.12);
+    color: #0d1020;
+    border: 1px solid rgba(42,79,214,0.42);
+    background: rgba(42,79,214,0.12);
     border-radius: var(--radius-sm);
     padding: 0.32rem 0.45rem;
     text-align: center;
   }
   .embed-key.dim {
-    color: #afbadf;
-    border-color: rgba(123,154,255,0.26);
-    background: rgba(123,154,255,0.06);
+    color: #3a4a70;
+    border-color: rgba(42,79,214,0.26);
+    background: rgba(42,79,214,0.06);
   }
   .vec-chip-group {
     display: flex;
@@ -48,27 +48,27 @@
   .vec-chip {
     font-family: 'JetBrains Mono', monospace;
     font-size: var(--fs-2xs);
-    color: #d9ffe7;
-    border: 1px solid rgba(90,232,142,0.45);
-    background: rgba(90,232,142,0.12);
+    color: #084020;
+    border: 1px solid rgba(15,110,47,0.45);
+    background: rgba(15,110,47,0.12);
     border-radius: 0.4rem;
     padding: 0.24rem 0.38rem;
   }
   .vec-chip.dim {
-    color: #b7c3e8;
-    border-color: rgba(123,154,255,0.24);
-    background: rgba(123,154,255,0.08);
+    color: #2a3560;
+    border-color: rgba(42,79,214,0.24);
+    background: rgba(42,79,214,0.08);
   }
   .vec-chip.token-label {
-    color: #fff1b9;
-    border-color: rgba(255,214,68,0.48);
-    background: rgba(255,214,68,0.18);
+    color: #4a3000;
+    border-color: rgba(106,79,0,0.48);
+    background: rgba(106,79,0,0.18);
   }
   .projection-card {
-    border-color: rgba(123,154,255,0.34);
+    border-color: rgba(42,79,214,0.34);
     background:
-      radial-gradient(circle at 15% 12%, rgba(123,154,255,0.1), transparent 40%),
-      radial-gradient(circle at 85% 85%, rgba(180,157,255,0.08), transparent 45%),
+      radial-gradient(circle at 15% 12%, rgba(42,79,214,0.1), transparent 40%),
+      radial-gradient(circle at 85% 85%, rgba(90,48,200,0.08), transparent 45%),
       var(--surface);
   }
   .projection-toolbar {
@@ -86,19 +86,19 @@
     border-radius: var(--radius-md);
     padding: 0.4rem 0.68rem;
     background: var(--surface2);
-    color: #dbe3ff;
+    color: #0d1020;
     cursor: pointer;
     transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease;
   }
   .lens-btn:hover {
-    border-color: rgba(123,154,255,0.6);
-    background: rgba(123,154,255,0.14);
+    border-color: rgba(42,79,214,0.6);
+    background: rgba(42,79,214,0.14);
     transform: translateY(-1px);
   }
   .lens-btn.active {
-    border-color: rgba(90,232,142,0.6);
-    background: rgba(90,232,142,0.18);
-    color: #d7ffe8;
+    border-color: rgba(15,110,47,0.6);
+    background: rgba(15,110,47,0.18);
+    color: #084020;
   }
   .projection-body {
     display: grid;
@@ -125,11 +125,11 @@
     margin-top: 0.5rem;
   }
   .projection-stage {
-    border: 1px solid rgba(123,154,255,0.3);
+    border: 1px solid rgba(42,79,214,0.3);
     border-radius: var(--radius-md);
     background:
-      linear-gradient(0deg, rgba(123,154,255,0.06) 1px, transparent 1px) 0 0 / 1.65rem 1.65rem,
-      linear-gradient(90deg, rgba(123,154,255,0.06) 1px, transparent 1px) 0 0 / 1.65rem 1.65rem,
+      linear-gradient(0deg, rgba(42,79,214,0.06) 1px, transparent 1px) 0 0 / 1.65rem 1.65rem,
+      linear-gradient(90deg, rgba(42,79,214,0.06) 1px, transparent 1px) 0 0 / 1.65rem 1.65rem,
       rgba(13,18,30,0.9);
     min-height: 15rem;
     aspect-ratio: 16 / 9;
@@ -145,8 +145,8 @@
     margin-top: 0.7rem;
     padding: 0.65rem 0.72rem;
     border-radius: var(--radius-md);
-    border: 1px solid rgba(123,154,255,0.28);
-    background: rgba(123,154,255,0.1);
+    border: 1px solid rgba(42,79,214,0.28);
+    background: rgba(42,79,214,0.1);
     transition: opacity 0.2s ease, transform 0.2s ease;
   }
   .projection-readout.updating {
@@ -162,26 +162,26 @@
   .neighbor-chip {
     font-family: 'JetBrains Mono', monospace;
     font-size: var(--fs-2xs);
-    border: 1px solid rgba(90,232,142,0.45);
+    border: 1px solid rgba(15,110,47,0.45);
     border-radius: var(--radius-sm);
     padding: 0.23rem 0.42rem;
-    color: #d7ffe8;
-    background: rgba(90,232,142,0.12);
+    color: #084020;
+    background: rgba(15,110,47,0.12);
   }
   .projection-note {
     margin-top: 0.6rem;
     font-size: var(--fs-xs);
-    color: #d1d8f4;
+    color: #1a2050;
     line-height: 1.5;
   }
   .math-note {
     font-family: 'JetBrains Mono', monospace;
     font-size: var(--fs-2xs);
-    color: #d7deff;
+    color: #0d1020;
     padding: 0.48rem 0.56rem;
     border-radius: var(--radius-md);
-    border: 1px solid rgba(123,154,255,0.34);
-    background: rgba(123,154,255,0.1);
+    border: 1px solid rgba(42,79,214,0.34);
+    background: rgba(42,79,214,0.1);
     margin-top: 0.55rem;
   }
 

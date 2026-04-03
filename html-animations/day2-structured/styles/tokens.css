@@ -27,18 +27,18 @@
   --radius-full: 999px;     /* badges, circular elements */
 
   /* ── Semantic color backgrounds ── */
-  --accent-bg:    rgba(123,154,255,0.10);
-  --accent-border: rgba(123,154,255,0.25);
-  --green-bg:     rgba(90,232,142,0.10);
-  --green-border:  rgba(90,232,142,0.25);
-  --red-bg:       rgba(255,123,123,0.10);
-  --red-border:    rgba(255,123,123,0.25);
-  --orange-bg:    rgba(255,170,85,0.10);
-  --orange-border: rgba(255,170,85,0.25);
-  --purple-bg:    rgba(180,157,255,0.10);
-  --purple-border: rgba(180,157,255,0.25);
-  --cyan-bg:      rgba(51,224,245,0.10);
-  --cyan-border:   rgba(51,224,245,0.25);
-  --yellow-bg:    rgba(255,214,68,0.10);
-  --yellow-border: rgba(255,214,68,0.25);
+  --accent-bg:    rgba(42,79,214,0.08);
+  --accent-border: rgba(42,79,214,0.40);
+  --green-bg:     rgba(15,110,47,0.08);
+  --green-border:  rgba(15,110,47,0.40);
+  --red-bg:       rgba(192,28,28,0.08);
+  --red-border:    rgba(192,28,28,0.40);
+  --orange-bg:    rgba(160,80,0,0.08);
+  --orange-border: rgba(160,80,0,0.40);
+  --purple-bg:    rgba(90,48,200,0.08);
+  --purple-border: rgba(90,48,200,0.40);
+  --cyan-bg:      rgba(0,120,144,0.08);
+  --cyan-border:   rgba(0,120,144,0.40);
+  --yellow-bg:    rgba(106,79,0,0.08);
+  --yellow-border: rgba(106,79,0,0.40);
 }

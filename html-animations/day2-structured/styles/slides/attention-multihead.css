@@ -127,9 +127,9 @@
     height: var(--attn24-head-slot-body-h);
     max-height: var(--attn24-head-slot-body-h);
     padding: 0.45rem;
-    border: 1px dashed rgba(184,194,221,0.32);
+    border: 1px dashed rgba(40,60,130,0.32);
     border-radius: var(--radius-sm);
-    background: rgba(6, 10, 18, 0.28);
+    background: rgba(60, 70, 130, 0.18);
     box-sizing: border-box;
 
 }
@@ -236,7 +236,7 @@
     font-size: var(--fs-2xs);
     font-weight: 700;
     letter-spacing: 0.02em;
-    fill: rgba(220,230,252,0.96);
+    fill: rgba(10,20,80,0.96);
     text-anchor: middle;
     dominant-baseline: middle;
     pointer-events: none;
@@ -316,9 +316,9 @@
   .attn24-head-qkv-shell,
   .attn24-head-output-shell {
     position: relative;
-    border: 1px solid rgba(184,194,221,0.28);
+    border: 1px solid rgba(40,60,130,0.28);
     border-radius: var(--radius-sm);
-    background: rgba(184,194,221,0.05);
+    background: rgba(40,60,130,0.05);
     overflow: hidden;
 
 }
@@ -419,7 +419,7 @@
     gap: 0.32rem;
     padding: 0.4rem 0.52rem 0.44rem;
     border-radius: var(--radius-md);
-    border: 1px solid rgba(184,194,221,0.24);
+    border: 1px solid rgba(40,60,130,0.24);
     background:
       radial-gradient(circle at top, rgba(255,255,255,0.03), transparent 52%),
       rgba(9,13,22,0.42);
@@ -537,7 +537,7 @@
 }
 
 .attn24-head-mini-x-label {
-    color: rgba(184,194,221,0.82);
+    color: rgba(40,60,130,0.82);
     transform: translateX(-0.7rem);
 
 }
@@ -551,7 +551,7 @@
 .attn24-head-mini-x-row .attn19-vector {
     height: var(--attn24-struct-row-h);
     border-color: rgba(206,216,242,0.44);
-    background: rgba(184,194,221,0.13);
+    background: rgba(40,60,130,0.13);
 
 }
 
@@ -571,7 +571,7 @@
 }
 
 .attn24-head-dummy-x-label {
-    color: rgba(184,194,221,0.8);
+    color: rgba(40,60,130,0.8);
     line-height: 1;
     grid-row: 1;
     align-self: end;
@@ -585,7 +585,7 @@
     height: var(--attn24-proj-shell-h);
     border: 1px solid rgba(206,216,242,0.4);
     border-radius: var(--radius-sm);
-    background: rgba(184,194,221,0.11);
+    background: rgba(40,60,130,0.11);
     overflow: hidden;
 
 }
@@ -690,7 +690,7 @@
     height: var(--attn24-proj-shell-h);
     border: 1px solid rgba(206,216,242,0.42);
     border-radius: var(--radius-sm);
-    background: rgba(184,194,221,0.1);
+    background: rgba(40,60,130,0.1);
     overflow: hidden;
 
 }
@@ -780,7 +780,7 @@
 .attn24-head-qkv-row .attn19-vector {
     height: var(--attn24-struct-row-h);
     border-color: rgba(206,216,242,0.46);
-    background: rgba(184,194,221,0.12);
+    background: rgba(40,60,130,0.12);
 
 }
 
@@ -811,15 +811,15 @@
 }
 
 .attn24-head-qkv-wrap[data-proj="v"] .attn24-head-qkv-label {
-    color: rgba(184,194,221,0.84);
+    color: rgba(40,60,130,0.84);
     grid-row: 1;
     align-self: end;
 
 }
 
 .attn24-head-qkv-wrap[data-proj="v"] .attn19-vector {
-    border-color: rgba(184,194,221,0.42);
-    background: rgba(184,194,221,0.08);
+    border-color: rgba(40,60,130,0.42);
+    background: rgba(40,60,130,0.08);
 
 }
 
@@ -1023,9 +1023,9 @@
     position: relative;
     width: var(--attn24-concat-w);
     padding: 0.08rem;
-    border: 1px solid rgba(184,194,221,0.28);
+    border: 1px solid rgba(40,60,130,0.28);
     border-radius: var(--radius-sm);
-    background: rgba(184,194,221,0.05);
+    background: rgba(40,60,130,0.05);
     overflow: hidden;
 
 }
@@ -1055,7 +1055,7 @@
         rgba(var(--attn19-focus-rgb), 0.14) 50%,
         rgba(var(--attn19-source-rgb), 0.14) 50%,
         rgba(var(--attn19-source-rgb), 0.14) 100%);
-    border-color: rgba(184,194,221,0.42);
+    border-color: rgba(40,60,130,0.42);
 
 }
 
@@ -1117,9 +1117,9 @@
     position: relative;
     width: var(--attn24-wo-w);
     height: var(--attn24-wo-h);
-    border: 1px solid rgba(184,194,221,0.28);
+    border: 1px solid rgba(40,60,130,0.28);
     border-radius: var(--radius-sm);
-    background: rgba(184,194,221,0.05);
+    background: rgba(40,60,130,0.05);
     overflow: hidden;
 
 }
@@ -1133,7 +1133,7 @@
 .attn24-wo-grid-v,
   .attn24-wo-grid-h {
     position: absolute;
-    background: rgba(184,194,221,0.2);
+    background: rgba(40,60,130,0.2);
     pointer-events: none;
 
 }
@@ -1153,8 +1153,8 @@
 }
 
 .attn24-final-output-vector {
-    border-color: rgba(184,194,221,0.46);
-    background: rgba(184,194,221,0.1);
+    border-color: rgba(40,60,130,0.46);
+    background: rgba(40,60,130,0.1);
 
 }
 

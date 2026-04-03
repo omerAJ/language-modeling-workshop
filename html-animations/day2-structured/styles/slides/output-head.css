@@ -72,8 +72,8 @@
 
 /* — Zone 2: LM Head — */
 .pred32-head-zone {
-  border: 1px solid rgba(123, 154, 255, 0.3);
-  background: rgba(123, 154, 255, 0.05);
+  border: 1px solid rgba(42, 79, 214, 0.3);
+  background: rgba(42, 79, 214, 0.05);
 }
 
 .pred32-zone-title {
@@ -90,10 +90,10 @@
 
 .pred32-formula {
   font-size: var(--fs-sm);
-  color: rgba(214, 224, 250, 0.9);
+  color: rgba(10, 20, 80, 0.9);
   font-family: 'JetBrains Mono', monospace;
   padding: 0.2rem 0.7rem;
-  background: rgba(123, 154, 255, 0.08);
+  background: rgba(42, 79, 214, 0.08);
   border-radius: var(--radius-sm);
 }
 
@@ -132,7 +132,7 @@
 
 .pred32-bar.is-top {
   background: var(--accent);
-  box-shadow: 0 0 8px rgba(123, 154, 255, 0.35);
+  box-shadow: 0 0 8px rgba(42, 79, 214, 0.35);
 }
 
 .pred32-bar-label {
@@ -143,13 +143,13 @@
 
 /* — Zone 3: Selected token — */
 .pred32-select-zone {
-  border: 1px solid rgba(90, 232, 142, 0.25);
-  background: rgba(90, 232, 142, 0.04);
+  border: 1px solid rgba(15, 110, 47, 0.25);
+  background: rgba(15, 110, 47, 0.04);
 }
 
 .pred32-selected-token {
-  background: rgba(90, 232, 142, 0.15) !important;
-  border-color: rgba(90, 232, 142, 0.4) !important;
+  background: rgba(15, 110, 47, 0.15) !important;
+  border-color: rgba(15, 110, 47, 0.4) !important;
   color: var(--green) !important;
   font-size: var(--fs-base) !important;
   padding: 0.3rem 0.8rem !important;
@@ -230,10 +230,10 @@
 .close33-summary-band {
   padding: 0.54rem 0.7rem;
   border-radius: var(--radius-md);
-  border: 1px solid rgba(123, 154, 255, 0.22);
-  background: rgba(123, 154, 255, 0.08);
+  border: 1px solid rgba(42, 79, 214, 0.22);
+  background: rgba(42, 79, 214, 0.08);
   font-size: var(--fs-xs);
-  color: #dbe4ff;
+  color: #0d1020;
   line-height: 1.36;
   text-align: center;
 }
@@ -301,28 +301,28 @@
 
 /* — Per-topic accent colors — */
 .close33-insight-blue {
-  border-color: rgba(123, 154, 255, 0.3);
+  border-color: rgba(42, 79, 214, 0.3);
 }
 .close33-insight-blue .close33-insight-title {
   color: var(--accent);
 }
 
 .close33-insight-purple {
-  border-color: rgba(180, 157, 255, 0.3);
+  border-color: rgba(90, 48, 200, 0.3);
 }
 .close33-insight-purple .close33-insight-title {
   color: var(--purple);
 }
 
 .close33-insight-cyan {
-  border-color: rgba(51, 224, 245, 0.3);
+  border-color: rgba(0, 120, 144, 0.3);
 }
 .close33-insight-cyan .close33-insight-title {
   color: var(--cyan);
 }
 
 .close33-insight-green {
-  border-color: rgba(90, 232, 142, 0.3);
+  border-color: rgba(15, 110, 47, 0.3);
 }
 .close33-insight-green .close33-insight-title {
   color: var(--green);
@@ -341,33 +341,33 @@
 }
 
 .gen33-seg-embed {
-  background: rgba(123, 154, 255, 0.15);
-  color: #b4c6ff;
-  border: 1px solid rgba(123, 154, 255, 0.25);
+  background: rgba(42, 79, 214, 0.15);
+  color: #0a1a80;
+  border: 1px solid rgba(42, 79, 214, 0.25);
 }
 
 .gen33-seg-position {
-  background: rgba(255, 214, 68, 0.12);
-  color: #ffe68a;
-  border: 1px solid rgba(255, 214, 68, 0.22);
+  background: rgba(106, 79, 0, 0.12);
+  color: #4a3200;
+  border: 1px solid rgba(106, 79, 0, 0.22);
 }
 
 .gen33-seg-norm {
-  background: rgba(153, 160, 184, 0.1);
+  background: rgba(61, 69, 112, 0.1);
   color: var(--text-dim);
-  border: 1px solid rgba(153, 160, 184, 0.2);
+  border: 1px solid rgba(61, 69, 112, 0.2);
 }
 
 .gen33-seg-attn {
-  background: rgba(180, 157, 255, 0.14);
-  color: #d4c8ff;
-  border: 1px solid rgba(180, 157, 255, 0.24);
+  background: rgba(90, 48, 200, 0.14);
+  color: #2e1a80;
+  border: 1px solid rgba(90, 48, 200, 0.24);
 }
 
 .gen33-seg-ffn {
-  background: rgba(51, 224, 245, 0.1);
-  color: #8af0fa;
-  border: 1px solid rgba(51, 224, 245, 0.2);
+  background: rgba(0, 120, 144, 0.1);
+  color: #003844;
+  border: 1px solid rgba(0, 120, 144, 0.2);
 }
 
 .gen33-seg-add {
@@ -376,15 +376,15 @@
 }
 
 .gen33-seg-head {
-  background: rgba(90, 232, 142, 0.12);
-  color: #b4f5cb;
-  border: 1px solid rgba(90, 232, 142, 0.22);
+  background: rgba(15, 110, 47, 0.12);
+  color: #084020;
+  border: 1px solid rgba(15, 110, 47, 0.22);
 }
 
 .gen33-seg-decode {
-  background: rgba(90, 232, 142, 0.18);
-  color: #d4f6df;
-  border: 1px solid rgba(90, 232, 142, 0.3);
+  background: rgba(15, 110, 47, 0.18);
+  color: #084020;
+  border: 1px solid rgba(15, 110, 47, 0.3);
   font-weight: 700;
 }
 

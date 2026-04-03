@@ -12,16 +12,16 @@
   display: flex;
   flex-direction: column;
   gap: 0.72rem;
-  border-color: rgba(51, 224, 245, 0.18);
+  border-color: rgba(0, 120, 144, 0.18);
   background:
-    radial-gradient(circle at 16% 14%, rgba(51, 224, 245, 0.08), transparent 36%),
+    radial-gradient(circle at 16% 14%, rgba(0, 120, 144, 0.08), transparent 36%),
     var(--surface);
 }
 
 .ffn26-section {
-  border: 1px solid rgba(123, 154, 255, 0.16);
+  border: 1px solid rgba(42, 79, 214, 0.16);
   border-radius: var(--radius-md);
-  background: rgba(18, 24, 40, 0.44);
+  background: rgba(210, 218, 244, 0.44);
   padding: 0.78rem 0.82rem;
 }
 
@@ -30,7 +30,7 @@
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: rgba(191, 208, 248, 0.86);
+  color: rgba(20, 40, 120, 0.86);
   margin-bottom: 0.55rem;
 }
 
@@ -56,20 +56,20 @@
 }
 
 .ffn26-role-box.attn {
-  border-color: rgba(180, 157, 255, 0.42);
-  background: rgba(180, 157, 255, 0.12);
+  border-color: rgba(90, 48, 200, 0.42);
+  background: rgba(90, 48, 200, 0.12);
   color: var(--purple);
 }
 
 .ffn26-role-box.ffn {
-  border-color: rgba(51, 224, 245, 0.42);
-  background: rgba(51, 224, 245, 0.12);
+  border-color: rgba(0, 120, 144, 0.42);
+  background: rgba(0, 120, 144, 0.12);
   color: var(--cyan);
 }
 
 .ffn26-flow-arrow {
   font-size: 1rem;
-  color: rgba(191, 208, 248, 0.72);
+  color: rgba(20, 40, 120, 0.72);
   line-height: 1;
 }
 
@@ -82,12 +82,12 @@
 
 .ffn26-role-note {
   border-radius: var(--radius-md);
-  border: 1px solid rgba(123, 154, 255, 0.18);
-  background: rgba(123, 154, 255, 0.08);
+  border: 1px solid rgba(42, 79, 214, 0.18);
+  background: rgba(42, 79, 214, 0.08);
   padding: 0.56rem 0.64rem;
   font-size: var(--fs-2xs);
   line-height: 1.5;
-  color: #dbe4ff;
+  color: #0d1020;
 }
 
 .ffn26-rowwise-grid {
@@ -100,8 +100,8 @@
 
 .ffn26-matrix-card {
   border-radius: var(--radius-md);
-  border: 1px solid rgba(123, 154, 255, 0.2);
-  background: rgba(123, 154, 255, 0.06);
+  border: 1px solid rgba(42, 79, 214, 0.2);
+  background: rgba(42, 79, 214, 0.06);
   padding: 0.65rem 0.68rem;
 }
 
@@ -110,14 +110,14 @@
   font-weight: 700;
   letter-spacing: 0.04em;
   text-transform: uppercase;
-  color: rgba(191, 208, 248, 0.88);
+  color: rgba(20, 40, 120, 0.88);
 }
 
 .ffn26-mini-dims {
   margin-top: 0.12rem;
   font-family: 'JetBrains Mono', monospace;
   font-size: var(--fs-2xs);
-  color: rgba(166, 178, 208, 0.82);
+  color: rgba(30, 50, 120, 0.82);
 }
 
 .ffn26-matrix-rows {
@@ -137,7 +137,7 @@
 .ffn26-matrix-label {
   font-family: 'JetBrains Mono', monospace;
   font-size: var(--fs-2xs);
-  color: rgba(220, 230, 252, 0.92);
+  color: rgba(10, 20, 80, 0.92);
   text-align: right;
 }
 
@@ -145,8 +145,8 @@
   position: relative;
   height: 0.88rem;
   border-radius: var(--radius-sm);
-  border: 1px solid rgba(123, 154, 255, 0.3);
-  background: rgba(123, 154, 255, 0.12);
+  border: 1px solid rgba(42, 79, 214, 0.3);
+  background: rgba(42, 79, 214, 0.12);
   overflow: hidden;
 }
 
@@ -159,7 +159,7 @@
   top: 0;
   bottom: 0;
   width: 1px;
-  background: rgba(10, 13, 20, 0.28);
+  background: rgba(60, 70, 130, 0.20);
 }
 
 .ffn26-matrix-row.is-focus {
@@ -167,20 +167,20 @@
 }
 
 .ffn26-matrix-row.is-focus .ffn26-matrix-bar {
-  border-color: rgba(51, 224, 245, 0.7);
-  background: rgba(51, 224, 245, 0.14);
-  box-shadow: 0 0 0 0.08rem rgba(51, 224, 245, 0.12);
+  border-color: rgba(0, 120, 144, 0.7);
+  background: rgba(0, 120, 144, 0.14);
+  box-shadow: 0 0 0 0.08rem rgba(0, 120, 144, 0.12);
 }
 
 .ffn26-focus-chip {
   justify-self: center;
   min-width: 8rem;
   border-radius: 999px;
-  border: 1px solid rgba(51, 224, 245, 0.28);
-  background: rgba(51, 224, 245, 0.1);
+  border: 1px solid rgba(0, 120, 144, 0.28);
+  background: rgba(0, 120, 144, 0.1);
   padding: 0.5rem 0.85rem;
   font-size: var(--fs-xs);
-  color: #dff7ff;
+  color: #003844;
   text-align: center;
 }
 
@@ -188,7 +188,7 @@
   margin-top: 0.58rem;
   font-size: var(--fs-2xs);
   line-height: 1.5;
-  color: #dbe4ff;
+  color: #0d1020;
   text-align: center;
 }
 
@@ -208,33 +208,33 @@
 
 .ffn26-mlp-chip {
   border-radius: 999px;
-  border: 1px solid rgba(123, 154, 255, 0.28);
-  background: rgba(123, 154, 255, 0.1);
+  border: 1px solid rgba(42, 79, 214, 0.28);
+  background: rgba(42, 79, 214, 0.1);
   padding: 0.44rem 0.7rem;
   font-family: 'JetBrains Mono', monospace;
   font-size: var(--fs-2xs);
-  color: #dce6ff;
+  color: #0d1020;
 }
 
 .ffn26-op-card {
   min-width: 8rem;
   border-radius: var(--radius-md);
-  border: 1px solid rgba(51, 224, 245, 0.24);
-  background: rgba(51, 224, 245, 0.08);
+  border: 1px solid rgba(0, 120, 144, 0.24);
+  background: rgba(0, 120, 144, 0.08);
   padding: 0.44rem 0.64rem;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 0.12rem;
-  color: #dff7ff;
+  color: #003844;
 }
 
 .ffn26-op-gelu {
   min-width: 5.6rem;
-  border-color: rgba(255, 214, 68, 0.26);
-  background: rgba(255, 214, 68, 0.08);
-  color: #ffe89a;
+  border-color: rgba(106, 79, 0, 0.26);
+  background: rgba(106, 79, 0, 0.08);
+  color: #4a3200;
 }
 
 .ffn26-op-title {
@@ -245,14 +245,14 @@
 .ffn26-op-dims {
   font-family: 'JetBrains Mono', monospace;
   font-size: var(--fs-2xs);
-  color: rgba(220, 230, 252, 0.84);
+  color: rgba(10, 20, 80, 0.84);
 }
 
 .ffn26-equation {
   margin-top: 0.62rem;
   text-align: center;
   font-size: var(--fs-xs);
-  color: #e3ecff;
+  color: #0d1020;
 }
 
 .ffn26-batch-grid {
@@ -288,20 +288,20 @@
 .ffn26-batch-op {
   min-width: 6.2rem;
   border-radius: var(--radius-md);
-  border: 1px solid rgba(51, 224, 245, 0.28);
-  background: rgba(51, 224, 245, 0.08);
+  border: 1px solid rgba(0, 120, 144, 0.28);
+  background: rgba(0, 120, 144, 0.08);
   padding: 0.46rem 0.62rem;
   display: grid;
   justify-items: center;
   gap: 0.14rem;
-  color: #dff7ff;
+  color: #003844;
 }
 
 .ffn26-batch-op-gelu {
   min-width: 5.2rem;
-  border-color: rgba(255, 214, 68, 0.28);
-  background: rgba(255, 214, 68, 0.08);
-  color: #ffe89a;
+  border-color: rgba(106, 79, 0, 0.28);
+  background: rgba(106, 79, 0, 0.08);
+  color: #4a3200;
 }
 
 .ffn26-batch-op-title {
@@ -312,28 +312,28 @@
 .ffn26-batch-op-dims {
   font-family: 'JetBrains Mono', monospace;
   font-size: var(--fs-2xs);
-  color: rgba(220, 230, 252, 0.82);
+  color: rgba(10, 20, 80, 0.82);
 }
 
 .ffn26-batch-card.is-output .ffn26-matrix-bar {
-  border-color: rgba(90, 232, 142, 0.34);
-  background: rgba(90, 232, 142, 0.1);
+  border-color: rgba(15, 110, 47, 0.34);
+  background: rgba(15, 110, 47, 0.1);
 }
 
 .ffn26-batch-card.is-output .ffn26-matrix-label {
-  color: #caf8db;
+  color: #0a3e1a;
 }
 
 .ffn26-takeaway {
   margin-top: 0.82rem;
-  border: 1px solid rgba(123, 154, 255, 0.28);
+  border: 1px solid rgba(42, 79, 214, 0.28);
   border-radius: var(--radius-md);
-  background: rgba(123, 154, 255, 0.1);
+  background: rgba(42, 79, 214, 0.1);
   display: flex;
   align-items: center;
   padding: 0.62rem 0.72rem;
   font-size: var(--fs-xs);
-  color: #dbe4ff;
+  color: #0d1020;
   line-height: 1.45;
   width: min(100%, 56rem);
   margin-left: auto;

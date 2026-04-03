@@ -40,7 +40,7 @@
     position: absolute;
     inset: 0;
     border-radius: inherit;
-    background: radial-grad ient(ellipse at top left, rgba(123,154,255,0.05), transparent 60%);
+    background: radial-gradient(ellipse at top left, rgba(26,69,200,0.04), transparent 60%);
     pointer-events: none;
   }
 
@@ -53,18 +53,18 @@
     font-size: var(--fs-sm);
     line-height: 1.55;
   }
-  .callout.info    { background: var(--accent-bg);  border: 1px solid var(--accent-border); color: #c2d0ff; }
-  .callout.warn    { background: var(--orange-bg);   border: 1px solid var(--orange-border);  color: #ffd4a8; }
-  .callout.success { background: var(--green-bg);   border: 1px solid var(--green-border);  color: #a8f5c8; }
-  .callout.question { background: var(--purple-bg); border: 1px solid var(--purple-border); color: #d4c8ff; }
-  .callout.pink    { background: rgba(255,130,196,0.1);  border: 1px solid rgba(255,130,196,0.22); color: #ffc4e2; }
+  .callout.info    { background: var(--accent-bg);  border: 1px solid var(--accent-border); color: #112580; }
+  .callout.warn    { background: var(--orange-bg);   border: 1px solid var(--orange-border);  color: #6a2e00; }
+  .callout.success { background: var(--green-bg);   border: 1px solid var(--green-border);  color: #0a4a20; }
+  .callout.question { background: var(--purple-bg); border: 1px solid var(--purple-border); color: #340e8a; }
+  .callout.pink    { background: rgba(170,24,104,0.07);  border: 1px solid rgba(170,24,104,0.30); color: #700040; }
   .callout .icon { flex-shrink: 0; font-size: var(--fs-lg); }
   .editor-note {
     margin-top: var(--sp-3);
     max-width: 52rem;
     background: var(--red-bg);
     border: 1px solid var(--red-border);
-    color: #ffc1c1;
+    color: #780000;
     border-radius: var(--radius-md);
     padding: var(--sp-3) var(--sp-4);
     font-size: var(--fs-xs);
@@ -72,7 +72,7 @@
     text-align: left;
   }
   .editor-note strong {
-    color: #ff7b7b;
+    color: var(--red);
     letter-spacing: 0.04em;
   }
 
@@ -91,11 +91,11 @@
     border-radius: var(--radius-full);
     margin-bottom: 0;
   }
-  .badge.day1 { background: rgba(123,154,255,0.18); color: var(--accent); }
-  .badge.activity { background: rgba(90,232,142,0.18); color: var(--green); }
-  .badge.concept { background: rgba(180,157,255,0.18); color: var(--purple); }
-  .badge.discussion { background: rgba(255,170,85,0.18); color: var(--orange); }
-  .badge.deepdive { background: rgba(255,214,68,0.18); color: var(--yellow); }
+  .badge.day1 { background: rgba(26,69,200,0.12); color: var(--accent); }
+  .badge.activity { background: rgba(21,116,60,0.12); color: var(--green); }
+  .badge.concept { background: rgba(88,40,184,0.12); color: var(--purple); }
+  .badge.discussion { background: rgba(158,74,0,0.12); color: var(--orange); }
+  .badge.deepdive { background: rgba(140,108,0,0.12); color: var(--yellow); }
 
 /* ── Grid layouts ── */
 .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-4); }
@@ -143,16 +143,16 @@
     font-size: var(--fs-lg);
     flex-shrink: 0;
   }
-  .flow-box.data    { border-color: rgba(51,224,245,0.45); color: var(--cyan); background: rgba(51,224,245,0.08); }
-  .flow-box.model   { border-color: rgba(123,154,255,0.45); color: var(--accent); background: rgba(123,154,255,0.08); }
-  .flow-box.blue    { border-color: rgba(123,154,255,0.45); color: var(--accent); background: rgba(123,154,255,0.08); }
-  .flow-box.loss    { border-color: rgba(255,123,123,0.45); color: var(--red); background: rgba(255,123,123,0.08); }
-  .flow-box.grad    { border-color: rgba(255,170,85,0.45); color: var(--orange); background: rgba(255,170,85,0.08); }
-  .flow-box.param   { border-color: rgba(180,157,255,0.45); color: var(--purple); background: rgba(180,157,255,0.08); }
-  .flow-box.target  { border-color: rgba(90,232,142,0.55); color: var(--green); background: rgba(90,232,142,0.1); border-style: dashed; }
-  .flow-box.green   { border-color: rgba(90,232,142,0.45); color: var(--green); background: rgba(90,232,142,0.08); }
-  .flow-box.pink    { border-color: rgba(255,130,196,0.45); color: var(--pink); background: rgba(255,130,196,0.08); }
-  .flow-box.yellow  { border-color: rgba(255,214,68,0.45); color: var(--yellow); background: rgba(255,214,68,0.08); }
+  .flow-box.data    { border-color: rgba(0,104,128,0.55); color: var(--cyan); background: rgba(0,104,128,0.07); }
+  .flow-box.model   { border-color: rgba(26,69,200,0.55); color: var(--accent); background: rgba(26,69,200,0.07); }
+  .flow-box.blue    { border-color: rgba(26,69,200,0.55); color: var(--accent); background: rgba(26,69,200,0.07); }
+  .flow-box.loss    { border-color: rgba(184,24,24,0.55); color: var(--red); background: rgba(184,24,24,0.07); }
+  .flow-box.grad    { border-color: rgba(158,74,0,0.55); color: var(--orange); background: rgba(158,74,0,0.07); }
+  .flow-box.param   { border-color: rgba(88,40,184,0.55); color: var(--purple); background: rgba(88,40,184,0.07); }
+  .flow-box.target  { border-color: rgba(21,116,60,0.65); color: var(--green); background: rgba(21,116,60,0.08); border-style: dashed; }
+  .flow-box.green   { border-color: rgba(21,116,60,0.55); color: var(--green); background: rgba(21,116,60,0.07); }
+  .flow-box.pink    { border-color: rgba(170,24,104,0.55); color: var(--pink); background: rgba(170,24,104,0.07); }
+  .flow-box.yellow  { border-color: rgba(140,108,0,0.55); color: var(--yellow); background: rgba(140,108,0,0.07); }
 
 /* Backward flow — arrows point left for backpropagation */
 .flow.flow-backward .flow-box ~ .flow-box::before { content: '←'; }
@@ -169,7 +169,7 @@
     height: var(--deck-nav-height);
     padding: 0 0.85rem;
     box-sizing: border-box;
-    background: rgba(10,13,20,0.92);
+    background: rgba(255,255,255,0.96);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     border-top: 1px solid var(--border);
@@ -205,7 +205,7 @@
   }
   .nav-btn:hover { background: var(--border); }
   .nav-btn.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
-  .nav-btn.primary:hover { background: #6888ef; }
+  .nav-btn.primary:hover { background: #1238a8; }
   .nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
   .slide-counter {
     font-family: 'JetBrains Mono', monospace;
