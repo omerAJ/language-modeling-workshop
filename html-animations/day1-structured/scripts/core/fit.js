@@ -4,7 +4,6 @@ var DECK_HEIGHT = 1080;
 var layoutState = {
   resizeBound: false,
   syntheticResizeGuard: false,
-  currentScale: 1,
   refreshSeq: 0,
   pendingRaf: null
 };
@@ -29,7 +28,6 @@ function applyDeckScale() {
   var nextScale = Number.isFinite(scale) && scale > 0 ? scale : 1;
   deckRoot.style.transform = 'translate(-50%, -50%) scale(' + nextScale + ')';
   deckRoot.style.setProperty('--deck-scale', nextScale.toFixed(4));
-  layoutState.currentScale = nextScale;
   return nextScale;
 }
 

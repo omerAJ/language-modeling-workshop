@@ -34,32 +34,33 @@
     100% { background-position: -200% 0; }
   }
 
-/* ── Pipeline boxes ── */
-.pipeline-box {
-    padding: var(--sp-4);
-    border-radius: var(--radius-md);
-    border: 1px solid var(--border);
-    background: var(--surface);
-    position: relative;
-  }
-  .pipeline-box h3 { font-size: var(--fs-base); margin-bottom: var(--sp-2); }
-  .pipeline-box .small-text { font-size: var(--fs-sm); }
-  .pipeline-box .pipe-num {
-    position: absolute;
-    top: -0.625rem; left: -0.625rem;
-    width: 1.625rem; height: 1.625rem;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: var(--fs-xs);
-    font-weight: 700;
-    color: #fff;
-  }
-
 /* ── Slide 3: ingredient images ── */
 #slide-3 {
     isolation: isolate;
+  }
+
+#slide-3 .ingredient-stack[data-ingredient="1"] {
+    --ingredient-accent: var(--cyan);
+    --ingredient-accent-bg: var(--cyan-bg);
+    --ingredient-accent-border: var(--cyan-border);
+  }
+
+#slide-3 .ingredient-stack[data-ingredient="2"] {
+    --ingredient-accent: var(--accent);
+    --ingredient-accent-bg: var(--accent-bg);
+    --ingredient-accent-border: var(--accent-border);
+  }
+
+#slide-3 .ingredient-stack[data-ingredient="3"] {
+    --ingredient-accent: var(--purple);
+    --ingredient-accent-bg: var(--purple-bg);
+    --ingredient-accent-border: var(--purple-border);
+  }
+
+#slide-3 .ingredient-stack[data-ingredient="4"] {
+    --ingredient-accent: var(--orange);
+    --ingredient-accent-bg: var(--orange-bg);
+    --ingredient-accent-border: var(--orange-border);
   }
 
 #slide-3 .ingredient-grid {
@@ -304,4 +305,44 @@
     filter: drop-shadow(0 0.9rem 1.2rem rgba(12,14,28,0.16));
     transform-origin: center center;
     will-change: transform, opacity;
+  }
+
+/* ── Slide 4: roadmap ── */
+#slide-4 .roadmap-card {
+    --roadmap-accent: var(--accent);
+  }
+
+#slide-4 .roadmap-card-day1 {
+    border-color: rgba(108,140,255,0.3);
+  }
+
+#slide-4 .roadmap-card-day2 {
+    --roadmap-accent: var(--purple);
+    border-color: rgba(167,139,250,0.25);
+    opacity: 0.6;
+  }
+
+#slide-4 .roadmap-title {
+    color: var(--roadmap-accent);
+    margin-top: 0.45rem;
+  }
+
+#slide-4 .roadmap-list {
+    list-style: none;
+    margin-top: 0.625rem;
+  }
+
+#slide-4 .roadmap-item {
+    position: relative;
+    padding: 0.3rem 0 0.3rem 1.25rem;
+  }
+
+#slide-4 .roadmap-list-arrow {
+    position: absolute;
+    left: 0;
+    color: var(--roadmap-accent);
+  }
+
+#slide-4 .roadmap-card .callout {
+    margin-top: 0.875rem;
   }

@@ -1,11 +1,12 @@
+var LIVE_DEMO_ENDPOINT = 'https://api.openai.com/v1/chat/completions';
+var LIVE_DEMO_MODEL = 'gpt-3.5-turbo-0125';
+
 function getLiveDemoElements() {
   var root = document.getElementById('slide-32b');
   if (!root) return {};
   return {
     root: root,
     apiKeyInput: document.getElementById('liveDemoApiKey'),
-    baseUrlInput: document.getElementById('liveDemoBaseUrl'),
-    modelInput: document.getElementById('liveDemoModel'),
     promptInput: document.getElementById('liveDemoInput'),
     messages: document.getElementById('liveDemoMessages'),
     status: document.getElementById('liveDemoStatus'),
@@ -15,22 +16,10 @@ function getLiveDemoElements() {
   };
 }
 
-function normalizeLiveDemoBaseUrl(rawValue) {
-  var trimmed = (rawValue || '').trim();
-  if (!trimmed) return 'https://api.openai.com/v1';
-  return trimmed.replace(/\/+$/, '');
-}
-
 function clearLiveDemoPresetTimer() {
   if (!liveDemoState.presetTimer) return;
   clearTrackedTimeout(liveDemoState.presetTimer);
   liveDemoState.presetTimer = null;
-}
-
-function getLiveDemoEndpoint(baseUrl) {
-  var normalized = normalizeLiveDemoBaseUrl(baseUrl);
-  if (/\/v1$/i.test(normalized)) return normalized + '/chat/completions';
-  return normalized + '/v1/chat/completions';
 }
 
 function ensureLiveDemoEmptyState() {
@@ -68,8 +57,6 @@ function setLiveDemoBusy(isBusy) {
   if (elements.sendButton) elements.sendButton.disabled = !!isBusy;
   if (elements.promptInput) elements.promptInput.disabled = !!isBusy;
   if (elements.apiKeyInput) elements.apiKeyInput.readOnly = !!isBusy;
-  if (elements.baseUrlInput) elements.baseUrlInput.readOnly = !!isBusy;
-  if (elements.modelInput) elements.modelInput.readOnly = !!isBusy;
   if (elements.clearButton) elements.clearButton.textContent = isBusy ? 'Stop & clear' : 'Clear context';
   elements.presetButtons.forEach(function(button) {
     button.disabled = !!isBusy;
@@ -218,8 +205,7 @@ async function submitLiveDemoPrompt(explicitPrompt) {
     return;
   }
 
-  var model = elements.modelInput && elements.modelInput.value ? elements.modelInput.value.trim() : 'gpt-3.5-turbo-0125';
-  var endpoint = getLiveDemoEndpoint(elements.baseUrlInput ? elements.baseUrlInput.value : '');
+  var model = LIVE_DEMO_MODEL;
   var conversation = getLiveDemoConversationMessages();
 
   var userBubble = appendLiveDemoMessage('user', prompt);
@@ -231,6 +217,7 @@ async function submitLiveDemoPrompt(explicitPrompt) {
 
   var controller = new AbortController();
   liveDemoState.abortController = controller;
+  var endpoint = LIVE_DEMO_ENDPOINT;
 
   try {
     var response = await fetch(endpoint, {

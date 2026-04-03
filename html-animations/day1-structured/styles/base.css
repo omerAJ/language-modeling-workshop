@@ -70,8 +70,6 @@ h2 {
   .hl-orange { color: var(--orange); font-weight: 600; }
   .hl-purple { color: var(--purple); font-weight: 600; }
   .hl-yellow { color: var(--yellow); font-weight: 600; }
-  .hl-cyan   { color: var(--cyan);   font-weight: 600; }
-  .hl-pink   { color: var(--pink);   font-weight: 600; }
 
 /* ── Interactive reveal ── */
 .reveal-btn {
@@ -149,8 +147,5 @@ h2 {
   .spacer-lg { height: var(--sp-5); }
 
 /* ── Utility classes ── */
-.text-base { font-size: var(--fs-base); }
-.text-sm   { font-size: var(--fs-sm); }
 .text-xs   { font-size: var(--fs-xs); }
-.text-2xs  { font-size: var(--fs-2xs); }
 .mono      { font-family: 'JetBrains Mono', monospace; }

@@ -59,23 +59,6 @@
   .callout.question { background: var(--purple-bg); border: 1px solid var(--purple-border); color: #340e8a; }
   .callout.pink    { background: rgba(170,24,104,0.07);  border: 1px solid rgba(170,24,104,0.30); color: #700040; }
   .callout .icon { flex-shrink: 0; font-size: var(--fs-lg); }
-  .editor-note {
-    margin-top: var(--sp-3);
-    max-width: 52rem;
-    background: var(--red-bg);
-    border: 1px solid var(--red-border);
-    color: #780000;
-    border-radius: var(--radius-md);
-    padding: var(--sp-3) var(--sp-4);
-    font-size: var(--fs-xs);
-    line-height: 1.55;
-    text-align: left;
-  }
-  .editor-note strong {
-    color: var(--red);
-    letter-spacing: 0.04em;
-  }
-
 /* ── Badges / pills ── */
 .badge {
     display: inline-block;
@@ -100,7 +83,6 @@
 /* ── Grid layouts ── */
 .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-4); }
   .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: var(--sp-4); }
-  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--sp-4); }
 
 /* ── Flow diagrams ── */
 .flow {
@@ -144,7 +126,7 @@
     flex-shrink: 0;
   }
   .flow-box.data    { border-color: rgba(0,104,128,0.55); color: var(--cyan); background: rgba(0,104,128,0.07); }
-  .flow-box.model   { border-color: rgba(26,69,200,0.55); color: var(--accent); background: rgba(26,69,200,0.07); }
+  .flow-box.model,
   .flow-box.blue    { border-color: rgba(26,69,200,0.55); color: var(--accent); background: rgba(26,69,200,0.07); }
   .flow-box.loss    { border-color: rgba(184,24,24,0.55); color: var(--red); background: rgba(184,24,24,0.07); }
   .flow-box.grad    { border-color: rgba(158,74,0,0.55); color: var(--orange); background: rgba(158,74,0,0.07); }
@@ -262,7 +244,6 @@
   .slide:not(.centered) > .gradient-line,
   .slide:not(.centered) > .grid-2,
   .slide:not(.centered) > .grid-3,
-  .slide:not(.centered) > .grid-4,
   .slide:not(.centered) > .card {
     margin-top: 0.60rem;
   }

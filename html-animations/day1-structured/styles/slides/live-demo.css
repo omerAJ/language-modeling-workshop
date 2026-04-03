@@ -193,25 +193,6 @@
   margin-top: auto;
 }
 
-@media (max-width: 70rem) {
-  .live-demo-shell {
-    grid-template-columns: 1fr;
-  }
-
-  .live-demo-connection {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* Fixed-stage deck: preserve the authored desktop layout inside the 1920×1080 stage. */
-.live-demo-shell {
-  grid-template-columns: minmax(0, 1.7fr) minmax(18rem, 0.95fr);
-}
-
-.live-demo-connection {
-  grid-template-columns: minmax(0, 1fr) auto;
-}
-
 /* Projector-safe compaction for slide 32b */
 #slide-32b h2 {
   margin-bottom: 0.7rem;

@@ -53,7 +53,7 @@
 
   <div class="ingredient-grid" id="ingredientsGrid">
     <!-- INGREDIENT 1 -->
-    <div class="ingredient-stack" data-ingredient="1" data-phase="hidden" style="--ingredient-accent: var(--cyan); --ingredient-accent-bg: var(--cyan-bg); --ingredient-accent-border: var(--cyan-border);">
+    <div class="ingredient-stack" data-ingredient="1" data-phase="hidden">
       <div class="card ingredient-card" id="ingredient1Card">
         <span class="ingredient-card-label mono">1</span>
         <div class="ingredient-card-body">
@@ -74,7 +74,7 @@
     </div>
 
     <!-- INGREDIENT 2 -->
-    <div class="ingredient-stack" data-ingredient="2" data-phase="hidden" style="--ingredient-accent: var(--accent); --ingredient-accent-bg: var(--accent-bg); --ingredient-accent-border: var(--accent-border);">
+    <div class="ingredient-stack" data-ingredient="2" data-phase="hidden">
       <div class="card ingredient-card" id="ingredient2Card">
         <span class="ingredient-card-label mono">2</span>
         <div class="ingredient-card-body">
@@ -95,7 +95,7 @@
     </div>
 
     <!-- INGREDIENT 3 -->
-    <div class="ingredient-stack" data-ingredient="3" data-phase="hidden" style="--ingredient-accent: var(--purple); --ingredient-accent-bg: var(--purple-bg); --ingredient-accent-border: var(--purple-border);">
+    <div class="ingredient-stack" data-ingredient="3" data-phase="hidden">
       <div class="card ingredient-card" id="ingredient3Card">
         <span class="ingredient-card-label mono">3</span>
         <div class="ingredient-card-body">
@@ -116,7 +116,7 @@
     </div>
 
     <!-- INGREDIENT 4 -->
-    <div class="ingredient-stack" data-ingredient="4" data-phase="hidden" style="--ingredient-accent: var(--orange); --ingredient-accent-bg: var(--orange-bg); --ingredient-accent-border: var(--orange-border);">
+    <div class="ingredient-stack" data-ingredient="4" data-phase="hidden">
       <div class="card ingredient-card" id="ingredient4Card">
         <span class="ingredient-card-label mono">4</span>
         <div class="ingredient-card-body">
@@ -163,60 +163,60 @@
 
   <div class="grid-2">
     <!-- DAY 1 -->
-    <div class="card" style="border-color: rgba(108,140,255,0.3);">
+    <div class="card roadmap-card roadmap-card-day1">
       <div class="badge day1">Day 1 — Today</div>
-      <h3 style="color:var(--accent); margin-top:0.45rem;">Why LLMs behave the way they do</h3>
-      <ul style="list-style:none; margin-top:0.625rem;">
-        <li class="small-text" style="padding:0.3rem 0 0.3rem 1.25rem; position:relative;">
-          <span style="position:absolute;left:0;color:var(--accent);">→</span>
+      <h3 class="roadmap-title">Why LLMs behave the way they do</h3>
+      <ul class="roadmap-list">
+        <li class="small-text roadmap-item">
+          <span class="roadmap-list-arrow">→</span>
           Inference vs. training
         </li>
-        <li class="small-text" style="padding:0.3rem 0 0.3rem 1.25rem; position:relative;">
-          <span style="position:absolute;left:0;color:var(--accent);">→</span>
+        <li class="small-text roadmap-item">
+          <span class="roadmap-list-arrow">→</span>
           Next-token prediction
         </li>
-        <li class="small-text" style="padding:0.3rem 0 0.3rem 1.25rem; position:relative;">
-          <span style="position:absolute;left:0;color:var(--accent);">→</span>
+        <li class="small-text roadmap-item">
+          <span class="roadmap-list-arrow">→</span>
           Loss → gradients → updates
         </li>
-        <li class="small-text" style="padding:0.3rem 0 0.3rem 1.25rem; position:relative;">
-          <span style="position:absolute;left:0;color:var(--accent);">→</span>
+        <li class="small-text roadmap-item">
+          <span class="roadmap-list-arrow">→</span>
           Why this objective works
         </li>
-        <li class="small-text" style="padding:0.3rem 0 0.3rem 1.25rem; position:relative;">
-          <span style="position:absolute;left:0;color:var(--accent);">→</span>
+        <li class="small-text roadmap-item">
+          <span class="roadmap-list-arrow">→</span>
           Data, scale, and alignment
         </li>
       </ul>
-      <div class="callout info" style="margin-top:0.875rem;">
+      <div class="callout info">
         <span class="icon">i</span>
         <span>Today: treat the model as a <strong>system being shaped.</strong></span>
       </div>
     </div>
 
     <!-- DAY 2 -->
-    <div class="card" style="border-color: rgba(167,139,250,0.25); opacity:0.6;">
+    <div class="card roadmap-card roadmap-card-day2">
       <div class="badge concept">Day 2 — Tomorrow</div>
-      <h3 style="color:var(--purple); margin-top:0.45rem;">How a Transformer processes text and computes the next word</h3>
-      <ul style="list-style:none; margin-top:0.625rem;">
-        <li class="small-text" style="padding:0.3rem 0 0.3rem 1.25rem; position:relative;">
-          <span style="position:absolute;left:0;color:var(--purple);">→</span>
+      <h3 class="roadmap-title">How a Transformer processes text and computes the next word</h3>
+      <ul class="roadmap-list">
+        <li class="small-text roadmap-item">
+          <span class="roadmap-list-arrow">→</span>
           Tokenization & embeddings
         </li>
-        <li class="small-text" style="padding:0.3rem 0 0.3rem 1.25rem; position:relative;">
-          <span style="position:absolute;left:0;color:var(--purple);">→</span>
+        <li class="small-text roadmap-item">
+          <span class="roadmap-list-arrow">→</span>
           Self-attention
         </li>
-        <li class="small-text" style="padding:0.3rem 0 0.3rem 1.25rem; position:relative;">
-          <span style="position:absolute;left:0;color:var(--purple);">→</span>
+        <li class="small-text roadmap-item">
+          <span class="roadmap-list-arrow">→</span>
           Feed-forward layers
         </li>
-        <li class="small-text" style="padding:0.3rem 0 0.3rem 1.25rem; position:relative;">
-          <span style="position:absolute;left:0;color:var(--purple);">→</span>
+        <li class="small-text roadmap-item">
+          <span class="roadmap-list-arrow">→</span>
           Full forward pass end-to-end
         </li>
       </ul>
-      <div class="callout info" style="margin-top:0.875rem;">
+      <div class="callout info">
         <span class="icon">i</span>
         <span>Tomorrow: treat it as a <strong>machine executing computation.</strong></span>
       </div>
@@ -255,7 +255,7 @@
   <div class="card" style="margin: 0 auto;">
 
     <!-- ONE-TIME SETUP -->
-    <div class="tiny" style="text-align:center; letter-spacing:0.06em; text-transform:uppercase; margin-bottom:0.25rem;">One-time setup</div>
+    <div class="tiny loop-phase-label">One-time setup</div>
     <div class="flow" style="margin-bottom:0.625rem;">
       <div class="flow-box data">Text<br>input</div>
       <div class="flow-arrow">→</div>
@@ -265,7 +265,7 @@
     </div>
 
     <!-- REPEATED LOOP -->
-    <div class="tiny" style="text-align:center; letter-spacing:0.06em; text-transform:uppercase; margin-bottom:0.25rem;">Repeat for each new token</div>
+    <div class="tiny loop-phase-label">Repeat for each new token</div>
     <div class="flow">
       <div class="flow-box data">Context<br>tokens</div>
       <div class="flow-arrow loop-arrow-anim">→</div>
@@ -1083,7 +1083,7 @@ What is the capital of ...</div>
           <div class="prompt-block">What is the capital of France?</div>
           <button class="reveal-btn text-xs" data-fix="chat">Show fix</button>
           <div class="hidden-content" id="fixChat">
-            <div class="prompt-block" style="border-color:rgba(74,222,128,0.4);">User: What is the capital of France?
+            <div class="prompt-block prompt-block-success">User: What is the capital of France?
 <strong style="color:var(--green);">Assistant:</strong></div>
             <p class="tiny" style="color:var(--green);">→ "The capital of France is Paris."</p>
           </div>
@@ -1093,7 +1093,7 @@ What is the capital of ...</div>
           <div class="prompt-block">347 + 128</div>
           <button class="reveal-btn text-xs" data-fix="math">Show fix</button>
           <div class="hidden-content" id="fixMath">
-            <div class="prompt-block" style="border-color:rgba(74,222,128,0.4);">347 + 128 <strong style="color:var(--green);">=</strong></div>
+            <div class="prompt-block prompt-block-success">347 + 128 <strong style="color:var(--green);">=</strong></div>
             <p class="tiny" style="color:var(--green);">→ "475"</p>
           </div>
         </div>
@@ -1102,7 +1102,7 @@ What is the capital of ...</div>
           <div class="prompt-block">fibonacci function</div>
           <button class="reveal-btn text-xs" data-fix="code">Show fix</button>
           <div class="hidden-content" id="fixCode">
-            <div class="prompt-block" style="border-color:rgba(74,222,128,0.4);"><strong style="color:var(--green);">def fibonacci(n):</strong>
+            <div class="prompt-block prompt-block-success"><strong style="color:var(--green);">def fibonacci(n):</strong>
     """Return the nth Fibonacci number."""</div>
             <p class="tiny" style="color:var(--green);">→ completes the function body</p>
           </div>
@@ -1206,19 +1206,19 @@ What is the capital of ...</div>
   </div>
   <div class="spacer-sm"></div>
   <div class="grid-2">
-    <div class="card" style="border-color: rgba(251,146,60,0.3);">
+    <div class="card post-training-card">
       <div class="badge discussion">Step 5</div>
-      <h3 style="color:var(--orange);">Supervised fine-tuning (SFT)</h3>
-      <ul class="obj-list" style="margin-top:0.5rem;">
+      <h3>Supervised fine-tuning (SFT)</h3>
+      <ul class="obj-list">
         <li data-num="1">Train on chat demonstrations: user turns to assistant replies.</li>
         <li data-num="2">Teach stable instruction-following and response structure.</li>
         <li data-num="3">Make assistant-style continuation the default.</li>
       </ul>
     </div>
-    <div class="card" style="border-color: rgba(251,146,60,0.3);">
+    <div class="card post-training-card">
       <div class="badge discussion">Step 6</div>
-      <h3 style="color:var(--orange);">Preference training + RLHF</h3>
-      <ul class="obj-list" style="margin-top:0.5rem;">
+      <h3>Preference training + RLHF</h3>
+      <ul class="obj-list">
         <li data-num="1">Use human rankings to separate better from worse candidate replies.</li>
         <li data-num="2">Push behavior toward helpfulness, policy compliance, and safer refusals.</li>
         <li data-num="3">Improve robustness beyond specific prompts or formatting tricks.</li>

@@ -39,7 +39,6 @@ function resumeInferenceBlank() {
 
 function resetInferenceDemo() {
   const row = document.getElementById('inferenceDemo');
-  const hint = document.getElementById('infHint');
   clearInferenceBlankTimer();
   inferenceState.step = 0;
   inferenceState.pendingBlank = false;
@@ -53,11 +52,6 @@ function resetInferenceDemo() {
       '<span class="tok input">is</span>',
       '<span class="tok blank" id="infCurrent">next?</span>'
     ].join('');
-  }
-
-  if (hint) {
-    hint.textContent = 'Click the blank to generate the next token';
-    hint.style.color = '';
   }
 }
 
@@ -102,11 +96,6 @@ function animateInference() {
   } else {
     clearInferenceBlankTimer();
     inferenceState.pendingBlank = false;
-    const hint = document.getElementById('infHint');
-    if (hint) {
-      hint.textContent = 'Generation complete — the model produced 3 tokens.';
-      hint.style.color = 'var(--green)';
-    }
   }
 }
 

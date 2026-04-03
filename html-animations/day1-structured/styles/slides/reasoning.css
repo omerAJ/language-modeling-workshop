@@ -5,9 +5,6 @@
     gap: var(--sp-3);
     margin-top: var(--sp-3);
   }
-  @media (max-width: 50rem) {
-    .pressure-grid { grid-template-columns: 1fr; }
-  }
   .pressure-card {
     background: var(--surface2);
     border: 1px solid var(--border);
@@ -79,11 +76,6 @@
     background: rgba(184,24,24,0.08);
     border-color: rgba(184,24,24,0.45);
     color: var(--red);
-  }
-
-  /* Fixed-stage deck: do not collapse to single column based on viewport width. */
-  .pressure-grid {
-    grid-template-columns: 1fr 1fr;
   }
 
   /* Projector-safe compaction for slide 23 */

@@ -1,7 +1,6 @@
 function createSlideDescriptor(id, overrides) {
   const base = {
     id,
-    build: () => {},
     init: () => {},
     step: () => false,
     reset: () => {}

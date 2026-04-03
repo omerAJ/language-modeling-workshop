@@ -4,10 +4,6 @@ function refreshSlides() {
     .filter(Boolean);
   state.nav.total = state.nav.slides.length;
   registerSlides();
-  state.registry.order.forEach((descriptor) => {
-    const root = document.getElementById(descriptor.id);
-    descriptor.build(root, state);
-  });
 }
 
 function getCurrentSlide() {
@@ -135,10 +131,6 @@ function goToSlide(index) {
   descriptor.init(state, nextSlideEl);
   typesetMath(nextSlideEl);
   scheduleActiveSlideFit({ reason: 'goToSlide' });
-}
-
-function goTo(index) {
-  goToSlide(index);
 }
 
 function nextSlide() {

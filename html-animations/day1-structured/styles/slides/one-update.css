@@ -86,9 +86,6 @@
     gap: var(--sp-4);
     margin-top: var(--sp-2);
   }
-  @media (max-width: 50rem) {
-    .dual-charts { grid-template-columns: 1fr; }
-  }
   .chart-col {
     background: var(--surface2);
     border-radius: var(--radius-md);
@@ -172,9 +169,6 @@
     align-items: start;
     margin-top: var(--sp-2);
   }
-  @media (max-width: 50rem) {
-    .before-after { grid-template-columns: 1fr; }
-  }
   .ba-col {
     background: var(--surface2);
     border-radius: var(--radius-md);
@@ -217,15 +211,6 @@
   @keyframes flowLeft {
     0%, 100% { opacity: 0.2; }
     50% { opacity: 1; }
-  }
-
-  /* Fixed-stage deck: keep authored multi-column layouts regardless of browser size. */
-  .dual-charts {
-    grid-template-columns: 1fr 1fr;
-  }
-
-  .before-after {
-    grid-template-columns: 1fr auto 1fr;
   }
 
 /* flow node (for backprop) */
@@ -312,20 +297,6 @@
   @keyframes pulseBorder {
     0%, 100% { border-color: var(--orange); }
     50% { border-color: rgba(158,74,0,0.3); }
-  }
-
-/* step label pill (for loss deep-dive slides) */
-.step-label {
-    display: inline-block;
-    font-size: var(--fs-2xs);
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--yellow);
-    background: rgba(140,108,0,0.10);
-    padding: 0.2rem var(--sp-2);
-    border-radius: var(--radius-full);
-    margin-bottom: var(--sp-2);
   }
 
 /* Projector-safe compaction for slides 10 and 14 */
