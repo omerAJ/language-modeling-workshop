@@ -62,7 +62,7 @@
 
 .block28-orient-card,
 .block28-note {
-  padding: 0.68rem 0.84rem;
+  padding: 0.33rem 0.84rem;
   border-radius: var(--radius-md);
   border: 1px solid var(--border);
   background: var(--surface);

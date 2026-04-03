@@ -12,7 +12,7 @@ const BLOCK28_TAKEAWAYS = [
   'Attention mixes across tokens and writes a context update.',
   'Residual add writes that update back into the same stream.',
   'The FFN updates each row independently, then writes its own residual update.',
-  'A transformer block is just two update rules: attention writes once, then the FFN writes again.'
+  'You now know one full Transformer block. Next: stack the same block layer after layer.'
 ];
 
 function setGptBlockStep(step) {

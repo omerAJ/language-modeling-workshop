@@ -3,12 +3,12 @@
 
 const POS26_MAX_STEP = 5;
 const POS26_TAKEAWAYS = [
-  'Design goals: unique codes, stable meaning across lengths, and smooth local change.',
-  'Raw indices are too large, too crude, and inconsistent once sequence length changes.',
-  'Binary keeps values bounded and multiscale, but neighboring positions still jump abruptly.',
-  'Sin/cos keeps the multiscale structure and makes nearby positions change smoothly.',
-  'Absolute codes help, but many attention patterns care more about relative offset than raw slot.',
-  'RoPE uses absolute rotations so attention scores depend on relative offset instead of absolute slot.'
+  'Good position codes are distinct, length-stable, and locally smooth.',
+  'Raw indices overwhelm embeddings and change meaning across context lengths.',
+  'Binary shows multiscale structure, but its jumps are too abrupt.',
+  'Sinusoids keep multiscale structure while staying smooth.',
+  'Attention often cares more about token distance than absolute slot.',
+  'RoPE rotates Q/K so attention scores reflect relative offset.'
 ];
 
 function measurePositionSignalPanelHeight(panel) {

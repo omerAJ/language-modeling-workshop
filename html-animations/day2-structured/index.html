@@ -1637,8 +1637,8 @@ l e a r n ing &lt;/w&gt;</div>
     <span class="section-tag">Input Representation</span>
     <div class="slide-header">
       <div class="badge concept">Problem</div>
-      <h2>Shuffle the Words, Break the Meaning</h2>
-      <p class="small-text">Self-attention compares token vectors by similarity. By itself, it has no built-in sense of sequence order.</p>
+      <h2>Self-Attention Compares Vectors, Not Word Order</h2>
+      <p class="small-text">Reorder the same tokens and attention makes the same comparisons.</p>
     </div>
     <div class="slide-body">
       <div class="card pos25-stage">
@@ -1680,21 +1680,21 @@ l e a r n ing &lt;/w&gt;</div>
 
         <div class="hidden-content autostep">
           <div class="pos25-answer-card">
-            <div class="pos25-answer-title">No. The same token vectors produce the same comparisons.</div>
-            <div class="pos25-answer-body">Attention compares vectors, not order. If the same vectors reappear, it makes the same comparisons; shuffling the rows just shuffles the outputs.</div>
+            <div class="pos25-answer-title">No. Reordered tokens produce the same comparisons.</div>
+            <div class="pos25-answer-body">Attention sees the same vectors; reordering only reorders the rows.</div>
           </div>
         </div>
 
         <div class="hidden-content autostep">
           <div class="callout warn">
             <span class="callout-icon">&#9888;&#65039;</span>
-            <span>Add position <em>before</em> attention. Then the same word in a different slot becomes a different input vector.</span>
+            <span>Add position <em>before</em> attention so slot changes change the input vector.</span>
           </div>
         </div>
 
       </div>
 
-      <div class="story-takeaway" id="pos25-takeaway">Position has to be injected before attention, so the same word in a different slot becomes a different input.</div>
+      <div class="story-takeaway" id="pos25-takeaway">Position must be added before attention so order changes the input.</div>
     </div>
   </div>
 
@@ -1745,9 +1745,9 @@ l e a r n ing &lt;/w&gt;</div>
           <div class="pos26-state-frame" id="pos26-state-frame">
             <section class="pos26-state-panel is-active" data-step="0" aria-hidden="false">
               <div class="pos26-panel-header">
-                <div class="pos26-step-label">Step 1 · Design Goals</div>
-                <h3 class="pos26-state-title">What should a good position code do?</h3>
-                <p class="pos26-state-lead">Before choosing a formula, set the criteria every candidate has to satisfy.</p>
+                <div class="pos26-step-label">Step 1 · Goals</div>
+                <h3 class="pos26-state-title">What must a position code do?</h3>
+                <p class="pos26-state-lead">Set the requirements before choosing a formula.</p>
               </div>
               <div class="pos26-state-grid">
                 <div class="pos26-copy-card">
@@ -1756,22 +1756,22 @@ l e a r n ing &lt;/w&gt;</div>
                     <div class="pos26-teach-row">
                       <span class="pos26-row-badge">1</span>
                       <div class="pos26-row-body">
-                        <strong>Unique positions</strong>
-                        <span>Each slot needs a distinct signal, so attention can tell first, fifth, and hundredth apart.</span>
+                        <strong>Distinct slots</strong>
+                        <span>Slot 1 and slot 100 must look different.</span>
                       </div>
                     </div>
                     <div class="pos26-teach-row">
                       <span class="pos26-row-badge">2</span>
                       <div class="pos26-row-body">
-                        <strong>Stable meaning across lengths</strong>
-                        <span>Position 5 should mean the same thing in sequences of length 10 or 10,000.</span>
+                        <strong>Stable meaning</strong>
+                        <span>Position 5 should mean the same in short and long contexts.</span>
                       </div>
                     </div>
                     <div class="pos26-teach-row">
                       <span class="pos26-row-badge">3</span>
                       <div class="pos26-row-body">
-                        <strong>Smooth local change</strong>
-                        <span>Nearby positions should produce nearby signals so the model sees smooth, learnable change.</span>
+                        <strong>Local smoothness</strong>
+                        <span>Nearby slots should get nearby codes.</span>
                       </div>
                     </div>
                   </div>
@@ -1793,7 +1793,7 @@ l e a r n ing &lt;/w&gt;</div>
                       <span class="token-pill">another</span>
                       <span class="token-pill reuse">dog</span>
                     </div>
-                    <div class="pos26-token-note">Both <strong>dog</strong> tokens share token identity. Position has to distinguish their roles.</div>
+                    <div class="pos26-token-note">Both <strong>dog</strong> tokens share an embedding; position separates them.</div>
                   </div>
                 </div>
               </div>
@@ -1801,9 +1801,9 @@ l e a r n ing &lt;/w&gt;</div>
 
             <section class="pos26-state-panel" data-step="1" aria-hidden="true">
               <div class="pos26-panel-header">
-                <div class="pos26-step-label">Step 2 · Attempt 1</div>
-                <h3 class="pos26-state-title">Add the raw index</h3>
-                <p class="pos26-state-lead">Add the token index itself. It is too large, too crude, and inconsistent once sequence length changes.</p>
+                <div class="pos26-step-label">Step 2 · Raw Index</div>
+                <h3 class="pos26-state-title">Why not just add the index?</h3>
+                <p class="pos26-state-lead">A raw index is too large, too uniform, and length-dependent.</p>
               </div>
               <div class="pos26-state-grid">
                 <div class="pos26-copy-card">
@@ -1813,21 +1813,21 @@ l e a r n ing &lt;/w&gt;</div>
                       <span class="pos26-row-badge">A</span>
                       <div class="pos26-row-body">
                         <strong>Scale mismatch</strong>
-                        <span>Embedding components usually live near 0. A position like 252 is much larger.</span>
+                        <span>252 overwhelms embedding values near 0.</span>
                       </div>
                     </div>
                     <div class="pos26-teach-row">
                       <span class="pos26-row-badge">B</span>
                       <div class="pos26-row-body">
                         <strong>Same scalar everywhere</strong>
-                        <span>Repeating one number across every dimension gives attention almost no positional structure.</span>
+                        <span>One scalar across every dimension adds almost no structure.</span>
                       </div>
                     </div>
                     <div class="pos26-teach-row">
                       <span class="pos26-row-badge">C</span>
                       <div class="pos26-row-body">
-                        <strong>Normalizing by length changes the meaning</strong>
-                        <span>Position 5 becomes 0.5 in a short sequence and 0.0005 in a long one, so the same slot no longer means the same thing.</span>
+                        <strong>Length-dependent meaning</strong>
+                        <span>Normalizing makes the same slot mean different things.</span>
                       </div>
                     </div>
                   </div>
@@ -1836,26 +1836,26 @@ l e a r n ing &lt;/w&gt;</div>
                   <div class="pos26-panel-label">the scale problem</div>
                   <div class="pos26-raw-grid">
                     <div class="pos26-raw-panel">
-                      <div class="pos26-panel-label">token embedding \(x_{252}\)</div>
+                      <div class="pos26-panel-label">embedding</div>
                       <div class="pos26-number-vector pos26-number-vector-token">
-                        <span>-0.02</span><span>0.04</span><span>-0.01</span><span>0.03</span>
-                        <span>-0.05</span><span>0.01</span><span>0.02</span><span>-0.03</span>
+                        <span>-0.2</span><span>0.4</span><span>-0.1</span><span>0.3</span>
+                        <span>-0.5</span><span>0.1</span><span>0.2</span><span>-0.3</span>
                       </div>
                     </div>
                     <div class="pos26-math-op">+</div>
                     <div class="pos26-raw-panel">
-                      <div class="pos26-panel-label">raw position code</div>
+                      <div class="pos26-panel-label">position</div>
                       <div class="pos26-number-vector pos26-number-vector-pos">
-                        <span>252</span><span>252</span><span>252</span><span>252</span>
+                        <span>251</span><span>251</span><span>251</span><span>251</span>
                         <span>252</span><span>252</span><span>252</span><span>252</span>
                       </div>
                     </div>
                     <div class="pos26-math-op">=</div>
                     <div class="pos26-raw-panel">
-                      <div class="pos26-panel-label">what attention sees</div>
+                      <div class="pos26-panel-label">result</div>
                       <div class="pos26-number-vector pos26-number-vector-out">
-                        <span>251.98</span><span>252.04</span><span>251.99</span><span>252.03</span>
-                        <span>251.95</span><span>252.01</span><span>252.02</span><span>251.97</span>
+                        <span>250.8</span><span>251.4</span><span>250.9</span><span>251.3</span>
+                        <span>251.5</span><span>252.1</span><span>252.2</span><span>251.7</span>
                       </div>
                     </div>
                   </div>
@@ -1875,9 +1875,9 @@ l e a r n ing &lt;/w&gt;</div>
 
             <section class="pos26-state-panel" data-step="2" aria-hidden="true">
               <div class="pos26-panel-header">
-                <div class="pos26-step-label">Step 3 · Attempt 2</div>
-                <h3 class="pos26-state-title">Binary fixes the range and reveals the multiscale pattern</h3>
-                <p class="pos26-state-lead">Binary is not the final answer, but it shows the structure worth keeping.</p>
+                <div class="pos26-step-label">Step 3 · Binary</div>
+                <h3 class="pos26-state-title">Binary shows the right pattern, but it jumps</h3>
+                <p class="pos26-state-lead">Binary keeps values bounded and multi-rate, but nearby slots can still change abruptly.</p>
               </div>
               <div class="pos26-state-grid">
                 <div class="pos26-copy-card">
@@ -1887,21 +1887,21 @@ l e a r n ing &lt;/w&gt;</div>
                       <span class="pos26-row-badge">A</span>
                       <div class="pos26-row-body">
                         <strong>Bounded values</strong>
-                        <span>Each dimension now stays in a small range, instead of exploding with the raw index.</span>
+                        <span>The code stays small.</span>
                       </div>
                     </div>
                     <div class="pos26-teach-row">
                       <span class="pos26-row-badge">B</span>
                       <div class="pos26-row-body">
-                        <strong>Different bits change at different rates</strong>
-                        <span>Bit 0 flips every token; slower bits flip every 2, 4, 8, ... tokens.</span>
+                        <strong>Multiple scales</strong>
+                        <span>Some bits flip fast, others slowly.</span>
                       </div>
                     </div>
                     <div class="pos26-teach-row">
                       <span class="pos26-row-badge">C</span>
                       <div class="pos26-row-body">
-                        <strong>But jumps are still abrupt</strong>
-                        <span>Crossing one boundary can flip several bits at once, so nearby positions are not smooth neighbors.</span>
+                        <strong>Not smooth</strong>
+                        <span>One step can flip several bits at once.</span>
                       </div>
                     </div>
                   </div>
@@ -1935,12 +1935,9 @@ l e a r n ing &lt;/w&gt;</div>
                   </div>
                   <div class="pos26-jump-card">
                     <div class="pos26-panel-label">why it is still hard to learn</div>
-                    <svg class="pos26-jump-plot" viewBox="0 0 220 84" aria-hidden="true">
-                      <line x1="16" y1="68" x2="208" y2="68"></line>
-                      <line x1="16" y1="12" x2="16" y2="68"></line>
-                      <polyline points="20,54 48,46 76,50 104,28 132,56 160,20 188,40 204,18"></polyline>
-                    </svg>
-                    <div class="pos26-jump-note">Bit boundaries create jumps instead of gentle drift.</div>
+                    <ul class="pos26-jump-list">
+                      <li>Adjacent slots can still flip multiple bits at once.</li>
+                    </ul>
                   </div>
                 </div>
               </div>
@@ -1948,9 +1945,9 @@ l e a r n ing &lt;/w&gt;</div>
 
             <section class="pos26-state-panel" data-step="3" aria-hidden="true">
               <div class="pos26-panel-header">
-                <div class="pos26-step-label">Step 4 · Fixed Absolute Code</div>
-                <h3 class="pos26-state-title">Sinusoids keep the multiscale pattern, but make it smooth</h3>
-                <p class="pos26-state-lead">Different dimensions still change at different rates, but now nearby positions stay close.</p>
+                <div class="pos26-step-label">Step 4 · Sin/Cos</div>
+                <h3 class="pos26-state-title">Sinusoids keep the scales and smooth the changes</h3>
+                <p class="pos26-state-lead">Different dimensions vary at different speeds, but nearby positions stay close.</p>
               </div>
               <div class="pos26-state-grid">
                 <div class="pos26-copy-card">
@@ -1959,27 +1956,19 @@ l e a r n ing &lt;/w&gt;</div>
                     <div class="pos26-teach-row">
                       <span class="pos26-row-badge">A</span>
                       <div class="pos26-row-body">
-                        <strong>Each row is one dimension across positions</strong>
-                        <span>Move across positions and that dimension traces a sine or cosine wave.</span>
+                        <strong>One dimension, one wave</strong>
+                        <span>Each row changes smoothly across position.</span>
                       </div>
                     </div>
                     <div class="pos26-teach-row">
                       <span class="pos26-row-badge">B</span>
                       <div class="pos26-row-body">
-                        <strong>Different dimensions capture different scales</strong>
-                        <span>Early rows oscillate quickly; later rows change slowly.</span>
-                      </div>
-                    </div>
-                    <div class="pos26-teach-row">
-                      <span class="pos26-row-badge">C</span>
-                      <div class="pos26-row-body">
-                        <strong>A vertical slice is one position vector</strong>
-                        <span>Read down one column to get one token's sinusoidal position code.</span>
+                        <strong>Multiple scales</strong>
+                        <span>Early rows move fast; later rows drift slowly.</span>
                       </div>
                     </div>
                   </div>
                   <div class="pos26-formula-card">
-                    <div class="pos26-panel-label">formula cue</div>
                     <div class="pos26-formula-lines">
                       <div>\(PE(pos, 2i) = \sin\!\left(\frac{pos}{10000^{2i/d}}\right)\)</div>
                       <div>\(PE(pos, 2i+1) = \cos\!\left(\frac{pos}{10000^{2i/d}}\right)\)</div>
@@ -2032,16 +2021,15 @@ l e a r n ing &lt;/w&gt;</div>
                       </div>
                     </div>
                   </div>
-                  <div class="pos26-frequency-note">Each row is one dimension; each vertical slice is one position vector.</div>
                 </div>
               </div>
             </section>
 
             <section class="pos26-state-panel" data-step="4" aria-hidden="true">
               <div class="pos26-panel-header">
-                <div class="pos26-step-label">Step 5 · Absolute vs Relative</div>
-                <h3 class="pos26-state-title">Absolute codes help, but attention often cares about relative offset</h3>
-                <p class="pos26-state-lead">Fixed sin/cos and learned embeddings both encode absolute slot. RoPE keeps the multiscale idea, but moves position into the attention comparison.</p>
+                <div class="pos26-step-label">Step 5 · Relative</div>
+                <h3 class="pos26-state-title">Attention often cares about distance, not just slot</h3>
+                <p class="pos26-state-lead">Absolute position says where a token is; attention often needs how far apart two tokens are.</p>
               </div>
               <div class="pos26-state-grid">
                 <div class="pos26-copy-card">
@@ -2050,22 +2038,22 @@ l e a r n ing &lt;/w&gt;</div>
                     <div class="pos26-teach-row">
                       <span class="pos26-row-badge">A</span>
                       <div class="pos26-row-body">
-                        <strong>Absolute position can be fixed or learned</strong>
-                        <span>Sin/cos is hand-designed; learned positional embeddings let the model train the absolute code directly.</span>
+                        <strong>Absolute codes can be fixed or learned</strong>
+                        <span>Sin/cos is fixed; learned embeddings train the code directly.</span>
                       </div>
                     </div>
                     <div class="pos26-teach-row">
                       <span class="pos26-row-badge">B</span>
                       <div class="pos26-row-body">
-                        <strong>Meaning often depends on relative offset</strong>
-                        <span>Attention usually cares how far one token is from another, not just the raw slot.</span>
+                        <strong>Many patterns depend on distance</strong>
+                        <span>Attention often cares how far apart tokens are.</span>
                       </div>
                     </div>
                     <div class="pos26-teach-row">
                       <span class="pos26-row-badge">C</span>
                       <div class="pos26-row-body">
-                        <strong>Position can shape the score inside \(QK^\top\)</strong>
-                        <span>Dot products depend on angle, so changing the comparison changes attention.</span>
+                        <strong>Dot-product angle changes the score</strong>
+                        <span>Attention uses dot products, so angle changes the score.</span>
                       </div>
                     </div>
                   </div>
@@ -2098,7 +2086,12 @@ l e a r n ing &lt;/w&gt;</div>
                   <div class="pos26-attn-bridge">
                     <div class="pos26-bridge-card">
                       <div class="pos26-panel-label">attention score</div>
-                      <div class="pos26-bridge-formula">\(\mathrm{Attn}(Q,K,V) = \mathrm{softmax}\!\left(\frac{QK^\top}{\sqrt{d_k}}\right)V\)</div>
+                      <div class="pos26-bridge-formula">\[
+                        \begin{aligned}
+                        \mathrm{Attn}(Q,K,V) = \\
+                        \mathrm{softmax}\!\left(\frac{QK^\top}{\sqrt{d_k}}\right)V
+                        \end{aligned}
+                      \]</div>
                     </div>
                     <div class="pos26-bridge-card">
                       <div class="pos26-panel-label">geometry of the dot product</div>
@@ -2119,8 +2112,8 @@ l e a r n ing &lt;/w&gt;</div>
             <section class="pos26-state-panel" data-step="5" aria-hidden="true">
               <div class="pos26-panel-header">
                 <div class="pos26-step-label">Step 6 · RoPE</div>
-                <h3 class="pos26-state-title">RoPE turns absolute positions into relative attention scores</h3>
-                <p class="pos26-state-lead">RoPE rotates \(Q\) and \(K\) just before the dot product. The algebra cancels the absolute rotations, so the score depends on \((m-n)\).</p>
+                <h3 class="pos26-state-title">RoPE makes attention scores depend on relative gap</h3>
+                <p class="pos26-state-lead">Rotate \(Q\) and \(K\) by absolute position; the score ends up depending on \((m-n)\).</p>
               </div>
               <div class="pos26-state-grid">
                 <div class="pos26-copy-card">
@@ -2129,22 +2122,22 @@ l e a r n ing &lt;/w&gt;</div>
                     <div class="pos26-teach-row">
                       <span class="pos26-row-badge">A</span>
                       <div class="pos26-row-body">
-                        <strong>Position enters during attention, not before it</strong>
-                        <span>Instead of adding a position vector to the embedding, RoPE rotates \(Q\) and \(K\) just before scoring.</span>
+                        <strong>Inject position at scoring time</strong>
+                        <span>Rotate \(Q/K\) instead of adding a vector to the embedding.</span>
                       </div>
                     </div>
                     <div class="pos26-teach-row">
                       <span class="pos26-row-badge">B</span>
                       <div class="pos26-row-body">
-                        <strong>Each 2D pair rotates by \(m\theta_i\) or \(n\theta_i\)</strong>
-                        <span>The same multiscale frequency ladder from sinusoidal PE sets the angle for each pair.</span>
+                        <strong>Keep the multiscale ladder</strong>
+                        <span>Each 2D pair uses its own frequency.</span>
                       </div>
                     </div>
                     <div class="pos26-teach-row">
                       <span class="pos26-row-badge">C</span>
                       <div class="pos26-row-body">
-                        <strong>The dot product converts absolute rotation into relative gap</strong>
-                        <span>\((R_m q)^\top (R_n k) = q^\top R_{m-n} k\), so tokens 5 apart get the same score wherever they appear.</span>
+                        <strong>Turn absolute rotations into relative offset</strong>
+                        <span>Same gap, same score pattern.</span>
                       </div>
                     </div>
                   </div>
@@ -2169,13 +2162,13 @@ l e a r n ing &lt;/w&gt;</div>
                         <text class="pos26-rope-svg-label pos26-rope-k-label" x="138" y="40">K</text>
                         <text class="pos26-rope-svg-label pos26-rope-arc-label" x="130" y="22">(m&#x2212;n)&#x3B8;</text>
                       </svg>
-                      <div class="pos26-rope-angle-note">The angle between \(Q\) and \(K\) now encodes the relative offset \((m-n)\theta_i\).</div>
+                      <div class="pos26-rope-angle-note">Angle encodes the gap.</div>
                     </div>
                     <div class="pos26-rope-stage">
                       <div class="pos26-panel-label">2. the dot product makes absolute rotation disappear</div>
                       <div class="pos26-rope-compare">
                         <div class="pos26-rope-score-formula">\((R_m q)^\top (R_n k) \;=\; q^\top R_{m-n}\, k\)</div>
-                        <div class="pos26-rope-score-note">Absolute slots \(m\) and \(n\) cancel. The same gap \((m-n)\) gives the same attention score anywhere in the sequence.</div>
+                        <div class="pos26-rope-score-note">Same gap, same relative score anywhere.</div>
                       </div>
                     </div>
                   </div>
@@ -2186,7 +2179,7 @@ l e a r n ing &lt;/w&gt;</div>
         </div>
       </div>
 
-      <div class="story-takeaway" id="pos26-takeaway">Before choosing a formula, set the criteria: unique positions, stable meaning across context lengths, and smooth local change.</div>
+      <div class="story-takeaway" id="pos26-takeaway">Good position codes are distinct, length-stable, and locally smooth.</div>
     </div>
   </div>
 
@@ -2259,13 +2252,6 @@ l e a r n ing &lt;/w&gt;</div>
             </div>
             <div class="ffn27-flow-formula">\(\mathrm{FFN}(h_i) = W_2\,\mathrm{GELU}(W_1 h_i + b_1) + b_2\)</div>
             <div class="ffn27-flow-note">The same small network runs at every position: shared weights, different token inputs.</div>
-          </div>
-        </div>
-
-        <div class="hidden-content autostep">
-          <div class="callout success">
-            <span class="callout-icon">&#9989;</span>
-            <span>Interpretability work (Geva et al., 2021) suggests FFN neurons can act like <strong>memory cells</strong>. The 4&times; expansion gives the model more pattern detectors.</span>
           </div>
         </div>
 
@@ -2356,14 +2342,7 @@ l e a r n ing &lt;/w&gt;</div>
       </div>
     </div>
 
-    <div class="hidden-content autostep">
-      <div class="callout success" style="margin-top:0.8rem;">
-        <span class="callout-icon">&#9989;</span>
-        <span>You now know one full Transformer block. Next: stack the same block layer after layer.</span>
-      </div>
-    </div>
-
-    <div class="block28-takeaway" id="block28-takeaway">Attention and FFN both write updates into one shared residual stream.</div>
+    <div class="block28-takeaway" id="block28-takeaway">You now know one full Transformer block. Next: stack the same block layer after layer.</div>
     </div>
   </div>
 
