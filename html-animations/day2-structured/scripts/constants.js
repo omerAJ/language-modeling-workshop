@@ -317,7 +317,7 @@ const ATTN_MATRIX_OUTPUT_ROW_MS = 240;
 
 const ATTN_MHA_TAKEAWAYS = [
   'The embedding matrix \\(X\\) stays fixed at the top. Below it, two empty head columns are reserved—one per head—each labeled with its subspace size \\(d_h\\).',
-  'A bus copies the same \\(X\\) into both heads: each column receives its own full-sequence matrix so the two attention mechanisms can run in parallel.',
+  'We make two cpies of \\(X\\), one for each heads: each head receives its own full-sequence matrix so the two attention mechanisms can run in parallel.',
   'Once the two heads start from the same input sequence \\(X\\), each head can compute attention in parallel using its own learned projections.',
   'Each head applies its own learned projection matrices \\(W_Q\\), \\(W_K\\), and \\(W_V\\) to the same \\(X\\), producing different head-specific \\(Q\\), \\(K\\), and \\(V\\).',
   'Each head now runs its own masked attention mechanism in parallel. Because the heads use different learned projections, they can focus on different relationships or features in the same sequence.',

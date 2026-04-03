@@ -856,7 +856,7 @@ function updateAttentionMultiHeadOverlay() {
   if (busY > busMaxY) busY = busMaxY;
 
   const remPx = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
-  busY = Math.min(busY + remPx * 2, nearestCopyY - 4);
+  busY = Math.min(busY + remPx * 1, nearestCopyY - 4);
 
   const nodeYShift = remPx * 0.5;
   copyNode.setAttribute('cx', nodeX.toFixed(2));

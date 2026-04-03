@@ -146,18 +146,10 @@
 }
 
 .attn24-head-card.is-split-visible:not(.is-proj-visible) .attn24-head-body {
-    grid-template-columns: 1fr;
-    justify-items: center;
-    align-content: center;
     min-height: var(--attn24-head-slot-body-h);
     height: var(--attn24-head-slot-body-h);
     max-height: var(--attn24-head-slot-body-h);
     box-sizing: border-box;
-
-}
-
-.attn24-head-card.is-split-visible:not(.is-proj-visible) .attn24-head-source-col {
-    grid-column: 1;
 
 }
 
