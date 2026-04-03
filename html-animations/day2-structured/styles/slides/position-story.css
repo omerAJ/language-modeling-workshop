@@ -221,7 +221,8 @@
   flex: 1 1 auto;
   min-height: 0;
   width: 100%;
-  display: block;
+  display: flex;
+  flex-direction: column;
   background:
     radial-gradient(circle at 82% 12%, rgba(0, 120, 144, 0.08), transparent 34%),
     radial-gradient(circle at 14% 12%, rgba(100, 75, 0, 0.06), transparent 30%),
@@ -229,7 +230,11 @@
 }
 
 .pos26-shell {
+  flex: 1 1 auto;
+  min-height: 0;
+  height: 100%;
   display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
   gap: 0.56rem;
 }
 
@@ -306,15 +311,19 @@
 .pos26-state-frame {
   position: relative;
   min-height: 0;
-  transition: height 0.28s ease;
+  height: 100%;
+  overflow: hidden;
 }
 
 .pos26-state-panel {
   position: absolute;
   inset: 0;
+  min-height: 0;
   display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
   gap: 0.64rem;
   align-content: start;
+  overflow: hidden;
   opacity: 0;
   transform: translateY(0.42rem);
   visibility: hidden;
@@ -369,12 +378,31 @@
   display: grid;
   grid-template-columns: minmax(0, 0.98fr) minmax(0, 1.12fr);
   gap: 0.62rem;
-  align-items: start;
+  min-height: 0;
+  height: 100%;
+  align-items: stretch;
+  overflow: hidden;
 }
 
 .pos26-copy-card,
 .pos26-visual-card {
   padding: 0.74rem 0.82rem;
+  min-height: 0;
+  height: 100%;
+  display: grid;
+  align-content: start;
+  overflow: hidden;
+}
+
+.pos26-teach-list,
+.pos26-raw-grid,
+.pos26-normalize-compare,
+.pos26-compare-rail,
+.pos26-relative-scene,
+.pos26-attn-bridge,
+.pos26-rope-walkthrough,
+.pos26-rope-stage {
+  min-height: 0;
 }
 
 .pos26-copy-title,
@@ -1024,10 +1052,6 @@
   fill: rgba(10, 20, 80, 0.88);
 }
 
-#slide-26[data-pos26-step='5'] .pos26-state-grid {
-  grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr);
-}
-
 #slide-26[data-pos26-step='5'] .pos26-copy-card,
 #slide-26[data-pos26-step='5'] .pos26-visual-card {
   padding: 0.72rem 0.78rem;
@@ -1079,4 +1103,14 @@
   font-size: 0.67rem;
   line-height: 1.45;
   color: rgba(30, 50, 120, 0.82);
+}
+
+
+/* Slide 26 only: tighten bottom spacing */
+#slide-26 .pos26-stage {
+  padding-bottom: 0.1rem; /* was var(--sp-4) = 1.20rem */
+}
+
+#slide-26.slide.slide-has-takeaway .slide-body {
+  gap: 0rem; /* was var(--deck-takeaway-body-gap) = 0.18rem */
 }

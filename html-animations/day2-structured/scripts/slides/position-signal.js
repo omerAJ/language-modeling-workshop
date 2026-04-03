@@ -11,31 +11,12 @@ const POS26_TAKEAWAYS = [
   'RoPE rotates Q/K so attention scores reflect relative offset.'
 ];
 
-function measurePositionSignalPanelHeight(panel) {
-  if (!panel) return 0;
-
-  const panelRect = panel.getBoundingClientRect();
-  const children = Array.from(panel.children);
-  if (children.length === 0) return Math.ceil(panelRect.height);
-
-  let maxBottom = 0;
-  children.forEach((child) => {
-    const rect = child.getBoundingClientRect();
-    if (!rect.width && !rect.height) return;
-    maxBottom = Math.max(maxBottom, rect.bottom - panelRect.top);
-  });
-
-  return Math.ceil(maxBottom);
-}
-
 function syncPositionSignalFrameHeight() {
   const slide = document.getElementById('slide-26');
   const frame = document.getElementById('pos26-state-frame');
-  const activePanel = frame ? frame.querySelector('.pos26-state-panel.is-active') : null;
-  if (!slide || !frame || !activePanel) return;
+  if (!slide || !frame) return;
 
   requestAnimationFrame(() => {
-    frame.style.height = measurePositionSignalPanelHeight(activePanel) + 'px';
     scheduleDeckRefresh({ reason: 'pos26-frame', typeset: false });
   });
 }
@@ -95,7 +76,6 @@ function runPositionSignalStep() {
 
 function resetPositionSignalSlide() {
   const slide = document.getElementById('slide-26');
-  const frame = document.getElementById('pos26-state-frame');
 
   positionSignalState.initialized = false;
   positionSignalState.step = 0;
@@ -111,8 +91,6 @@ function resetPositionSignalSlide() {
       item.classList.toggle('is-complete', false);
     });
   }
-
-  if (frame) frame.style.removeProperty('height');
 
   const takeaway = document.getElementById('pos26-takeaway');
   if (takeaway) takeaway.innerHTML = POS26_TAKEAWAYS[0];
