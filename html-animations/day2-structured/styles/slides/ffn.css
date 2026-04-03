@@ -12,14 +12,14 @@
   display: flex;
   flex-direction: column;
   gap: 0.72rem;
-  border-color: rgba(0, 120, 144, 0.18);
+  border-color: rgba(0, 120, 144, 0.55);
   background:
     radial-gradient(circle at 16% 14%, rgba(0, 120, 144, 0.08), transparent 36%),
     var(--surface);
 }
 
 .ffn26-section {
-  border: 1px solid rgba(42, 79, 214, 0.16);
+  border: 1px solid rgba(42, 79, 214, 0.55);
   border-radius: var(--radius-md);
   background: rgba(210, 218, 244, 0.44);
   padding: 0.78rem 0.82rem;
@@ -82,7 +82,7 @@
 
 .ffn26-role-note {
   border-radius: var(--radius-md);
-  border: 1px solid rgba(42, 79, 214, 0.18);
+  border: 1px solid rgba(42, 79, 214, 0.55);
   background: rgba(42, 79, 214, 0.08);
   padding: 0.56rem 0.64rem;
   font-size: var(--fs-2xs);
@@ -100,7 +100,7 @@
 
 .ffn26-matrix-card {
   border-radius: var(--radius-md);
-  border: 1px solid rgba(42, 79, 214, 0.2);
+  border: 1px solid rgba(42, 79, 214, 0.55);
   background: rgba(42, 79, 214, 0.06);
   padding: 0.65rem 0.68rem;
 }
@@ -151,7 +151,7 @@
 }
 
 .ffn26-matrix-bar.is-faint {
-  opacity: 0.68;
+  opacity: 1;
 }
 
 .ffn26-matrix-divider {
@@ -176,7 +176,7 @@
   justify-self: center;
   min-width: 8rem;
   border-radius: 999px;
-  border: 1px solid rgba(0, 120, 144, 0.28);
+  border: 1px solid rgba(0, 120, 144, 0.55);
   background: rgba(0, 120, 144, 0.1);
   padding: 0.5rem 0.85rem;
   font-size: var(--fs-xs);
@@ -208,7 +208,7 @@
 
 .ffn26-mlp-chip {
   border-radius: 999px;
-  border: 1px solid rgba(42, 79, 214, 0.28);
+  border: 1px solid rgba(42, 79, 214, 0.55);
   background: rgba(42, 79, 214, 0.1);
   padding: 0.44rem 0.7rem;
   font-family: 'JetBrains Mono', monospace;
@@ -219,7 +219,7 @@
 .ffn26-op-card {
   min-width: 8rem;
   border-radius: var(--radius-md);
-  border: 1px solid rgba(0, 120, 144, 0.24);
+  border: 1px solid rgba(0, 120, 144, 0.55);
   background: rgba(0, 120, 144, 0.08);
   padding: 0.44rem 0.64rem;
   display: flex;
@@ -232,7 +232,7 @@
 
 .ffn26-op-gelu {
   min-width: 5.6rem;
-  border-color: rgba(106, 79, 0, 0.26);
+  border-color: rgba(106, 79, 0, 0.55);
   background: rgba(106, 79, 0, 0.08);
   color: #4a3200;
 }
@@ -288,7 +288,7 @@
 .ffn26-batch-op {
   min-width: 6.2rem;
   border-radius: var(--radius-md);
-  border: 1px solid rgba(0, 120, 144, 0.28);
+  border: 1px solid rgba(0, 120, 144, 0.55);
   background: rgba(0, 120, 144, 0.08);
   padding: 0.46rem 0.62rem;
   display: grid;
@@ -299,7 +299,7 @@
 
 .ffn26-batch-op-gelu {
   min-width: 5.2rem;
-  border-color: rgba(106, 79, 0, 0.28);
+  border-color: rgba(106, 79, 0, 0.55);
   background: rgba(106, 79, 0, 0.08);
   color: #4a3200;
 }
@@ -326,7 +326,7 @@
 
 .ffn26-takeaway {
   margin-top: 0.82rem;
-  border: 1px solid rgba(42, 79, 214, 0.28);
+  border: 1px solid rgba(42, 79, 214, 0.55);
   border-radius: var(--radius-md);
   background: rgba(42, 79, 214, 0.1);
   display: flex;

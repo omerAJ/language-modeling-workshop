@@ -35,7 +35,7 @@
 
   .arch-box.embed   { background: rgba(160,80,0,0.12);  border-color: rgba(160,80,0,0.4);  color: var(--orange); }
   .arch-box.pos     { background: var(--yellow-bg);        border-color: var(--yellow-border);   color: var(--yellow); }
-  .arch-box.drop    { background: rgba(61,69,112,0.08); border-color: rgba(61,69,112,0.25); color: var(--text-dim); }
+  .arch-box.drop    { background: rgba(61,69,112,0.08); border-color: rgba(61,69,112,0.55); color: var(--text-dim); }
   .arch-box.block   { background: var(--purple-bg);        border-color: var(--purple-border);   color: var(--purple); }
   .arch-box.norm    { background: var(--cyan-bg);           border-color: var(--cyan-border);     color: var(--cyan); }
   .arch-box.linear  { background: var(--accent-bg);         border-color: var(--accent-border);   color: var(--accent); }
@@ -199,7 +199,7 @@
     justify-content: flex-end;
     position: relative;
     margin-left: 3.2rem;
-    opacity: 0.9;
+    opacity: 1;
     align-self: center;
     height: max-content;
     min-width: 14.6rem;
@@ -461,7 +461,7 @@
   .token-anchor {
     font-size: var(--fs-lg);
     line-height: 1.5;
-    color: #d7def7;
+    color: #0d1020;
   }
   .token-anchor strong {
     color: var(--accent);

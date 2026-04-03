@@ -206,7 +206,7 @@
 }
 
 .attn23-source-item[data-token="sat"] .attn19-vector-label {
-    color: rgba(188,205,250,0.86);
+    color: rgba(10,20,80,1);
 
 }
 
@@ -214,7 +214,7 @@
   .attn23-source-item[data-token="on"] .attn19-vector-label,
   .attn23-source-item[data-token="the"] .attn19-vector-label,
   .attn23-source-item[data-token="mat"] .attn19-vector-label {
-    color: rgba(170,233,196,0.84);
+    color: rgba(5,70,25,1);
 
 }
 
@@ -271,7 +271,7 @@
     font-weight: 700;
     letter-spacing: 0.03em;
     text-align: center;
-    opacity: 0.68;
+    opacity: 1;
     transform: translateY(0.04rem);
     transition: opacity 0.22s ease, transform 0.22s ease;
 
@@ -291,7 +291,7 @@
 }
 
 .attn23-col-x .attn23-col-label {
-    color: rgba(188,205,250,0.86);
+    color: rgba(10,20,80,1);
 
 }
 
@@ -303,8 +303,8 @@
 .attn23-col-meta {
     font-family: 'JetBrains Mono', monospace;
     font-size: 0.68rem;
-    color: rgba(189,204,240,0.72);
-    opacity: 0.42;
+    color: rgba(10,20,80,1);
+    opacity: 1;
     transform: translateY(0.04rem);
     transition: opacity 0.22s ease, transform 0.22s ease;
     white-space: nowrap;
@@ -335,12 +335,12 @@
 }
 
 .attn23-col-token .attn23-shell {
-    opacity: 0.76;
+    opacity: 1;
 
 }
 
 .attn23-col-x .attn23-shell {
-    opacity: 0.52;
+    opacity: 1;
     padding: 0.26rem 0.36rem;
 
 }
@@ -422,7 +422,7 @@
 .attn23-mini-x-label {
     font-family: 'JetBrains Mono', monospace;
     font-size: var(--fs-2xs);
-    color: rgba(188,205,250,0.82);
+    color: rgba(10,20,80,1);
     text-align: left;
     letter-spacing: 0.03em;
     transform: translateX(0.85rem);
@@ -519,7 +519,7 @@
     font-size: var(--fs-2xs);
     font-weight: 700;
     text-align: center;
-    opacity: 0.9;
+    opacity: 1;
 
 }
 
@@ -534,7 +534,7 @@
 }
 
 .attn23-proj-output-label[data-proj="v"] {
-    color: rgba(222,230,250,0.88);
+    color: rgba(10,20,80,1);
 
 }
 
@@ -743,7 +743,7 @@
 }
 
 .attn23-x-slot.is-visible .attn19-vector-values {
-    color: rgba(218,228,250,0.58);
+    color: rgba(10,20,80,1);
 
 }
 
@@ -778,19 +778,19 @@
 }
 
 #slide-23.attn23-token-settled .attn23-source-chip-wrap {
-    opacity: 0.22;
+    opacity: 0;
     transform: translateY(-0.02rem) scale(0.99);
 
 }
 
 #slide-23.attn23-full-settled .attn23-source-vector-wrap {
-    opacity: 0.2;
+    opacity: 0;
     transform: translateY(-0.02rem) scale(0.99);
 
 }
 
 #slide-23.attn23-show-projections .attn23-col-token {
-    opacity: 0.48;
+    opacity: 0;
     filter: saturate(0.86);
     transform: translateY(0.5rem);
 
@@ -871,7 +871,7 @@
     position: absolute;
     margin: 0;
     pointer-events: none;
-    opacity: 0.96;
+    opacity: 1;
     transform: translate3d(0, 0, 0);
     transform-origin: center center;
     will-change: transform, opacity;
@@ -956,7 +956,7 @@
     font-size: var(--fs-2xs);
     font-weight: 700;
     letter-spacing: 0.03em;
-    color: rgba(220,230,252,0.95);
+    color: rgba(10,20,80,1);
     text-align: center;
 
 }
@@ -964,7 +964,7 @@
 .attn23-score-dims {
     font-family: 'JetBrains Mono', monospace;
     font-size: var(--fs-2xs);
-    color: rgba(189,204,240,0.72);
+    color: rgba(10,20,80,1);
     white-space: nowrap;
     text-align: center;
 
@@ -981,7 +981,7 @@
 }
 
 .attn23-score-s-wrap .attn23-score-matrix-label {
-    color: rgba(220,230,252,0.95);
+    color: rgba(10,20,80,1);
 
 }
 
@@ -1008,7 +1008,7 @@
     place-items: center;
     font-family: 'JetBrains Mono', monospace;
     font-size: var(--fs-2xs);
-    color: rgba(206,217,245,0.78);
+    color: rgba(10,20,80,1);
     letter-spacing: 0.01em;
     text-transform: lowercase;
 
@@ -1025,7 +1025,7 @@
     text-orientation: mixed;
     transform: rotate(180deg);
     letter-spacing: 0.03em;
-    color: rgba(214,225,249,0.88);
+    color: rgba(10,20,80,1);
 
 }
 
@@ -1269,7 +1269,7 @@
     padding: 0.12rem 0.08rem;
     font-family: 'JetBrains Mono', monospace;
     font-size: var(--fs-2xs);
-    color: rgba(222,232,255,0.95);
+    color: rgba(10,20,80,1);
     background: rgba(40,60,130,0.03);
     border-right: 1px solid rgba(40,60,130,0.16);
 
@@ -1299,23 +1299,23 @@
     opacity: 0;
     background-image: repeating-linear-gradient(
       135deg,
-      rgba(226,233,250,0.22) 0,
-      rgba(226,233,250,0.22) 0.16rem,
-      rgba(226,233,250,0) 0.16rem,
-      rgba(226,233,250,0) 0.34rem
+      rgba(160,40,40,0.18) 0,
+      rgba(160,40,40,0.18) 0.16rem,
+      rgba(160,40,40,0) 0.16rem,
+      rgba(160,40,40,0) 0.34rem
     );
     transition: opacity 0.22s ease;
 
 }
 
 .attn23-score-cell-value.is-dimmed {
-    opacity: 0.22;
+    opacity: 0;
 
 }
 
 .attn23-score-cell-mask.is-visible {
     opacity: 1;
-    background: linear-gradient(180deg, rgba(18,22,31,0.78), rgba(27,34,48,0.88));
+    background: rgba(200,55,55,0.07);
 
 }
 
@@ -1335,7 +1335,7 @@
     font-size: var(--fs-lg);
     font-weight: 600;
     align-self: center;
-    color: rgba(214,226,252,0.9);
+    color: rgba(10,20,80,1);
     line-height: 1;
     opacity: 0;
     visibility: hidden;
@@ -1424,7 +1424,7 @@
 }
 
 #slide-23.attn23-show-score-future-problem .attn23-score-row.is-mask-problem-visible .attn23-score-cell[data-future="true"] .attn23-score-cell-value {
-    color: rgba(255,224,186,0.98);
+    color: rgba(80,10,10,1);
 
 }
 
@@ -1433,20 +1433,20 @@
     background:
       repeating-linear-gradient(
         135deg,
-        rgba(226,233,250,0.08) 0,
-        rgba(226,233,250,0.08) 0.16rem,
-        rgba(226,233,250,0) 0.16rem,
-        rgba(226,233,250,0) 0.34rem
+        rgba(160,40,40,0.14) 0,
+        rgba(160,40,40,0.14) 0.16rem,
+        rgba(160,40,40,0) 0.16rem,
+        rgba(160,40,40,0) 0.34rem
       ),
-      linear-gradient(180deg, rgba(35,42,58,0.78), rgba(27,34,48,0.88));
-    box-shadow: inset 0 0 0 1px rgba(105,117,146,0.42);
+      rgba(200,55,55,0.07);
+    box-shadow: inset 0 0 0 1px rgba(150,40,40,0.32);
 
 }
 
 #slide-23.attn23-show-score-causal-mask .attn23-score-row.is-mask-applied-visible .attn23-score-cell[data-future="true"] .attn23-score-cell-mask,
   #slide-23.attn23-show-score-causal-mask .attn23-score-row.is-mask-question-visible .attn23-score-cell[data-future="true"] .attn23-score-cell-mask {
     opacity: 1;
-    background: linear-gradient(180deg, rgba(18,22,31,0.78), rgba(27,34,48,0.88));
+    background: transparent;
 
 }
 
@@ -1458,10 +1458,10 @@
 
 #slide-23.attn23-show-score-causal-mask .attn23-score-row.is-mask-applied-visible .attn23-score-cell[data-future="true"] .attn23-score-cell-value,
   #slide-23.attn23-show-score-causal-mask .attn23-score-row.is-mask-question-visible .attn23-score-cell[data-future="true"] .attn23-score-cell-value {
-    color: rgba(242,246,255,0.94);
+    color: rgba(10,20,80,1);
     font-weight: 700;
     letter-spacing: 0.02em;
-    text-shadow: 0 0 0.32rem rgba(156,177,255,0.18);
+    text-shadow: 0 0 0.32rem rgba(42,79,214,0.18);
 
 }
 
@@ -1471,13 +1471,13 @@
 }
 
 #slide-23.attn23-show-score-mask-question .attn23-score-row.is-mask-question-visible .attn23-score-cell[data-future="true"] .attn23-score-cell-value {
-    color: rgba(248,250,255,0.98);
-    text-shadow: 0 0 0.48rem rgba(156,177,255,0.28);
+    color: rgba(10,20,80,1);
+    text-shadow: 0 0 0.48rem rgba(42,79,214,0.28);
 
 }
 
 #slide-23.attn23-show-score-mask-question .attn23-score-row.is-mask-question-visible .attn23-score-cell[data-future="false"] .attn23-score-cell-value {
-    color: rgba(203,214,239,0.78);
+    color: rgba(10,20,80,1);
 
 }
 
@@ -1527,7 +1527,7 @@
     font-family: 'JetBrains Mono', monospace;
     font-size: var(--fs-2xs);
     letter-spacing: 0.02em;
-    color: rgba(222,232,255,0.92);
+    color: rgba(10,20,80,1);
     text-align: center;
     padding: 0.18rem 0.44rem;
     border-radius: 999px;
@@ -1539,6 +1539,12 @@
 
 .attn23-postscore-op {
     font-weight: 700;
+
+}
+
+.attn23-postscore-scale-op {
+    font-size: var(--fs-sm);
+    padding: 0.28rem 0.62rem;
 
 }
 
@@ -1562,18 +1568,18 @@
 
 .attn23-postscore-softmax-main {
     font-weight: 700;
-    color: rgba(231,238,255,0.96);
+    color: rgba(10,20,80,1);
 
 }
 
 .attn23-postscore-softmax-note {
     font-size: var(--fs-2xs);
-    color: rgba(199,212,244,0.86);
+    color: rgba(10,20,80,1);
 
 }
 
 .attn23-postscore-row-sum {
-    color: rgba(193,215,255,0.96);
+    color: rgba(10,20,80,1);
     border-color: rgba(var(--attn19-focus-rgb), 0.28);
     background: rgba(var(--attn19-focus-rgb), 0.11);
 
@@ -1581,8 +1587,8 @@
 
 .attn23-postscore-caption {
     font-size: var(--fs-2xs);
-    color: rgba(201,214,246,0.86);
-    border-color: rgba(40,60,130,0.18);
+    color: rgba(10,20,80,1);
+    border-color: rgba(40,60,130,0.55);
     background: rgba(40,60,130,0.05);
 
 }
@@ -1592,18 +1598,18 @@
     font-family: 'JetBrains Mono', monospace;
     font-size: var(--fs-lg);
     font-weight: 600;
-    color: rgba(214,226,252,0.9);
+    color: rgba(10,20,80,1);
     line-height: 1;
 
 }
 
 .attn23-postscore-main-label {
-    color: rgba(220,230,252,0.95);
+    color: rgba(10,20,80,1);
 
 }
 
 .attn23-postscore-v-label {
-    color: rgba(223,231,250,0.92);
+    color: rgba(10,20,80,1);
 
 }
 
@@ -1665,18 +1671,18 @@
     background:
       repeating-linear-gradient(
         135deg,
-        rgba(226,233,250,0.08) 0,
-        rgba(226,233,250,0.08) 0.16rem,
-        rgba(226,233,250,0) 0.16rem,
-        rgba(226,233,250,0) 0.34rem
+        rgba(160,40,40,0.14) 0,
+        rgba(160,40,40,0.14) 0.16rem,
+        rgba(160,40,40,0) 0.16rem,
+        rgba(160,40,40,0) 0.34rem
       ),
-      linear-gradient(180deg, rgba(35,42,58,0.78), rgba(27,34,48,0.88));
-    box-shadow: inset 0 0 0 1px rgba(105,117,146,0.42);
+      rgba(200,55,55,0.07);
+    box-shadow: inset 0 0 0 1px rgba(150,40,40,0.32);
 
 }
 
 .attn23-postscore-cell.is-masked .attn23-score-cell-value {
-    color: rgba(242,246,255,0.96);
+    color: rgba(10,20,80,1);
     font-weight: 700;
     letter-spacing: 0.02em;
 
@@ -1835,6 +1841,35 @@
     opacity: 1;
     visibility: visible;
     transform: translateY(0);
+
+}
+
+/* Row-sum: move to right of main matrix during softmax reveal */
+#slide-23.attn23-show-postscore-softmax .attn23-postscore-stage {
+    grid-template-columns: auto 9rem;
+    justify-content: center;
+    align-items: center;
+
+}
+
+#slide-23.attn23-show-postscore-softmax .attn23-postscore-main-wrap {
+    grid-row: 1;
+    grid-column: 1;
+
+}
+
+#slide-23.attn23-show-postscore-softmax .attn23-postscore-softmax-op {
+    grid-row: 2;
+    grid-column: 1 / -1;
+    justify-self: center;
+
+}
+
+#slide-23.attn23-show-postscore-softmax .attn23-postscore-row-sum {
+    grid-row: 1;
+    grid-column: 2;
+    align-self: center;
+    justify-self: center;
 
 }
 

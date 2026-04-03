@@ -142,10 +142,10 @@ function drawProjection() {
     ctx.strokeStyle = toRgba(style.stroke, isEmphasized ? 0.75 : 0.34);
     ctx.stroke();
 
-    ctx.font = '600 16px Inter, sans-serif';
+    ctx.font = '600 19px Inter, sans-serif';
     ctx.textAlign = 'left';
     ctx.textBaseline = 'middle';
-    ctx.fillStyle = isEmphasized ? 'rgba(233,239,255,0.96)' : 'rgba(233,239,255,0.46)';
+    ctx.fillStyle = isEmphasized ? 'rgba(0,0,0,1)' : 'rgba(0,0,0,0.55)';
     ctx.fillText(token, x + labelOffset[0], y + labelOffset[1]);
   });
 
@@ -160,11 +160,11 @@ function drawProjection() {
   ctx.fillStyle = 'rgba(90,232,142,0.95)';
   ctx.fill();
   ctx.lineWidth = 2.2;
-  ctx.strokeStyle = 'rgba(218,255,232,0.85)';
+  ctx.strokeStyle = 'rgba(10,90,45,0.85)';
   ctx.stroke();
 
-  ctx.font = '700 16px Inter, sans-serif';
-  ctx.fillStyle = '#d8ffe9';
+  ctx.font = '700 19px Inter, sans-serif';
+  ctx.fillStyle = '#000000';
   ctx.textAlign = 'left';
   ctx.fillText('cat (anchor)', catX + 12, catY + 1);
 }

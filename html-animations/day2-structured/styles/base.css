@@ -218,7 +218,7 @@
     text-transform: uppercase;
     letter-spacing: 0.07em;
     color: var(--text-dim);
-    opacity: 0.42;
+    opacity: 1;
   }
 
   .badge {

@@ -65,7 +65,7 @@
   font-family: 'JetBrains Mono', monospace;
   font-size: 1.2rem;
   font-weight: 700;
-  color: rgba(30, 50, 120, 0.62);
+  color: rgba(30,50,120,1);
   flex: 0 0 auto;
 }
 
@@ -73,7 +73,7 @@
 .ffn27-analogy-card {
   padding: 0.78rem 0.92rem;
   border-radius: var(--radius-md);
-  border: 1px solid rgba(42, 79, 214, 0.2);
+  border: 1px solid rgba(42, 79, 214, 0.55);
   background: rgba(210, 218, 244, 0.5);
   margin-top: 0.42rem;
 }
@@ -89,7 +89,7 @@
 .ffn27-flow-section {
   padding: 0.78rem 0.88rem;
   border-radius: var(--radius-md);
-  border: 1px solid rgba(0, 120, 144, 0.22);
+  border: 1px solid rgba(0, 120, 144, 0.55);
   background: rgba(210, 218, 244, 0.48);
   display: grid;
   gap: 0.52rem;
@@ -135,25 +135,25 @@
 
 .ffn27-flow-input,
 .ffn27-flow-output {
-  border: 1px solid rgba(42, 79, 214, 0.28);
+  border: 1px solid rgba(42, 79, 214, 0.55);
   background: rgba(42, 79, 214, 0.1);
   color: #0d1020;
 }
 
 .ffn27-flow-expand {
-  border: 1px solid rgba(0, 120, 144, 0.28);
+  border: 1px solid rgba(0, 120, 144, 0.55);
   background: rgba(0, 120, 144, 0.1);
   color: #003844;
 }
 
 .ffn27-flow-act {
-  border: 1px solid rgba(100, 75, 0, 0.28);
+  border: 1px solid rgba(100, 75, 0, 0.55);
   background: rgba(100, 75, 0, 0.08);
   color: #4a3000;
 }
 
 .ffn27-flow-contract {
-  border: 1px solid rgba(90, 48, 200, 0.28);
+  border: 1px solid rgba(90, 48, 200, 0.55);
   background: rgba(90, 48, 200, 0.08);
   color: #2e1a80;
 }
@@ -162,7 +162,7 @@
   font-family: 'JetBrains Mono', monospace;
   font-size: 0.9rem;
   font-weight: 700;
-  color: rgba(30, 50, 120, 0.62);
+  color: rgba(30,50,120,1);
   flex: 0 0 auto;
 }
 
@@ -172,7 +172,7 @@
   color: #0d1020;
   padding: 0.32rem 0.56rem;
   border-radius: var(--radius-sm);
-  border: 1px solid rgba(42, 79, 214, 0.18);
+  border: 1px solid rgba(42, 79, 214, 0.55);
   background: rgba(42, 79, 214, 0.06);
 }
 

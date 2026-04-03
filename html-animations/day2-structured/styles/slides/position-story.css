@@ -27,7 +27,7 @@
   margin: 0.82rem auto 0;
   padding: 0.62rem 0.78rem;
   border-radius: var(--radius-md);
-  border: 1px solid rgba(42, 79, 214, 0.28);
+  border: 1px solid rgba(42, 79, 214, 0.55);
   background: rgba(42, 79, 214, 0.1);
   color: #0d1020;
   font-size: var(--fs-xs);
@@ -149,7 +149,7 @@
   justify-items: center;
   padding: 0.9rem 1.2rem;
   border-radius: var(--radius-md);
-  border: 1px solid rgba(42, 79, 214, 0.22);
+  border: 1px solid rgba(42, 79, 214, 0.55);
   background: rgba(210, 218, 244, 0.5);
   min-width: 16rem;
 }
@@ -177,7 +177,7 @@
   color: rgba(100, 75, 0, 0.88);
   padding: 0.3rem 0.7rem;
   border-radius: 999px;
-  border: 1px solid rgba(100, 75, 0, 0.24);
+  border: 1px solid rgba(100, 75, 0, 0.55);
   background: rgba(100, 75, 0, 0.08);
 }
 
@@ -188,14 +188,14 @@
   color: #5a0000;
   padding: 0.44rem 0.8rem;
   border-radius: var(--radius-md);
-  border: 1px solid rgba(192, 28, 28, 0.22);
+  border: 1px solid rgba(192, 28, 28, 0.55);
   background: rgba(192, 28, 28, 0.08);
 }
 
 .pos25-answer-card {
   padding: 0.72rem 0.9rem;
   border-radius: var(--radius-md);
-  border: 1px solid rgba(42, 79, 214, 0.24);
+  border: 1px solid rgba(42, 79, 214, 0.55);
   background: rgba(210, 218, 244, 0.52);
 }
 
@@ -247,7 +247,7 @@
 .pos26-rope-box,
 .pos26-rope-score-card {
   border-radius: var(--radius-md);
-  border: 1px solid rgba(42, 79, 214, 0.18);
+  border: 1px solid rgba(42, 79, 214, 0.55);
   background: rgba(210, 218, 244, 0.46);
 }
 
@@ -266,7 +266,7 @@
   padding: 0.32rem 0.2rem;
   border-radius: var(--radius-sm);
   border: 1px solid transparent;
-  color: rgba(30, 50, 120, 0.64);
+  color: rgba(30,50,120,1);
   background: rgba(60, 70, 130, 0.15);
   transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
 }
@@ -278,8 +278,8 @@
 }
 
 .pos26-progress-step.is-complete {
-  color: #c8f5d8;
-  border-color: rgba(15, 110, 47, 0.22);
+  color: #0a3e1a;
+  border-color: rgba(15, 110, 47, 0.55);
   background: rgba(15, 110, 47, 0.08);
 }
 
@@ -341,7 +341,7 @@
   gap: 0.28rem;
   padding: 0.16rem 0.42rem;
   border-radius: 999px;
-  border: 1px solid rgba(42, 79, 214, 0.22);
+  border: 1px solid rgba(42, 79, 214, 0.55);
   background: rgba(42, 79, 214, 0.08);
   color: rgba(10, 20, 80, 0.82);
   font-family: 'JetBrains Mono', monospace;
@@ -399,7 +399,7 @@
   align-items: flex-start;
   padding: 0.48rem 0.54rem;
   border-radius: var(--radius-md);
-  border: 1px solid rgba(42, 79, 214, 0.14);
+  border: 1px solid rgba(42, 79, 214, 0.55);
   background: rgba(60, 70, 130, 0.15);
 }
 
@@ -414,7 +414,7 @@
   font-size: 0.64rem;
   font-weight: 700;
   color: #0d1020;
-  border: 1px solid rgba(42, 79, 214, 0.24);
+  border: 1px solid rgba(42, 79, 214, 0.55);
   background: rgba(42, 79, 214, 0.14);
 }
 
@@ -455,7 +455,7 @@
   align-items: center;
   padding: 0.5rem 0.64rem;
   border-radius: var(--radius-md);
-  border: 1px solid rgba(42, 79, 214, 0.18);
+  border: 1px solid rgba(42, 79, 214, 0.55);
   background: rgba(60, 70, 130, 0.20);
 }
 
@@ -477,11 +477,11 @@
 .pos26-flow-pos {
   border: 1px solid rgba(15, 110, 47, 0.32);
   background: rgba(15, 110, 47, 0.1);
-  color: #c8f5d8;
+  color: #0a3e1a;
 }
 
 .pos26-flow-result {
-  border: 1px solid rgba(100, 75, 0, 0.28);
+  border: 1px solid rgba(100, 75, 0, 0.55);
   background: rgba(100, 75, 0, 0.08);
   color: #4a3000;
 }
@@ -498,7 +498,7 @@
   margin-top: 0.56rem;
   padding: 0.58rem 0.66rem;
   border-radius: var(--radius-md);
-  border: 1px solid rgba(42, 79, 214, 0.14);
+  border: 1px solid rgba(42, 79, 214, 0.55);
   background: rgba(60, 70, 130, 0.16);
 }
 
@@ -556,19 +556,19 @@
 
 .pos26-number-vector-token span {
   color: #0d1020;
-  border-color: rgba(42, 79, 214, 0.24);
+  border-color: rgba(42, 79, 214, 0.55);
   background: rgba(42, 79, 214, 0.1);
 }
 
 .pos26-number-vector-pos span {
   color: #4a3000;
-  border-color: rgba(100, 75, 0, 0.28);
+  border-color: rgba(100, 75, 0, 0.55);
   background: rgba(100, 75, 0, 0.12);
 }
 
 .pos26-number-vector-out span {
   color: #5a0000;
-  border-color: rgba(192, 28, 28, 0.26);
+  border-color: rgba(192, 28, 28, 0.55);
   background: rgba(192, 28, 28, 0.12);
 }
 
@@ -643,13 +643,13 @@
 .pos26-freq-tag.mid {
   color: #4a3000;
   background: rgba(100, 75, 0, 0.18);
-  border: 1px solid rgba(100, 75, 0, 0.28);
+  border: 1px solid rgba(100, 75, 0, 0.55);
 }
 
 .pos26-freq-tag.slow {
-  color: #c8f5d8;
+  color: #0a3e1a;
   background: rgba(15, 110, 47, 0.16);
-  border: 1px solid rgba(15, 110, 47, 0.26);
+  border: 1px solid rgba(15, 110, 47, 0.55);
 }
 
 .pos26-binary-cell {
@@ -672,13 +672,13 @@
 
 .pos26-binary-cell.on {
   background: rgba(42, 79, 214, 0.14);
-  border: 1px solid rgba(42, 79, 214, 0.22);
+  border: 1px solid rgba(42, 79, 214, 0.55);
   color: rgba(30, 50, 120, 0.72);
 }
 
 .pos26-binary-cell.off {
   background: rgba(100, 75, 0, 0.16);
-  border: 1px solid rgba(100, 75, 0, 0.26);
+  border: 1px solid rgba(100, 75, 0, 0.55);
   color: #4a3000;
 }
 
@@ -708,7 +708,7 @@
 .pos26-mini-bit {
   height: 0.52rem;
   border-radius: 0.2rem;
-  border: 1px solid rgba(42, 79, 214, 0.18);
+  border: 1px solid rgba(42, 79, 214, 0.55);
 }
 
 .pos26-mini-bit.on {
@@ -717,7 +717,7 @@
 
 .pos26-mini-bit.off {
   background: rgba(100, 75, 0, 0.14);
-  border-color: rgba(100, 75, 0, 0.24);
+  border-color: rgba(100, 75, 0, 0.55);
 }
 
 .pos26-wave-card {
@@ -808,7 +808,7 @@
   --pos26-relative-token-padding-x: 0.42rem;
   padding: var(--pos26-relative-scene-padding-y) var(--pos26-relative-scene-padding-x);
   border-radius: var(--radius-md);
-  border: 1px solid rgba(42, 79, 214, 0.16);
+  border: 1px solid rgba(42, 79, 214, 0.55);
   background: rgba(60, 70, 130, 0.16);
 }
 
@@ -832,7 +832,7 @@
   place-items: center;
   min-height: 0.5rem;
   border-radius: var(--radius-sm);
-  border: 1px solid rgba(42, 79, 214, 0.16);
+  border: 1px solid rgba(42, 79, 214, 0.55);
   background: rgba(42, 79, 214, 0.08);
   font-family: 'JetBrains Mono', monospace;
   font-size: 0.55rem;
@@ -841,7 +841,7 @@
 }
 
 .pos26-index-chip.pos26-focus {
-  border-color: rgba(100, 75, 0, 0.26);
+  border-color: rgba(100, 75, 0, 0.55);
   background: rgba(100, 75, 0, 0.12);
   color: #4a3000;
 }
@@ -923,7 +923,7 @@
   place-items: center;
   min-height: 2rem;
   border-radius: var(--radius-sm);
-  border: 1px solid rgba(42, 79, 214, 0.22);
+  border: 1px solid rgba(42, 79, 214, 0.55);
   background: rgba(42, 79, 214, 0.1);
   color: #0d1020;
   font-weight: 700;

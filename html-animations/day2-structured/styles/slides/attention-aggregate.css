@@ -121,7 +121,7 @@
     border-radius: 999px;
     border: 1px solid rgba(var(--attn19-focus-rgb), 0.95);
     background: rgba(var(--attn19-focus-rgb), 0.28);
-    color: rgba(228,238,255,0.98);
+    color: rgba(10,20,80,1);
     font-family: 'JetBrains Mono', monospace;
     font-size: var(--fs-2xs);
     line-height: 1;
@@ -154,7 +154,7 @@
     position: absolute;
     margin: 0;
     pointer-events: none;
-    opacity: 0.94;
+    opacity: 1;
     border-color: rgba(var(--attn19-focus-rgb), 0.82);
     box-shadow: 0 0 0 0.08rem rgba(var(--attn19-focus-rgb), 0.22), 0 0 0.62rem rgba(var(--attn19-focus-rgb), 0.26);
     background: rgba(var(--attn19-focus-rgb), 0.14);
@@ -168,7 +168,7 @@
 }
 
 #slide-22 .attn22-merge-ghost .attn19-vector-values {
-    color: rgba(221,233,255,0.96);
+    color: rgba(10,20,80,1);
 
 }
 
@@ -180,7 +180,7 @@
 }
 
 #slide-22 .attn22-col.is-merge-target .attn19-vector-wrap-v .attn19-vector-label {
-    color: rgba(228,238,255,0.98);
+    color: rgba(10,20,80,1);
     text-shadow: 0 0 0.34rem rgba(var(--attn19-focus-rgb), 0.44);
 
 }
@@ -199,7 +199,7 @@
 }
 
 #slide-22.attn22-show-merged #attn22-col-sat .attn19-vector-wrap-v .attn19-vector-label {
-    color: rgba(232,240,255,0.98);
+    color: rgba(10,20,80,1);
 
 }
 
@@ -207,7 +207,7 @@
     position: absolute;
     margin: 0;
     pointer-events: none;
-    opacity: 0.96;
+    opacity: 1;
     border-color: rgba(var(--attn19-focus-rgb), 0.88);
     box-shadow: 0 0 0 0.08rem rgba(var(--attn19-focus-rgb), 0.24), 0 0 0.66rem rgba(var(--attn19-focus-rgb), 0.28);
     background: rgba(var(--attn19-focus-rgb), 0.18);
@@ -221,12 +221,12 @@
 }
 
 #slide-22 .attn22-residual-ghost .attn19-vector-values {
-    color: rgba(228,238,255,0.98);
+    color: rgba(10,20,80,1);
 
 }
 
 #slide-22 .attn22-col.is-residual-target .attn19-vector-wrap-x .attn19-vector-label {
-    color: rgba(232,240,255,0.98);
+    color: rgba(10,20,80,1);
     text-shadow: 0 0 0.34rem rgba(var(--attn19-focus-rgb), 0.44);
 
 }
@@ -260,7 +260,7 @@
 }
 
 #slide-22.attn22-show-pairing .attn22-col.is-pairing .attn19-vector-wrap-v .attn19-vector-label {
-    color: rgba(228,238,255,0.98);
+    color: rgba(10,20,80,1);
     text-shadow: 0 0 0.35rem rgba(var(--attn19-focus-rgb), 0.48);
 
 }
@@ -279,7 +279,7 @@
 }
 
 #slide-22.attn22-show-pairing .attn22-col.is-paired .attn19-vector-wrap-v .attn19-vector-label {
-    color: rgba(208,222,255,0.92);
+    color: rgba(10,20,80,1);
 
 }
 
@@ -330,7 +330,7 @@
     min-height: 1.45rem;
     font-family: 'JetBrains Mono', monospace;
     font-size: var(--fs-2xs);
-    color: rgba(224,234,255,0.95);
+    color: rgba(10,20,80,1);
     letter-spacing: 0.01em;
 
 }
@@ -338,7 +338,7 @@
 #slide-22 .attn22-agg-term {
     font-family: 'JetBrains Mono', monospace;
     font-size: var(--fs-2xs);
-    color: rgba(214,226,252,0.92);
+    color: rgba(10,20,80,1);
     border: 1px solid rgba(var(--attn19-focus-rgb), 0.35);
     background: rgba(var(--attn19-focus-rgb), 0.13);
     border-radius: 999px;
@@ -360,7 +360,7 @@
     justify-self: center;
     align-items: center;
     gap: 0.3rem;
-    opacity: 0.42;
+    opacity: 1;
     transform: scale(0.97);
     transition: opacity var(--attn22-agg-collapse-ms, 240ms) ease, transform var(--attn22-agg-collapse-ms, 240ms) ease;
 
@@ -369,7 +369,7 @@
 #slide-22 .attn22-agg-output-label {
     font-family: 'JetBrains Mono', monospace;
     font-size: var(--fs-2xs);
-    color: rgba(198,213,248,0.9);
+    color: rgba(10,20,80,1);
     white-space: nowrap;
 
 }
@@ -390,7 +390,7 @@
     font-family: 'JetBrains Mono', monospace;
     font-size: 0.56rem;
     font-variant-numeric: tabular-nums;
-    color: rgba(220,232,255,0.94);
+    color: rgba(10,20,80,1);
     text-align: center;
     padding: 0.18rem 0.08rem;
     border-right: 1px solid rgba(var(--attn19-focus-rgb), 0.22);
@@ -403,7 +403,7 @@
 }
 
 #slide-22 .attn22-agg-wrap.is-collapsed .attn22-agg-formula {
-    opacity: 0.35;
+    opacity: 1;
 
 }
 

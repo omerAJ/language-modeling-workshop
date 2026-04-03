@@ -49,7 +49,7 @@
   .callout .icon { flex-shrink: 0; font-size: var(--fs-lg); }
   .callout.info     { background: var(--accent-bg);  border: 1px solid var(--accent-border); color: #0f1a60; }
   .callout.warn     { background: var(--orange-bg);  border: 1px solid var(--orange-border); color: #5e2a00; }
-  .callout.success  { background: var(--green-bg);   border: 1px solid var(--green-border);  color: #a8f5c8; }
+  .callout.success  { background: var(--green-bg);   border: 1px solid var(--green-border);  color: #084020; }
   .callout.question { background: var(--purple-bg);  border: 1px solid var(--purple-border); color: #2e1a80; }
 
   .flow {
@@ -138,9 +138,9 @@
     border-color: var(--accent);
     color: #fff;
   }
-  .nav-btn.primary:hover { background: #6888ef; }
+  .nav-btn.primary:hover { background: #1a3aa8; }
 
-  .nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+  .nav-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
   .bottom-bar {
     display: flex;

@@ -23,7 +23,7 @@
     background: rgba(42,79,214,0.08);
   }
   .embed-row.matrix-ellipsis-row {
-    opacity: 0.58;
+    opacity: 1;
   }
   .embed-key {
     font-family: 'JetBrains Mono', monospace;
@@ -56,7 +56,7 @@
   }
   .vec-chip.dim {
     color: #2a3560;
-    border-color: rgba(42,79,214,0.24);
+    border-color: rgba(42,79,214,0.55);
     background: rgba(42,79,214,0.08);
   }
   .vec-chip.token-label {
@@ -130,7 +130,7 @@
     background:
       linear-gradient(0deg, rgba(42,79,214,0.06) 1px, transparent 1px) 0 0 / 1.65rem 1.65rem,
       linear-gradient(90deg, rgba(42,79,214,0.06) 1px, transparent 1px) 0 0 / 1.65rem 1.65rem,
-      rgba(13,18,30,0.9);
+      rgba(232,236,252,0.95);
     min-height: 15rem;
     aspect-ratio: 16 / 9;
     overflow: hidden;
@@ -150,7 +150,7 @@
     transition: opacity 0.2s ease, transform 0.2s ease;
   }
   .projection-readout.updating {
-    opacity: 0.68;
+    opacity: 1;
     transform: translateY(2px);
   }
   .projection-neighbors {
