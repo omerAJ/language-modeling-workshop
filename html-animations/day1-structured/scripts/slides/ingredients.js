@@ -3,6 +3,7 @@
 // ══════════════════════════════════════
 var ingredientAnimationState = {
   animation: null,
+  imageAnimation: null,
   ghost: null,
   locked: false,
   timerId: null
@@ -32,6 +33,40 @@ function getIngredientHeroStage() {
 
 function getIngredientHeroImage() {
   return document.getElementById('ingredientHeroImage');
+}
+
+function getContainedImageRect(imageEl) {
+  var rect = imageEl.getBoundingClientRect();
+  var naturalWidth = imageEl.naturalWidth || rect.width;
+  var naturalHeight = imageEl.naturalHeight || rect.height;
+
+  if (!rect.width || !rect.height || !naturalWidth || !naturalHeight) {
+    return rect;
+  }
+
+  var frameRatio = rect.width / rect.height;
+  var imageRatio = naturalWidth / naturalHeight;
+  var renderedWidth;
+  var renderedHeight;
+  var offsetX = 0;
+  var offsetY = 0;
+
+  if (imageRatio > frameRatio) {
+    renderedWidth = rect.width;
+    renderedHeight = rect.width / imageRatio;
+    offsetY = (rect.height - renderedHeight) / 2;
+  } else {
+    renderedHeight = rect.height;
+    renderedWidth = rect.height * imageRatio;
+    offsetX = (rect.width - renderedWidth) / 2;
+  }
+
+  return {
+    left: rect.left + offsetX,
+    top: rect.top + offsetY,
+    width: renderedWidth,
+    height: renderedHeight
+  };
 }
 
 function isInteractionLocked() {
@@ -100,6 +135,7 @@ function finalizeIngredientFlight() {
   }
   ingredientAnimationState.ghost = null;
   ingredientAnimationState.animation = null;
+  ingredientAnimationState.imageAnimation = null;
   ingredientAnimationState.locked = false;
   updateIngredientButtons();
 }
@@ -112,6 +148,11 @@ function cancelIngredientFlight() {
     ingredientAnimationState.animation.oncancel = null;
     ingredientAnimationState.animation.cancel();
     ingredientAnimationState.animation = null;
+  }
+
+  if (ingredientAnimationState.imageAnimation) {
+    ingredientAnimationState.imageAnimation.cancel();
+    ingredientAnimationState.imageAnimation = null;
   }
 
   if (ingredientAnimationState.ghost && ingredientAnimationState.ghost.parentNode) {
@@ -150,14 +191,14 @@ function animateIngredientToGrid(n) {
     return;
   }
 
-  var startRect = heroImage.getBoundingClientRect();
+  var startRect = getContainedImageRect(heroImage);
   ingredientAnimationState.locked = true;
   updateIngredientButtons();
 
   setIngredientPhase(n, 'grid');
   hideIngredientHero();
 
-  var endRect = targetImage.getBoundingClientRect();
+  var endRect = getContainedImageRect(targetImage);
   if (!startRect.width || !startRect.height || !endRect.width || !endRect.height) {
     finalizeIngredientFlight();
     return;
@@ -184,8 +225,8 @@ function animateIngredientToGrid(n) {
   var deltaY = endRect.top - startRect.top;
   var scaleX = endRect.width / startRect.width;
   var scaleY = endRect.height / startRect.height;
-  var squeezeScaleX = Math.max(scaleX * 0.82, scaleX * 0.62);
-  var squeezeScaleY = Math.min(scaleY * 1.12, Math.max(scaleY * 1.02, 0.48));
+  var squeezeScaleX = Math.max(Math.min(scaleX * 0.66, 0.78), 0.34);
+  var squeezeScaleY = Math.max(Math.min(scaleY * 0.62, 0.74), 0.32);
   var duration = 660;
 
   if (ghost.animate) {
@@ -205,6 +246,26 @@ function animateIngredientToGrid(n) {
         transform: 'translate3d(' + deltaX + 'px, ' + deltaY + 'px, 0px) scale(' + scaleX + ', ' + scaleY + ')',
         opacity: 0.84,
         borderRadius: '0.28rem'
+      }
+    ], {
+      duration: duration,
+      easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
+      fill: 'forwards'
+    });
+
+    ingredientAnimationState.imageAnimation = ghostImage.animate([
+      {
+        transform: 'scale(1, 1)',
+        opacity: 1
+      },
+      {
+        offset: 0.64,
+        transform: 'scale(0.9, 0.64)',
+        opacity: 0.98
+      },
+      {
+        transform: 'scale(1, 1)',
+        opacity: 0.92
       }
     ], {
       duration: duration,
