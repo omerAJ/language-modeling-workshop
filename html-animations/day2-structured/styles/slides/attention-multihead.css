@@ -112,6 +112,12 @@
 
 }
 
+#attn24-takeaway {
+    display: block;
+    line-height: 1.5;
+
+}
+
 /* Step 0: two head columns visible below X; body is a single empty slot until split. */
 #slide-24:not(.attn24-show-split) .attn24-head-body {
     grid-template-columns: 1fr;
