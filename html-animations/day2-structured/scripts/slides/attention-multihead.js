@@ -518,10 +518,11 @@ function cloneAttentionMultiHeadFragment(node, extraClass = '') {
 
 function placeAttentionMultiHeadGhost(ghost, rect, stageRect) {
   if (!ghost || !rect || !stageRect) return;
-  ghost.style.left = (rect.left - stageRect.left).toFixed(2) + 'px';
-  ghost.style.top = (rect.top - stageRect.top).toFixed(2) + 'px';
-  ghost.style.width = rect.width.toFixed(2) + 'px';
-  ghost.style.height = rect.height.toFixed(2) + 'px';
+  const sc = layoutState.currentScale || 1;
+  ghost.style.left = ((rect.left - stageRect.left) / sc).toFixed(2) + 'px';
+  ghost.style.top = ((rect.top - stageRect.top) / sc).toFixed(2) + 'px';
+  ghost.style.width = (rect.width / sc).toFixed(2) + 'px';
+  ghost.style.height = (rect.height / sc).toFixed(2) + 'px';
 }
 
 function animateAttentionMultiHeadGhost(ghost, sourceEl, targetEl, durationMs, options = {}) {
@@ -537,20 +538,50 @@ function animateAttentionMultiHeadGhost(ghost, sourceEl, targetEl, durationMs, o
     || targetRect.width < 1 || targetRect.height < 1
   ) return false;
 
+  const sc = layoutState.currentScale || 1;
   const fromX = sourceRect.left - stageRect.left + sourceRect.width * 0.5;
   const fromY = sourceRect.top - stageRect.top + sourceRect.height * 0.5;
   const toX = targetRect.left - stageRect.left + targetRect.width * 0.5;
   const toY = targetRect.top - stageRect.top + targetRect.height * 0.5;
-  const dx = toX - fromX;
-  const dy = toY - fromY;
+  const dx = (toX - fromX) / sc;
+  const dy = (toY - fromY) / sc;
   const scaleX = sourceRect.width > 0 ? targetRect.width / sourceRect.width : 1;
   const scaleY = sourceRect.height > 0 ? targetRect.height / sourceRect.height : 1;
 
-  ghost.style.transition = 'transform ' + durationMs + 'ms cubic-bezier(0.2, 0.75, 0.3, 1), opacity ' + ATTN_MATRIX_FADE_MS + 'ms ease';
-  const rafId = requestAnimationFrame(() => {
-    ghost.style.transform = 'translate3d(' + dx.toFixed(2) + 'px, ' + dy.toFixed(2) + 'px, 0) scale(' + scaleX.toFixed(3) + ', ' + scaleY.toFixed(3) + ')';
+  const transformVal = 'translate3d(' + dx.toFixed(2) + 'px, ' + dy.toFixed(2) + 'px, 0) scale(' + scaleX.toFixed(3) + ', ' + scaleY.toFixed(3) + ')';
+  const onDone = options.onDone;
+
+  ghost.style.transition = 'none';
+  ghost.style.transform = 'translate3d(0,0,0) scale(1,1)';
+  void ghost.getBoundingClientRect();
+
+  /* Double-RAF: first frame commits the no-transform + transition property;
+     second frame applies the target transform so the browser sees an actual
+     property change and starts the CSS transition reliably. */
+  const raf1 = requestAnimationFrame(() => {
+    ghost.style.transition = 'transform ' + durationMs + 'ms cubic-bezier(0.2, 0.75, 0.3, 1), opacity ' + ATTN_MATRIX_FADE_MS + 'ms ease';
+    const raf2 = requestAnimationFrame(() => {
+      ghost.style.transform = transformVal;
+
+      if (typeof onDone === 'function') {
+        let fired = false;
+        const finish = () => {
+          if (fired) return;
+          fired = true;
+          ghost.removeEventListener('transitionend', onTransitionEnd);
+          onDone();
+        };
+        const onTransitionEnd = (e) => {
+          if (e.propertyName === 'transform') finish();
+        };
+        ghost.addEventListener('transitionend', onTransitionEnd);
+        const safetyId = setTimeout(finish, durationMs + 200);
+        state.attentionMultiHead.timers.push(safetyId);
+      }
+    });
+    state.attentionMultiHead.rafIds.push(raf2);
   });
-  state.attentionMultiHead.rafIds.push(rafId);
+  state.attentionMultiHead.rafIds.push(raf1);
   return true;
 }
 
@@ -1395,7 +1426,36 @@ function runAttentionMultiHeadConcatSequence() {
   clearAttentionMultiHeadGhosts();
   slide.classList.add('attn24-show-concat-flight');
   slide.classList.remove('attn24-show-concat', 'attn24-show-concat-ready', 'attn24-show-wo');
-  let concatGhostAnimated = false;
+
+  const ghosts = [];
+  let landed = 0;
+
+  function onGhostLanded() {
+    landed++;
+    if (landed < ghosts.length) return;
+
+    /* All ghosts have finished their CSS transform flight. */
+
+    /* 1 — Fade ghosts out */
+    ghosts.forEach((g) => { g.style.opacity = '0'; });
+
+    /* 2 — After the opacity fade, swap to concat layout */
+    state.attentionMultiHead.timers.push(setTimeout(() => {
+      slide.classList.add('attn24-show-concat');
+      slide.classList.remove('attn24-show-concat-flight');
+      ghosts.forEach((g) => g.remove());
+    }, ATTN_MATRIX_FADE_MS + 40));
+
+    /* 3 — Reveal the concat matrix */
+    state.attentionMultiHead.timers.push(setTimeout(() => {
+      slide.classList.add('attn24-show-concat-ready');
+    }, ATTN_MATRIX_FADE_MS + 160));
+
+    /* 4 — Settle into final state */
+    state.attentionMultiHead.timers.push(setTimeout(() => {
+      settleAttentionMultiHeadConcatState();
+    }, ATTN_MATRIX_FADE_MS + 320));
+  }
 
   ATTN_MHA_HEADS.forEach((head) => {
     const sourceShell = document.getElementById('attn24-head-output-shell-' + head);
@@ -1403,39 +1463,24 @@ function runAttentionMultiHeadConcatSequence() {
     const ghost = createAttentionMultiHeadOutputGhost(head);
     setAttentionMultiHeadSourceOutputVisible(head, false);
     if (ghost && sourceShell && target) {
-      const didAnimate = animateAttentionMultiHeadGhost(ghost, sourceShell, target, ATTN_MHA_CONCAT_MS);
+      const didAnimate = animateAttentionMultiHeadGhost(ghost, sourceShell, target, ATTN_MHA_CONCAT_MS, {
+        onDone: onGhostLanded
+      });
       if (didAnimate) {
-        concatGhostAnimated = true;
-        state.attentionMultiHead.timers.push(setTimeout(() => {
-          ghost.style.opacity = '0.08';
-        }, Math.max(ATTN_MHA_CONCAT_MS - ATTN_MATRIX_FADE_MS + 40, 140)));
-        state.attentionMultiHead.timers.push(setTimeout(() => {
-          ghost.remove();
-        }, ATTN_MHA_CONCAT_MS + ATTN_MATRIX_FADE_MS + 40));
+        ghosts.push(ghost);
       } else {
         ghost.remove();
       }
     }
   });
 
-  state.attentionMultiHead.timers.push(setTimeout(() => {
-    if (concatGhostAnimated) {
-      slide.classList.add('attn24-show-concat');
-      slide.classList.remove('attn24-show-concat-flight');
-    }
-  }, concatGhostAnimated
-    ? Math.max(ATTN_MHA_CONCAT_MS - 60, 220)
-    : Math.max(ATTN_MHA_CONCAT_MS - 120, 180)));
-
-  state.attentionMultiHead.timers.push(setTimeout(() => {
-    slide.classList.add('attn24-show-concat-ready');
-  }, concatGhostAnimated
-    ? (ATTN_MHA_CONCAT_MS + 20)
-    : Math.max(ATTN_MHA_CONCAT_MS - 60, 220)));
-
-  state.attentionMultiHead.timers.push(setTimeout(() => {
-    settleAttentionMultiHeadConcatState();
-  }, ATTN_MHA_CONCAT_MS + ATTN_MATRIX_FADE_MS + 80));
+  if (ghosts.length === 0) {
+    slide.classList.add('attn24-show-concat', 'attn24-show-concat-ready');
+    slide.classList.remove('attn24-show-concat-flight');
+    state.attentionMultiHead.timers.push(setTimeout(() => {
+      settleAttentionMultiHeadConcatState();
+    }, 60));
+  }
 }
 
 function runAttentionMultiHeadOutputProjectionSequence() {
@@ -1478,23 +1523,20 @@ function initAttentionMultiHeadSlide() {
     if (!state.attentionMultiHead.resizeBound) {
       addTrackedListener(window, 'resize', () => {
         if (!state.attentionMultiHead.initialized) return;
-        if (state.attentionMultiHead.step >= 7) {
-          settleAttentionMultiHeadOutputProjectionState();
-        } else if (state.attentionMultiHead.step >= 6) {
-          settleAttentionMultiHeadConcatState();
-        } else if (state.attentionMultiHead.step >= 5) {
-          settleAttentionMultiHeadOutputState();
-        } else if (state.attentionMultiHead.step >= 4) {
-          settleAttentionMultiHeadAttentionState();
-        } else if (state.attentionMultiHead.step >= 3) {
-          settleAttentionMultiHeadProjectionState();
-        } else if (state.attentionMultiHead.step >= 2) {
-          settleAttentionMultiHeadSourceCollapseState();
-        } else if (state.attentionMultiHead.step >= 1) {
-          settleAttentionMultiHeadSplitState();
-        } else {
-          resetAttentionMultiHeadVisuals();
-        }
+        const s = state.attentionMultiHead;
+        const doneForStep = [
+          true, s.splitDone, s.sourceCollapsedDone, s.projDone,
+          s.attnDone, s.outputDone, s.concatDone, s.outputProjectionDone
+        ];
+        if (!doneForStep[s.step]) return;
+        if (s.step >= 7)      settleAttentionMultiHeadOutputProjectionState();
+        else if (s.step >= 6) settleAttentionMultiHeadConcatState();
+        else if (s.step >= 5) settleAttentionMultiHeadOutputState();
+        else if (s.step >= 4) settleAttentionMultiHeadAttentionState();
+        else if (s.step >= 3) settleAttentionMultiHeadProjectionState();
+        else if (s.step >= 2) settleAttentionMultiHeadSourceCollapseState();
+        else if (s.step >= 1) settleAttentionMultiHeadSplitState();
+        else                  resetAttentionMultiHeadVisuals();
       });
       state.attentionMultiHead.resizeBound = true;
     }
