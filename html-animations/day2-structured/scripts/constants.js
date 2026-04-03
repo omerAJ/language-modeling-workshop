@@ -316,8 +316,8 @@ const ATTN_MATRIX_OUTPUT_ROW_STAGGER_MS = 140;
 const ATTN_MATRIX_OUTPUT_ROW_MS = 240;
 
 const ATTN_MHA_TAKEAWAYS = [
-  'Multi-head attention runs several smaller attention mechanisms in parallel on different learned projections of the same embedding matrix \\(X\\).',
-  'Split the same embedding matrix \\(X\\) into two parallel heads. Both heads see the full sequence, but each head will work in its own smaller learned subspace.',
+  'The embedding matrix \\(X\\) stays fixed at the top. Below it, two empty head columns are reserved—one per head—each labeled with its subspace size \\(d_h\\).',
+  'A bus copies the same \\(X\\) into both heads: each column receives its own full-sequence matrix so the two attention mechanisms can run in parallel.',
   'Once the two heads start from the same input sequence \\(X\\), each head can compute attention in parallel using its own learned projections.',
   'Each head applies its own learned projection matrices \\(W_Q\\), \\(W_K\\), and \\(W_V\\) to the same \\(X\\), producing different head-specific \\(Q\\), \\(K\\), and \\(V\\).',
   'Each head now runs its own masked attention mechanism in parallel. Because the heads use different learned projections, they can focus on different relationships or features in the same sequence.',
@@ -348,9 +348,18 @@ const ATTN_MHA_PROJS = ['q', 'k', 'v'];
 
 const ATTN_MHA_SPLIT_MS = 620;
 
+/** Multi-head split: gap between chained bus strokes (same dash-draw feel as slide 20 compare). */
+const ATTN_MHA_BUS_SEGMENT_GAP_MS = 48;
+
 const ATTN_MHA_PROJ_STAGGER_MS = 120;
 
 const ATTN_MHA_PROJ_REVEAL_MS = 220;
+
+/** Delay after projection opens before showing W and ×, = (per head, after stagger). */
+const ATTN_MHA_PROJ_DUMMY_MS = 260;
+
+/** Delay after weights appear before revealing Q/K/V result matrices. */
+const ATTN_MHA_PROJ_WEIGHTS_MS = 280;
 
 const ATTN_MHA_ATTN_STAGGER_MS = 110;
 

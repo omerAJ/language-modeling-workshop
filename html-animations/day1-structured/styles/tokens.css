@@ -4,7 +4,7 @@
    The authored deck is a fixed 1920×1080 stage.
    The viewport scales that stage uniformly; rems stay deterministic. */
 html {
-  font-size: 31px;
+  font-size: 30px;
   width: 100%;
   height: 100%;
 }

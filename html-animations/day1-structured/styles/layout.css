@@ -40,7 +40,7 @@
     position: absolute;
     inset: 0;
     border-radius: inherit;
-    background: radial-gradient(ellipse at top left, rgba(123,154,255,0.05), transparent 60%);
+    background: radial-grad ient(ellipse at top left, rgba(123,154,255,0.05), transparent 60%);
     pointer-events: none;
   }
 

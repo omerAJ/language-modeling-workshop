@@ -1,16 +1,20 @@
 /* Slide 24: multi-head attention. */
 
 .attn24-stage {
-    --attn24-source-w: 12.2rem;
-    --attn24-head-gap: 1.2rem;
-    --attn24-mini-x-w: 7.9rem;
-    --attn24-branch-gap: 2.4rem;
+    --attn24-source-w: 13.4rem;
+    --attn24-source-max-h: 18.5rem;
+    /* Pre–projection: head body height fixed so split reveal does not resize the lower stage */
+    --attn24-head-slot-body-h: 7.8rem;
+    --attn24-head-card-preproj-h: 10.2rem;
+    --attn24-head-gap: 0.85rem;
+    --attn24-mini-x-w: 7.6rem;
+    --attn24-branch-gap: 1.85rem;
     --attn24-qkv-w: 3.18rem;
     --attn24-proj-shell-w: var(--attn24-qkv-w);
     --attn24-proj-shell-pad: 0.07rem;
     --attn24-proj-shell-h: calc((var(--attn24-struct-row-h) * 5) - 4px + (var(--attn24-proj-shell-pad) * 2));
-    --attn24-proj-top-band: 1.05rem;
-    --attn24-proj-bottom-band: 2.05rem;
+    --attn24-proj-top-band: 1.45rem;
+    --attn24-proj-bottom-band: 0.25rem;
     --attn24-attn-w: 7.8rem;
     --attn24-output-w: 5.9rem;
     --attn24-concat-w: 10.7rem;
@@ -18,15 +22,159 @@
     --attn24-wo-w: 3.05rem;
     --attn24-wo-h: 3.05rem;
     --attn24-combine-gap: 0.62rem;
-    --attn24-struct-row-h: 0.74rem;
+    --attn24-struct-row-h: 0.64rem;
     --attn24-output-row-h: 0.88rem;
     position: relative;
     display: grid;
     justify-items: center;
     align-content: start;
-    gap: 0.88rem;
-    padding-top: 0.68rem;
+    gap: 0.62rem;
+    padding-top: 0.52rem;
     transition: gap 0.26s ease, padding-top 0.26s ease;
+
+}
+
+/* Lower “two-head” block only: captions sit on this region, not above embedding X */
+.attn24-head-region {
+    width: min(calc(100% - 0.6rem), 63rem);
+    max-width: 100%;
+    justify-self: center;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.32rem;
+    position: relative;
+    z-index: 4;
+
+}
+
+.attn24-head-captions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--attn24-head-gap);
+    width: 100%;
+
+}
+
+.attn24-head-caption {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: baseline;
+    justify-content: center;
+    justify-self: center;
+    gap: 0.38rem;
+    min-width: 0;
+    width: max-content;
+    max-width: 100%;
+    margin: 0 auto;
+    text-align: center;
+
+}
+
+.attn24-head-caption-title {
+    font-size: var(--fs-2xs);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    line-height: 1.2;
+
+}
+
+.attn24-head-caption-meta {
+    font-size: var(--fs-2xs);
+    font-family: 'JetBrains Mono', monospace;
+    color: rgba(182,194,223,0.7);
+    white-space: nowrap;
+
+}
+
+.attn24-head-caption-meta sub {
+    font-size: 0.78em;
+    line-height: 0;
+
+}
+
+#attn24-head-caption-h1 .attn24-head-caption-title {
+    color: rgba(var(--attn19-focus-rgb), 0.94);
+
+}
+
+#attn24-head-caption-h2 .attn24-head-caption-title {
+    color: rgba(var(--attn19-source-rgb), 0.9);
+
+}
+
+#slide-24 .slide-header .attn19-subtitle {
+    max-width: none;
+    white-space: nowrap;
+    line-height: 1.35;
+    font-size: 0.875rem;
+
+}
+
+/* Step 0: two head columns visible below X; body is a single empty slot until split. */
+#slide-24:not(.attn24-show-split) .attn24-head-body {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    align-content: center;
+    min-height: var(--attn24-head-slot-body-h);
+    height: var(--attn24-head-slot-body-h);
+    max-height: var(--attn24-head-slot-body-h);
+    padding: 0.45rem;
+    border: 1px dashed rgba(184,194,221,0.32);
+    border-radius: var(--radius-sm);
+    background: rgba(6, 10, 18, 0.28);
+    box-sizing: border-box;
+
+}
+
+#slide-24:not(.attn24-show-split) .attn24-head-source-col {
+    grid-column: 1;
+
+}
+
+/* Q/K/V rows stay out of the layout until the projection step — avoids a huge jump on split reveal. */
+.attn24-head-card:not(.is-proj-visible) .attn24-head-proj-pane {
+    display: none;
+
+}
+
+.attn24-head-card.is-split-visible:not(.is-proj-visible) .attn24-head-body {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    align-content: center;
+    min-height: var(--attn24-head-slot-body-h);
+    height: var(--attn24-head-slot-body-h);
+    max-height: var(--attn24-head-slot-body-h);
+    box-sizing: border-box;
+
+}
+
+.attn24-head-card.is-split-visible:not(.is-proj-visible) .attn24-head-source-col {
+    grid-column: 1;
+
+}
+
+/* Lock full card height until Q/K/V stage so reveal only swaps content inside the slot */
+.attn24-head-card:not(.is-proj-visible) {
+    height: var(--attn24-head-card-preproj-h);
+    min-height: var(--attn24-head-card-preproj-h);
+    max-height: var(--attn24-head-card-preproj-h);
+    overflow: hidden;
+    box-sizing: border-box;
+
+}
+
+.attn24-head-card.is-proj-visible {
+    height: auto;
+    max-height: none;
+    min-height: 14.2rem;
+    overflow: visible;
+
+}
+
+#slide-24:not(.attn24-show-split) .attn24-head-overlay {
+    display: none;
 
 }
 
@@ -38,40 +186,48 @@
 
 }
 
+/* Stacking: heads < ghosts < bus SVG < embedding X (source always on top — no cover during copy reveal) */
 .attn24-ghost-layer {
-    z-index: 4;
+    z-index: 5;
     overflow: hidden;
 
 }
 
 .attn24-overlay {
-    z-index: 2;
+    z-index: 6;
     opacity: 0;
     transition: opacity 0.22s ease;
 
 }
 
+/* Match slide 23 matrix projection bus (attn23-proj-overlay) */
 .attn24-overlay-line,
   .attn24-overlay-bus {
-    stroke: rgba(var(--attn19-focus-rgb), 0.5);
-    stroke-width: 1.02;
-    fill: none;
-    stroke-linecap: round;
     opacity: 0;
     transition: opacity 0.22s ease;
+
+}
+
+.attn24-overlay-line {
+    stroke: rgba(var(--attn19-focus-rgb), 0.92);
+    stroke-width: 1.28;
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
 
 }
 
 .attn24-overlay-bus {
-    stroke: rgba(var(--attn19-focus-rgb), 0.42);
-    stroke-width: 0.98;
+    stroke: rgba(var(--attn19-focus-rgb), 0.66);
+    stroke-width: 1.12;
+    fill: none;
 
 }
 
 .attn24-copy-node {
-    fill: var(--accent-bg);
-    stroke: var(--accent-border);
-    stroke-width: 1;
+    fill: rgba(var(--attn19-focus-rgb), 0.16);
+    stroke: rgba(var(--attn19-focus-rgb), 0.8);
+    stroke-width: 1.08;
     opacity: 0;
     transition: opacity 0.22s ease;
 
@@ -80,9 +236,12 @@
 .attn24-copy-label {
     font-family: 'JetBrains Mono', monospace;
     font-size: var(--fs-2xs);
-    fill: rgba(211,223,255,0.94);
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    fill: rgba(220,230,252,0.96);
     text-anchor: middle;
     dominant-baseline: middle;
+    pointer-events: none;
     opacity: 0;
     transition: opacity 0.22s ease;
 
@@ -109,7 +268,8 @@
 }
 
 .attn24-source-wrap,
-  .attn24-head-grid {
+  .attn24-head-grid,
+  .attn24-head-region {
     transition: opacity 0.24s ease, transform 0.24s ease;
 
 }
@@ -119,11 +279,14 @@
     display: grid;
     justify-items: center;
     align-content: start;
-    max-height: 12rem;
-    overflow: hidden;
+    max-height: var(--attn24-source-max-h);
+    overflow: visible;
     opacity: 1;
     transform: translateY(0);
     transition: max-height 0.28s ease, opacity 0.24s ease, transform 0.24s ease;
+    position: relative;
+    z-index: 10;
+    isolation: isolate;
 
 }
 
@@ -238,13 +401,13 @@
 }
 
 .attn24-head-grid {
-    width: min(calc(100% - 0.6rem), 63rem);
+    width: 100%;
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: var(--attn24-head-gap);
     align-items: start;
     position: relative;
-    z-index: 1;
+    z-index: 0;
     transform: translateY(0);
     transition: width 0.28s ease, opacity 0.24s ease, transform 0.24s ease;
 
@@ -252,11 +415,11 @@
 
 .attn24-head-card {
     --attn24-head-rgb: var(--attn19-focus-rgb);
-    min-height: 18.7rem;
+    min-height: var(--attn24-head-card-preproj-h);
     display: grid;
     align-content: start;
-    gap: 0.42rem;
-    padding: 0.62rem 0.62rem 0.54rem;
+    gap: 0.32rem;
+    padding: 0.4rem 0.52rem 0.44rem;
     border-radius: var(--radius-md);
     border: 1px solid rgba(184,194,221,0.24);
     background:
@@ -274,36 +437,6 @@
 
 #attn24-head-card-h2 {
     --attn24-head-rgb: var(--attn19-source-rgb);
-
-}
-
-.attn24-head-header {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 0.44rem;
-
-}
-
-.attn24-head-title {
-    font-size: var(--fs-2xs);
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: rgba(214,224,250,0.9);
-
-}
-
-.attn24-head-meta {
-    font-size: var(--fs-2xs);
-    font-family: 'JetBrains Mono', monospace;
-    color: rgba(182,194,223,0.66);
-    white-space: nowrap;
-
-}
-
-.attn24-head-meta sub {
-    font-size: 0.78em;
 
 }
 
@@ -360,25 +493,27 @@
 
 }
 
-.attn24-head-copy-node {
-    fill: rgba(var(--attn24-head-rgb), 0.34);
-    stroke: rgba(var(--attn24-head-rgb), 1);
-    stroke-width: 1.5;
+.attn24-head-copy-badge {
     opacity: 0;
     transition: opacity 0.22s ease;
 
 }
 
+.attn24-head-copy-pill {
+    fill: rgba(12, 16, 26, 0.9);
+    stroke: rgba(var(--attn24-head-rgb), 0.85);
+    stroke-width: 1.25;
+    filter: drop-shadow(0 0.05rem 0.18rem rgba(6, 10, 18, 0.42));
+
+}
+
 .attn24-head-copy-label {
     font-family: 'JetBrains Mono', monospace;
-    font-size: var(--fs-2xs);
     font-weight: 700;
-    fill: rgba(214,224,250,0.92);
+    fill: rgba(214,224,250,0.95);
     text-anchor: middle;
     dominant-baseline: middle;
-    opacity: 0;
-    transition: opacity 0.22s ease;
-    text-shadow: 0 0 0.3rem rgba(6,10,18,0.7);
+    pointer-events: none;
 
 }
 
@@ -405,6 +540,7 @@
 
 .attn24-head-mini-x-label {
     color: rgba(184,194,221,0.82);
+    transform: translateX(-0.7rem);
 
 }
 
@@ -439,8 +575,8 @@
 .attn24-head-dummy-x-label {
     color: rgba(184,194,221,0.8);
     line-height: 1;
-    grid-row: 3;
-    align-self: start;
+    grid-row: 1;
+    align-self: end;
 
 }
 
@@ -502,6 +638,8 @@
     position: relative;
     z-index: 2;
     transition: opacity 0.22s ease, filter 0.22s ease;
+    margin-left: 1.4rem;
+    margin-top: -0.8rem;
 
 }
 
@@ -509,7 +647,7 @@
     display: grid;
     grid-template-columns: max-content max-content max-content max-content minmax(0, 1fr);
     align-items: center;
-    gap: 0.7rem;
+    gap: 0.52rem;
 
 }
 
@@ -601,8 +739,8 @@
 
 .attn24-head-w-label {
     color: rgba(214,224,250,0.9);
-    grid-row: 3;
-    align-self: start;
+    grid-row: 1;
+    align-self: end;
 
 }
 
@@ -617,8 +755,8 @@
     font-size: var(--fs-2xs);
     color: rgba(182,194,223,0.62);
     letter-spacing: 0.04em;
-    grid-row: 3;
-    align-self: end;
+    grid-row: 1;
+    align-self: start;
 
 }
 
@@ -695,8 +833,8 @@
 
 .attn24-head-attn-block {
     width: 100%;
-    margin-top: 0.08rem;
-    padding: 0.42rem 0.48rem;
+    margin-top: 0.04rem;
+    padding: 0.3rem 0.36rem;
     border: 1px solid rgba(var(--attn24-head-rgb), 0.28);
     border-radius: var(--radius-md);
     background:
@@ -721,11 +859,14 @@
 
 .attn24-head-attn-block-formula {
     font-family: 'JetBrains Mono', monospace;
-    font-size: var(--fs-2xs);
+    font-size: 0.68rem;
     color: rgba(202,213,239,0.82);
     text-align: center;
-    line-height: 1.24;
-    white-space: nowrap;
+    line-height: 1.28;
+    white-space: normal;
+    max-width: 100%;
+    word-break: break-word;
+    overflow-wrap: anywhere;
 
 }
 
@@ -1020,10 +1161,10 @@
 }
 
 #slide-24.attn24-show-concat .attn24-source-wrap,
-  #slide-24.attn24-show-concat .attn24-head-grid,
+  #slide-24.attn24-show-concat .attn24-head-region,
   #slide-24.attn24-show-concat .attn24-overlay,
   #slide-24.attn24-show-wo .attn24-source-wrap,
-  #slide-24.attn24-show-wo .attn24-head-grid,
+  #slide-24.attn24-show-wo .attn24-head-region,
   #slide-24.attn24-show-wo .attn24-overlay {
     opacity: 0;
     transform: translateY(-0.18rem);
@@ -1063,6 +1204,7 @@
 
 #slide-24.attn24-source-collapsed .attn24-source-wrap {
     max-height: 0;
+    overflow: hidden;
     opacity: 0;
     transform: translateY(-0.42rem);
     pointer-events: none;
@@ -1086,6 +1228,16 @@
 
 }
 
+#slide-24.attn24-show-output:not(.attn24-show-concat-flight):not(.attn24-show-concat):not(.attn24-show-wo) .attn24-head-grid {
+    transform: translateY(-0.22rem);
+
+}
+
+#slide-24.attn24-show-output:not(.attn24-show-concat-flight):not(.attn24-show-concat):not(.attn24-show-wo) .attn24-source-collapsed .attn24-head-grid {
+    transform: translateY(-0.5rem);
+
+}
+
 #slide-24.attn24-show-wo .attn24-concat-wrap,
   #slide-24.attn24-show-wo .attn24-wo-wrap,
   #slide-24.attn24-show-wo .attn24-mha-output-wrap {
@@ -1103,8 +1255,14 @@
 
 }
 
-#slide-24.attn24-show-split .attn24-source-panel,
-  #slide-24.attn24-show-proj .attn24-source-panel {
+/* Keep X visually unchanged during the split/copy transition; dim only once projections begin. */
+#slide-24.attn24-show-split:not(.attn24-source-collapsed):not(.attn24-show-proj) .attn24-source-panel,
+  #slide-24.attn24-show-split:not(.attn24-source-collapsed):not(.attn24-show-proj) .attn24-source-wrap {
+    opacity: 1;
+
+}
+
+#slide-24.attn24-show-proj .attn24-source-panel {
     opacity: 0.78;
 
 }
@@ -1125,7 +1283,7 @@
 
 }
 
-.attn24-head-card.is-proj-visible .attn24-head-dummy-x-wrap,
+.attn24-head-card.is-proj-dummies .attn24-head-dummy-x-wrap,
   .attn24-head-card.is-attn-visible .attn24-head-dummy-x-wrap,
   .attn24-head-card.is-output-visible .attn24-head-dummy-x-wrap {
     opacity: 1;
@@ -1134,26 +1292,23 @@
 
 }
 
-.attn24-head-card.is-proj-visible .attn24-head-overlay,
+.attn24-head-card.is-proj-dummies .attn24-head-overlay,
   .attn24-head-card.is-attn-visible .attn24-head-overlay,
   .attn24-head-card.is-output-visible .attn24-head-overlay,
-  .attn24-head-card.is-proj-visible .attn24-head-overlay-line,
+  .attn24-head-card.is-proj-dummies .attn24-head-overlay-line,
   .attn24-head-card.is-attn-visible .attn24-head-overlay-line,
   .attn24-head-card.is-output-visible .attn24-head-overlay-line,
-  .attn24-head-card.is-proj-visible .attn24-head-overlay-bus,
+  .attn24-head-card.is-proj-dummies .attn24-head-overlay-bus,
   .attn24-head-card.is-attn-visible .attn24-head-overlay-bus,
   .attn24-head-card.is-output-visible .attn24-head-overlay-bus,
-  .attn24-head-card.is-proj-visible .attn24-head-copy-node,
-  .attn24-head-card.is-attn-visible .attn24-head-copy-node,
-  .attn24-head-card.is-output-visible .attn24-head-copy-node,
-  .attn24-head-card.is-proj-visible .attn24-head-copy-label,
-  .attn24-head-card.is-attn-visible .attn24-head-copy-label,
-  .attn24-head-card.is-output-visible .attn24-head-copy-label {
+  .attn24-head-card.is-proj-dummies .attn24-head-copy-badge,
+  .attn24-head-card.is-attn-visible .attn24-head-copy-badge,
+  .attn24-head-card.is-output-visible .attn24-head-copy-badge {
     opacity: 1;
 
 }
 
-.attn24-head-card.is-proj-visible .attn24-head-w-wrap,
+.attn24-head-card.is-proj-weights .attn24-head-w-wrap,
   .attn24-head-card.is-attn-visible .attn24-head-w-wrap,
   .attn24-head-card.is-output-visible .attn24-head-w-wrap {
     opacity: 1;
@@ -1171,7 +1326,7 @@
 
 }
 
-.attn24-head-card.is-proj-visible .attn24-head-proj-op,
+.attn24-head-card.is-proj-weights .attn24-head-proj-op,
   .attn24-head-card.is-attn-visible .attn24-head-proj-op,
   .attn24-head-card.is-output-visible .attn24-head-proj-op {
     opacity: 1;
@@ -1213,7 +1368,7 @@
     margin: 0;
     transform-origin: center center;
     pointer-events: none;
-    z-index: 5;
+    z-index: 0;
     will-change: transform, opacity;
     opacity: 0.98;
 

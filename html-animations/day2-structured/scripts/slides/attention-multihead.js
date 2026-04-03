@@ -217,21 +217,26 @@ function createAttentionMultiHeadHeadOverlay(head) {
     class: 'attn24-head-overlay-bus',
     id: 'attn24-head-line-bus-' + head
   }));
-  overlay.appendChild(svgEl('circle', {
-    class: 'attn24-head-copy-node',
-    id: 'attn24-head-copy-node-' + head
-  }));
-  overlay.appendChild(svgEl('text', {
-    class: 'attn24-head-copy-label',
-    id: 'attn24-head-copy-label-' + head,
-    text: '×3'
-  }));
   ATTN_MHA_PROJS.forEach((proj) => {
     overlay.appendChild(svgEl('path', {
       class: 'attn24-head-overlay-line',
       id: 'attn24-head-line-' + proj + '-' + head
     }));
   });
+  const badge = svgEl('g', {
+    class: 'attn24-head-copy-badge',
+    id: 'attn24-head-copy-badge-' + head
+  });
+  badge.appendChild(svgEl('rect', {
+    class: 'attn24-head-copy-pill',
+    id: 'attn24-head-copy-pill-' + head
+  }));
+  badge.appendChild(svgEl('text', {
+    class: 'attn24-head-copy-label',
+    id: 'attn24-head-copy-label-' + head,
+    text: '\u00d7' + String(ATTN_MHA_PROJS.length)
+  }));
+  overlay.appendChild(badge);
   return overlay;
 }
 
@@ -440,23 +445,6 @@ function createAttentionMultiHeadHeadCard(head) {
     id: 'attn24-head-card-' + head,
     dataset: { head }
   });
-  card.appendChild(createEl('div', {
-    className: 'attn24-head-header',
-    id: 'attn24-head-header-' + head
-  }, [
-    createEl('div', {
-      className: 'attn24-head-title',
-      text: ATTN_MHA_HEAD_LABELS[head]
-    }),
-    createEl('div', {
-      className: 'attn24-head-meta'
-    }, [
-      'd',
-      createEl('sub', { text: 'h' }),
-      ' = ',
-      String(ATTN_MHA_HEAD_DIM)
-    ])
-  ]));
   const body = createEl('div', {
     className: 'attn24-head-body',
     id: 'attn24-head-body-' + head
@@ -481,6 +469,24 @@ function createAttentionMultiHeadHeadCard(head) {
   card.appendChild(createAttentionMultiHeadAttentionBlock(head));
   card.appendChild(createAttentionMultiHeadOutputMatrix(head));
   return card;
+}
+
+function syncAttentionMultiHeadCaptions() {
+  ATTN_MHA_HEADS.forEach((head) => {
+    const cap = document.getElementById('attn24-head-caption-' + head);
+    if (!cap) return;
+    const titleEl = cap.querySelector('.attn24-head-caption-title');
+    const metaEl = cap.querySelector('.attn24-head-caption-meta');
+    if (titleEl) titleEl.textContent = ATTN_MHA_HEAD_LABELS[head] || head;
+    if (metaEl) {
+      metaEl.replaceChildren(
+        'd',
+        createEl('sub', { text: 'h' }),
+        ' = ',
+        String(ATTN_MHA_HEAD_DIM)
+      );
+    }
+  });
 }
 
 function clearAttentionMultiHeadTimers() {
@@ -607,7 +613,7 @@ function setAttentionMultiHeadHeadOverlayVisible(head, visible) {
   const overlay = document.getElementById('attn24-head-overlay-' + head);
   if (!overlay) return;
   overlay.style.opacity = visible ? '1' : '0';
-  overlay.querySelectorAll('.attn24-head-overlay-line, .attn24-head-overlay-bus, .attn24-head-copy-node, .attn24-head-copy-label').forEach((el) => {
+  overlay.querySelectorAll('.attn24-head-overlay-line, .attn24-head-overlay-bus, .attn24-head-copy-badge').forEach((el) => {
     el.style.opacity = visible ? '1' : '0';
     el.style.visibility = visible ? 'visible' : 'hidden';
   });
@@ -655,9 +661,9 @@ function updateAttentionMultiHeadHeadOverlay(head) {
   const overlay = document.getElementById('attn24-head-overlay-' + head);
   const sourceLine = document.getElementById('attn24-head-line-source-' + head);
   const busLine = document.getElementById('attn24-head-line-bus-' + head);
-  const copyNode = document.getElementById('attn24-head-copy-node-' + head);
+  const copyPill = document.getElementById('attn24-head-copy-pill-' + head);
   const copyLabel = document.getElementById('attn24-head-copy-label-' + head);
-  if (!body || !sourceShell || !overlay || !sourceLine || !busLine || !copyNode || !copyLabel) return;
+  if (!body || !sourceShell || !overlay || !sourceLine || !busLine || !copyPill || !copyLabel) return;
 
   const bodyRect = body.getBoundingClientRect();
   if (bodyRect.width < 1 || bodyRect.height < 1) return;
@@ -699,47 +705,42 @@ function updateAttentionMultiHeadHeadOverlay(head) {
   }).filter(Boolean);
   if (!targets.length) return;
 
-  const maxTargetY = Math.max.apply(null, targets.map((entry) => entry.dummyLeft.y));
+  const ys = targets.map((entry) => entry.dummyLeft.y);
+  const maxTargetY = Math.max.apply(null, ys);
+  const minTargetY = Math.min.apply(null, ys);
   const nearestTargetX = Math.min.apply(null, targets.map((entry) => entry.dummyLeft.x));
   const gapWidth = Math.max(1, nearestTargetX - sourcePoint.x);
-  const busX = sourcePoint.x + Math.max(16, Math.min(34, gapWidth * 0.42));
-  const busBottom = Math.max(sourcePoint.y, maxTargetY);
-  const nodeRadius = 4.4;
-  const branchInset = 8.5;
+  const remPx = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
+  const pillH = Math.max(remPx * 1.1, 18);
+  const pillW = Math.max(remPx * 1.1, 38);
+  const rx = pillH * 0.5;
+  const busX = sourcePoint.x + Math.max(14, Math.min(32, gapWidth * 0.4));
+  const pillLeft = busX;
+  const pillRight = busX + pillW;
+  const pillTop = sourcePoint.y - pillH * 0.5;
+  const yTrunkTop = Math.min(sourcePoint.y, minTargetY);
+  const yTrunkBot = Math.max(sourcePoint.y, maxTargetY);
 
-  setLine(sourceLine, sourcePoint, {
-    x: Math.max(sourcePoint.x, busX - nodeRadius - 1.5),
-    y: sourcePoint.y
-  });
-  setLine(busLine, { x: busX, y: sourcePoint.y }, { x: busX, y: busBottom });
+  setLine(sourceLine, sourcePoint, { x: pillLeft, y: sourcePoint.y });
+  setLine(busLine, { x: pillRight, y: yTrunkTop }, { x: pillRight, y: yTrunkBot });
 
-  copyNode.setAttribute('cx', busX.toFixed(2));
-  copyNode.setAttribute('cy', sourcePoint.y.toFixed(2));
-  copyNode.setAttribute('r', nodeRadius.toFixed(2));
-  copyLabel.setAttribute('x', busX.toFixed(2));
-  copyLabel.setAttribute('y', (sourcePoint.y - 9).toFixed(2));
+  copyPill.setAttribute('x', pillLeft.toFixed(2));
+  copyPill.setAttribute('y', pillTop.toFixed(2));
+  copyPill.setAttribute('width', pillW.toFixed(2));
+  copyPill.setAttribute('height', pillH.toFixed(2));
+  copyPill.setAttribute('rx', rx.toFixed(2));
+  copyPill.setAttribute('ry', rx.toFixed(2));
+  copyLabel.setAttribute('x', (pillLeft + pillW * 0.5).toFixed(2));
+  copyLabel.setAttribute('y', sourcePoint.y.toFixed(2));
+  copyLabel.style.fontSize = Math.round(pillH * 0.56) + 'px';
 
-  const sortedTargets = targets.slice().sort((a, b) => a.dummyLeft.y - b.dummyLeft.y);
-
-  sortedTargets.forEach((entry, idx) => {
-    const dummyEnd = {
-      x: Math.max(busX + 2, entry.dummyLeft.x - branchInset),
-      y: entry.dummyLeft.y
-    };
-    if (idx === 0) {
-      const elbowX = busX + Math.max(10, Math.min(18, (dummyEnd.x - busX) * 0.42));
-      setPath(entry.branchLine, [
-        { x: busX, y: sourcePoint.y },
-        { x: elbowX, y: sourcePoint.y },
-        { x: elbowX, y: dummyEnd.y },
-        dummyEnd
-      ]);
-    } else {
-      setPath(entry.branchLine, [
-        { x: busX, y: dummyEnd.y },
-        dummyEnd
-      ]);
-    }
+  targets.forEach((entry) => {
+    const y = entry.dummyLeft.y;
+    const xEnd = entry.dummyLeft.x;
+    setPath(entry.branchLine, [
+      { x: pillRight, y },
+      { x: xEnd, y }
+    ]);
   });
 }
 
@@ -770,62 +771,245 @@ function updateAttentionMultiHeadOverlay() {
     };
   };
 
-  const sourceBottom = anchor(sourceShell, 0.5, 1);
+  const xBottom = anchor(sourceShell, 0.5, 1);
+  const linePad = Math.max(stageRect.height * 0.009, 3.5);
   const branchTargets = [];
   ATTN_MHA_HEADS.forEach((head) => {
     const shell = document.getElementById('attn24-head-mini-x-shell-' + head);
     const line = document.getElementById('attn24-line-' + head);
+    const card = document.getElementById('attn24-head-card-' + head);
     if (!shell || !line) return;
     branchTargets.push({
       line,
-      target: anchor(shell, 0.5, 0)
+      target: anchor(shell, 0.5, 0),
+      capTopY: card ? anchor(card, 0.5, 0).y : anchor(shell, 0.5, 0).y
     });
   });
   if (!branchTargets.length) return;
 
-  const minTargetX = Math.min.apply(null, branchTargets.map((entry) => entry.target.x));
-  const maxTargetX = Math.max.apply(null, branchTargets.map((entry) => entry.target.x));
-  const minTargetY = Math.min.apply(null, branchTargets.map((entry) => entry.target.y));
-  const nodeRadius = Math.max(stageRect.height * 0.015, 6.2);
-  const nodeX = sourceBottom.x;
-  const nodeY = Math.min(
-    minTargetY - Math.max(stageRect.height * 0.08, 28),
-    sourceBottom.y + Math.max(stageRect.height * 0.12, 42)
+  const nearestCopyY = Math.min.apply(null, branchTargets.map((entry) => entry.target.y));
+  const nearestCapY = Math.min.apply(null, branchTargets.map((entry) => entry.capTopY));
+  const minCopyX = Math.min.apply(null, branchTargets.map((entry) => entry.target.x));
+  const maxCopyX = Math.max.apply(null, branchTargets.map((entry) => entry.target.x));
+  const nodeX = xBottom.x;
+  const nodeRadius = Math.max(stageRect.height * 0.018, 6.4);
+  const minNodeGap = Math.max(stageRect.height * 0.3, 84);
+  const maxNodeY = nearestCapY - nodeRadius - Math.max(stageRect.height * 0.045, 9);
+  const nodeY = Math.max(
+    xBottom.y + nodeRadius + 2,
+    Math.min(xBottom.y + minNodeGap, maxNodeY)
   );
-  const busY = Math.max(
-    nodeY + nodeRadius + Math.max(stageRect.height * 0.016, 7),
-    minTargetY - Math.max(stageRect.height * 0.028, 12)
+  const busStartX = minCopyX;
+  const busEndX = maxCopyX;
+  const busClearBelowNode = Math.max(stageRect.height * 0.02, 6);
+  const busMinY = nodeY + nodeRadius + busClearBelowNode;
+  const busMaxY = nearestCapY - Math.max(stageRect.height * 0.026, 9);
+  const busPreferredY = Math.min(
+    nearestCopyY - Math.max(stageRect.height * 0.028, 11),
+    nodeY + Math.max(stageRect.height * 0.072, 18)
   );
+  let busY = Math.max(busMinY, Math.min(busPreferredY, busMaxY));
+  if (!Number.isFinite(busY)) busY = busMinY;
+  if (busY < busMinY) busY = busMinY;
+  if (busY > busMaxY) busY = busMaxY;
 
+  const remPx = parseFloat(getComputedStyle(document.documentElement).fontSize) || 16;
+  busY = Math.min(busY + remPx * 2, nearestCopyY - 4);
+
+  const nodeYShift = remPx * 0.5;
   copyNode.setAttribute('cx', nodeX.toFixed(2));
-  copyNode.setAttribute('cy', nodeY.toFixed(2));
+  copyNode.setAttribute('cy', (nodeY + nodeYShift).toFixed(2));
   copyNode.setAttribute('r', nodeRadius.toFixed(2));
   copyLabel.setAttribute('x', nodeX.toFixed(2));
-  copyLabel.setAttribute('y', nodeY.toFixed(2));
+  copyLabel.setAttribute('y', (nodeY + nodeYShift).toFixed(2));
 
+  const sourceY1 = xBottom.y + linePad;
+  const sourceY2 = nodeY - nodeRadius - Math.max(stageRect.height * 0.006, 2);
   sourceLine.setAttribute('x1', nodeX.toFixed(2));
-  sourceLine.setAttribute('y1', (sourceBottom.y + 3).toFixed(2));
+  sourceLine.setAttribute('y1', sourceY1.toFixed(2));
   sourceLine.setAttribute('x2', nodeX.toFixed(2));
-  sourceLine.setAttribute('y2', (nodeY - nodeRadius - 2).toFixed(2));
+  sourceLine.setAttribute('y2', sourceY2.toFixed(2));
 
   busTrunkLine.setAttribute('x1', nodeX.toFixed(2));
-  busTrunkLine.setAttribute('y1', (nodeY + nodeRadius + 1).toFixed(2));
+  busTrunkLine.setAttribute('y1', (nodeY + nodeYShift + nodeRadius + Math.max(stageRect.height * 0.004, 1.2)).toFixed(2));
   busTrunkLine.setAttribute('x2', nodeX.toFixed(2));
   busTrunkLine.setAttribute('y2', busY.toFixed(2));
 
-  busMainLine.setAttribute('x1', minTargetX.toFixed(2));
+  busMainLine.setAttribute('x1', busStartX.toFixed(2));
   busMainLine.setAttribute('y1', busY.toFixed(2));
-  busMainLine.setAttribute('x2', maxTargetX.toFixed(2));
+  busMainLine.setAttribute('x2', busEndX.toFixed(2));
   busMainLine.setAttribute('y2', busY.toFixed(2));
 
   branchTargets.forEach((entry) => {
-    entry.line.setAttribute('x1', entry.target.x.toFixed(2));
+    const toX = entry.target.x;
+    const toY = entry.target.y - Math.max(stageRect.height * 0.004, 1.2);
+    entry.line.setAttribute('x1', toX.toFixed(2));
     entry.line.setAttribute('y1', busY.toFixed(2));
-    entry.line.setAttribute('x2', entry.target.x.toFixed(2));
-    entry.line.setAttribute('y2', (entry.target.y - 2).toFixed(2));
+    entry.line.setAttribute('x2', toX.toFixed(2));
+    entry.line.setAttribute('y2', toY.toFixed(2));
   });
 
   updateAttentionMultiHeadHeadOverlays();
+}
+
+const ATTN24_BUS_LINE_IDS = [
+  'attn24-line-source',
+  'attn24-line-bus-trunk',
+  'attn24-line-bus-main',
+  'attn24-line-h1',
+  'attn24-line-h2'
+];
+
+const ATTN24_BUS_DRAW_EASE = 'cubic-bezier(0.34, 0.08, 0.22, 1)';
+
+function attentionMultiHeadSvgLineTotalLength(el) {
+  if (!el) return 0;
+  if (typeof el.getTotalLength === 'function') {
+    try {
+      const L = el.getTotalLength();
+      if (L > 0.5) return L;
+    } catch (err) {
+      /* fall through */
+    }
+  }
+  const x1 = parseFloat(el.getAttribute('x1'));
+  const y1 = parseFloat(el.getAttribute('y1'));
+  const x2 = parseFloat(el.getAttribute('x2'));
+  const y2 = parseFloat(el.getAttribute('y2'));
+  if ([x1, y1, x2, y2].some((n) => Number.isNaN(n))) return 0;
+  const len = Math.hypot(x2 - x1, y2 - y1);
+  return len > 0.5 ? len : 1;
+}
+
+function clearAttentionMultiHeadStageBusDrawStyles() {
+  ATTN24_BUS_LINE_IDS.forEach((id) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.style.transition = '';
+    el.style.strokeDasharray = '';
+    el.style.strokeDashoffset = '';
+  });
+  ATTN_MHA_HEADS.forEach((head) => {
+    const el = document.getElementById('attn24-line-' + head);
+    if (el) el.setAttribute('marker-end', 'url(#attn24-arr-marker)');
+  });
+  const node = document.getElementById('attn24-copy-node');
+  const label = document.getElementById('attn24-copy-label');
+  if (node) {
+    node.style.transition = '';
+    node.style.opacity = '';
+  }
+  if (label) {
+    label.style.transition = '';
+    label.style.opacity = '';
+  }
+}
+
+function prepAttentionMultiHeadStageBusStrokeHidden() {
+  /* Use a large safe value — actual length is measured per-segment at animation time */
+  ATTN24_BUS_LINE_IDS.forEach((id) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.style.transition = 'none';
+    el.style.strokeDasharray = '9999';
+    el.style.strokeDashoffset = '9999';
+    if (id === 'attn24-line-h1' || id === 'attn24-line-h2') {
+      el.setAttribute('marker-end', 'none');
+    }
+  });
+  const node = document.getElementById('attn24-copy-node');
+  const label = document.getElementById('attn24-copy-label');
+  if (node) {
+    node.style.transition = 'none';
+    node.style.opacity = '0';
+  }
+  if (label) {
+    label.style.transition = 'none';
+    label.style.opacity = '0';
+  }
+}
+
+/**
+ * Hide the element in the CURRENT frame, then start the draw animation in the NEXT frame.
+ * The RAF boundary is a guaranteed style flush for SVG stroke properties.
+ * getBoundingClientRect() is NOT sufficient for stroke-dashoffset — it only flushes layout.
+ */
+function runAttentionMultiHeadStageLineDraw(el, drawMs) {
+  if (!el) return;
+  const L = attentionMultiHeadSvgLineTotalLength(el);
+  if (L < 0.5) return;
+  const dash = L.toFixed(2);
+  /* 1 — commit hidden state THIS frame (transition: none so no CSS cascade interference) */
+  el.style.transition = 'none';
+  el.style.strokeDasharray = dash;
+  el.style.strokeDashoffset = dash;
+  /* 2 — start the animation in the NEXT frame; the frame boundary IS the flush */
+  const rafId = requestAnimationFrame(() => {
+    el.style.transition = 'stroke-dashoffset ' + drawMs + 'ms ' + ATTN24_BUS_DRAW_EASE;
+    el.style.strokeDashoffset = '0';
+  });
+  state.attentionMultiHead.rafIds.push(rafId);
+}
+
+function scheduleAttentionMultiHeadStageBusDrawChain(slide) {
+  const drawMs = ATTN_QKV_COMPARE_DRAW_MS;
+  const gap = ATTN_MHA_BUS_SEGMENT_GAP_MS;
+
+  const push = (fn, delay) => {
+    state.attentionMultiHead.timers.push(
+      setTimeout(() => {
+        if (!slide.classList.contains('attn24-show-split') || slide.classList.contains('attn24-source-collapsed')) return;
+        fn();
+      }, delay)
+    );
+  };
+
+  /* First segment: one RAF to ensure coordinates from updateAttentionMultiHeadOverlay are committed */
+  const busRaf = requestAnimationFrame(() => {
+    if (!slide.classList.contains('attn24-show-split') || slide.classList.contains('attn24-source-collapsed')) return;
+    const src = document.getElementById('attn24-line-source');
+    runAttentionMultiHeadStageLineDraw(src, drawMs);
+  });
+  state.attentionMultiHead.rafIds.push(busRaf);
+
+  push(() => {
+    const node = document.getElementById('attn24-copy-node');
+    const label = document.getElementById('attn24-copy-label');
+    if (node) {
+      node.style.transition = 'opacity ' + ATTN_QKV_COMPARE_HEAD_FADE_MS + 'ms ease';
+      node.style.opacity = '1';
+    }
+    if (label) {
+      label.style.transition = 'opacity ' + ATTN_QKV_COMPARE_HEAD_FADE_MS + 'ms ease';
+      label.style.opacity = '1';
+    }
+  }, Math.max(drawMs - 70, 120));
+
+  const trunkStart = drawMs + gap;
+  push(() => {
+    runAttentionMultiHeadStageLineDraw(document.getElementById('attn24-line-bus-trunk'), drawMs);
+  }, trunkStart);
+
+  const mainStart = trunkStart + drawMs + gap;
+  push(() => {
+    runAttentionMultiHeadStageLineDraw(document.getElementById('attn24-line-bus-main'), drawMs);
+  }, mainStart);
+
+  const branchStart = mainStart + drawMs + gap;
+  push(() => {
+    runAttentionMultiHeadStageLineDraw(document.getElementById('attn24-line-h1'), drawMs);
+    runAttentionMultiHeadStageLineDraw(document.getElementById('attn24-line-h2'), drawMs);
+  }, branchStart);
+
+  const branchEnd = branchStart + drawMs;
+  push(() => {
+    const h1 = document.getElementById('attn24-line-h1');
+    const h2 = document.getElementById('attn24-line-h2');
+    if (h1) h1.setAttribute('marker-end', 'url(#attn24-arr-marker)');
+    if (h2) h2.setAttribute('marker-end', 'url(#attn24-arr-marker)');
+  }, branchEnd + 16);
+
+  return branchEnd + 100;
 }
 
 function resetAttentionMultiHeadVisuals() {
@@ -842,9 +1026,28 @@ function resetAttentionMultiHeadVisuals() {
   state.attentionMultiHead.combineVisible = false;
   state.attentionMultiHead.outputVisibleCount = 0;
   if (!slide) return;
-  slide.classList.remove('attn24-show-split', 'attn24-source-collapsed', 'attn24-show-proj', 'attn24-show-attn', 'attn24-show-output', 'attn24-show-concat-flight', 'attn24-show-concat', 'attn24-show-concat-ready', 'attn24-show-wo');
+  slide.classList.remove(
+    'attn24-show-split',
+    'attn24-source-collapsed',
+    'attn24-show-proj',
+    'attn24-show-attn',
+    'attn24-show-output',
+    'attn24-show-concat-flight',
+    'attn24-show-concat',
+    'attn24-show-concat-ready',
+    'attn24-show-wo'
+  );
+  clearAttentionMultiHeadStageBusDrawStyles();
   slide.querySelectorAll('.attn24-head-card').forEach((card) => {
-    card.classList.remove('is-split-visible', 'is-proj-visible', 'is-qkv-visible', 'is-attn-visible', 'is-output-visible');
+    card.classList.remove(
+      'is-split-visible',
+      'is-proj-visible',
+      'is-proj-dummies',
+      'is-proj-weights',
+      'is-qkv-visible',
+      'is-attn-visible',
+      'is-output-visible'
+    );
   });
   syncAttentionMultiHeadOutputRows(0);
   clearAttentionMultiHeadActiveRows();
@@ -896,7 +1099,7 @@ function settleAttentionMultiHeadProjectionState() {
   ATTN_MHA_HEADS.forEach((head) => {
     const card = document.getElementById('attn24-head-card-' + head);
     if (!card) return;
-    card.classList.add('is-proj-visible', 'is-qkv-visible');
+    card.classList.add('is-proj-visible', 'is-proj-dummies', 'is-proj-weights', 'is-qkv-visible');
     setAttentionMultiHeadHeadSourceVisible(head, true);
     setAttentionMultiHeadDummyCopiesVisible(head, true);
     setAttentionMultiHeadHeadOverlayVisible(head, true);
@@ -1001,36 +1204,42 @@ function runAttentionMultiHeadSplitSequence() {
   const slide = document.getElementById('slide-24');
   if (!slide) return;
   resetAttentionMultiHeadVisuals();
-  slide.classList.add('attn24-show-split');
-  updateAttentionMultiHeadOverlay();
+  const rafId = requestAnimationFrame(() => {
+    slide.classList.add('attn24-show-split');
+    updateAttentionMultiHeadOverlay();
+    prepAttentionMultiHeadStageBusStrokeHidden();
+    const busBuildMs = scheduleAttentionMultiHeadStageBusDrawChain(slide);
 
-  ATTN_MHA_HEADS.forEach((head, idx) => {
-    const card = document.getElementById('attn24-head-card-' + head);
-    const source = document.getElementById('attn24-source-shell');
-    const target = document.getElementById('attn24-head-mini-x-shell-' + head);
-    const ghost = createAttentionMultiHeadSplitGhost();
-    if (ghost && source && target) {
-      animateAttentionMultiHeadGhost(ghost, source, target, ATTN_MHA_SPLIT_MS);
-      state.attentionMultiHead.timers.push(setTimeout(() => {
-        if (card) card.classList.add('is-split-visible');
+    ATTN_MHA_HEADS.forEach((head, idx) => {
+      const card = document.getElementById('attn24-head-card-' + head);
+      const source = document.getElementById('attn24-source-shell');
+      const target = document.getElementById('attn24-head-mini-x-shell-' + head);
+      const ghost = createAttentionMultiHeadSplitGhost();
+      if (ghost && source && target) {
+        animateAttentionMultiHeadGhost(ghost, source, target, ATTN_MHA_SPLIT_MS);
+        state.attentionMultiHead.timers.push(setTimeout(() => {
+          if (card) card.classList.add('is-split-visible');
+          setAttentionMultiHeadHeadSourceVisible(head, true);
+          setAttentionMultiHeadDummyCopiesVisible(head, false);
+          setAttentionMultiHeadHeadOverlayVisible(head, false);
+        }, Math.max(ATTN_MHA_SPLIT_MS - 110, 140) + (idx * 30)));
+        state.attentionMultiHead.timers.push(setTimeout(() => {
+          ghost.remove();
+        }, ATTN_MHA_SPLIT_MS + ATTN_MATRIX_FADE_MS + 40));
+      } else if (card) {
+        card.classList.add('is-split-visible');
         setAttentionMultiHeadHeadSourceVisible(head, true);
         setAttentionMultiHeadDummyCopiesVisible(head, false);
         setAttentionMultiHeadHeadOverlayVisible(head, false);
-      }, Math.max(ATTN_MHA_SPLIT_MS - 110, 140) + (idx * 30)));
-      state.attentionMultiHead.timers.push(setTimeout(() => {
-        ghost.remove();
-      }, ATTN_MHA_SPLIT_MS + ATTN_MATRIX_FADE_MS + 40));
-    } else if (card) {
-      card.classList.add('is-split-visible');
-      setAttentionMultiHeadHeadSourceVisible(head, true);
-      setAttentionMultiHeadDummyCopiesVisible(head, false);
-      setAttentionMultiHeadHeadOverlayVisible(head, false);
-    }
-  });
+      }
+    });
 
-  state.attentionMultiHead.timers.push(setTimeout(() => {
-    settleAttentionMultiHeadSplitState();
-  }, ATTN_MHA_SPLIT_MS + ATTN_MATRIX_FADE_MS + 80));
+    const ghostDoneMs = ATTN_MHA_SPLIT_MS + ATTN_MATRIX_FADE_MS + 80;
+    state.attentionMultiHead.timers.push(setTimeout(() => {
+      settleAttentionMultiHeadSplitState();
+    }, Math.max(ghostDoneMs, busBuildMs)));
+  });
+  state.attentionMultiHead.rafIds.push(rafId);
 }
 
 function runAttentionMultiHeadSourceCollapseSequence() {
@@ -1063,23 +1272,42 @@ function runAttentionMultiHeadProjectionSequence() {
   slide.classList.add('attn24-show-split', 'attn24-source-collapsed');
   slide.classList.add('attn24-show-proj');
 
+  ATTN_MHA_HEADS.forEach((head) => {
+    const card = document.getElementById('attn24-head-card-' + head);
+    if (!card) {
+      return;
+    }
+    card.classList.remove('is-proj-visible', 'is-proj-dummies', 'is-proj-weights', 'is-qkv-visible');
+    setAttentionMultiHeadDummyCopiesVisible(head, false);
+    setAttentionMultiHeadHeadOverlayVisible(head, false);
+  });
+
   ATTN_MHA_HEADS.forEach((head, idx) => {
     const card = document.getElementById('attn24-head-card-' + head);
     if (!card) return;
+    const t0 = idx * ATTN_MHA_PROJ_STAGGER_MS;
     state.attentionMultiHead.timers.push(setTimeout(() => {
-      card.classList.add('is-split-visible', 'is-proj-visible');
+      card.classList.add('is-split-visible', 'is-proj-visible', 'is-proj-dummies');
       setAttentionMultiHeadHeadSourceVisible(head, true);
       setAttentionMultiHeadDummyCopiesVisible(head, true);
       setAttentionMultiHeadHeadOverlayVisible(head, true);
-    }, idx * ATTN_MHA_PROJ_STAGGER_MS));
+      updateAttentionMultiHeadHeadOverlay(head);
+    }, t0));
+    state.attentionMultiHead.timers.push(setTimeout(() => {
+      card.classList.add('is-proj-weights');
+      updateAttentionMultiHeadHeadOverlay(head);
+    }, t0 + ATTN_MHA_PROJ_DUMMY_MS));
     state.attentionMultiHead.timers.push(setTimeout(() => {
       card.classList.add('is-qkv-visible');
-    }, (idx * ATTN_MHA_PROJ_STAGGER_MS) + ATTN_MHA_PROJ_REVEAL_MS));
+      updateAttentionMultiHeadHeadOverlay(head);
+    }, t0 + ATTN_MHA_PROJ_DUMMY_MS + ATTN_MHA_PROJ_WEIGHTS_MS));
   });
 
+  const lastStagger = (ATTN_MHA_HEADS.length - 1) * ATTN_MHA_PROJ_STAGGER_MS;
+  const projAnimEnd = lastStagger + ATTN_MHA_PROJ_DUMMY_MS + ATTN_MHA_PROJ_WEIGHTS_MS + ATTN_MHA_PROJ_REVEAL_MS;
   state.attentionMultiHead.timers.push(setTimeout(() => {
     settleAttentionMultiHeadProjectionState();
-  }, ((ATTN_MHA_HEADS.length - 1) * ATTN_MHA_PROJ_STAGGER_MS) + ATTN_MHA_PROJ_REVEAL_MS + ATTN_MATRIX_FADE_MS + 40));
+  }, projAnimEnd + ATTN_MATRIX_FADE_MS + 50));
 }
 
 function runAttentionMultiHeadAttentionSequence() {
@@ -1090,7 +1318,7 @@ function runAttentionMultiHeadAttentionSequence() {
   }
   clearAttentionMultiHeadTimers();
   clearAttentionMultiHeadGhosts();
-  slide.classList.add('attn24-show-split', 'attn24-show-proj', 'attn24-show-attn');
+  slide.classList.add('attn24-show-split', 'attn24-source-collapsed', 'attn24-show-proj', 'attn24-show-attn');
 
   ATTN_MHA_HEADS.forEach((head, idx) => {
     const card = document.getElementById('attn24-head-card-' + head);
@@ -1113,7 +1341,7 @@ function runAttentionMultiHeadOutputSequence() {
   }
   clearAttentionMultiHeadTimers();
   clearAttentionMultiHeadGhosts();
-  slide.classList.add('attn24-show-split', 'attn24-show-proj', 'attn24-show-attn', 'attn24-show-output');
+  slide.classList.add('attn24-show-split', 'attn24-source-collapsed', 'attn24-show-proj', 'attn24-show-attn', 'attn24-show-output');
   ATTN_MHA_HEADS.forEach((head) => {
     const card = document.getElementById('attn24-head-card-' + head);
     if (card) card.classList.add('is-output-visible');
@@ -1263,8 +1491,14 @@ function initAttentionMultiHeadSlide() {
     state.attentionMultiHead.initialized = true;
   }
 
+  const stageCopyLabel = document.getElementById('attn24-copy-label');
+  if (stageCopyLabel) {
+    stageCopyLabel.textContent = '\u00d7' + String(ATTN_MHA_HEADS.length);
+  }
+
   const takeaway = document.getElementById('attn24-takeaway');
   if (takeaway) setMathHTML(takeaway, ATTN_MHA_TAKEAWAYS[state.attentionMultiHead.step] || ATTN_MHA_TAKEAWAYS[0]);
+  syncAttentionMultiHeadCaptions();
   typesetMath(slide);
 
   if (state.attentionMultiHead.step >= 7) {
