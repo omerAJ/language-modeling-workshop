@@ -51,81 +51,95 @@
   <p class="small-text">If you built one from scratch, you would need data, an architecture, a learning signal, and serious compute power.</p>
   <div class="spacer-sm"></div>
 
-  <div class="grid-3" id="ingredientsGrid" style="grid-template-columns: repeat(4, minmax(0, 1fr));">
+  <div class="ingredient-grid" id="ingredientsGrid">
     <!-- INGREDIENT 1 -->
-    <div class="ingredient-stack">
-      <div class="card" style="text-align:center;" id="ingredient1Card">
-        <div style="font-size:2.2rem; margin-bottom:0.5rem;">1</div>
-        <div id="ingredient1Hidden">
-          <h3 style="color:var(--cyan);">???</h3>
-          <p class="small-text" style="color:var(--text-dim);">Click for answer</p>
-          <button class="reveal-btn" data-ingredient="1" style="margin-top:0.75rem;">Show</button>
-        </div>
-        <div id="ingredient1Revealed" style="display:none;">
-          <h3 style="color:var(--cyan);">Data</h3>
-          <p class="small-text">Curated text that teaches the model what patterns exist.</p>
+    <div class="ingredient-stack" data-ingredient="1" data-phase="hidden" style="--ingredient-accent: var(--cyan); --ingredient-accent-bg: var(--cyan-bg); --ingredient-accent-border: var(--cyan-border);">
+      <div class="card ingredient-card" id="ingredient1Card">
+        <span class="ingredient-card-label mono">1</span>
+        <div class="ingredient-card-body">
+          <div class="ingredient-state" id="ingredient1Hidden">
+            <h3 class="ingredient-title">???</h3>
+            <p class="small-text ingredient-prompt">Click for answer</p>
+            <button class="reveal-btn ingredient-reveal-btn" data-ingredient="1">Show</button>
+          </div>
+          <div class="ingredient-state" id="ingredient1Revealed" style="display:none;">
+            <h3 class="ingredient-title">Data</h3>
+            <p class="small-text">Curated text that teaches the model what patterns exist.</p>
+          </div>
         </div>
       </div>
-      <div class="ingredient-image-wrap" id="ingredient1ImageWrap" style="display:none;">
-        <img class="ingredient-image" src="./images/data.png" alt="Data illustration">
+      <div class="ingredient-image-wrap" id="ingredient1ImageWrap" aria-hidden="true">
+        <img class="ingredient-image" src="./images/ingredients-fixed/data.png" alt="Data illustration">
       </div>
     </div>
 
     <!-- INGREDIENT 2 -->
-    <div class="ingredient-stack">
-      <div class="card" style="text-align:center;" id="ingredient2Card">
-        <div style="font-size:2.2rem; margin-bottom:0.5rem;">2</div>
-        <div id="ingredient2Hidden">
-          <h3 style="color:var(--accent);">???</h3>
-          <p class="small-text" style="color:var(--text-dim);">Click for answer</p>
-          <button class="reveal-btn" data-ingredient="2" style="margin-top:0.75rem;">Show</button>
-        </div>
-        <div id="ingredient2Revealed" style="display:none;">
-          <h3 style="color:var(--accent);">Architecture</h3>
-          <p class="small-text">Transformer blocks that turn context into next-token scores.</p>
+    <div class="ingredient-stack" data-ingredient="2" data-phase="hidden" style="--ingredient-accent: var(--accent); --ingredient-accent-bg: var(--accent-bg); --ingredient-accent-border: var(--accent-border);">
+      <div class="card ingredient-card" id="ingredient2Card">
+        <span class="ingredient-card-label mono">2</span>
+        <div class="ingredient-card-body">
+          <div class="ingredient-state" id="ingredient2Hidden">
+            <h3 class="ingredient-title">???</h3>
+            <p class="small-text ingredient-prompt">Click for answer</p>
+            <button class="reveal-btn ingredient-reveal-btn" data-ingredient="2">Show</button>
+          </div>
+          <div class="ingredient-state" id="ingredient2Revealed" style="display:none;">
+            <h3 class="ingredient-title">Architecture</h3>
+            <p class="small-text">Transformer blocks that turn context into next-token scores.</p>
+          </div>
         </div>
       </div>
-      <div class="ingredient-image-wrap" id="ingredient2ImageWrap" style="display:none;">
-        <img class="ingredient-image" src="./images/architecture.png" alt="Architecture illustration">
+      <div class="ingredient-image-wrap" id="ingredient2ImageWrap" aria-hidden="true">
+        <img class="ingredient-image" src="./images/ingredients-fixed/architecture.png" alt="Architecture illustration">
       </div>
     </div>
 
     <!-- INGREDIENT 3 -->
-    <div class="ingredient-stack">
-      <div class="card" style="text-align:center;" id="ingredient3Card">
-        <div style="font-size:2.2rem; margin-bottom:0.5rem;">3</div>
-        <div id="ingredient3Hidden">
-          <h3 style="color:var(--purple);">???</h3>
-          <p class="small-text" style="color:var(--text-dim);">Click for answer</p>
-          <button class="reveal-btn" data-ingredient="3" style="margin-top:0.75rem;">Show</button>
-        </div>
-        <div id="ingredient3Revealed" style="display:none;">
-          <h3 style="color:var(--purple);">Learning Signal</h3>
-          <p class="small-text">Next-token loss plus gradient updates that change the weights.</p>
+    <div class="ingredient-stack" data-ingredient="3" data-phase="hidden" style="--ingredient-accent: var(--purple); --ingredient-accent-bg: var(--purple-bg); --ingredient-accent-border: var(--purple-border);">
+      <div class="card ingredient-card" id="ingredient3Card">
+        <span class="ingredient-card-label mono">3</span>
+        <div class="ingredient-card-body">
+          <div class="ingredient-state" id="ingredient3Hidden">
+            <h3 class="ingredient-title">???</h3>
+            <p class="small-text ingredient-prompt">Click for answer</p>
+            <button class="reveal-btn ingredient-reveal-btn" data-ingredient="3">Show</button>
+          </div>
+          <div class="ingredient-state" id="ingredient3Revealed" style="display:none;">
+            <h3 class="ingredient-title">Learning Signal</h3>
+            <p class="small-text">Next-token loss plus gradient updates that change the weights.</p>
+          </div>
         </div>
       </div>
-      <div class="ingredient-image-wrap" id="ingredient3ImageWrap" style="display:none;">
-        <img class="ingredient-image" src="./images/learning-signal.png" alt="Learning signal illustration">
+      <div class="ingredient-image-wrap" id="ingredient3ImageWrap" aria-hidden="true">
+        <img class="ingredient-image" src="./images/ingredients-fixed/learning-signal.png" alt="Learning signal illustration">
       </div>
     </div>
 
     <!-- INGREDIENT 4 -->
-    <div class="ingredient-stack">
-      <div class="card" style="text-align:center;" id="ingredient4Card">
-        <div style="font-size:2.2rem; margin-bottom:0.5rem;">4</div>
-        <div id="ingredient4Hidden">
-          <h3 style="color:var(--orange);">???</h3>
-          <p class="small-text" style="color:var(--text-dim);">Click for answer</p>
-          <button class="reveal-btn" data-ingredient="4" style="margin-top:0.75rem;">Show</button>
-        </div>
-        <div id="ingredient4Revealed" style="display:none;">
-          <h3 style="color:var(--orange);">Compute Power</h3>
-          <p class="small-text">Massive parallel hardware that makes large-scale training and inference actually feasible.</p>
+    <div class="ingredient-stack" data-ingredient="4" data-phase="hidden" style="--ingredient-accent: var(--orange); --ingredient-accent-bg: var(--orange-bg); --ingredient-accent-border: var(--orange-border);">
+      <div class="card ingredient-card" id="ingredient4Card">
+        <span class="ingredient-card-label mono">4</span>
+        <div class="ingredient-card-body">
+          <div class="ingredient-state" id="ingredient4Hidden">
+            <h3 class="ingredient-title">???</h3>
+            <p class="small-text ingredient-prompt">Click for answer</p>
+            <button class="reveal-btn ingredient-reveal-btn" data-ingredient="4">Show</button>
+          </div>
+          <div class="ingredient-state" id="ingredient4Revealed" style="display:none;">
+            <h3 class="ingredient-title">Compute Power</h3>
+            <p class="small-text">Massive hardware that makes large-scale training and inference actually feasible.</p>
+          </div>
         </div>
       </div>
-      <div class="ingredient-image-wrap" id="ingredient4ImageWrap" style="display:none;">
-        <img class="ingredient-image" src="./images/compute.png" alt="Compute power illustration">
+      <div class="ingredient-image-wrap" id="ingredient4ImageWrap" aria-hidden="true">
+        <img class="ingredient-image" src="./images/ingredients-fixed/compute.png" alt="Compute power illustration">
       </div>
+    </div>
+  </div>
+
+  <div class="ingredient-hero-stage" id="ingredientHeroStage" aria-hidden="true">
+    <div class="ingredient-hero-frame" id="ingredientHeroFrame">
+      <img class="ingredient-hero-image" id="ingredientHeroImage" alt="">
     </div>
   </div>
 

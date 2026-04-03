@@ -6,6 +6,10 @@ function cacheUiReferences() {
   state.ui.progressFill = $('#progressFill');
 }
 
+function interactionLockActive() {
+  return typeof isInteractionLocked === 'function' && isInteractionLocked();
+}
+
 function handleDelegatedClick(event) {
   const noteToggle = event.target.closest('.notes-toggle');
   if (noteToggle) {
@@ -16,6 +20,7 @@ function handleDelegatedClick(event) {
 
   const ingredientBtn = event.target.closest('[data-ingredient]');
   if (ingredientBtn) {
+    if (interactionLockActive()) return;
     if (runMutationWithHistory(function() {
       revealIngredient(Number(ingredientBtn.dataset.ingredient));
     })) {
@@ -119,6 +124,12 @@ function handleSubmit(event) {
 function handleKeydown(e) {
   const tag = e.target && e.target.tagName;
   if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || (e.target && e.target.isContentEditable)) return;
+  const navKey = e.key === ' ' || e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === 'PageDown' || e.key === 'ArrowLeft' || e.key === 'ArrowUp' || e.key === 'PageUp';
+
+  if (navKey && interactionLockActive()) {
+    e.preventDefault();
+    return;
+  }
 
   if (e.key === ' ') {
     e.preventDefault();
@@ -152,9 +163,18 @@ function handleTransitionEnd(e) {
 }
 
 function bindGlobalEvents() {
-  state.ui.btnNext.addEventListener('click', nextWithInteractions);
-  state.ui.btnSkip.addEventListener('click', nextSlide);
-  state.ui.btnPrev.addEventListener('click', prevWithInteractions);
+  state.ui.btnNext.addEventListener('click', function() {
+    if (interactionLockActive()) return;
+    nextWithInteractions();
+  });
+  state.ui.btnSkip.addEventListener('click', function() {
+    if (interactionLockActive()) return;
+    nextSlide();
+  });
+  state.ui.btnPrev.addEventListener('click', function() {
+    if (interactionLockActive()) return;
+    prevWithInteractions();
+  });
   document.addEventListener('click', handleDelegatedClick);
   document.addEventListener('submit', handleSubmit);
   document.addEventListener('keydown', handleKeydown);
