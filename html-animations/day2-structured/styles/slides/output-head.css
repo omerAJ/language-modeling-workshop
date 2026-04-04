@@ -70,6 +70,11 @@
   margin-top: var(--sp-1);
 }
 
+.pred32-policy-note {
+  font-size: var(--fs-2xs);
+  color: var(--text-dim);
+}
+
 /* — Zone 2: LM Head — */
 .pred32-head-zone {
   border: 1px solid rgba(42, 79, 214, 0.3);
@@ -170,7 +175,162 @@
 
 
 /* ══════════════════════════════════════════════════════════════════
-   Slide 33: You Now Know the Transformer
+   Slide 33: From Probabilities to Behavior
+   ══════════════════════════════════════════════════════════════════ */
+
+.decode33-layout {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  margin-top: 0.45rem;
+  min-height: 0;
+}
+
+.decode33-distribution-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+  padding: var(--sp-4);
+  border: 1px solid rgba(42, 79, 214, 0.25);
+  background: linear-gradient(180deg, rgba(42, 79, 214, 0.08), rgba(255, 255, 255, 0.92));
+}
+
+.decode33-kicker {
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--accent);
+  text-align: center;
+}
+
+.decode33-flow {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: var(--sp-2);
+}
+
+.decode33-inline-arrow {
+  font-size: var(--fs-lg);
+  color: var(--text-dim);
+}
+
+.decode33-softmax-pill,
+.decode33-dist-label {
+  padding: 0.22rem 0.6rem;
+  border-radius: var(--radius-sm);
+  font-size: var(--fs-xs);
+}
+
+.decode33-softmax-pill {
+  border: 1px solid rgba(42, 79, 214, 0.3);
+  background: rgba(42, 79, 214, 0.08);
+  color: var(--accent);
+  font-style: normal;
+}
+
+.decode33-dist-label {
+  border: 1px solid rgba(61, 69, 112, 0.2);
+  background: rgba(61, 69, 112, 0.08);
+  color: #23304f;
+  font-weight: 600;
+}
+
+.decode33-bars-row {
+  justify-content: center;
+}
+
+.decode33-fixed-note {
+  text-align: center;
+  font-size: var(--fs-xs);
+  color: #23304f;
+  font-weight: 600;
+}
+
+.decode33-policy-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.7rem;
+}
+
+.decode33-policy-card {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface2);
+  padding: 0.8rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.decode33-policy-title {
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  color: #0d1020;
+}
+
+.decode33-policy-body {
+  font-size: var(--fs-2xs);
+  color: var(--text-dim);
+  line-height: 1.45;
+}
+
+.decode33-policy-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.decode33-policy-label {
+  font-size: var(--fs-2xs);
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.decode33-policy-token {
+  font-size: var(--fs-2xs) !important;
+  padding: 0.18rem 0.5rem !important;
+  border-color: rgba(61, 69, 112, 0.3) !important;
+}
+
+.decode33-policy-token.decode33-greedy-token {
+  background: rgba(15, 110, 47, 0.14) !important;
+  border-color: rgba(15, 110, 47, 0.35) !important;
+  color: var(--green) !important;
+}
+
+.decode33-policy-token.decode33-temp-token {
+  background: rgba(90, 48, 200, 0.12) !important;
+  border-color: rgba(90, 48, 200, 0.3) !important;
+  color: var(--purple) !important;
+}
+
+.decode33-policy-token.decode33-topk-token {
+  background: rgba(42, 79, 214, 0.12) !important;
+  border-color: rgba(42, 79, 214, 0.3) !important;
+  color: var(--accent) !important;
+}
+
+.decode33-bridge-line {
+  padding: 0.65rem 0.8rem;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(15, 110, 47, 0.25);
+  background: rgba(15, 110, 47, 0.08);
+  color: #08341b;
+  text-align: center;
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  line-height: 1.45;
+}
+
+
+/* ══════════════════════════════════════════════════════════════════
+   Slide 34: You Now Know the Transformer
    ══════════════════════════════════════════════════════════════════ */
 
 .close33-layout {
@@ -250,7 +410,7 @@
   pointer-events: none;
 }
 
-#slide-33.gen33-show-insights .close33-bottom {
+#slide-34.gen33-show-insights .close33-bottom {
   opacity: 1;
   max-height: 50rem;
   pointer-events: auto;
@@ -285,7 +445,7 @@
   line-height: 1.42;
 }
 
-#slide-33 .callout {
+#slide-34 .callout {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr);
   gap: 0.5rem;
@@ -295,8 +455,24 @@
   align-items: start;
 }
 
-#slide-33 .callout span:last-child {
+#slide-34 .callout span:last-child {
   min-width: 0;
+}
+
+.close33-context-line,
+.close33-stop-line {
+  font-size: var(--fs-xs);
+  text-align: center;
+  line-height: 1.4;
+}
+
+.close33-context-line {
+  color: #23304f;
+  font-weight: 600;
+}
+
+.close33-stop-line {
+  color: var(--text-dim);
 }
 
 /* — Per-topic accent colors — */
@@ -388,6 +564,12 @@
   font-weight: 700;
 }
 
+.gen33-seg-append {
+  background: rgba(106, 79, 0, 0.12);
+  color: #5a3a00;
+  border: 1px solid rgba(106, 79, 0, 0.35);
+}
+
 .gen33-seg-arrow,
 .gen33-seg-arrow-sm {
   color: var(--text-dim);
@@ -412,3 +594,25 @@
 /* ══════════════════════════════════════════════════════════════════
    Responsive
    ══════════════════════════════════════════════════════════════════ */
+
+@media (max-width: 1100px) {
+  .decode33-policy-grid,
+  .close33-insights {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 820px) {
+  .pred32-loop-flow {
+    grid-template-columns: 1fr;
+  }
+
+  .pred32-flow-arrow {
+    transform: rotate(90deg);
+  }
+
+  .decode33-policy-grid,
+  .close33-insights {
+    grid-template-columns: 1fr;
+  }
+}

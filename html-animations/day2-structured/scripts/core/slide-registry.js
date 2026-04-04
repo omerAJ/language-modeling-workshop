@@ -104,7 +104,7 @@ function defineSlides() {
       step: () => runOutputHeadStep(),
       reset: () => resetOutputHeadSlide()
     }),
-    'slide-33': createSlideDescriptor('slide-33', {
+    'slide-34': createSlideDescriptor('slide-34', {
       init: () => initGenerationSlide(),
       step: () => runGenerationStep(),
       reset: () => resetGenerationSlide()

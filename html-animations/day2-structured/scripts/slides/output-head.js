@@ -15,9 +15,14 @@ var PRED32_BAR_STAGGER_MS = 60;
 var PRED32_CLASSES = ['pred32-show-loop'];
 
 var PRED32_TAKEAWAYS = [
-  'One full forward pass predicts one next token.',
-  'Append the chosen token, then run the whole stack again.'
+  'One full forward pass produces scores over the vocabulary.',
+  'Greedy decoding (argmax) is one way to turn that distribution into the next token to append.'
 ];
+
+function getPred32SlideBars() {
+  var slide = document.getElementById('slide-32');
+  return slide ? slide.querySelectorAll('.pred32-bar') : [];
+}
 
 function buildPred32Zones() {
   // Zone 1: context tokens + last-row label
@@ -34,7 +39,7 @@ function buildPred32Zones() {
     ctxZone.appendChild(tokensRow);
     ctxZone.appendChild(createEl('div', {
       className: 'pred32-zone-note',
-      html: 'Only the last row predicts next token: \\(h_t^{(L)}\\)'
+      html: 'Only the last row scores the next token: \\(h_t^{(L)}\\)'
     }));
   }
 
@@ -48,12 +53,12 @@ function buildPred32Zones() {
     }));
     headZone.appendChild(createEl('div', {
       className: 'pred32-softmax-label',
-      text: 'softmax \u2192 probabilities'
+      text: 'softmax \u2192 probability distribution'
     }));
     var barsRow = createEl('div', { className: 'pred32-bars-row' });
-    PRED32_VOCAB.forEach(function(entry, i) {
+    PRED32_VOCAB.forEach(function(entry) {
       var pct = Math.round(entry.prob * 100);
-      var barCls = 'pred32-bar' + (i === 0 ? ' is-top' : '');
+      var barCls = 'pred32-bar';
       barsRow.appendChild(createEl('div', { className: 'pred32-bar-item' }, [
         createEl('strong', { text: pct + '%' }),
         createEl('div', {
@@ -65,6 +70,10 @@ function buildPred32Zones() {
       ]));
     });
     headZone.appendChild(barsRow);
+    headZone.appendChild(createEl('div', {
+      className: 'pred32-zone-note',
+      text: 'The transformer produces scores; decoding decides how to pick from them.'
+    }));
   }
 
   // Zone 3: selected token + loop annotation
@@ -72,7 +81,11 @@ function buildPred32Zones() {
   if (selectZone && selectZone.children.length === 0) {
     selectZone.appendChild(createEl('div', {
       className: 'pred32-zone-title pred32-zone-title-green',
-      text: 'Next Token'
+      text: 'Greedy decoding (argmax)'
+    }));
+    selectZone.appendChild(createEl('div', {
+      className: 'pred32-policy-note',
+      text: 'Always pick the highest-probability token.'
     }));
     selectZone.appendChild(createEl('span', {
       className: 'attn19-token-chip pred32-selected-token',
@@ -86,7 +99,7 @@ function buildPred32Zones() {
 }
 
 function animatePred32Bars() {
-  var bars = document.querySelectorAll('.pred32-bar');
+  var bars = getPred32SlideBars();
   outputHeadState.timers.forEach(function(t) { clearTimeout(t); });
   outputHeadState.timers = [];
   bars.forEach(function(bar, i) {
@@ -98,7 +111,7 @@ function animatePred32Bars() {
 }
 
 function resetPred32Bars() {
-  var bars = document.querySelectorAll('.pred32-bar');
+  var bars = getPred32SlideBars();
   bars.forEach(function(bar) {
     bar.style.transition = 'none';
     bar.style.height = '0';

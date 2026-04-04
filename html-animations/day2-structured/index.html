@@ -2408,7 +2408,7 @@ l e a r n ing &lt;/w&gt;</div>
     <div class="slide-header">
       <div class="badge concept">Mechanism</div>
       <h2>Predict One Token, Append, Repeat</h2>
-      <p class="small-text">Take the last hidden state, score the vocabulary, choose one token, append it, and run again.</p>
+      <p class="small-text">Take the last hidden state, score the vocabulary, form a distribution, then decode one token to continue generation.</p>
     </div>
 
     <div class="slide-body">
@@ -2424,11 +2424,102 @@ l e a r n ing &lt;/w&gt;</div>
       </div>
     </div>
 
-    <div class="block28-takeaway" id="pred32-takeaway">One full forward pass predicts one next token.</div>
+    <div class="block28-takeaway" id="pred32-takeaway">One full forward pass produces scores over the vocabulary.</div>
     </div>
   </div>
 
   <div class="slide slide-has-takeaway" id="slide-33">
+    <span class="section-tag">Output &amp; Generation</span>
+    <div class="slide-header">
+      <div class="badge concept">Bridge</div>
+      <h2>From probabilities to behavior</h2>
+      <p class="small-text">The model outputs one distribution. Decoding decides how that distribution becomes an actual token.</p>
+    </div>
+
+    <div class="slide-body">
+    <div class="decode33-layout">
+      <div class="card decode33-distribution-card">
+        <div class="decode33-kicker">One shared distribution</div>
+        <div class="decode33-flow">
+          <div class="pred32-formula">\( \ell = W_U\, h_t^{(L)} \)</div>
+          <div class="decode33-inline-arrow">&#8594;</div>
+          <div class="pred32-softmax-label decode33-softmax-pill">softmax</div>
+          <div class="decode33-inline-arrow">&#8594;</div>
+          <div class="decode33-dist-label">distribution over next tokens</div>
+        </div>
+        <div class="pred32-bars-row decode33-bars-row">
+          <div class="pred32-bar-item">
+            <strong>42%</strong>
+            <div class="pred32-bar" style="height:2.1rem;"></div>
+            <span class="pred32-bar-label">mat</span>
+          </div>
+          <div class="pred32-bar-item">
+            <strong>24%</strong>
+            <div class="pred32-bar" style="height:1.2rem;"></div>
+            <span class="pred32-bar-label">rug</span>
+          </div>
+          <div class="pred32-bar-item">
+            <strong>16%</strong>
+            <div class="pred32-bar" style="height:0.8rem;"></div>
+            <span class="pred32-bar-label">.</span>
+          </div>
+          <div class="pred32-bar-item">
+            <strong>11%</strong>
+            <div class="pred32-bar" style="height:0.55rem;"></div>
+            <span class="pred32-bar-label">floor</span>
+          </div>
+          <div class="pred32-bar-item">
+            <strong>7%</strong>
+            <div class="pred32-bar" style="height:0.35rem;"></div>
+            <span class="pred32-bar-label">bed</span>
+          </div>
+        </div>
+        <div class="decode33-fixed-note">The distribution is fixed. Only the selection rule changes.</div>
+      </div>
+
+      <div class="decode33-policy-grid">
+        <div class="decode33-policy-card">
+          <div class="decode33-policy-title">Greedy (argmax)</div>
+          <div class="decode33-policy-body">Always pick the highest probability token.</div>
+          <div class="decode33-policy-row">
+            <span class="decode33-policy-label">Chosen token</span>
+            <span class="attn19-token-chip decode33-policy-token decode33-greedy-token">mat</span>
+          </div>
+        </div>
+
+        <div class="decode33-policy-card">
+          <div class="decode33-policy-title">Temperature sampling</div>
+          <div class="decode33-policy-body">Adjust sharpness, then sample.</div>
+          <div class="decode33-policy-row">
+            <span class="decode33-policy-label">Example sample</span>
+            <span class="attn19-token-chip decode33-policy-token decode33-temp-token">rug</span>
+          </div>
+        </div>
+
+        <div class="decode33-policy-card">
+          <div class="decode33-policy-title">Top-k sampling</div>
+          <div class="decode33-policy-body">Restrict the candidate set, then sample.</div>
+          <div class="decode33-policy-row">
+            <span class="decode33-policy-label">Keep</span>
+            <span class="attn19-token-chip decode33-policy-token decode33-topk-token">mat</span>
+            <span class="attn19-token-chip decode33-policy-token decode33-topk-token">rug</span>
+            <span class="attn19-token-chip decode33-policy-token decode33-topk-token">.</span>
+          </div>
+          <div class="decode33-policy-row">
+            <span class="decode33-policy-label">Example sample</span>
+            <span class="attn19-token-chip decode33-policy-token decode33-topk-token">.</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="decode33-bridge-line">The transformer produces scores. A decoding policy turns those scores into actual text.</div>
+    </div>
+
+    <div class="block28-takeaway" id="decode33-takeaway">The distribution is fixed; decoding changes how one next token is chosen.</div>
+    </div>
+  </div>
+
+  <div class="slide slide-has-takeaway" id="slide-34">
     <span class="section-tag">Synthesis</span>
     <div class="slide-header">
       <div class="badge concept">Closing</div>
@@ -2440,19 +2531,21 @@ l e a r n ing &lt;/w&gt;</div>
     <div class="close33-layout">
       <div class="close33-pipeline-wrap">
         <div class="close33-pipeline" id="close33-pipeline"></div>
-        <div class="close33-loop-label">&#x21A9; autoregressive loop &#8212; append &amp; repeat</div>
-        <div class="close33-summary-band">Tokenize &#8594; Represent &#8594; Understand &#215; L &#8594; Predict &#8594; append &amp; repeat.</div>
+        <div class="close33-loop-label">&#x21A9; autoregressive loop &#8212; append and run again</div>
+        <div class="close33-context-line">The new token changes the context &#8594; the next distribution is different</div>
+        <div class="close33-summary-band">Tokenize &#8594; Represent &#8594; Understand &#215; L &#8594; Predict &#8594; Decode &#8594; Append &#8594; Repeat / Stop</div>
+        <div class="close33-stop-line">Stop when EOS is produced, a stop sequence is hit, or max tokens is reached</div>
       </div>
       <div class="close33-bottom" id="close33-bottom">
         <div class="close33-insights" id="close33-insights"></div>
         <div class="callout success">
           <span class="icon">&#x2713;</span>
-          <span>From tokens to meaning to prediction, this is the transformer loop.</span>
+          <span>From tokenization through decoding, this is the forward pass that drives generation.</span>
         </div>
       </div>
     </div>
 
-    <div class="block28-takeaway" id="close33-takeaway">Tokenize &#8594; Represent &#8594; Understand &#215; L &#8594; Predict &#8594; Repeat.</div>
+    <div class="block28-takeaway" id="close33-takeaway">Tokenize &#8594; Represent &#8594; Understand &#215; L &#8594; Predict &#8594; Decode &#8594; Append &#8594; Repeat / Stop.</div>
     </div>
   </div>
 
@@ -2464,7 +2557,7 @@ l e a r n ing &lt;/w&gt;</div>
   <div class="progress-track">
     <div class="progress-fill" id="progressFill" style="width:0%"></div>
   </div>
-  <span class="slide-counter" id="slideCounter">1 / 33</span>
+  <span class="slide-counter" id="slideCounter">1 / 31</span>
   <button class="nav-btn primary" id="btnNext">Next &rarr;</button>
 </div>
 </div>

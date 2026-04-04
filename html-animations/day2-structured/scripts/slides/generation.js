@@ -1,12 +1,12 @@
-/* Slide 33 — You Now Know the Transformer */
+/* Slide 34 — You Now Know the Transformer */
 
 var GEN33_MAX_STEP = 1;
 
 var GEN33_CLASSES = ['gen33-show-insights'];
 
 var GEN33_TAKEAWAYS = [
-  'Tokenize \u2192 Represent \u2192 Understand \u00d7 L \u2192 Predict \u2192 Repeat.',
-  'Every LLM runs this same loop. You now know every box.'
+  'Tokenize \u2192 Represent \u2192 Understand \u00d7 L \u2192 Predict \u2192 Decode \u2192 Append \u2192 Repeat / Stop.',
+  'You now understand the full forward pass and how generation decisions are made.'
 ];
 
 var GEN33_PIPELINE_SEGS = [
@@ -32,7 +32,9 @@ var GEN33_PIPELINE_SEGS = [
   { text: '\u2192',     cls: 'gen33-seg-arrow' },
   { text: 'LM head',    cls: 'gen33-seg-head' },
   { text: '\u2192',     cls: 'gen33-seg-arrow' },
-  { text: 'next token', cls: 'gen33-seg-decode' }
+  { text: 'Decode',     cls: 'gen33-seg-decode' },
+  { text: '\u2192',     cls: 'gen33-seg-arrow' },
+  { text: 'Append',     cls: 'gen33-seg-append' }
 ];
 
 var GEN33_INSIGHTS = [
@@ -52,8 +54,8 @@ var GEN33_INSIGHTS = [
     color: 'cyan'
   },
   {
-    title: 'Predict',
-    body: 'The LM head scores the vocabulary, picks one token, appends it, and the loop runs again.',
+    title: 'Predict + Decode',
+    body: 'The LM head scores the vocabulary, decoding turns those scores into one token, that token is appended, and the next context produces a different distribution.',
     color: 'green'
   }
 ];
@@ -89,7 +91,7 @@ function buildGen33Insights() {
 }
 
 function setGenerationStep(step) {
-  var slide = document.getElementById('slide-33');
+  var slide = document.getElementById('slide-34');
   var takeaway = document.getElementById('close33-takeaway');
   if (!slide || !takeaway) return;
 
@@ -125,7 +127,7 @@ function resetGenerationSlide() {
   generationState.timers.forEach(function(t) { clearTimeout(t); });
   generationState.timers = [];
   generationState.step = 0;
-  var slide = document.getElementById('slide-33');
+  var slide = document.getElementById('slide-34');
   if (slide) {
     GEN33_CLASSES.forEach(function(cls) { slide.classList.remove(cls); });
   }

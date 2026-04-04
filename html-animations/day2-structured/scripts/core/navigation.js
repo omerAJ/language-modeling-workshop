@@ -53,7 +53,7 @@ const STEP_STATE_CONTROLLERS = {
     get: () => outputHeadState.step,
     set: (step) => setOutputHeadStep(step)
   },
-  'slide-33': {
+  'slide-34': {
     get: () => generationState.step,
     set: (step) => setGenerationStep(step)
   }
