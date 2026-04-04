@@ -151,7 +151,7 @@ function createAttentionPositionProblemStage() {
       createEl('div', {
         className: 'attn25-shared-note',
         id: 'attn25-note-orderblind',
-        text: 'swap rows in → swap rows out'
+        text: 'permutation equivariant: swap rows in -> swap rows out'
       })
     ])
   ]);

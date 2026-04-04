@@ -187,6 +187,46 @@
   .token-pill.main { border-color: rgba(42,79,214,0.55); color: #0d1020; background: rgba(42,79,214,0.12); }
   .token-pill.reuse { border-color: rgba(15,110,47,0.5); color: #0a3e1a; background: rgba(15,110,47,0.12); }
   .token-pill.flex { border-color: rgba(160,80,0,0.5); color: #5a2800; background: rgba(160,80,0,0.12); }
+  .token-pill.discovery {
+    border-color: rgba(15,110,47,0.56);
+    color: #0a3e1a;
+    background: rgba(15,110,47,0.16);
+    box-shadow: 0 0 0 0.1rem rgba(15,110,47,0.1);
+  }
+  .token-pill.discovery-ed {
+    border-color: rgba(160,80,0,0.56);
+    color: #5a2800;
+    background: rgba(160,80,0,0.16);
+    box-shadow: 0 0 0 0.1rem rgba(160,80,0,0.08);
+  }
+  .corpus-discovery,
+  .corpus-discovery-ed {
+    display: inline-block;
+    padding: 0.04rem 0.18rem;
+    border-radius: 0.32rem;
+    font-weight: 700;
+    line-height: 1.1;
+  }
+  .corpus-discovery {
+    color: #0a3e1a;
+    background: rgba(15,110,47,0.16);
+    box-shadow: inset 0 0 0 1px rgba(15,110,47,0.2);
+  }
+  .corpus-discovery-ed {
+    color: #5a2800;
+    background: rgba(160,80,0,0.16);
+    box-shadow: inset 0 0 0 1px rgba(160,80,0,0.22);
+  }
+  .discovery-callout {
+    background: rgba(15,110,47,0.1);
+    border: 1px solid rgba(15,110,47,0.26);
+    color: #0a3e1a;
+  }
+  .discovery-callout.discovery-callout-ed {
+    background: rgba(160,80,0,0.1);
+    border-color: rgba(160,80,0,0.24);
+    color: #5a2800;
+  }
   .example-sentence {
     font-family: 'JetBrains Mono', monospace;
     font-size: var(--fs-xs);

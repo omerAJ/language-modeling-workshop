@@ -51,7 +51,7 @@ Refactor Notes (Zero-Regression):
     <div class="badge day2">Day 2</div>
     <h1 class="large">How a Transformer<br>Computes the Next Token</h1>
     <div class="spacer-sm"></div>
-    <p class="subtitle">From tokenization to decoding: the full forward-pass computation</p>
+    <p class="subtitle">From tokenization to decoding, the full forward pass</p>
     <div class="spacer-lg"></div>
     <div class="gradient-line" style="width:12.5rem;"></div>
   </div>
@@ -61,7 +61,7 @@ Refactor Notes (Zero-Regression):
     <span class="section-tag">Setup</span>
     <div class="slide-header">
       <div class="badge day2">Roadmap</div>
-      <h2>Workshop roadmap</h2>
+      <h2>Workshop Roadmap</h2>
     </div>
     <div class="spacer-sm"></div>
 
@@ -69,7 +69,7 @@ Refactor Notes (Zero-Regression):
       <!-- DAY 1 -->
       <div class="card" style="border-color: rgba(108,140,255,0.3); opacity:0.6;">
         <div class="badge day1">Day 1 — Completed</div>
-        <h3 style="color:var(--accent); margin-top:0.45rem;">Why LLMs behave the way they do</h3>
+        <h3 style="color:var(--accent); margin-top:0.45rem;">Why LLMs Behave as They Do</h3>
         <ul style="list-style:none; margin-top:0.625rem;">
           <li class="small-text" style="padding:0.3rem 0 0.3rem 1.25rem; position:relative;">
             <span style="position:absolute;left:0;color:var(--accent);">→</span>
@@ -94,14 +94,14 @@ Refactor Notes (Zero-Regression):
         </ul>
         <div class="callout info" style="margin-top:0.875rem;">
           <span class="icon">i</span>
-          <span>Yesterday: treat the model as a <strong>system being shaped.</strong></span>
+          <span>Day 1: the model as a <strong>system shaped by training.</strong></span>
         </div>
       </div>
 
       <!-- DAY 2 -->
       <div class="card" style="border-color: rgba(167,139,250,0.25);">
         <div class="badge day2">Day 2 — Today</div>
-        <h3 style="color:var(--purple); margin-top:0.45rem;">How a Transformer processes text and computes the next word</h3>
+        <h3 style="color:var(--purple); margin-top:0.45rem;">How a Transformer Processes Text and Predicts the Next Token</h3>
         <ul style="list-style:none; margin-top:0.625rem;">
           <li class="small-text" style="padding:0.3rem 0 0.3rem 1.25rem; position:relative;">
             <span style="position:absolute;left:0;color:var(--purple);">→</span>
@@ -122,7 +122,7 @@ Refactor Notes (Zero-Regression):
         </ul>
         <div class="callout info" style="margin-top:0.875rem;">
           <span class="icon">i</span>
-          <span>Today: treat it as a <strong>machine executing computation.</strong></span>
+          <span>Day 2: the model as a <strong>machine executing computation.</strong></span>
         </div>
       </div>
     </div>
@@ -133,7 +133,7 @@ Refactor Notes (Zero-Regression):
     <span class="section-tag">Architecture</span>
     <div class="slide-header">
       <div class="badge concept">Architecture</div>
-      <h2>Decoder-Only Transformer — High-Level View</h2>
+      <h2>Decoder-Only Transformer: High-Level View</h2>
     </div>
     <div class="spacer-sm"></div>
 
@@ -186,7 +186,7 @@ Refactor Notes (Zero-Regression):
       <!-- ── RIGHT: Inside one Transformer Block (zoom-in panel) ── -->
       <div class="arch3-block-shell" aria-hidden="true">
         <div class="block-detail-panel arch3-block-detail">
-          <span class="block-detail-title">Inside One Transformer Block</span>
+          <span class="block-detail-title">Inside a Transformer Block</span>
           <div class="arch-stack" style="margin-top:1rem;">
 
             <span class="arch-label">Block Output</span>
@@ -227,9 +227,9 @@ Refactor Notes (Zero-Regression):
 
       <div class="arch3-equation-shell" aria-hidden="true" data-math-ready="false">
         <div class="arch3-equation-panel">
-          <div class="arch3-equation-kicker">Self-Attention In One Line</div>
+          <div class="arch3-equation-kicker">Self-Attention in One Line</div>
           <div class="arch3-equation-main" id="arch3-equation-main" aria-live="polite"></div>
-          <div class="arch3-equation-caption">The core primitive that gives transformers their power across language, reasoning, and generation.</div>
+          <div class="arch3-equation-caption">The core operation behind language modeling, reasoning, and generation.</div>
         </div>
       </div>
 
@@ -238,7 +238,7 @@ Refactor Notes (Zero-Regression):
     <div class="spacer-sm"></div>
     <div class="callout info" style="max-width:40rem; margin:0 auto;">
       <span class="icon">i</span>
-      <span>Each block adds to the <strong>residual stream</strong> — information flows forward and accumulates through all L layers.</span>
+      <span>Each block writes into the <strong>residual stream</strong>, which accumulates across all layers.</span>
     </div>
   </div>
 
@@ -247,7 +247,7 @@ Refactor Notes (Zero-Regression):
     <span class="section-tag">Tokenization</span>
     <div class="slide-header">
       <div class="badge concept">Tokenization</div>
-      <h2>How many r's in strawberry?</h2>
+      <h2>How Many r's Are in "Strawberry"?</h2>
     </div>
     <div class="slide-body">
     <div class="grid-2">
@@ -255,25 +255,25 @@ Refactor Notes (Zero-Regression):
         <div class="mono" style="font-size:2.2rem; font-weight:700; letter-spacing:0.04em;">
           st<span class="hl-red">r</span>awbe<span class="hl-red">rr</span>y
         </div>
-        <div class="text-xs" style="color:var(--text-dim);">You count: <strong style="color:var(--green);">3 r's</strong></div>
-        <div class="text-xs">GPT-4 answers: <strong style="color:var(--red);">2 r's</strong></div>
+        <div class="text-xs" style="color:var(--text-dim);">You see: <strong style="color:var(--green);">3 r's</strong></div>
+        <div class="text-xs">Model answer: <strong style="color:var(--red);">2 r's</strong></div>
       </div>
       <div class="card">
-        <h3>What the model sees</h3>
-        <div class="token-count-label" style="margin-top:0.5rem;">You write</div>
+        <h3>What the Model Sees</h3>
+        <div class="token-count-label" style="margin-top:0.5rem;">You type</div>
         <div class="mono text-sm" style="letter-spacing:0.18em; margin-top:0.25rem;">s t r a w b e r r y</div>
-        <div class="token-count-label" style="margin-top:0.7rem;">Model receives</div>
+        <div class="token-count-label" style="margin-top:0.7rem;">Model sees</div>
         <div class="token-example" style="margin-top:0.3rem;">
           <span class="token-pill main">[straw]</span>
           <span class="token-pill reuse">[berry]</span>
         </div>
-        <p class="small-text" style="margin-top:0.55rem; color:var(--text-dim);">The model gets <strong>2 token vectors</strong>, not 10 letter vectors. Counting r's means reconstructing character structure from subword pieces.</p>
+        <p class="small-text" style="margin-top:0.55rem; color:var(--text-dim);">The model gets <strong>2 token vectors</strong>, not 10 letter vectors. Letter counting requires reconstructing characters from subword pieces.</p>
       </div>
     </div>
 
     <div class="callout info" style="margin-top:0.5rem;">
       <span class="icon">i</span>
-      <span>This is <strong>architectural</strong>, not a bug. The next slides show where that limitation comes from.</span>
+      <span>This is <strong>structural</strong>, not a bug. The next slides show where the limitation comes from.</span>
     </div>
     </div>
   </div>
@@ -283,7 +283,7 @@ Refactor Notes (Zero-Regression):
     <span class="section-tag">Tokenization</span>
     <div class="slide-header">
       <div class="badge concept">Tokenization</div>
-      <h2>Before the model reads, it tokenizes</h2>
+      <h2>Before Reading, the Model Tokenizes</h2>
     </div>
     <div class="spacer-sm"></div>
 
@@ -296,7 +296,7 @@ Refactor Notes (Zero-Regression):
 
     <div class="grid-2 slide5-stage" style="margin-top:0.75rem;">
       <div class="card">
-        <h3>Three concrete steps</h3>
+        <h3>Three Steps</h3>
         <ul class="pc-list good">
           <li>Define a fixed vocabulary of discrete symbols.</li>
           <li>Split input text into pieces from that vocabulary.</li>
@@ -304,16 +304,16 @@ Refactor Notes (Zero-Regression):
         </ul>
         <div class="callout info" style="margin-top:0.7rem;">
           <span class="icon">i</span>
-          <span>The vocabulary is learned once and then <strong>frozen</strong>. GPT-2 uses 50,257 tokens; GPT-4 class tokenizers are roughly 100k.</span>
+          <span>The vocabulary is learned once, then <strong>frozen</strong>. GPT-2 uses 50,257 tokens; GPT-4-class tokenizers are roughly 100k.</span>
         </div>
       </div>
       <div class="hidden-content autostep slide5-right-reveal">
         <div class="card">
-          <h3>Running example</h3>
-          <p class="tiny" style="margin-top:0.2rem;">We’ll reuse this sentence across the next three slides.</p>
+          <h3>Running Example</h3>
+          <p class="tiny" style="margin-top:0.2rem;">Used in the next three slides.</p>
           <div class="token-count-label" style="margin-top:0.5rem;">Sentence</div>
           <div class="example-sentence text-sm">"researchers fine-tune large-scale models"</div>
-          <div class="token-count-label" style="margin-top:0.65rem;">Under subword tokenization</div>
+          <div class="token-count-label" style="margin-top:0.65rem;">Subword tokenization</div>
           <div class="token-example" style="margin-top:0.4rem; flex-wrap:wrap;">
             <span class="token-pill main">[research]</span>
             <span class="token-pill reuse">[ers]</span>
@@ -327,7 +327,7 @@ Refactor Notes (Zero-Regression):
             <span class="token-pill reuse">[s]</span>
           </div>
           <div class="id-seq" style="margin-top:0.5rem;">[3245, 891, 4680, 12, 10812, 3267, 12, 5649, 219, 82]</div>
-          <p class="tiny" style="margin-top:0.4rem;">IDs are illustrative; exact values depend on the tokenizer vocabulary.</p>
+          <p class="tiny" style="margin-top:0.4rem;">IDs shown are illustrative; exact values depend on the tokenizer.</p>
         </div>
       </div>
     </div>
@@ -338,20 +338,20 @@ Refactor Notes (Zero-Regression):
     <span class="section-tag">Tokenization</span>
     <div class="slide-header">
       <div class="badge discussion">Word-Level</div>
-      <h2>Approach 1: word-level tokenization — simple, but brittle</h2>
+      <h2>Approach 1: Word-Level Tokenization</h2>
     </div>
     <div class="spacer-sm"></div>
 
     <div class="card">
-      <h3>Running sentence under word-level tokenization</h3>
-      <div class="small-text" style="margin-top:0.4rem;">If the vocabulary contains every word:</div>
+      <h3>Running Sentence: Word-Level Tokenization</h3>
+      <div class="small-text" style="margin-top:0.4rem;">If every word is in the vocabulary:</div>
       <div class="token-example" style="margin-top:0.35rem;">
         <span class="token-pill main">[researchers]</span>
         <span class="token-pill main">[fine-tune]</span>
         <span class="token-pill main">[large-scale]</span>
         <span class="token-pill main">[models]</span>
       </div>
-      <div class="small-text" style="margin-top:0.6rem;">But compounds like <span class="hl-orange">fine-tune</span> and <span class="hl-orange">large-scale</span> are often missing. They collapse to unknown tokens:</div>
+      <div class="small-text" style="margin-top:0.6rem;">But compounds like <span class="hl-orange">fine-tune</span> and <span class="hl-orange">large-scale</span> are often missing, so they collapse to unknown tokens:</div>
       <div class="token-example" style="margin-top:0.35rem;">
         <span class="token-pill">[researchers]</span>
         <span class="token-pill flex">[UNK]</span>
@@ -363,14 +363,14 @@ Refactor Notes (Zero-Regression):
     <div class="hidden-content autostep">
       <div class="grid-2" style="margin-top:0.8rem;">
         <div class="card tradeoff-card" style="border-color: rgba(90,232,142,0.28);">
-          <h3 style="color:var(--green);">What works</h3>
+          <h3 style="color:var(--green);">Strengths</h3>
           <ul class="pc-list good">
             <li>Short sequences for familiar text.</li>
             <li>Common words stay intact as single units.</li>
           </ul>
         </div>
         <div class="card tradeoff-card" style="border-color: rgba(255,123,123,0.3);">
-          <h3 style="color:var(--red);">Why it breaks</h3>
+          <h3 style="color:var(--red);">Limits</h3>
           <ul class="pc-list bad">
             <li>Language is open-vocabulary. English Wikipedia alone has ~1.5M unique word forms.</li>
             <li>New terms like "GPT-4", "LoRA", and "RLHF" create unknowns.</li>
@@ -383,7 +383,7 @@ Refactor Notes (Zero-Regression):
       <div class="spacer-sm"></div>
       <div class="callout warn">
         <span class="icon">!</span>
-        <span><strong>Word-level tokenization is efficient, but brittle.</strong> Anything outside the fixed vocabulary becomes unknown.</span>
+        <span><strong>Efficient, but brittle.</strong> Anything outside the fixed vocabulary becomes unknown.</span>
       </div>
     </div>
   </div>
@@ -393,12 +393,12 @@ Refactor Notes (Zero-Regression):
     <span class="section-tag">Tokenization</span>
     <div class="slide-header">
       <div class="badge discussion">Character-Level</div>
-      <h2>Approach 2: character-level tokenization — flexible, but expensive</h2>
+      <h2>Approach 2: Character-Level Tokenization</h2>
     </div>
     <div class="spacer-sm"></div>
 
     <div class="card">
-      <h3>Running sentence under character-level tokenization</h3>
+      <h3>Running Sentence: Character-Level Tokenization</h3>
       <div class="token-example" style="margin-top:0.5rem; flex-wrap:wrap; gap:0.28rem;">
         <span class="token-pill">[r]</span><span class="token-pill">[e]</span><span class="token-pill">[s]</span><span class="token-pill">[e]</span><span class="token-pill">[a]</span><span class="token-pill">[r]</span><span class="token-pill">[c]</span><span class="token-pill">[h]</span><span class="token-pill">[e]</span><span class="token-pill">[r]</span><span class="token-pill">[s]</span>
         <span class="token-pill" style="opacity:0.45;">[ ]</span>
@@ -418,7 +418,7 @@ Refactor Notes (Zero-Regression):
           <div class="token-count-number">~40 tokens</div>
         </div>
         <div class="token-count-box">
-          <div class="token-count-label">Scaling: 500-token passage</div>
+          <div class="token-count-label">Scaling: 500-word passage</div>
           <div class="token-count-number">~2,500 character tokens</div>
         </div>
       </div>
@@ -427,14 +427,14 @@ Refactor Notes (Zero-Regression):
     <div class="hidden-content autostep">
       <div class="grid-2" style="margin-top:-0.4rem;">
         <div class="card tradeoff-card" style="border-color: rgba(90,232,142,0.28);">
-          <h3 style="color:var(--green);">What works</h3>
+          <h3 style="color:var(--green);">Strengths</h3>
           <ul class="pc-list good">
             <li>No unknown tokens — ever.</li>
             <li>Handles new words, typos, code, any language.</li>
           </ul>
         </div>
         <div class="card tradeoff-card" style="border-color: rgba(255,123,123,0.3);">
-          <h3 style="color:var(--red);">Why it gets expensive</h3>
+          <h3 style="color:var(--red);">Limits</h3>
           <ul class="pc-list bad">
             <li>Sequences become \(5\text{–}10\times\) longer.</li>
             <li>Self-attention is \(O(n^2)\), so \(5\times\) longer means roughly \(25\times\) more compute.</li>
@@ -448,7 +448,7 @@ Refactor Notes (Zero-Regression):
       <div class="spacer-sm"></div>
       <div class="callout warn">
         <span class="icon">!</span>
-        <span><strong>Character-level coverage is perfect, but too expensive.</strong> Quadratic attention scaling makes it impractical at real sequence lengths.</span>
+        <span><strong>Perfect coverage, impractical cost.</strong> Quadratic attention scaling makes it too expensive at realistic sequence lengths.</span>
       </div>
     </div>
   </div>
@@ -458,12 +458,12 @@ Refactor Notes (Zero-Regression):
     <span class="section-tag">Tokenization</span>
     <div class="slide-header">
       <div class="badge concept">Subword Strategy</div>
-      <h2>Approach 3: subword tokenization — the practical default</h2>
+      <h2>Approach 3: Subword Tokenization, the Practical Default</h2>
     </div>
     <div class="spacer-sm"></div>
 
     <div class="card">
-      <h3>Running sentence under subword tokenization</h3>
+      <h3>Running Sentence: Subword Tokenization</h3>
       <div class="token-example" style="margin-top:0.5rem; flex-wrap:wrap;">
         <span class="token-pill main">[research]</span>
         <span class="token-pill reuse">[ers]</span>
@@ -476,7 +476,7 @@ Refactor Notes (Zero-Regression):
         <span class="token-pill main">[model]</span>
         <span class="token-pill reuse">[s]</span>
       </div>
-      <p class="small-text" style="margin-top:0.5rem;">Frequent stems become single tokens. Hyphens, prefixes, and suffixes are their own reusable pieces — no word is ever fully unknown.</p>
+      <p class="small-text" style="margin-top:0.5rem;">Frequent stems become single tokens. Hyphens, prefixes, and suffixes become reusable pieces, so words stay decomposable rather than unknown.</p>
     </div>
 
     <div class="hidden-content autostep">
@@ -503,13 +503,13 @@ Refactor Notes (Zero-Regression):
       <div class="spacer-sm"></div>
       <div class="callout success">
         <span class="icon">+</span>
-        <span><strong>Subword gives near-word efficiency with broad coverage.</strong> That is why it became the default in modern LLMs.</span>
+        <span><strong>Near-word efficiency with broad coverage.</strong> That is why subword tokenization became the modern default.</span>
       </div>
     </div>
     <div class="hidden-content autostep">
       <div class="callout info" style="margin-top:0.7rem;">
         <span class="icon">i</span>
-        <span>One tradeoff remains: characters inside the same token chunk are no longer individually visible to the model. We will return to that at the end of this section.</span>
+        <span>One tradeoff remains: characters inside a token are no longer individually visible. This matters again at the end of the section.</span>
       </div>
     </div>
   </div>
@@ -519,10 +519,10 @@ Refactor Notes (Zero-Regression):
     <span class="section-tag">Tokenization</span>
     <div class="slide-header">
       <div class="badge concept">BPE</div>
-      <h2>How does the tokenizer learn these pieces?</h2>
+      <h2>How the Tokenizer Learns These Pieces</h2>
     </div>
     <div class="slide-body">
-    <p class="token-anchor">Subword pieces are not hand-written rules. They are <strong>learned from data</strong> using Byte Pair Encoding (BPE).</p>
+    <p class="token-anchor">We start with a <strong>character-level vocabulary</strong>. Now let the corpus teach us which adjacent pairs deserve their own tokens.</p>
 
     <div class="flow token-interface" style="margin-top:0.55rem;">
       <div class="flow-box">Start: characters</div>
@@ -533,12 +533,12 @@ Refactor Notes (Zero-Regression):
 
     <div class="grid-2" style="margin-top:0.5rem;">
       <div class="card">
-        <h3>The core rule</h3>
-        <p class="small-text">Start from characters. Repeatedly merge the most frequent adjacent pair in the corpus. After many merges, those reusable pairs become the vocabulary.</p>
+        <h3>Core Rule</h3>
+        <p class="small-text">Last slide, the fallback was character-level text. BPE starts there too: count adjacent pairs in the corpus, merge the most frequent pair, and repeat. Those learned merges become the vocabulary.</p>
       </div>
       <div class="card">
-        <h3>Why it works</h3>
-        <p class="small-text">BPE is driven by frequency, not grammar. It finds stems, prefixes, and suffixes because those strings appear together often in real text.</p>
+        <h3>Why BPE Works</h3>
+        <p class="small-text">BPE is driven by frequency, not grammar. That is why stems and endings like <span class="hl">-ing</span> and <span class="hl-orange">-ed</span> can emerge naturally when they keep showing up together.</p>
       </div>
     </div>
 
@@ -548,7 +548,7 @@ Refactor Notes (Zero-Regression):
     </div>
     <div class="callout question" style="margin-top:0.6rem;">
       <span class="icon">?</span>
-      <span>Now let's run BPE on a tiny corpus and watch the merges happen.</span>
+      <span>Watch BPE build up from characters on a tiny action corpus.</span>
     </div>
     </div>
   </div>
@@ -558,7 +558,7 @@ Refactor Notes (Zero-Regression):
     <span class="section-tag">Tokenization</span>
     <div class="slide-header">
       <div class="badge activity">BPE Walkthrough</div>
-      <h2>BPE on a tiny corpus</h2>
+      <h2>BPE on a tiny action corpus</h2>
     </div>
     <div class="spacer-sm"></div>
 
@@ -572,27 +572,29 @@ Refactor Notes (Zero-Regression):
       <!-- State 0: character-level corpus -->
       <div class="grid-2 bpe-initial" style="position:absolute; top:0; left:0; right:0;">
         <div class="corpus-card">
-          <div class="corpus-title">Starting state: every character is separate (&lt;/w&gt; marks word end)</div>
+          <div class="corpus-title">Start from a character-level vocabulary: every word is just letters (&lt;/w&gt; marks word end)</div>
           <div class="corpus-body">h u g &lt;/w&gt;
 h u g s &lt;/w&gt;
 h u g g e d &lt;/w&gt;
 h u g g i n g &lt;/w&gt;
-h u g g i n g f a c e &lt;/w&gt;
-t r a i n i n g &lt;/w&gt;
-l e a r n i n g &lt;/w&gt;</div>
-          <p class="tiny" style="margin-top:0.45rem;">Count adjacent pairs, merge the most frequent one, then repeat.</p>
+s m i l e d &lt;/w&gt;
+s m i l i n g &lt;/w&gt;
+w a v e d &lt;/w&gt;
+w a v i n g &lt;/w&gt;</div>
+          <p class="tiny" style="margin-top:0.45rem;">Start at characters, count adjacent pairs, and let repetition decide what gets promoted.</p>
         </div>
         <div class="card">
+          <div class="token-count-label">Base vocabulary</div>
           <div class="token-example" style="flex-wrap:wrap; gap:0.3rem;">
-            <span class="token-pill">h</span><span class="token-pill">u</span><span class="token-pill">g</span><span class="token-pill">s</span><span class="token-pill">e</span><span class="token-pill">d</span><span class="token-pill">i</span><span class="token-pill">n</span><span class="token-pill">f</span><span class="token-pill">a</span><span class="token-pill">c</span><span class="token-pill">t</span><span class="token-pill">r</span><span class="token-pill">l</span>
+            <span class="token-pill">h</span><span class="token-pill">u</span><span class="token-pill">g</span><span class="token-pill">s</span><span class="token-pill">e</span><span class="token-pill">d</span><span class="token-pill">i</span><span class="token-pill">n</span><span class="token-pill">m</span><span class="token-pill">l</span><span class="token-pill">w</span><span class="token-pill">a</span><span class="token-pill">v</span>
           </div>
           <div class="pair-grid" style="margin-top:0.65rem;">
-            <div class="pair-chip"><strong>h u</strong> → 5</div>
-            <div class="pair-chip"><strong>u g</strong> → 5</div>
-            <div class="pair-chip"><strong>i n</strong> → 5</div>
-            <div class="pair-chip"><strong>n g</strong> → 4</div>
+            <div class="pair-chip"><strong>h u</strong> → 4</div>
+            <div class="pair-chip"><strong>u g</strong> → 4</div>
+            <div class="pair-chip"><strong>i n</strong> → 3</div>
+            <div class="pair-chip"><strong>e d</strong> → 3</div>
           </div>
-          <p class="small-text" style="margin-top:0.5rem;">We begin by merging <span class="hl">h + u</span>.</p>
+          <p class="small-text" style="margin-top:0.5rem;">There is a tie at the top. We will follow the <span class="hl">hug</span> stem first, then come back for reusable endings.</p>
         </div>
       </div>
 
@@ -600,27 +602,28 @@ l e a r n i n g &lt;/w&gt;</div>
       <div class="hidden-content autostep bpe-overlay">
         <div class="grid-2">
           <div class="corpus-card" style="border-color:rgba(123,154,255,0.45);">
-            <div class="corpus-title">Merge 1: <span class="hl">h + u → hu</span> &nbsp;(freq: 5)</div>
+            <div class="corpus-title">Merge 1: <span class="hl">h + u → hu</span> &nbsp;(freq: 4)</div>
             <div class="corpus-body">hu g &lt;/w&gt;
 hu g s &lt;/w&gt;
 hu g g e d &lt;/w&gt;
 hu g g i n g &lt;/w&gt;
-hu g g i n g f a c e &lt;/w&gt;
-t r a i n i n g &lt;/w&gt;
-l e a r n i n g &lt;/w&gt;</div>
+s m i l e d &lt;/w&gt;
+s m i l i n g &lt;/w&gt;
+w a v e d &lt;/w&gt;
+w a v i n g &lt;/w&gt;</div>
           </div>
           <div class="card">
+            <div class="token-count-label">Merged chunks so far</div>
             <div class="token-example" style="flex-wrap:wrap; gap:0.3rem;">
-              <span class="token-pill">h</span><span class="token-pill">u</span><span class="token-pill">g</span><span class="token-pill">s</span><span class="token-pill">e</span><span class="token-pill">d</span><span class="token-pill">i</span><span class="token-pill">n</span><span class="token-pill">f</span><span class="token-pill">a</span><span class="token-pill">c</span><span class="token-pill">t</span><span class="token-pill">r</span><span class="token-pill">l</span>
               <span class="token-pill main">hu</span>
             </div>
             <div class="pair-grid" style="margin-top:0.65rem;">
-              <div class="pair-chip"><strong>hu g</strong> → 5</div>
-              <div class="pair-chip"><strong>i n</strong> → 5</div>
-              <div class="pair-chip"><strong>n g</strong> → 4</div>
-              <div class="pair-chip"><strong>g g</strong> → 3</div>
+              <div class="pair-chip"><strong>hu g</strong> → 4</div>
+              <div class="pair-chip"><strong>i n</strong> → 3</div>
+              <div class="pair-chip"><strong>e d</strong> → 3</div>
+              <div class="pair-chip"><strong>n g</strong> → 3</div>
             </div>
-            <p class="small-text" style="margin-top:0.5rem;">Next, we merge <span class="hl">hu + g</span> to form <span class="hl">hug</span>.</p>
+            <p class="small-text" style="margin-top:0.5rem;">Same corpus, one level up: <span class="hl">hu + g</span> is still the most common pair.</p>
           </div>
         </div>
       </div>
@@ -629,28 +632,29 @@ l e a r n i n g &lt;/w&gt;</div>
       <div class="hidden-content autostep bpe-overlay">
         <div class="grid-2">
           <div class="corpus-card" style="border-color:rgba(123,154,255,0.45);">
-            <div class="corpus-title">Merge 2: <span class="hl">hu + g → hug</span> &nbsp;(freq: 5)</div>
+            <div class="corpus-title">Merge 2: <span class="hl">hu + g → hug</span> &nbsp;(freq: 4)</div>
             <div class="corpus-body">hug &lt;/w&gt;
 hug s &lt;/w&gt;
 hug g e d &lt;/w&gt;
 hug g i n g &lt;/w&gt;
-hug g i n g f a c e &lt;/w&gt;
-t r a i n i n g &lt;/w&gt;
-l e a r n i n g &lt;/w&gt;</div>
+s m i l e d &lt;/w&gt;
+s m i l i n g &lt;/w&gt;
+w a v e d &lt;/w&gt;
+w a v i n g &lt;/w&gt;</div>
           </div>
           <div class="card">
+            <div class="token-count-label">Merged chunks so far</div>
             <div class="token-example" style="flex-wrap:wrap; gap:0.3rem;">
-              <span class="token-pill">h</span><span class="token-pill">u</span><span class="token-pill">g</span><span class="token-pill">s</span><span class="token-pill">e</span><span class="token-pill">d</span><span class="token-pill">i</span><span class="token-pill">n</span><span class="token-pill">f</span><span class="token-pill">a</span><span class="token-pill">c</span><span class="token-pill">t</span><span class="token-pill">r</span><span class="token-pill">l</span>
               <span class="token-pill main">hu</span>
               <span class="token-pill main">hug</span>
             </div>
             <div class="pair-grid" style="margin-top:0.65rem;">
-              <div class="pair-chip"><strong>i n</strong> → 5</div>
-              <div class="pair-chip"><strong>n g</strong> → 4</div>
-              <div class="pair-chip"><strong>hug g</strong> → 3</div>
-              <div class="pair-chip"><strong>g i</strong> → 2</div>
+              <div class="pair-chip"><strong>i n</strong> → 3</div>
+              <div class="pair-chip"><strong>e d</strong> → 3</div>
+              <div class="pair-chip"><strong>n g</strong> → 3</div>
+              <div class="pair-chip"><strong>hug g</strong> → 2</div>
             </div>
-            <p class="small-text" style="margin-top:0.5rem;">At this stage, <span class="hl">i + n</span> is the most frequent pair.</p>
+            <p class="small-text" style="margin-top:0.5rem;">The stem is built. Next we let shared endings compete.</p>
           </div>
         </div>
       </div>
@@ -659,29 +663,30 @@ l e a r n i n g &lt;/w&gt;</div>
       <div class="hidden-content autostep bpe-overlay">
         <div class="grid-2">
           <div class="corpus-card" style="border-color:rgba(123,154,255,0.45);">
-            <div class="corpus-title">Merge 3: <span class="hl">i + n → in</span> &nbsp;(freq: 5)</div>
+            <div class="corpus-title">Merge 3: <span class="hl">i + n → in</span> &nbsp;(freq: 3)</div>
             <div class="corpus-body">hug &lt;/w&gt;
 hug s &lt;/w&gt;
 hug g e d &lt;/w&gt;
 hug g in g &lt;/w&gt;
-hug g in g f a c e &lt;/w&gt;
-t r a in in g &lt;/w&gt;
-l e a r n in g &lt;/w&gt;</div>
+s m i l e d &lt;/w&gt;
+s m i l in g &lt;/w&gt;
+w a v e d &lt;/w&gt;
+w a v in g &lt;/w&gt;</div>
           </div>
           <div class="card">
+            <div class="token-count-label">Merged chunks so far</div>
             <div class="token-example" style="flex-wrap:wrap; gap:0.3rem;">
-              <span class="token-pill">h</span><span class="token-pill">u</span><span class="token-pill">g</span><span class="token-pill">s</span><span class="token-pill">e</span><span class="token-pill">d</span><span class="token-pill">i</span><span class="token-pill">n</span><span class="token-pill">f</span><span class="token-pill">a</span><span class="token-pill">c</span><span class="token-pill">t</span><span class="token-pill">r</span><span class="token-pill">l</span>
               <span class="token-pill main">hu</span>
               <span class="token-pill main">hug</span>
-              <span class="token-pill reuse">in</span>
+              <span class="token-pill main">in</span>
             </div>
             <div class="pair-grid" style="margin-top:0.65rem;">
-              <div class="pair-chip"><strong>in g</strong> → 4</div>
-              <div class="pair-chip"><strong>hug g</strong> → 3</div>
-              <div class="pair-chip"><strong>g in</strong> → 2</div>
-              <div class="pair-chip"><strong>a c</strong> → 1</div>
+              <div class="pair-chip"><strong>in g</strong> → 3</div>
+              <div class="pair-chip"><strong>e d</strong> → 3</div>
+              <div class="pair-chip"><strong>hug g</strong> → 2</div>
+              <div class="pair-chip"><strong>l in</strong> → 1</div>
             </div>
-            <p class="small-text" style="margin-top:0.5rem;">Next merge: <span class="hl">in + g</span>.</p>
+            <p class="small-text" style="margin-top:0.5rem;">One more merge turns a recurring ending into a reusable chunk.</p>
           </div>
         </div>
       </div>
@@ -690,188 +695,64 @@ l e a r n in g &lt;/w&gt;</div>
       <div class="hidden-content autostep bpe-overlay">
         <div class="grid-2">
           <div class="corpus-card" style="border-color:rgba(90,232,142,0.5);">
-            <div class="corpus-title">Merge 4: <span class="hl">in + g → ing</span> &nbsp;(freq: 4)</div>
+            <div class="corpus-title">Merge 4: <span class="hl">in + g → ing</span> &nbsp;(freq: 3)</div>
             <div class="corpus-body">hug &lt;/w&gt;
 hug s &lt;/w&gt;
 hug g e d &lt;/w&gt;
 hug g <span class="corpus-discovery">ing</span> &lt;/w&gt;
-hug g <span class="corpus-discovery">ing</span> f a c e &lt;/w&gt;
-t r a in <span class="corpus-discovery">ing</span> &lt;/w&gt;
-l e a r n <span class="corpus-discovery">ing</span> &lt;/w&gt;</div>
+s m i l e d &lt;/w&gt;
+s m i l <span class="corpus-discovery">ing</span> &lt;/w&gt;
+w a v e d &lt;/w&gt;
+w a v <span class="corpus-discovery">ing</span> &lt;/w&gt;</div>
           </div>
           <div class="card">
+            <div class="token-count-label">Merged chunks so far</div>
             <div class="token-example" style="flex-wrap:wrap; gap:0.3rem;">
-              <span class="token-pill">h</span><span class="token-pill">u</span><span class="token-pill">g</span><span class="token-pill">s</span><span class="token-pill">e</span><span class="token-pill">d</span><span class="token-pill">i</span><span class="token-pill">n</span><span class="token-pill">f</span><span class="token-pill">a</span><span class="token-pill">c</span><span class="token-pill">t</span><span class="token-pill">r</span><span class="token-pill">l</span>
               <span class="token-pill main">hu</span>
               <span class="token-pill main">hug</span>
-              <span class="token-pill reuse">in</span>
+              <span class="token-pill main">in</span>
               <span class="token-pill discovery">ing</span>
+            </div>
+            <div class="pair-grid" style="margin-top:0.65rem;">
+              <div class="pair-chip"><strong>e d</strong> → 3</div>
+              <div class="pair-chip"><strong>hug g</strong> → 2</div>
+              <div class="pair-chip"><strong>l ing</strong> → 1</div>
+              <div class="pair-chip"><strong>v ing</strong> → 1</div>
             </div>
             <div class="callout discovery-callout" style="margin-top:0.55rem;">
               <span class="icon">!</span>
-              <span>High-frequency suffixes like <span class="hl">-ing</span> emerge early because they repeat across many words.</span>
+              <span>Aha: <span class="hl">ing</span> just became reusable. Three different words now share the same ending token.</span>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- State 5: merge 5 -->
+      <!-- State 5: merge 5 (ed discovery) -->
       <div class="hidden-content autostep bpe-overlay">
         <div class="grid-2">
-          <div class="corpus-card" style="border-color:rgba(123,154,255,0.45);">
-            <div class="corpus-title">Merge 5: <span class="hl">hug + g → hugg</span> &nbsp;(freq: 3)</div>
+          <div class="corpus-card" style="border-color:rgba(255,170,85,0.46);">
+            <div class="corpus-title">Merge 5: <span class="hl-orange">e + d → ed</span> &nbsp;(freq: 3)</div>
             <div class="corpus-body">hug &lt;/w&gt;
 hug s &lt;/w&gt;
-hugg e d &lt;/w&gt;
-hugg ing &lt;/w&gt;
-hugg ing f a c e &lt;/w&gt;
-t r a in ing &lt;/w&gt;
-l e a r n ing &lt;/w&gt;</div>
+hug g <span class="corpus-discovery-ed">ed</span> &lt;/w&gt;
+hug g <span class="corpus-discovery">ing</span> &lt;/w&gt;
+s m i l <span class="corpus-discovery-ed">ed</span> &lt;/w&gt;
+s m i l <span class="corpus-discovery">ing</span> &lt;/w&gt;
+w a v <span class="corpus-discovery-ed">ed</span> &lt;/w&gt;
+w a v <span class="corpus-discovery">ing</span> &lt;/w&gt;</div>
           </div>
           <div class="card">
+            <div class="token-count-label">Reusable endings unlocked</div>
             <div class="token-example" style="flex-wrap:wrap; gap:0.3rem;">
-              <span class="token-pill">h</span><span class="token-pill">u</span><span class="token-pill">g</span><span class="token-pill">s</span><span class="token-pill">e</span><span class="token-pill">d</span><span class="token-pill">i</span><span class="token-pill">n</span><span class="token-pill">f</span><span class="token-pill">a</span><span class="token-pill">c</span><span class="token-pill">t</span><span class="token-pill">r</span><span class="token-pill">l</span>
               <span class="token-pill main">hu</span>
               <span class="token-pill main">hug</span>
-              <span class="token-pill reuse">in</span>
-              <span class="token-pill reuse">ing</span>
-              <span class="token-pill main">hugg</span>
+              <span class="token-pill main">in</span>
+              <span class="token-pill discovery">ing</span>
+              <span class="token-pill discovery-ed">ed</span>
             </div>
-            <div class="pair-grid" style="margin-top:0.65rem;">
-              <div class="pair-chip"><strong>hugg ing</strong> → 2</div>
-              <div class="pair-chip"><strong>f a</strong> → 1</div>
-              <div class="pair-chip"><strong>a c</strong> → 1</div>
-              <div class="pair-chip"><strong>hugg e</strong> → 1</div>
-            </div>
-            <p class="small-text" style="margin-top:0.5rem;">Next merge: <span class="hl">hugg + ing</span>.</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- State 6: merge 6 -->
-      <div class="hidden-content autostep bpe-overlay">
-        <div class="grid-2">
-          <div class="corpus-card" style="border-color:rgba(123,154,255,0.45);">
-            <div class="corpus-title">Merge 6: <span class="hl">hugg + ing → hugging</span> &nbsp;(freq: 2)</div>
-            <div class="corpus-body">hug &lt;/w&gt;
-hug s &lt;/w&gt;
-hugg e d &lt;/w&gt;
-hugging &lt;/w&gt;
-hugging f a c e &lt;/w&gt;
-t r a in ing &lt;/w&gt;
-l e a r n ing &lt;/w&gt;</div>
-          </div>
-          <div class="card">
-            <div class="token-example" style="flex-wrap:wrap; gap:0.3rem;">
-              <span class="token-pill">h</span><span class="token-pill">u</span><span class="token-pill">g</span><span class="token-pill">s</span><span class="token-pill">e</span><span class="token-pill">d</span><span class="token-pill">i</span><span class="token-pill">n</span><span class="token-pill">f</span><span class="token-pill">a</span><span class="token-pill">c</span><span class="token-pill">t</span><span class="token-pill">r</span><span class="token-pill">l</span>
-              <span class="token-pill main">hu</span>
-              <span class="token-pill main">hug</span>
-              <span class="token-pill reuse">in</span>
-              <span class="token-pill reuse">ing</span>
-              <span class="token-pill main">hugg</span>
-              <span class="token-pill flex">hugging</span>
-            </div>
-            <div class="pair-grid" style="margin-top:0.65rem;">
-              <div class="pair-chip"><strong>f a</strong> → 1</div>
-              <div class="pair-chip"><strong>a c</strong> → 1</div>
-              <div class="pair-chip"><strong>c e</strong> → 1</div>
-              <div class="pair-chip"><strong>a in</strong> → 1</div>
-            </div>
-            <p class="small-text" style="margin-top:0.5rem;">From here, low-frequency merges compose <span class="hl">face</span>.</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- State 7: merge 7 -->
-      <div class="hidden-content autostep bpe-overlay">
-        <div class="grid-2">
-          <div class="corpus-card" style="border-color:rgba(255,170,85,0.4);">
-            <div class="corpus-title">Merge 7: <span class="hl">f + a → fa</span> &nbsp;(freq: 1)</div>
-            <div class="corpus-body">hug &lt;/w&gt;
-hug s &lt;/w&gt;
-hugg e d &lt;/w&gt;
-hugging &lt;/w&gt;
-hugging fa c e &lt;/w&gt;
-t r a in ing &lt;/w&gt;
-l e a r n ing &lt;/w&gt;</div>
-          </div>
-          <div class="card">
-            <div class="token-example" style="flex-wrap:wrap; gap:0.3rem;">
-              <span class="token-pill">h</span><span class="token-pill">u</span><span class="token-pill">g</span><span class="token-pill">s</span><span class="token-pill">e</span><span class="token-pill">d</span><span class="token-pill">i</span><span class="token-pill">n</span><span class="token-pill">f</span><span class="token-pill">a</span><span class="token-pill">c</span><span class="token-pill">t</span><span class="token-pill">r</span><span class="token-pill">l</span>
-              <span class="token-pill main">hu</span><span class="token-pill main">hug</span><span class="token-pill reuse">in</span><span class="token-pill reuse">ing</span><span class="token-pill main">hugg</span><span class="token-pill flex">hugging</span><span class="token-pill main">fa</span>
-            </div>
-            <p class="small-text" style="margin-top:0.5rem;">Next: <span class="hl">fa + c → fac</span>.</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- State 8: merge 8 -->
-      <div class="hidden-content autostep bpe-overlay">
-        <div class="grid-2">
-          <div class="corpus-card" style="border-color:rgba(255,170,85,0.4);">
-            <div class="corpus-title">Merge 8: <span class="hl">fa + c → fac</span> &nbsp;(freq: 1)</div>
-            <div class="corpus-body">hug &lt;/w&gt;
-hug s &lt;/w&gt;
-hugg e d &lt;/w&gt;
-hugging &lt;/w&gt;
-hugging fac e &lt;/w&gt;
-t r a in ing &lt;/w&gt;
-l e a r n ing &lt;/w&gt;</div>
-          </div>
-          <div class="card">
-            <div class="token-example" style="flex-wrap:wrap; gap:0.3rem;">
-              <span class="token-pill">h</span><span class="token-pill">u</span><span class="token-pill">g</span><span class="token-pill">s</span><span class="token-pill">e</span><span class="token-pill">d</span><span class="token-pill">i</span><span class="token-pill">n</span><span class="token-pill">f</span><span class="token-pill">a</span><span class="token-pill">c</span><span class="token-pill">t</span><span class="token-pill">r</span><span class="token-pill">l</span>
-              <span class="token-pill main">hu</span><span class="token-pill main">hug</span><span class="token-pill reuse">in</span><span class="token-pill reuse">ing</span><span class="token-pill main">hugg</span><span class="token-pill flex">hugging</span><span class="token-pill main">fa</span><span class="token-pill main">fac</span>
-            </div>
-            <p class="small-text" style="margin-top:0.5rem;">Next: <span class="hl">fac + e → face</span>.</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- State 9: merge 9 -->
-      <div class="hidden-content autostep bpe-overlay">
-        <div class="grid-2">
-          <div class="corpus-card" style="border-color:rgba(255,170,85,0.4);">
-            <div class="corpus-title">Merge 9: <span class="hl">fac + e → face</span> &nbsp;(freq: 1)</div>
-            <div class="corpus-body">hug &lt;/w&gt;
-hug s &lt;/w&gt;
-hugg e d &lt;/w&gt;
-hugging &lt;/w&gt;
-hugging face &lt;/w&gt;
-t r a in ing &lt;/w&gt;
-l e a r n ing &lt;/w&gt;</div>
-          </div>
-          <div class="card">
-            <div class="token-example" style="flex-wrap:wrap; gap:0.3rem;">
-              <span class="token-pill">h</span><span class="token-pill">u</span><span class="token-pill">g</span><span class="token-pill">s</span><span class="token-pill">e</span><span class="token-pill">d</span><span class="token-pill">i</span><span class="token-pill">n</span><span class="token-pill">f</span><span class="token-pill">a</span><span class="token-pill">c</span><span class="token-pill">t</span><span class="token-pill">r</span><span class="token-pill">l</span>
-              <span class="token-pill main">hu</span><span class="token-pill main">hug</span><span class="token-pill reuse">in</span><span class="token-pill reuse">ing</span><span class="token-pill main">hugg</span><span class="token-pill flex">hugging</span><span class="token-pill main">fa</span><span class="token-pill main">fac</span><span class="token-pill main">face</span>
-            </div>
-            <p class="small-text" style="margin-top:0.5rem;">Final merge in this walkthrough: <span class="hl">hugging + face</span>.</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- State 10: merge 10 -->
-      <div class="hidden-content autostep bpe-overlay">
-        <div class="grid-2">
-          <div class="corpus-card" style="border-color:rgba(255,170,85,0.4);">
-            <div class="corpus-title">Merge 10: <span class="hl">hugging + face → huggingface</span> &nbsp;(freq: 1)</div>
-            <div class="corpus-body">hug &lt;/w&gt;
-hug s &lt;/w&gt;
-hugg e d &lt;/w&gt;
-hugging &lt;/w&gt;
-huggingface &lt;/w&gt;
-t r a in ing &lt;/w&gt;
-l e a r n ing &lt;/w&gt;</div>
-          </div>
-          <div class="card">
-            <div class="token-example" style="flex-wrap:wrap; gap:0.3rem;">
-              <span class="token-pill">h</span><span class="token-pill">u</span><span class="token-pill">g</span><span class="token-pill">s</span><span class="token-pill">e</span><span class="token-pill">d</span><span class="token-pill">i</span><span class="token-pill">n</span><span class="token-pill">f</span><span class="token-pill">a</span><span class="token-pill">c</span><span class="token-pill">t</span><span class="token-pill">r</span><span class="token-pill">l</span>
-              <span class="token-pill main">hu</span><span class="token-pill main">hug</span><span class="token-pill reuse">in</span><span class="token-pill reuse">ing</span><span class="token-pill main">hugg</span><span class="token-pill flex">hugging</span><span class="token-pill main">fa</span><span class="token-pill main">fac</span><span class="token-pill main">face</span><span class="token-pill flex">huggingface</span>
-            </div>
-            <div class="callout info" style="margin-top:0.55rem;">
-              <span class="icon">i</span>
-              <span>Frequency turns characters into reusable chunks and, sometimes, full words.</span>
+            <div class="callout discovery-callout discovery-callout-ed" style="margin-top:0.55rem;">
+              <span class="icon">!</span>
+              <span>Now <span class="hl-orange">ed</span> joins the vocabulary too. The tokenizer is learning reusable endings, not memorizing whole words.</span>
             </div>
           </div>
         </div>
@@ -891,43 +772,47 @@ l e a r n ing &lt;/w&gt;</div>
 
     <div class="grid-2">
       <div class="card">
-        <h3>Vocabulary after our merges</h3>
-        <div class="token-example" style="margin-top:0.55rem; flex-wrap:wrap; gap:0.38rem;">
-          <span class="token-pill">h</span>
-          <span class="token-pill">u</span>
-          <span class="token-pill">g</span>
-          <span class="token-pill">s</span>
-          <span class="token-pill">e</span>
-          <span class="token-pill">d</span>
-          <span class="token-pill">i</span>
-          <span class="token-pill">n</span>
-          <span class="token-pill">f</span>
-          <span class="token-pill">a</span>
-          <span class="token-pill">c</span>
-          <span class="token-pill">t</span>
-          <span class="token-pill">r</span>
-          <span class="token-pill">l</span>
-          <span class="token-pill main">hu</span>
-          <span class="token-pill main">hug</span>
-          <span class="token-pill main">hugg</span>
-          <span class="token-pill reuse">in</span>
-          <span class="token-pill reuse">ing</span>
-          <span class="token-pill flex">hugging</span>
-          <span class="token-pill main">fa</span>
-          <span class="token-pill main">fac</span>
-          <span class="token-pill main">face</span>
-          <span class="token-pill flex">huggingface</span>
+        <h3>Vocabulary After These Merges</h3>
+        <div style="margin-top:0.55rem; display:flex; flex-direction:column; gap:0.72rem;">
+          <div>
+            <div class="token-count-label">Base characters</div>
+            <div class="token-example" style="margin-top:0.28rem; flex-wrap:wrap; gap:0.38rem;">
+              <span class="token-pill">h</span>
+              <span class="token-pill">u</span>
+              <span class="token-pill">g</span>
+              <span class="token-pill">s</span>
+              <span class="token-pill">e</span>
+              <span class="token-pill">d</span>
+              <span class="token-pill">i</span>
+              <span class="token-pill">n</span>
+              <span class="token-pill">m</span>
+              <span class="token-pill">l</span>
+              <span class="token-pill">w</span>
+              <span class="token-pill">a</span>
+              <span class="token-pill">v</span>
+            </div>
+          </div>
+          <div>
+            <div class="token-count-label">Stem-building chunks</div>
+            <div class="token-example" style="margin-top:0.28rem; flex-wrap:wrap; gap:0.38rem;">
+              <span class="token-pill main">hu</span>
+              <span class="token-pill main">hug</span>
+              <span class="token-pill main">in</span>
+            </div>
+          </div>
+          <div>
+            <div class="token-count-label">Reusable suffix chunks</div>
+            <div class="token-example" style="margin-top:0.28rem; flex-wrap:wrap; gap:0.38rem;">
+              <span class="token-pill discovery">ing</span>
+              <span class="token-pill discovery-ed">ed</span>
+            </div>
+          </div>
         </div>
-        <p class="tiny" style="margin-top:0.5rem;">Gray = base characters &nbsp;·&nbsp; Blue = primary merges &nbsp;·&nbsp; Green = suffix merges &nbsp;·&nbsp; Orange = full-word tokens</p>
+        <p class="tiny" style="margin-top:0.5rem;">Gray = base characters &nbsp;·&nbsp; Blue = stem-building merges &nbsp;·&nbsp; Green = <span class="hl">ing</span> &nbsp;·&nbsp; Orange = <span class="hl-orange">ed</span></p>
       </div>
       <div class="card">
-        <h3>How it applies to new text</h3>
+        <h3>Reusable Chunks in Action</h3>
         <div style="margin-top:0.5rem; display:flex; flex-direction:column; gap:0.5rem;">
-          <div class="small-text" style="display:flex; align-items:center; gap:0.45rem; flex-wrap:wrap;">
-            <span class="hl" style="min-width:5.5rem;">hug</span>
-            <span>→</span>
-            <span class="token-pill main" style="display:inline-block;">hug</span>
-          </div>
           <div class="small-text" style="display:flex; align-items:center; gap:0.45rem; flex-wrap:wrap;">
             <span class="hl" style="min-width:5.5rem;">hugs</span>
             <span>→</span>
@@ -935,21 +820,35 @@ l e a r n ing &lt;/w&gt;</div>
             <span class="token-pill" style="display:inline-block;">s</span>
           </div>
           <div class="small-text" style="display:flex; align-items:center; gap:0.45rem; flex-wrap:wrap;">
-            <span class="hl-orange" style="min-width:5.5rem;">hugged</span>
-            <span>→</span>
-            <span class="token-pill main" style="display:inline-block;">hugg</span>
-            <span class="token-pill" style="display:inline-block;">e</span>
-            <span class="token-pill" style="display:inline-block;">d</span>
-          </div>
-          <div class="small-text" style="display:flex; align-items:center; gap:0.45rem; flex-wrap:wrap;">
             <span class="hl-green" style="min-width:5.5rem;">hugging</span>
             <span>→</span>
-            <span class="token-pill flex" style="display:inline-block;">hugging</span>
+            <span class="token-pill main" style="display:inline-block;">hug</span>
+            <span class="token-pill" style="display:inline-block;">g</span>
+            <span class="token-pill discovery" style="display:inline-block;">ing</span>
           </div>
           <div class="small-text" style="display:flex; align-items:center; gap:0.45rem; flex-wrap:wrap;">
-            <span class="hl-purple" style="min-width:5.5rem;">HuggingFace</span>
+            <span class="hl-orange" style="min-width:5.5rem;">hugged</span>
             <span>→</span>
-            <span class="token-pill flex" style="display:inline-block;">huggingface</span>
+            <span class="token-pill main" style="display:inline-block;">hug</span>
+            <span class="token-pill" style="display:inline-block;">g</span>
+            <span class="token-pill discovery-ed" style="display:inline-block;">ed</span>
+          </div>
+          <div class="small-text" style="display:flex; align-items:center; gap:0.45rem; flex-wrap:wrap;">
+            <span class="hl-green" style="min-width:5.5rem;">smiling</span>
+            <span>→</span>
+            <span class="token-pill" style="display:inline-block;">s</span>
+            <span class="token-pill" style="display:inline-block;">m</span>
+            <span class="token-pill" style="display:inline-block;">i</span>
+            <span class="token-pill" style="display:inline-block;">l</span>
+            <span class="token-pill discovery" style="display:inline-block;">ing</span>
+          </div>
+          <div class="small-text" style="display:flex; align-items:center; gap:0.45rem; flex-wrap:wrap;">
+            <span class="hl-orange" style="min-width:5.5rem;">waved</span>
+            <span>→</span>
+            <span class="token-pill" style="display:inline-block;">w</span>
+            <span class="token-pill" style="display:inline-block;">a</span>
+            <span class="token-pill" style="display:inline-block;">v</span>
+            <span class="token-pill discovery-ed" style="display:inline-block;">ed</span>
           </div>
         </div>
       </div>
@@ -958,11 +857,11 @@ l e a r n ing &lt;/w&gt;</div>
     <div class="spacer-sm"></div>
     <div class="callout info">
       <span class="icon">i</span>
-      <span>The tokenizer can spell unseen words from learned pieces. <span class="hl-orange">"hugged"</span> never appeared in the corpus, but it still tokenizes cleanly.</span>
+      <span>The tokenizer has now learned reusable endings like <span class="hl">ing</span> and <span class="hl-orange">ed</span>, so common word forms can reuse chunks instead of being rebuilt from scratch every time.</span>
     </div>
     <div class="callout success" style="margin-top:0.6rem;">
       <span class="icon">+</span>
-      <span><strong>BPE starts from characters and repeatedly merges the most frequent pair.</strong> That loop builds the reusable subword vocabulary used by most modern LLMs.</span>
+      <span><strong>BPE starts from characters and promotes repeated pairs into reusable chunks.</strong> That is how pieces like <span class="hl">hug</span>, <span class="hl">ing</span>, and <span class="hl-orange">ed</span> enter the vocabulary.</span>
     </div>
   </div>
 
@@ -971,13 +870,13 @@ l e a r n ing &lt;/w&gt;</div>
     <span class="section-tag">Tokenization</span>
     <div class="slide-header">
       <div class="badge discussion">Why It Matters</div>
-      <h2>Why tokenization constrains reasoning</h2>
+      <h2>Why Tokenization Shapes Reasoning</h2>
     </div>
     <div class="spacer-sm"></div>
 
     <div class="card" style="border-color: rgba(123,154,255,0.35);">
-      <h3>The mechanism</h3>
-      <p class="small-text">The model computes on <strong>token vectors</strong>, not character vectors. If one token covers many letters, character-level reasoning has to be reconstructed from subword pieces.</p>
+      <h3>Core Mechanism</h3>
+      <p class="small-text">The model computes on <strong>token vectors</strong>, not character vectors. When one token covers many letters, character-level reasoning must be reconstructed from subword pieces.</p>
       <div style="margin-top:0.7rem; display:flex; align-items:center; gap:0.6rem; flex-wrap:wrap;">
         <span class="hl">"strawberry"</span>
         <span class="small-text">→</span>
@@ -990,7 +889,7 @@ l e a r n ing &lt;/w&gt;</div>
 
     <div class="grid-2" style="margin-top:0.8rem;">
       <div class="card">
-        <h3>Where this gets hard</h3>
+        <h3>Where It Breaks</h3>
         <ul class="pc-list bad">
           <li>Counting specific letters in a word.</li>
           <li>Extracting the nth character from a string.</li>
@@ -999,8 +898,13 @@ l e a r n ing &lt;/w&gt;</div>
         </ul>
       </div>
       <div class="card">
-        <h3>Important nuance</h3>
-        <p class="small-text">Tokenization is a structural disadvantage, not a hard ceiling. Character-level behavior can emerge late in training, and small architectural changes can improve it.</p>
+        <h3>Why It Works So Well</h3>
+        <ul class="pc-list good">
+          <li>Subword pieces let the model handle <strong>unseen words</strong> by composing familiar parts instead of needing every word in the vocabulary.</li>
+          <li>Sequences stay much <strong>shorter than character-level</strong>, which makes attention cheaper and preserves more context.</li>
+          <li>The vocabulary stays much <strong>smaller than word-level</strong>, reducing the size of the embedding and output layers.</li>
+          <li>That tradeoff is why tokenization is so widely used: it is efficient, flexible, and good enough for most language understanding tasks.</li>
+        </ul>
       </div>
     </div>
 
@@ -1008,7 +912,7 @@ l e a r n ing &lt;/w&gt;</div>
     <div class="callout success" style="margin-top:-0.3rem; font-size: 0.98rem;">
 
       <span class="icon">+</span>
-      <span>Tokenization defines the vocabulary, shapes sequence length, and sets the granularity of every computation that follows.</span>
+      <span>Tokenization defines the vocabulary, shapes sequence length, and sets the granularity of every downstream computation.</span>
     </div>
   </div>
 
@@ -1020,7 +924,7 @@ l e a r n ing &lt;/w&gt;</div>
       <h2>From token IDs to vectors</h2>
     </div>
     <div class="slide-body">
-    <p class="small-text">A token ID is just a row index into a learned embedding matrix.</p>
+    <p class="small-text">A token ID is simply a row index in a learned embedding matrix.</p>
     <div class="math">\[
       T\in\{1,\dots,|V|\}^{n},\quad X^{(0)}=E[T]\in\mathbb{R}^{n\times d_{\text{model}}}
     \]</div>
@@ -1033,7 +937,7 @@ l e a r n ing &lt;/w&gt;</div>
 
     <div class="grid-2" style="margin-top:0.45rem;">
       <div class="card">
-        <h3>Three retrieved rows</h3>
+        <h3>Three Retrieved Rows</h3>
         <div class="embed-table">
           <div class="embed-row matrix-ellipsis-row">
             <span class="embed-key dim">⋮</span>
@@ -1068,13 +972,11 @@ l e a r n ing &lt;/w&gt;</div>
         </div>
       </div>
       <div class="card">
-        <h3>Scale of the full table</h3>
+        <h3>Scale of the Full Table</h3>
         <div class="math">\[
           E \in \mathbb{R}^{|V|\times d_{\text{model}}}
         \]</div>
-        <div class="id-seq" style="margin-top:0.55rem; white-space:pre-wrap; word-break:break-word;">Example (GPT-2 small):<br>\(|V| = 50{,}257,\quad d_{\text{model}} = 768\)<br>\(\lvert E \rvert = 50{,}257 \times 768 = 38{,}597{,}376\)</div>
-        <div class="id-seq" style="margin-top:0.5rem; white-space:pre-wrap; word-break:break-word;">This slide's lookup:<br>\([\text{river}, \text{bank}, \text{loan}] \mapsto [812, 1452, 5021]\)<br>\(\mapsto [E[812,:], E[1452,:], E[5021,:]]\)</div>
-        <p class="tiny" style="margin-top:0.5rem;">Token IDs shown here are illustrative; exact values depend on the tokenizer vocabulary.</p>
+        <div class="id-seq" style="margin-top:0.55rem; white-space:pre-wrap; word-break:break-word;">Examples:<br>GPT-2 small: \(|V| = 50{,}257,\quad d_{\text{model}} = 768\)<br>\(\lvert E \rvert = 50{,}257 \times 768 = 38{,}597{,}376\)<br><br>GPT-4 tokenizer: \(|V| \approx 100{,}000\)<br>\(\text{Exact } d_{\text{model}} \text{ is not public, but the table still scales as } |V| \times d_{\text{model}}\)</div>
       </div>
     </div>
     </div>
@@ -1085,12 +987,12 @@ l e a r n ing &lt;/w&gt;</div>
     <span class="section-tag">Embeddings</span>
     <div class="slide-header">
       <div class="badge concept">Key Properties</div>
-      <h2>What embeddings give you, and what they still lack</h2>
+      <h2>What Embeddings Provide, and What They Still Lack</h2>
     </div>
     <div class="slide-body">
       <div class="grid-2">
         <div class="card">
-          <h3>What embeddings already give you</h3>
+          <h3>What Embeddings Already Provide</h3>
           <ul class="pc-list good" style="margin-top:0.5rem;">
             <li>Learned table \(E \in \mathbb{R}^{|V| \times d_{\text{model}}}\): one trainable row per token type.</li>
             <li>Often one of the largest parameter blocks, scaling with \(|V| \times d_{\text{model}}\).</li>
@@ -1099,7 +1001,7 @@ l e a r n ing &lt;/w&gt;</div>
           </ul>
         </div>
         <div class="card">
-          <h3>What later layers still have to add</h3>
+          <h3>What Later Layers Must Add</h3>
           <ul class="pc-list bad" style="margin-top:0.5rem;">
             <li>Sense is unresolved: one row can support multiple intended meanings.</li>
             <li>No token-token interaction yet — rows cannot use neighboring words.</li>
@@ -1111,7 +1013,7 @@ l e a r n ing &lt;/w&gt;</div>
 
       <div class="callout info" style="margin-top:0.5rem;">
         <span class="icon">→</span>
-        <span>Next: look at the same vectors through different semantic projections, then show why context is needed to pick the intended meaning.</span>
+        <span>Different projections reveal different relationships; context resolves the intended meaning.</span>
       </div>
     </div>
   </div>
@@ -1121,12 +1023,12 @@ l e a r n ing &lt;/w&gt;</div>
     <span class="section-tag">Embeddings</span>
     <div class="slide-header">
       <div class="badge discussion">Geometry</div>
-      <h2>One embedding space, multiple semantic projections</h2>
-      <p class="small-text">Each token is one high-dimensional vector. These plots show different 2D views of that same space.</p>
+      <h2>One Embedding Space, Multiple Semantic Projections</h2>
+      <p class="small-text">Each token is one high-dimensional vector. These plots are different 2D views of the same space.</p>
     </div>
     <div class="slide-body">
     <div class="card projection-card" style="margin-top:0.5rem;">
-      <h3>Change the lens, not the space</h3>
+      <h3>Change the Lens, Not the Space</h3>
       <div class="projection-toolbar" id="projectionToolbar16">
         <button class="lens-btn active" data-lens="pet" aria-pressed="true">Pet / companionship</button>
         <button class="lens-btn" data-lens="feline" aria-pressed="false">Feline family</button>
@@ -1142,9 +1044,9 @@ l e a r n ing &lt;/w&gt;</div>
 
         <div class="projection-body-info">
           <div class="projection-readout" id="projectionReadout16">
-            <div class="small-text">Projection lens: <span class="hl" id="projectionLensLabel16">Pet / companionship</span></div>
-            <div class="small-text" style="margin-top:0.28rem;">Dimension pair emphasizes: <strong id="projectionMeaning16">pet and companionship features</strong></div>
-            <div class="small-text" style="margin-top:0.28rem;">Nearest to <strong>cat</strong> under this lens:</div>
+            <div class="small-text">Active lens: <span class="hl" id="projectionLensLabel16">Pet / companionship</span></div>
+            <div class="small-text" style="margin-top:0.28rem;">This view emphasizes: <strong id="projectionMeaning16">pet and companionship features</strong></div>
+            <div class="small-text" style="margin-top:0.28rem;">Nearest to <strong>cat</strong> in this view:</div>
             <div class="projection-neighbors" id="projectionNeighbors16">
               <span class="neighbor-chip">dog</span>
               <span class="neighbor-chip">hamster</span>
@@ -1152,7 +1054,7 @@ l e a r n ing &lt;/w&gt;</div>
             </div>
           </div>
           <div class="math-note" style="margin-top:0.5rem;">\(z^{(\mathrm{lens})} = P_{\mathrm{lens}}x,\; P_{\mathrm{lens}}\in\mathbb{R}^{2\times d_{\text{model}}}\)</div>
-          <p class="projection-note" style="margin-top:0.5rem;">The underlying vectors do not move. Only the 2D projection changes, so different relationships become visible under different lenses.</p>
+          <p class="projection-note" style="margin-top:0.5rem;">The underlying vectors do not move. Only the 2D projection changes, revealing different relationships.</p>
         </div>
       </div>
     </div>
@@ -1169,13 +1071,13 @@ l e a r n ing &lt;/w&gt;</div>
     <div class="spacer-sm"></div>
 
     <div class="card" style="border-color: rgba(123,154,255,0.36);">
-      <h3>Same row, different meaning</h3>
+      <h3>Same Row, Different Meaning</h3>
       <div class="sense-sentence" style="margin-top:0.55rem;">The fisherman sat on the <span class="sense-focus">bank</span> of the river.</div>
       <div class="sense-sentence" style="margin-top:0.5rem;">She applied for a loan at the <span class="sense-focus">bank</span>.</div>
       <div class="math" style="margin-top:0.68rem;">\[
         h_{\text{bank}}^{(0)} = E[\text{bank}]
       \]</div>
-      <p class="small-text" style="margin-top:0.2rem;">At input, both sentences start from the same <span class="hl">bank</span> row.</p>
+      <p class="small-text" style="margin-top:0.2rem;">At input, both sentences start from the same <span class="hl">bank</span> embedding.</p>
       <ul class="pc-list good" style="margin-top:0.65rem;">
         <li>The row tells us which token this is.</li>
         <li>The neighboring words tell us which sense is intended.</li>
@@ -1186,7 +1088,7 @@ l e a r n ing &lt;/w&gt;</div>
     <div class="spacer-sm"></div>
     <div class="callout info">
       <span class="icon">→</span>
-      <span>Next: attention lets a token read from the words around it.</span>
+      <span>Attention lets a token read from surrounding words.</span>
     </div>
   </div>
 
@@ -1196,8 +1098,8 @@ l e a r n ing &lt;/w&gt;</div>
     <div class="slide-header">
       <div class="badge concept">Mechanism</div>
       <h2>Attention lets tokens read from each other</h2>
-      <p class="small-text attn18-subtitle">Each token can update its representation using the rest of the sequence.</p>
-      <p class="tiny attn18-motivation">Embeddings are static — attention makes them context-aware.</p>
+      <p class="small-text attn18-subtitle">Each token updates its representation using the rest of the sequence.</p>
+      <p class="tiny attn18-motivation">Embeddings are static; attention makes them context-aware.</p>
     </div>
 
     <div class="attn18-layout">
@@ -1219,7 +1121,7 @@ l e a r n ing &lt;/w&gt;</div>
             <polygon id="attn18-flow-head-mat" class="attn18-flow-head"></polygon>
             <path id="attn18-flow-path-sat" class="attn18-flow-line"></path>
             <polygon id="attn18-flow-head-sat" class="attn18-flow-head"></polygon>
-            <text id="attn18-flow-caption" class="attn18-overlay-label">sat can pull in what it needs from other tokens</text>
+            <text id="attn18-flow-caption" class="attn18-overlay-label">sat pulls in what it needs from the other tokens</text>
             <text id="attn18-flow-micro-cat" class="attn18-overlay-label micro">who sat?</text>
             <text id="attn18-flow-micro-mat" class="attn18-overlay-label micro">where?</text>
           </g>
@@ -1232,15 +1134,15 @@ l e a r n ing &lt;/w&gt;</div>
       </div>
     </div>
 
-    <div class="attn18-takeaway" id="attn18-takeaway">Next: how does sat decide which tokens matter — and what to copy from them?</div>
+    <div class="attn18-takeaway" id="attn18-takeaway">Attention now needs a scoring rule: what matters, and what gets copied forward?</div>
   </div>
 
   <div class="slide slide-has-takeaway" id="slide-19">
     <span class="section-tag">Attention</span>
     <div class="slide-header">
       <div class="badge concept">Mechanism</div>
-      <h2>Step 1 — Make \(Q\), \(K\), and \(V\) versions of each token</h2>
-      <p class="small-text attn19-subtitle">The same token state is projected into three learned subspaces.</p>
+      <h2>Step 1 — Create \(Q\), \(K\), and \(V\) for each token</h2>
+      <p class="small-text attn19-subtitle">Project the same token state into three learned subspaces.</p>
     </div>
 
     <div class="attn19-layout attn19p1-layout">
@@ -1283,15 +1185,15 @@ l e a r n ing &lt;/w&gt;</div>
       </div>
     </div>
 
-    <div class="attn19p1-takeaway" id="attn19p1-takeaway">Embeddings are static — attention projects them into new roles</div>
+    <div class="attn19p1-takeaway" id="attn19p1-takeaway">Attention creates three role-specific versions of each token state.</div>
   </div>
 
   <div class="slide slide-has-takeaway" id="slide-20">
     <span class="section-tag">Attention</span>
     <div class="slide-header">
       <div class="badge concept">Mechanism</div>
-      <h2>Step 2 — Compute scores</h2>
-      <p class="small-text attn19-subtitle">Compare \(q_{\mathrm{sat}}\) against every key \(k_j\)</p>
+      <h2>Step 2 — Compute attention scores</h2>
+      <p class="small-text attn19-subtitle">Compare \(q_{\mathrm{sat}}\) with every key \(k_j\)</p>
     </div>
 
     <div class="attn19-layout">
@@ -1366,7 +1268,7 @@ l e a r n ing &lt;/w&gt;</div>
       </div>
     </div>
 
-    <div class="attn19-takeaway" id="attn19-takeaway">We start from embeddings \(x_1, \ldots, x_n\).</div>
+    <div class="attn19-takeaway" id="attn19-takeaway">Start from embeddings \(x_1, \ldots, x_n\).</div>
   </div>
 
   <div class="slide slide-has-takeaway" id="slide-21">
@@ -1374,7 +1276,7 @@ l e a r n ing &lt;/w&gt;</div>
     <div class="slide-header">
       <div class="badge concept">Mechanism</div>
       <h2>Step 3 — From scores to attention weights</h2>
-      <p class="small-text attn19-subtitle">Scale scores, then softmax them into weights.</p>
+      <p class="small-text attn19-subtitle">Scale the scores, then softmax them into weights.</p>
     </div>
 
     <div class="attn21-layout">
@@ -1385,7 +1287,7 @@ l e a r n ing &lt;/w&gt;</div>
           <div class="attn21-pipeline">
             <div class="attn21-block attn21-block-s">
               <div class="attn21-block-title">RAW SCORES \(\mathbf{s}\)</div>
-              <div class="attn21-block-caption">for query token: <span id="attn21-query-token">sat</span></div>
+              <div class="attn21-block-caption">query token: <span id="attn21-query-token">sat</span></div>
               <div class="attn21-row-shell">
                 <div class="attn21-chip-grid attn21-row-raw" id="attn21-raw-row"></div>
               </div>
@@ -1403,7 +1305,7 @@ l e a r n ing &lt;/w&gt;</div>
               <div class="attn21-row-shell">
                 <div class="attn21-chip-grid attn21-row-scaled" id="attn21-scaled-row"></div>
               </div>
-              <div class="attn21-scale-note">\(\sqrt{d_k}\) prevents overly large dot products</div>
+              <div class="attn21-scale-note">Scaling keeps dot products in a stable range</div>
             </div>
 
             <div class="attn21-link attn21-link-softmax">
@@ -1425,14 +1327,14 @@ l e a r n ing &lt;/w&gt;</div>
       </div>
     </div>
 
-    <div class="attn21-takeaway" id="attn21-takeaway">Raw similarity scores between \(q_{\mathrm{sat}}\) and each key \(k_j\), producing \(s_j = q_{\mathrm{sat}}^{\mathsf{T}} k_j\).</div>
+    <div class="attn21-takeaway" id="attn21-takeaway">Raw similarity scores compare \(q_{\mathrm{sat}}\) with each key \(k_j\): \(s_j = q_{\mathrm{sat}}^{\mathsf{T}} k_j\).</div>
   </div>
 
   <div class="slide slide-has-takeaway" id="slide-22">
     <span class="section-tag">Attention</span>
     <div class="slide-header">
       <div class="badge concept">Mechanism</div>
-      <h2>Step 4 — Aggregate values and add residual</h2>
+      <h2>Step 4 — Mix values, then add the residual</h2>
       <p class="small-text attn19-subtitle">Mix value vectors with attention weights, then add back \(x_{\mathrm{sat}}\)</p>
     </div>
     <div class="slide-body">
@@ -1510,7 +1412,7 @@ l e a r n ing &lt;/w&gt;</div>
       </div>
     </div>
 
-    <div class="attn19-takeaway" id="attn22-takeaway">Start from Step 3 scores \(s_j = q_{\mathrm{sat}}^{\mathsf{T}} k_j\) for each token.</div>
+    <div class="attn19-takeaway" id="attn22-takeaway">Start from the Step 3 scores for \(q_{\mathrm{sat}}\).</div>
     </div>
   </div>
 
@@ -1519,7 +1421,7 @@ l e a r n ing &lt;/w&gt;</div>
     <div class="slide-header">
       <div class="badge concept">Mechanism</div>
       <h2>Attention in matrix form</h2>
-      <p class="small-text attn19-subtitle">Stack tokens into matrices, then compute the whole sequence at once.</p>
+      <p class="small-text attn19-subtitle">Stack tokens into matrices, then compute the full sequence at once.</p>
     </div>
     <div class="slide-body">
     <div class="attn19-layout">
@@ -1578,7 +1480,7 @@ l e a r n ing &lt;/w&gt;</div>
       </div>
     </div>
 
-    <div class="attn19-takeaway" id="attn23-takeaway">Start from the same sequence: tokens plus their embedding rows.</div>
+    <div class="attn19-takeaway" id="attn23-takeaway">Start from the same sequence: tokens and their embedding rows.</div>
     </div>
   </div>
 
@@ -1626,7 +1528,7 @@ l e a r n ing &lt;/w&gt;</div>
       </div>
     </div>
 
-    <div class="attn19-takeaway" id="attn24-takeaway">Multi-head attention lets tokens read from each other in parallel, but the block still needs explicit position and a per-token computation after attention.</div>
+    <div class="attn19-takeaway" id="attn24-takeaway">Multi-head attention lets different heads read the same sequence in parallel.</div>
     </div>
   </div>
 
@@ -1638,7 +1540,7 @@ l e a r n ing &lt;/w&gt;</div>
     <div class="slide-header">
       <div class="badge concept">Problem</div>
       <h2>Self-Attention Compares Vectors, Not Word Order</h2>
-      <p class="small-text">Reorder the same tokens and attention makes the same comparisons.</p>
+      <p class="small-text">Without positional signals, self-attention is permutation equivariant: reorder the token rows in, and the outputs reorder the same way.</p>
     </div>
     <div class="slide-body">
       <div class="card pos25-stage">
@@ -1655,7 +1557,7 @@ l e a r n ing &lt;/w&gt;</div>
             <div class="pos25-meaning">The dog is the chaser</div>
           </div>
 
-          <div class="pos25-vs">Same words</div>
+          <div class="pos25-vs">Same tokens</div>
 
           <div class="pos25-sentence">
             <div class="pos25-pills">
@@ -1669,7 +1571,7 @@ l e a r n ing &lt;/w&gt;</div>
           </div>
         </div>
 
-        <div class="pos25-punchline">Same tokens, completely different meaning.</div>
+        <div class="pos25-punchline">Same tokens, different meaning.</div>
 
         <div class="hidden-content autostep">
           <div class="callout question">
@@ -1680,15 +1582,15 @@ l e a r n ing &lt;/w&gt;</div>
 
         <div class="hidden-content autostep">
           <div class="pos25-answer-card">
-            <div class="pos25-answer-title">No. Reordered tokens produce the same comparisons.</div>
-            <div class="pos25-answer-body">Attention sees the same vectors; reordering only reorders the rows.</div>
+            <div class="pos25-answer-title">No. The layer is permutation equivariant without positions.</div>
+            <div class="pos25-answer-body">It only compares the token vectors it receives. If you permute those input rows, the same pairwise scores are computed between the same vectors, and the output rows are permuted in exactly the same way.</div>
           </div>
         </div>
 
         <div class="hidden-content autostep">
           <div class="callout warn">
             <span class="callout-icon">&#9888;&#65039;</span>
-            <span>Add position <em>before</em> attention so slot changes change the input vector.</span>
+            <span>Add position <em>before</em> attention so permuting tokens changes the vectors and breaks this symmetry.</span>
           </div>
         </div>
 
@@ -1710,7 +1612,7 @@ l e a r n ing &lt;/w&gt;</div>
     <div class="slide-header">
       <div class="badge concept">Design Journey</div>
       <h2>Designing Positional Encoding</h2>
-      <p class="small-text">We already know attention needs order. Now build a position signal from first principles.</p>
+      <p class="small-text">Attention needs order. Build a position signal from first principles.</p>
     </div>
     <div class="slide-body">
       <div class="card pos26-stage">
@@ -1747,7 +1649,7 @@ l e a r n ing &lt;/w&gt;</div>
               <div class="pos26-panel-header">
                 <div class="pos26-step-label">Step 1 · Goals</div>
                 <h3 class="pos26-state-title">What must a position code do?</h3>
-                <p class="pos26-state-lead">Set the requirements before choosing a formula.</p>
+                  <p class="pos26-state-lead">Start with the requirements, then choose the formula.</p>
               </div>
               <div class="pos26-state-grid">
                 <div class="pos26-copy-card">
@@ -1785,7 +1687,7 @@ l e a r n ing &lt;/w&gt;</div>
                     <div class="pos26-flow-box pos26-flow-result">input to attention \(h_i^{(0)}\)</div>
                   </div>
                   <div class="pos26-token-story">
-                    <div class="pos26-panel-label">why we need this at all</div>
+                  <div class="pos26-panel-label">why this matters</div>
                     <div class="pos26-token-line">
                       <span class="token-pill">The</span>
                       <span class="token-pill main">dog</span>
@@ -1793,7 +1695,7 @@ l e a r n ing &lt;/w&gt;</div>
                       <span class="token-pill">another</span>
                       <span class="token-pill reuse">dog</span>
                     </div>
-                    <div class="pos26-token-note">Both <strong>dog</strong> tokens share an embedding; position separates them.</div>
+                    <div class="pos26-token-note">Both <strong>dog</strong> tokens share an embedding; position distinguishes them.</div>
                   </div>
                 </div>
               </div>
@@ -1807,7 +1709,7 @@ l e a r n ing &lt;/w&gt;</div>
               </div>
               <div class="pos26-state-grid">
                 <div class="pos26-copy-card">
-                  <div class="pos26-copy-title">What goes wrong?</div>
+                  <div class="pos26-copy-title">Why Raw Indices Fail</div>
                   <div class="pos26-teach-list">
                     <div class="pos26-teach-row">
                       <span class="pos26-row-badge">A</span>
@@ -1833,7 +1735,7 @@ l e a r n ing &lt;/w&gt;</div>
                   </div>
                 </div>
                 <div class="pos26-visual-card">
-                  <div class="pos26-panel-label">the scale problem</div>
+                  <div class="pos26-panel-label">scale mismatch</div>
                   <div class="pos26-raw-grid">
                     <div class="pos26-raw-panel">
                       <div class="pos26-panel-label">embedding</div>
@@ -1881,7 +1783,7 @@ l e a r n ing &lt;/w&gt;</div>
               </div>
               <div class="pos26-state-grid">
                 <div class="pos26-copy-card">
-                  <div class="pos26-copy-title">What binary teaches us</div>
+                  <div class="pos26-copy-title">What Binary Gets Right</div>
                   <div class="pos26-teach-list">
                     <div class="pos26-teach-row">
                       <span class="pos26-row-badge">A</span>
@@ -1907,7 +1809,7 @@ l e a r n ing &lt;/w&gt;</div>
                   </div>
                 </div>
                 <div class="pos26-visual-card">
-                  <div class="pos26-panel-label">binary counter across positions</div>
+                  <div class="pos26-panel-label">binary code across positions</div>
                   <div class="pos26-binary-stage">
                     <div class="pos26-binary-grid">
                       <div class="pos26-binary-label">Position</div>
@@ -1934,7 +1836,7 @@ l e a r n ing &lt;/w&gt;</div>
                     </div>
                   </div>
                   <div class="pos26-jump-card">
-                    <div class="pos26-panel-label">why it is still hard to learn</div>
+                    <div class="pos26-panel-label">why it remains hard to learn</div>
                     <ul class="pos26-jump-list">
                       <li>Adjacent slots can still flip multiple bits at once.</li>
                     </ul>
@@ -1951,7 +1853,7 @@ l e a r n ing &lt;/w&gt;</div>
               </div>
               <div class="pos26-state-grid">
                 <div class="pos26-copy-card">
-                  <div class="pos26-copy-title">What improves?</div>
+                  <div class="pos26-copy-title">What Sinusoids Improve</div>
                   <div class="pos26-teach-list">
                     <div class="pos26-teach-row">
                       <span class="pos26-row-badge">A</span>
@@ -1976,7 +1878,7 @@ l e a r n ing &lt;/w&gt;</div>
                   </div>
                 </div>
                 <div class="pos26-visual-card">
-                  <div class="pos26-panel-label">rows = fixed dimensions, x-axis = position</div>
+                  <div class="pos26-panel-label">rows = dimensions, x-axis = position</div>
                   <div class="pos26-compare-rail">
                     <div class="pos26-mini-strip-card">
                       <div class="pos26-panel-label">binary intuition</div>
@@ -2028,81 +1930,80 @@ l e a r n ing &lt;/w&gt;</div>
             <section class="pos26-state-panel" data-step="4" aria-hidden="true">
               <div class="pos26-panel-header">
                 <div class="pos26-step-label">Step 5 · Relative</div>
-                <h3 class="pos26-state-title">Attention often cares about distance, not just slot</h3>
-                <p class="pos26-state-lead">Absolute position says where a token is; attention often needs how far apart two tokens are.</p>
+                <h3 class="pos26-state-title">Attention wants relative gap in the score</h3>
+                <p class="pos26-state-lead">Absolute position says where a token sits. Attention scores often need how far apart the compared tokens are.</p>
               </div>
               <div class="pos26-state-grid">
                 <div class="pos26-copy-card">
-                  <div class="pos26-copy-title">Absolute vs relative position</div>
+                  <div class="pos26-copy-title">What Attention Needs</div>
                   <div class="pos26-teach-list">
                     <div class="pos26-teach-row">
                       <span class="pos26-row-badge">A</span>
                       <div class="pos26-row-body">
-                        <strong>Absolute codes can be fixed or learned</strong>
-                        <span>Sin/cos is fixed; learned embeddings train the code directly.</span>
+                        <strong>Absolute vs. relative</strong>
+                        <span>Absolute position answers “which slot is this?” Relative position answers “how far is this token from the token it is being compared against?”</span>
                       </div>
                     </div>
                     <div class="pos26-teach-row">
                       <span class="pos26-row-badge">B</span>
                       <div class="pos26-row-body">
-                        <strong>Many patterns depend on distance</strong>
-                        <span>Attention often cares how far apart tokens are.</span>
-                      </div>
-                    </div>
-                    <div class="pos26-teach-row">
-                      <span class="pos26-row-badge">C</span>
-                      <div class="pos26-row-body">
-                        <strong>Dot-product angle changes the score</strong>
-                        <span>Attention uses dot products, so angle changes the score.</span>
+                        <strong>Scores are geometric</strong>
+                        <span>Attention compares queries and keys with a dot product, so changing the relative gap should change the angle and therefore the score.</span>
                       </div>
                     </div>
                   </div>
                 </div>
-                <div class="pos26-visual-card">
-                  <div class="pos26-relative-scene">
-                    <div class="pos26-panel-label">absolute vs relative position</div>
-                    <div class="pos26-sentence-row pos26-sentence-row-top">
-                      <span class="pos26-index-chip">0</span>
-                      <span class="pos26-index-chip">1</span>
-                      <span class="pos26-index-chip pos26-focus">2</span>
-                      <span class="pos26-index-chip">3</span>
-                      <span class="pos26-index-chip">4</span>
-                    </div>
-                    <div class="pos26-token-line pos26-token-line-wide">
-                      <span class="token-pill">The</span>
-                      <span class="token-pill main">dog</span>
-                      <span class="token-pill flex">chased</span>
-                      <span class="token-pill">another</span>
-                      <span class="token-pill reuse">dog</span>
-                    </div>
-                    <div class="pos26-sentence-row pos26-sentence-row-bottom">
-                      <span class="pos26-index-chip">-2</span>
-                      <span class="pos26-index-chip">-1</span>
-                      <span class="pos26-index-chip pos26-focus">0</span>
-                      <span class="pos26-index-chip">+1</span>
-                      <span class="pos26-index-chip">+2</span>
-                    </div>
-                  </div>
-                  <div class="pos26-attn-bridge">
-                    <div class="pos26-bridge-card">
-                      <div class="pos26-panel-label">attention score</div>
-                      <div class="pos26-bridge-formula">\[
-                        \begin{aligned}
-                        \mathrm{Attn}(Q,K,V) = \\
-                        \mathrm{softmax}\!\left(\frac{QK^\top}{\sqrt{d_k}}\right)V
-                        \end{aligned}
-                      \]</div>
-                    </div>
-                    <div class="pos26-bridge-card">
-                      <div class="pos26-panel-label">geometry of the dot product</div>
-                      <div class="pos26-bridge-formula">\(\vec{a}\cdot\vec{b} = |\vec{a}|\,|\vec{b}|\,\cos\theta\)</div>
-                      <svg class="pos26-angle-visual" viewBox="0 0 120 72" aria-hidden="true">
-                        <line x1="18" y1="56" x2="18" y2="16"></line>
-                        <line x1="18" y1="56" x2="92" y2="56"></line>
-                        <line x1="18" y1="56" x2="54" y2="20"></line>
-                        <path d="M38 56 A20 20 0 0 0 32 42"></path>
-                      </svg>
-                      <div class="pos26-angle-note">Change the angle, change the score.</div>
+                <div class="pos26-visual-card pos26-bridge-visual-card">
+                  <div class="pos26-bridge-stage">
+                    <div class="pos26-relative-scene">
+                      <div class="pos26-panel-label">same sentence, two position views</div>
+                      <div class="pos26-relative-row-group">
+                        <div class="pos26-sentence-row pos26-sentence-row-top">
+                          <span class="pos26-index-chip">0</span>
+                          <span class="pos26-index-chip">1</span>
+                          <span class="pos26-index-chip pos26-focus">2</span>
+                          <span class="pos26-index-chip">3</span>
+                          <span class="pos26-index-chip">4</span>
+                        </div>
+                      </div>
+                      <div class="pos26-token-line pos26-token-line-wide">
+                        <span class="token-pill">The</span>
+                        <span class="token-pill main">dog</span>
+                        <span class="token-pill flex">chased</span>
+                        <span class="token-pill">another</span>
+                        <span class="token-pill reuse">dog</span>
+                      </div>
+                      <div class="pos26-relative-row-group">
+                        <div class="pos26-sentence-row pos26-sentence-row-bottom">
+                          <span class="pos26-index-chip">-2</span>
+                          <span class="pos26-index-chip">-1</span>
+                          <span class="pos26-index-chip pos26-focus">0</span>
+                          <span class="pos26-index-chip">+1</span>
+                          <span class="pos26-index-chip">+2</span>
+                        </div>
+                      </div>
+                      </div>
+                    <div class="pos26-score-geometry-card">
+                      <div class="pos26-panel-label">why this should affect attention</div>
+                      <div class="pos26-score-geometry-grid">
+                        <div class="pos26-score-geometry-copy">
+                          <div class="pos26-score-cue">score between token \(m\) and token \(n\): \(s_{mn} = q_m^{\mathsf{T}} k_n\)</div>
+                          <div class="pos26-bridge-formula">\(q_m \cdot k_n = |q_m|\,|k_n|\,\cos\theta_{mn}\)</div>
+                          <div class="pos26-bridge-note">Relative gap changes angle &#8594; angle changes score.</div>
+                        </div>
+                        <div class="pos26-score-geometry-visual">
+                          <svg class="pos26-angle-visual" viewBox="0 0 120 72" aria-hidden="true">
+                            <line x1="18" y1="56" x2="18" y2="16"></line>
+                            <line x1="18" y1="56" x2="92" y2="56"></line>
+                            <line x1="18" y1="56" x2="54" y2="20"></line>
+                            <path d="M38 56 A20 20 0 0 0 32 42"></path>
+                            <text class="pos26-angle-svg-label pos26-angle-svg-label-q" x="11" y="14">q</text>
+                            <text class="pos26-angle-svg-label pos26-angle-svg-label-k" x="57" y="19">k</text>
+                            <text class="pos26-angle-svg-label pos26-angle-svg-label-theta" x="33" y="44">&#952;</text>
+                          </svg>
+                          <div class="pos26-angle-note">Step 6 needs a position scheme that makes score geometry reflect relative offset.</div>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -2117,7 +2018,7 @@ l e a r n ing &lt;/w&gt;</div>
               </div>
               <div class="pos26-state-grid">
                 <div class="pos26-copy-card">
-                  <div class="pos26-copy-title">How RoPE works</div>
+                  <div class="pos26-copy-title">How RoPE Works</div>
                   <div class="pos26-teach-list">
                     <div class="pos26-teach-row">
                       <span class="pos26-row-badge">A</span>
@@ -2145,7 +2046,7 @@ l e a r n ing &lt;/w&gt;</div>
                 <div class="pos26-visual-card">
                   <div class="pos26-rope-walkthrough">
                     <div class="pos26-rope-stage">
-                      <div class="pos26-panel-label">1. rotate Q and K by their absolute positions</div>
+                      <div class="pos26-panel-label">1. rotate Q and K by absolute position</div>
                       <div class="pos26-rope-rotate-labels">
                         <span>query at position \(m\): rotate by \(m\theta_i\)</span>
                         <span>key at position \(n\): rotate by \(n\theta_i\)</span>
@@ -2165,7 +2066,7 @@ l e a r n ing &lt;/w&gt;</div>
                       <div class="pos26-rope-angle-note">Angle encodes the gap.</div>
                     </div>
                     <div class="pos26-rope-stage">
-                      <div class="pos26-panel-label">2. the dot product makes absolute rotation disappear</div>
+                      <div class="pos26-panel-label">2. the dot product cancels absolute rotation</div>
                       <div class="pos26-rope-compare">
                         <div class="pos26-rope-score-formula">\((R_m q)^\top (R_n k) \;=\; q^\top R_{m-n}\, k\)</div>
                         <div class="pos26-rope-score-note">Same gap, same relative score anywhere.</div>
@@ -2201,32 +2102,22 @@ l e a r n ing &lt;/w&gt;</div>
           <div class="ffn27-role-box ffn27-role-attn">
             <div class="ffn27-role-title">Attention</div>
             <div class="ffn27-role-desc">Mixes information <strong>across</strong> tokens</div>
-            <div class="ffn27-role-detail">&#8220;What should I pay attention to?&#8221;</div>
+            <div class="ffn27-role-detail">Cross-token context</div>
           </div>
           <div class="ffn27-role-arrow">&#8594;</div>
           <div class="ffn27-role-box ffn27-role-ffn">
             <div class="ffn27-role-title">FFN</div>
             <div class="ffn27-role-desc">Transforms <strong>each</strong> token independently</div>
-            <div class="ffn27-role-detail">&#8220;Now let me think about what I heard.&#8221;</div>
-          </div>
-        </div>
-
-        <div class="hidden-content autostep">
-          <div class="callout question">
-            <span class="callout-icon">&#10067;</span>
-            <span>Why do we need an FFN after attention?</span>
-          </div>
-          <div class="ffn27-analogy-card">
-            <p>Attention is the <strong>group discussion</strong>: tokens share information. The FFN is the private reflection afterward: each token updates its own representation.</p>
+            <div class="ffn27-role-detail">Per-token transformation</div>
           </div>
         </div>
 
         <div class="hidden-content autostep">
           <div class="ffn27-flow-section">
-            <div class="ffn27-flow-title">Per token: expand, activate, contract</div>
+            <div class="ffn27-flow-title">Per Token: Expand, Activate, Contract</div>
             <div class="ffn27-flow">
               <div class="ffn27-flow-box ffn27-flow-input">
-                <div class="ffn27-flow-label">token row</div>
+                <div class="ffn27-flow-label">token state</div>
                 <div class="ffn27-flow-dim">\(d_{\mathrm{model}}\)</div>
               </div>
               <div class="ffn27-flow-arrow">&#8594;</div>
@@ -2246,19 +2137,47 @@ l e a r n ing &lt;/w&gt;</div>
               </div>
               <div class="ffn27-flow-arrow">&#8594;</div>
               <div class="ffn27-flow-box ffn27-flow-output">
-                <div class="ffn27-flow-label">updated row</div>
+                <div class="ffn27-flow-label">updated state</div>
                 <div class="ffn27-flow-dim">\(d_{\mathrm{model}}\)</div>
               </div>
             </div>
             <div class="ffn27-flow-formula">\(\mathrm{FFN}(h_i) = W_2\,\mathrm{GELU}(W_1 h_i + b_1) + b_2\)</div>
-            <div class="ffn27-flow-note">The same small network runs at every position: shared weights, different token inputs.</div>
+            <div class="ffn27-flow-note">The same small network runs at every position: shared weights, different inputs.</div>
+            <div class="ffn27-case-study">
+              <div class="ffn27-case-kicker">Parameter Reality</div>
+              <p class="ffn27-case-lead">Per block, attention is roughly \(4d_{\mathrm{model}}^2\) parameters, while the FFN is roughly \(8d_{\mathrm{model}}^2\). That is why, in large dense LLMs, the FFN usually outweighs attention in total parameters.</p>
+              <div class="ffn27-case-table" role="table" aria-label="GPT-3 parameter breakdown">
+                <div class="ffn27-case-row ffn27-case-row-head" role="row">
+                  <div class="ffn27-case-cell" role="columnheader">Model</div>
+                  <div class="ffn27-case-cell" role="columnheader">Total</div>
+                  <div class="ffn27-case-cell" role="columnheader">Attention</div>
+                  <div class="ffn27-case-cell" role="columnheader">FFN</div>
+                  <div class="ffn27-case-cell" role="columnheader">Other</div>
+                </div>
+                <div class="ffn27-case-row" role="row">
+                  <div class="ffn27-case-cell ffn27-case-model" role="cell"><strong>GPT-3 13B</strong></div>
+                  <div class="ffn27-case-cell" role="cell"><strong>12.95B</strong></div>
+                  <div class="ffn27-case-cell" role="cell"><strong>4.23B</strong><span>32.6%</span></div>
+                  <div class="ffn27-case-cell" role="cell"><strong>8.46B</strong><span>65.3%</span></div>
+                  <div class="ffn27-case-cell" role="cell"><strong>0.27B</strong><span>2.1%</span></div>
+                </div>
+                <div class="ffn27-case-row" role="row">
+                  <div class="ffn27-case-cell ffn27-case-model" role="cell"><strong>GPT-3 175B</strong></div>
+                  <div class="ffn27-case-cell" role="cell"><strong>174.60B</strong></div>
+                  <div class="ffn27-case-cell" role="cell"><strong>57.99B</strong><span>33.2%</span></div>
+                  <div class="ffn27-case-cell" role="cell"><strong>115.97B</strong><span>66.4%</span></div>
+                  <div class="ffn27-case-cell" role="cell"><strong>0.65B</strong><span>0.4%</span></div>
+                </div>
+              </div>
+              <div class="ffn27-case-footnote">Other = token embeddings + positional embeddings + LayerNorm parameters.</div>
+            </div>
           </div>
         </div>
 
       </div>
     </div>
 
-    <div class="story-takeaway" id="ffn27-takeaway">Attention shares information across tokens. The FFN then updates each token independently.</div>
+    <div class="story-takeaway" id="ffn27-takeaway">Attention shares information across tokens. The FFN updates each token independently and usually holds most of the parameters.</div>
     </div>
   </div>
 
@@ -2270,7 +2189,7 @@ l e a r n ing &lt;/w&gt;</div>
     <div class="slide-header">
       <div class="badge concept">Synthesis</div>
       <h2>One Transformer Block, Revisited</h2>
-      <p class="small-text">Same diagram as slide 3. This time, every box has a job.</p>
+      <p class="small-text">Same diagram as slide 3. This time, every box has a clear role.</p>
     </div>
 
     <div class="slide-body">
@@ -2313,12 +2232,12 @@ l e a r n ing &lt;/w&gt;</div>
 
       <div class="block28-panel">
         <div class="block28-orient-card">
-          <div class="block28-note-head">Read One Block Bottom To Top</div>
+          <div class="block28-note-head">Read the Block Bottom to Top</div>
           <div class="block28-note-body">LayerNorm &#8594; attention &#8594; residual add &#8594; LayerNorm &#8594; FFN &#8594; residual add. Both sublayers write into the same residual stream.</div>
         </div>
         <div class="block28-note block28-note-ln">
           <div class="block28-note-head">LayerNorm</div>
-          <div class="block28-note-body">LN normalizes each row before the sublayer reads it.</div>
+          <div class="block28-note-body">Normalizes each row before the sublayer reads it.</div>
         </div>
         <div class="block28-note block28-note-attn">
           <div class="block28-note-head">Multi-Head Attention</div>
@@ -2326,7 +2245,7 @@ l e a r n ing &lt;/w&gt;</div>
         </div>
         <div class="block28-note block28-note-add">
           <div class="block28-note-head">Residual Add (+)</div>
-          <div class="block28-note-body">Residual add writes the attention update back into the same stream.</div>
+          <div class="block28-note-body">Writes the attention update back into the same stream.</div>
         </div>
         <div class="block28-note block28-note-ffn">
           <div class="block28-note-head">Feed-Forward Network</div>
@@ -2342,7 +2261,7 @@ l e a r n ing &lt;/w&gt;</div>
       </div>
     </div>
 
-    <div class="block28-takeaway" id="block28-takeaway">You now know one full Transformer block. Next: stack the same block layer after layer.</div>
+    <div class="block28-takeaway" id="block28-takeaway">A full model stacks this same Transformer block layer after layer.</div>
     </div>
   </div>
 
@@ -2351,7 +2270,7 @@ l e a r n ing &lt;/w&gt;</div>
     <div class="slide-header">
       <div class="badge concept">Concept</div>
       <h2>Same Block, More Depth</h2>
-      <p class="small-text">The block repeats \(L\) times. The shape stays \(S \times d_{\mathrm{model}}\); each pass refines the residual stream again.</p>
+      <p class="small-text">The block repeats \(L\) times. The shape stays \(S \times d_{\mathrm{model}}\); each layer further refines the residual stream.</p>
     </div>
 
     <div class="slide-body">
@@ -2380,20 +2299,20 @@ l e a r n ing &lt;/w&gt;</div>
 
       <div class="stack31-notes">
         <div class="stack31-overview-card">
-          <div class="stack31-overview-head">What depth means</div>
-          <div class="stack31-overview-body">Each layer runs the same transformer block again. The sequence shape stays fixed; the representation gets more refined.</div>
+          <div class="stack31-overview-head">What Depth Means</div>
+          <div class="stack31-overview-body">Each layer runs the same transformer block again. The sequence shape stays fixed; the representation becomes more refined.</div>
         </div>
         <div class="hidden-content autostep stack31-depth-reveal">
           <div class="stack31-note-strip">
-            <div class="stack31-note-row"><span class="hl">One block = one refinement round</span> &#8212; attention and FFN read the current stream and write back an update.</div>
-            <div class="stack31-note-row"><span class="hl-purple">The next block starts from the improved stream</span> &#8212; later layers continue from what earlier layers already built.</div>
-            <div class="stack31-note-row"><span class="hl-green">Depth buys repeated computation</span> &#8212; the model gets multiple chances to combine and refine information.</div>
+            <div class="stack31-note-row"><span class="hl">One block = one refinement pass</span> &#8212; attention and FFN read the current stream and write back an update.</div>
+            <div class="stack31-note-row"><span class="hl-purple">Each new block starts from the updated stream</span> &#8212; later layers build on what earlier layers already produced.</div>
+            <div class="stack31-note-row"><span class="hl-green">Depth adds repeated computation</span> &#8212; the model gets multiple chances to combine and refine information.</div>
           </div>
         </div>
         <div class="hidden-content autostep stack31-scale-reveal">
           <div class="callout info">
             <span class="icon">&#x1F4D6;</span>
-            <span>GPT-2 small uses <strong>12</strong> layers. GPT-3 uses <strong>96</strong>. Same block, more refinement rounds.</span>
+            <span>GPT-2 small uses <strong>12</strong> layers. GPT-3 uses <strong>96</strong>. Same block, more refinement passes.</span>
           </div>
         </div>
       </div>
@@ -2408,7 +2327,7 @@ l e a r n ing &lt;/w&gt;</div>
     <div class="slide-header">
       <div class="badge concept">Mechanism</div>
       <h2>Predict One Token, Append, Repeat</h2>
-      <p class="small-text">Take the last hidden state, score the vocabulary, form a distribution, then decode one token to continue generation.</p>
+      <p class="small-text">Take the last hidden state, score the vocabulary, form a distribution, then decode one token.</p>
     </div>
 
     <div class="slide-body">
@@ -2432,20 +2351,20 @@ l e a r n ing &lt;/w&gt;</div>
     <span class="section-tag">Output &amp; Generation</span>
     <div class="slide-header">
       <div class="badge concept">Bridge</div>
-      <h2>From probabilities to behavior</h2>
-      <p class="small-text">The model outputs one distribution. Decoding decides how that distribution becomes an actual token.</p>
+      <h2>From Probabilities to Behavior</h2>
+      <p class="small-text">The model outputs one distribution. Decoding determines how that distribution becomes an actual token.</p>
     </div>
 
     <div class="slide-body">
     <div class="decode33-layout">
       <div class="card decode33-distribution-card">
-        <div class="decode33-kicker">One shared distribution</div>
+        <div class="decode33-kicker">One Distribution</div>
         <div class="decode33-flow">
           <div class="pred32-formula">\( \ell = W_U\, h_t^{(L)} \)</div>
           <div class="decode33-inline-arrow">&#8594;</div>
           <div class="pred32-softmax-label decode33-softmax-pill">softmax</div>
           <div class="decode33-inline-arrow">&#8594;</div>
-          <div class="decode33-dist-label">distribution over next tokens</div>
+          <div class="decode33-dist-label">next-token distribution</div>
         </div>
         <div class="pred32-bars-row decode33-bars-row">
           <div class="pred32-bar-item">
@@ -2474,7 +2393,7 @@ l e a r n ing &lt;/w&gt;</div>
             <span class="pred32-bar-label">bed</span>
           </div>
         </div>
-        <div class="decode33-fixed-note">The distribution is fixed. Only the selection rule changes.</div>
+        <div class="decode33-fixed-note">Same distribution. Different selection rule.</div>
       </div>
 
       <div class="decode33-policy-grid">
@@ -2488,7 +2407,7 @@ l e a r n ing &lt;/w&gt;</div>
         </div>
 
         <div class="decode33-policy-card">
-          <div class="decode33-policy-title">Temperature sampling</div>
+          <div class="decode33-policy-title">Temperature Sampling</div>
           <div class="decode33-policy-body">Adjust sharpness, then sample.</div>
           <div class="decode33-policy-row">
             <span class="decode33-policy-label">Example sample</span>
@@ -2497,7 +2416,7 @@ l e a r n ing &lt;/w&gt;</div>
         </div>
 
         <div class="decode33-policy-card">
-          <div class="decode33-policy-title">Top-k sampling</div>
+          <div class="decode33-policy-title">Top-k Sampling</div>
           <div class="decode33-policy-body">Restrict the candidate set, then sample.</div>
           <div class="decode33-policy-row">
             <span class="decode33-policy-label">Keep</span>
@@ -2512,10 +2431,10 @@ l e a r n ing &lt;/w&gt;</div>
         </div>
       </div>
 
-      <div class="decode33-bridge-line">The transformer produces scores. A decoding policy turns those scores into actual text.</div>
+      <div class="decode33-bridge-line">The transformer produces scores. Decoding turns those scores into text.</div>
     </div>
 
-    <div class="block28-takeaway" id="decode33-takeaway">The distribution is fixed; decoding changes how one next token is chosen.</div>
+    <div class="block28-takeaway" id="decode33-takeaway">The distribution stays fixed; decoding changes how the next token is chosen.</div>
     </div>
   </div>
 
@@ -2524,17 +2443,17 @@ l e a r n ing &lt;/w&gt;</div>
     <div class="slide-header">
       <div class="badge concept">Closing</div>
       <h2>You Now Know the Transformer</h2>
-      <p class="small-text">This is the full loop you just unpacked.</p>
+      <p class="small-text">This is the full loop.</p>
     </div>
 
     <div class="slide-body">
     <div class="close33-layout">
       <div class="close33-pipeline-wrap">
         <div class="close33-pipeline" id="close33-pipeline"></div>
-        <div class="close33-loop-label">&#x21A9; autoregressive loop &#8212; append and run again</div>
-        <div class="close33-context-line">The new token changes the context &#8594; the next distribution is different</div>
-        <div class="close33-summary-band">Tokenize &#8594; Represent &#8594; Understand &#215; L &#8594; Predict &#8594; Decode &#8594; Append &#8594; Repeat / Stop</div>
-        <div class="close33-stop-line">Stop when EOS is produced, a stop sequence is hit, or max tokens is reached</div>
+        <div class="close33-loop-label">&#x21A9; autoregressive loop: append and run again</div>
+        <div class="close33-context-line">Each new token changes the context &#8594; the next distribution changes</div>
+        <div class="close33-summary-band">Tokenize &#8594; Represent &#8594; Understand &#215; L &#8594; Predict &#8594; Decode &#8594; Append &#8594; Repeat or Stop</div>
+        <div class="close33-stop-line">Stop at EOS, a stop sequence, or the max token limit</div>
       </div>
       <div class="close33-bottom" id="close33-bottom">
         <div class="close33-insights" id="close33-insights"></div>
@@ -2545,8 +2464,8 @@ l e a r n ing &lt;/w&gt;</div>
       </div>
     </div>
 
-    <div class="block28-takeaway" id="close33-takeaway">Tokenize &#8594; Represent &#8594; Understand &#215; L &#8594; Predict &#8594; Decode &#8594; Append &#8594; Repeat / Stop.</div>
-    </div>
+    <div class="block28-takeaway" id="close33-takeaway">Tokenize &#8594; Represent &#8594; Understand &#215; L &#8594; Predict &#8594; Decode &#8594; Append &#8594; Repeat or Stop.</div>
+  </div>
   </div>
 
 </div>

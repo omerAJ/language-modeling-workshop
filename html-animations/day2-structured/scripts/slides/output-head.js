@@ -16,7 +16,7 @@ var PRED32_CLASSES = ['pred32-show-loop'];
 
 var PRED32_TAKEAWAYS = [
   'One full forward pass produces scores over the vocabulary.',
-  'Greedy decoding (argmax) is one way to turn that distribution into the next token to append.'
+  'Greedy decoding (argmax) is one way to select the next token.'
 ];
 
 function getPred32SlideBars() {
@@ -30,7 +30,7 @@ function buildPred32Zones() {
   if (ctxZone && ctxZone.children.length === 0) {
     ctxZone.appendChild(createEl('div', {
       className: 'pred32-zone-title',
-      text: 'Current Context'
+      text: 'Context'
     }));
     var tokensRow = createEl('div', { className: 'pred32-tokens-row' });
     PRED32_TOKENS.forEach(function(tok) {
@@ -39,7 +39,7 @@ function buildPred32Zones() {
     ctxZone.appendChild(tokensRow);
     ctxZone.appendChild(createEl('div', {
       className: 'pred32-zone-note',
-      html: 'Only the last row scores the next token: \\(h_t^{(L)}\\)'
+      html: 'Only the final hidden state scores the next token: \\(h_t^{(L)}\\)'
     }));
   }
 
@@ -53,7 +53,7 @@ function buildPred32Zones() {
     }));
     headZone.appendChild(createEl('div', {
       className: 'pred32-softmax-label',
-      text: 'softmax \u2192 probability distribution'
+      text: 'softmax \u2192 next-token distribution'
     }));
     var barsRow = createEl('div', { className: 'pred32-bars-row' });
     PRED32_VOCAB.forEach(function(entry) {
@@ -72,7 +72,7 @@ function buildPred32Zones() {
     headZone.appendChild(barsRow);
     headZone.appendChild(createEl('div', {
       className: 'pred32-zone-note',
-      text: 'The transformer produces scores; decoding decides how to pick from them.'
+      text: 'The model produces scores; decoding selects the next token.'
     }));
   }
 
@@ -81,11 +81,11 @@ function buildPred32Zones() {
   if (selectZone && selectZone.children.length === 0) {
     selectZone.appendChild(createEl('div', {
       className: 'pred32-zone-title pred32-zone-title-green',
-      text: 'Greedy decoding (argmax)'
+      text: 'Greedy Decoding (argmax)'
     }));
     selectZone.appendChild(createEl('div', {
       className: 'pred32-policy-note',
-      text: 'Always pick the highest-probability token.'
+      text: 'Always choose the highest-probability token.'
     }));
     selectZone.appendChild(createEl('span', {
       className: 'attn19-token-chip pred32-selected-token',
@@ -93,7 +93,7 @@ function buildPred32Zones() {
     }));
     selectZone.appendChild(createEl('div', {
       className: 'pred32-loop-note',
-      html: '&#x21A9; append to context and run again'
+      html: '&#x21A9; append and run again'
     }));
   }
 }

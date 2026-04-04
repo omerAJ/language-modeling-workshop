@@ -117,7 +117,7 @@
   flex: 1 1 auto;
   min-height: 0;
   display: grid;
-  gap: 0.65rem;
+  gap: 0.55rem;
   background:
     radial-gradient(circle at 84% 14%, rgba(192, 28, 28, 0.08), transparent 30%),
     radial-gradient(circle at 14% 18%, rgba(15, 110, 47, 0.06), transparent 34%),
@@ -247,7 +247,7 @@
 .pos26-formula-card,
 .pos26-jump-card,
 .pos26-normalize-card,
-.pos26-bridge-card,
+.pos26-score-geometry-card,
 .pos26-rope-stage,
 .pos26-rope-box,
 .pos26-rope-score-card {
@@ -398,8 +398,9 @@
 .pos26-raw-grid,
 .pos26-normalize-compare,
 .pos26-compare-rail,
+.pos26-bridge-stage,
 .pos26-relative-scene,
-.pos26-attn-bridge,
+.pos26-score-geometry-grid,
 .pos26-rope-walkthrough,
 .pos26-rope-stage {
   min-height: 0;
@@ -777,6 +778,23 @@
 .pos26-wave-row.mid .pos26-wave-line { stroke: #ff7b7b; }
 .pos26-wave-row.slow .pos26-wave-line { stroke: #8be9ae; }
 
+/* Slide 26 Step 5 right-stage controls */
+#slide-26 {
+  --pos26-step5-right-card-padding-y: 0.1rem;
+  --pos26-step5-right-card-padding-x: 0.72rem;
+  --pos26-step5-right-stage-gap: 0.0rem;
+  --pos26-step5-right-scene-gap: 0.32rem;
+  --pos26-step5-right-scene-padding-y: 0.1rem;
+  --pos26-step5-right-scene-padding-x: 0.76rem;
+  --pos26-step5-right-token-gap: 0.1rem;
+  --pos26-step5-right-token-padding-y: 0.1rem;
+  --pos26-step5-right-token-padding-x: 0.42rem;
+  --pos26-step5-right-score-card-padding-y: 0.1rem;
+  --pos26-step5-right-score-card-padding-x: 0.6rem;
+  --pos26-step5-right-score-grid-gap: 0.48rem;
+  --pos26-step5-right-score-inner-gap: 0.24rem;
+}
+
 .pos26-formula-card {
   --pos26-formula-font-size: 1.0rem;
   margin-top: 0.48rem;
@@ -826,18 +844,38 @@
   stroke-linejoin: round;
 }
 
+.pos26-bridge-stage,
 .pos26-relative-scene {
-  --pos26-relative-scene-padding-y: 0.08rem;
-  --pos26-relative-scene-padding-x: 0.76rem;
+  display: grid;
+  gap: var(--pos26-step5-right-scene-gap, 0.32rem);
+}
+
+.pos26-relative-scene {
+  --pos26-relative-scene-padding-y: var(--pos26-step5-right-scene-padding-y, 0.08rem);
+  --pos26-relative-scene-padding-x: var(--pos26-step5-right-scene-padding-x, 0.76rem);
   --pos26-relative-chip-gap: 0.20rem;
-  --pos26-relative-token-gap: 0.22rem;
+  --pos26-relative-token-gap: var(--pos26-step5-right-token-gap, 0.22rem);
   --pos26-relative-token-font-size: 0.50rem;
-  --pos26-relative-token-padding-y: 0.24rem;
-  --pos26-relative-token-padding-x: 0.42rem;
+  --pos26-relative-token-padding-y: var(--pos26-step5-right-token-padding-y, 0.24rem);
+  --pos26-relative-token-padding-x: var(--pos26-step5-right-token-padding-x, 0.42rem);
   padding: var(--pos26-relative-scene-padding-y) var(--pos26-relative-scene-padding-x);
   border-radius: var(--radius-md);
   border: 1px solid rgba(42, 79, 214, 0.55);
   background: rgba(60, 70, 130, 0.16);
+}
+
+.pos26-relative-row-group {
+  display: grid;
+  gap: 0.16rem;
+}
+
+.pos26-relative-row-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: rgba(30, 50, 120, 0.76);
 }
 
 .pos26-sentence-row {
@@ -883,15 +921,39 @@
   padding: var(--pos26-relative-token-padding-y) var(--pos26-relative-token-padding-x);
 }
 
-.pos26-attn-bridge {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.42rem;
-  margin-top: 0.0rem;
+.pos26-relative-note {
+  margin-top: 0.06rem;
+  font-size: var(--fs-2xs);
+  line-height: 1.42;
+  color: rgba(30, 50, 120, 0.82);
 }
 
-.pos26-bridge-card {
-  padding: 0.0rem 0.58rem;
+.pos26-score-geometry-card {
+  padding: var(--pos26-step5-right-score-card-padding-y, 0.54rem) var(--pos26-step5-right-score-card-padding-x, 0.64rem);
+}
+
+.pos26-score-geometry-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr);
+  gap: var(--pos26-step5-right-score-grid-gap, 0.56rem);
+  align-items: center;
+}
+
+.pos26-score-geometry-copy,
+.pos26-score-geometry-visual {
+  display: grid;
+  gap: var(--pos26-step5-right-score-inner-gap, 0.24rem);
+  min-height: 0;
+}
+
+.pos26-score-cue {
+  padding: 0.42rem 0.5rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(42, 79, 214, 0.55);
+  background: rgba(42, 79, 214, 0.1);
+  font-size: 0.74rem;
+  line-height: 1.4;
+  color: #0d1020;
 }
 
 .pos26-bridge-formula {
@@ -900,10 +962,17 @@
   color: #4a3000;
 }
 
+.pos26-bridge-note {
+  font-size: var(--fs-2xs);
+  line-height: 1.42;
+  color: #4a3000;
+  font-weight: 700;
+}
+
 .pos26-angle-visual {
   width: 100%;
-  height: 3.9rem;
-  margin-top: 0.18rem;
+  height: 3.8rem;
+  margin-top: 0;
 }
 
 .pos26-angle-visual line,
@@ -917,6 +986,17 @@
 .pos26-angle-visual line:nth-of-type(2) { stroke: rgba(40, 60, 130, 0.5); }
 .pos26-angle-visual line:nth-of-type(3) { stroke: #8be9ae; }
 .pos26-angle-visual path { stroke: #7a3c00; }
+
+.pos26-angle-svg-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  font-weight: 700;
+  fill: rgba(10, 20, 80, 0.88);
+}
+
+.pos26-angle-svg-label-q { fill: #63d3ff; }
+.pos26-angle-svg-label-k { fill: #8be9ae; }
+.pos26-angle-svg-label-theta { fill: #7a3c00; }
 
 .pos26-rope-walkthrough {
   display: grid;
@@ -1103,6 +1183,47 @@
   font-size: 0.67rem;
   line-height: 1.45;
   color: rgba(30, 50, 120, 0.82);
+}
+
+#slide-26[data-pos26-step='4'] .pos26-state-grid {
+  grid-template-columns: minmax(0, 0.78fr) minmax(0, 1.22fr);
+  gap: 0.54rem;
+}
+
+#slide-26[data-pos26-step='4'] .pos26-copy-card {
+  padding: 0.68rem 0.74rem;
+}
+
+#slide-26[data-pos26-step='4'] .pos26-visual-card {
+  padding: var(--pos26-step5-right-card-padding-y) var(--pos26-step5-right-card-padding-x);
+}
+
+#slide-26[data-pos26-step='4'] .pos26-teach-list {
+  gap: 0.34rem;
+}
+
+#slide-26[data-pos26-step='4'] .pos26-teach-row {
+  padding: 0.44rem 0.5rem;
+}
+
+#slide-26[data-pos26-step='4'] .pos26-row-body span {
+  line-height: 1.38;
+}
+
+#slide-26[data-pos26-step='4'] .pos26-bridge-stage {
+  gap: var(--pos26-step5-right-stage-gap);
+}
+
+#slide-26[data-pos26-step='4'] .pos26-score-geometry-card {
+  padding: var(--pos26-step5-right-score-card-padding-y) var(--pos26-step5-right-score-card-padding-x);
+}
+
+#slide-26[data-pos26-step='4'] .pos26-score-geometry-grid {
+  gap: var(--pos26-step5-right-score-grid-gap);
+}
+
+#slide-26[data-pos26-step='4'] .pos26-angle-note {
+  margin-top: 0;
 }
 
 

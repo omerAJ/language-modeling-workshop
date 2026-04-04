@@ -7,7 +7,7 @@ const POS26_TAKEAWAYS = [
   'Raw indices overwhelm embeddings and change meaning across context lengths.',
   'Binary shows multiscale structure, but its jumps are too abrupt.',
   'Sinusoids keep multiscale structure while staying smooth.',
-  'Attention often cares more about token distance than absolute slot.',
+  'Attention scores come from dot products, so a useful position scheme should make score geometry depend on relative offset.',
   'RoPE rotates Q/K so attention scores reflect relative offset.'
 ];
 

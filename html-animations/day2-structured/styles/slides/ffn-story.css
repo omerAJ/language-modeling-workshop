@@ -183,6 +183,96 @@
   line-height: 1.5;
 }
 
+.ffn27-case-study {
+  display: grid;
+  gap: 0.1rem;
+  margin-top: 0.14rem;
+  padding: 0.1rem 0.7rem;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(42, 79, 214, 0.4);
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.ffn27-case-kicker {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.55rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(10, 20, 80, 0.9);
+  text-align: center;
+}
+
+.ffn27-case-lead {
+  margin: 0;
+  font-size: 0.71rem;
+  line-height: 1.0;
+  color: rgba(10, 20, 80, 0.9);
+  text-align: center;
+}
+
+.ffn27-case-table {
+  display: grid;
+  gap: 0.1rem;
+}
+
+.ffn27-case-row {
+  display: grid;
+  grid-template-columns: minmax(6.4rem, 1.2fr) repeat(4, minmax(0, 1fr));
+  gap: 0.1rem;
+  align-items: stretch;
+}
+
+.ffn27-case-cell {
+  min-width: 0;
+  padding: 0.34rem 0.38rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(42, 79, 214, 0.25);
+  background: rgba(42, 79, 214, 0.05);
+  display: grid;
+  gap: 0.08rem;
+  justify-items: center;
+  align-content: center;
+  text-align: center;
+  font-size: 0.66rem;
+  line-height: 1.28;
+  color: rgba(10, 20, 80, 0.92);
+}
+
+.ffn27-case-row-head .ffn27-case-cell {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  background: rgba(10, 20, 80, 0.06);
+}
+
+.ffn27-case-cell strong {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #0d1020;
+}
+
+.ffn27-case-cell span {
+  font-size: 0.6rem;
+  color: rgba(30, 50, 120, 0.72);
+}
+
+.ffn27-case-model {
+  justify-items: start;
+  text-align: left;
+  background: rgba(0, 120, 144, 0.06);
+  border-color: rgba(0, 120, 144, 0.24);
+}
+
+.ffn27-case-footnote {
+  text-align: center;
+  font-size: 0.62rem;
+  line-height: 1.36;
+  color: rgba(10, 20, 80, 0.78);
+}
+
 /* Projector-safe compaction for slide 27 */
 
 #slide-27 .story-layout {
@@ -213,7 +303,7 @@
 }
 
 #slide-27 .ffn27-role-box {
-  padding: 0.68rem 0.76rem;
+  padding: 0.20rem 0.76rem;
 }
 
 #slide-27 .ffn27-role-title {
@@ -278,4 +368,31 @@
 
 #slide-27 .ffn27-flow-note {
   line-height: 1.38;
+}
+
+#slide-27 .ffn27-case-study {
+  gap: 0.1rem;
+  padding: 0.1rem 0.58rem;
+}
+
+#slide-27 .ffn27-case-lead {
+  font-size: 0.68rem;
+}
+
+#slide-27 .ffn27-case-row {
+  gap: 0.22rem;
+}
+
+#slide-27 .ffn27-case-cell {
+  padding: 0.1rem 0.3rem;
+  font-size: 0.62rem;
+}
+
+#slide-27 .ffn27-case-cell strong {
+  font-size: 0.68rem;
+}
+
+#slide-27 .ffn27-case-cell span,
+#slide-27 .ffn27-case-footnote {
+  font-size: 0.58rem;
 }

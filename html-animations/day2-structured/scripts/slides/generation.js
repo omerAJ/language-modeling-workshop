@@ -5,14 +5,14 @@ var GEN33_MAX_STEP = 1;
 var GEN33_CLASSES = ['gen33-show-insights'];
 
 var GEN33_TAKEAWAYS = [
-  'Tokenize \u2192 Represent \u2192 Understand \u00d7 L \u2192 Predict \u2192 Decode \u2192 Append \u2192 Repeat / Stop.',
-  'You now understand the full forward pass and how generation decisions are made.'
+  'Tokenize \u2192 Represent \u2192 Understand \u00d7 L \u2192 Predict \u2192 Decode \u2192 Append \u2192 Repeat or Stop.',
+  'This is the full forward pass, from tokenization to generation.'
 ];
 
 var GEN33_PIPELINE_SEGS = [
-  { text: 'tokens',     cls: 'gen33-seg-embed' },
+  { text: 'Tokens',     cls: 'gen33-seg-embed' },
   { text: '\u2192',     cls: 'gen33-seg-arrow' },
-  { text: 'embed',      cls: 'gen33-seg-embed' },
+  { text: 'Embed',      cls: 'gen33-seg-embed' },
   { text: '+',          cls: 'gen33-seg-add' },
   { text: 'PE',         cls: 'gen33-seg-position' },
   { text: '\u2192',     cls: 'gen33-seg-arrow' },
@@ -30,7 +30,7 @@ var GEN33_PIPELINE_SEGS = [
   { text: '+',          cls: 'gen33-seg-add' },
   { text: '] \u00d7 L', cls: 'gen33-seg-bracket' },
   { text: '\u2192',     cls: 'gen33-seg-arrow' },
-  { text: 'LM head',    cls: 'gen33-seg-head' },
+  { text: 'LM Head',    cls: 'gen33-seg-head' },
   { text: '\u2192',     cls: 'gen33-seg-arrow' },
   { text: 'Decode',     cls: 'gen33-seg-decode' },
   { text: '\u2192',     cls: 'gen33-seg-arrow' },
@@ -40,7 +40,7 @@ var GEN33_PIPELINE_SEGS = [
 var GEN33_INSIGHTS = [
   {
     title: 'Tokenize',
-    body: 'The model reads subword chunks, not whole words. Vocabulary boundaries shape what it can represent cleanly.',
+    body: 'The model reads subword units, not whole words. Vocabulary boundaries shape what it can represent cleanly.',
     color: 'blue'
   },
   {
@@ -50,12 +50,12 @@ var GEN33_INSIGHTS = [
   },
   {
     title: 'Understand',
-    body: 'Stacked blocks use attention and FFN to refine the residual stream while keeping the sequence shape fixed.',
+    body: 'Stacked blocks use attention and FFN to refine the residual stream while keeping sequence shape fixed.',
     color: 'cyan'
   },
   {
     title: 'Predict + Decode',
-    body: 'The LM head scores the vocabulary, decoding turns those scores into one token, that token is appended, and the next context produces a different distribution.',
+    body: 'The LM head scores the vocabulary. Decoding selects one token, appends it, and the new context changes the next distribution.',
     color: 'green'
   }
 ];
